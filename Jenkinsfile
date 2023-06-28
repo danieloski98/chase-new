@@ -44,14 +44,14 @@ pipeline {
         stage('create deployment directory'){
             steps{
 
-                sh 'cd /home/ubuntu && mkdir deploy'
+                sh 'cd /home/ubuntu && sudo mkdir deploy'
                 sh 'ls'
             }
         }
         stage('Build phase'){
             steps{
             
-                sh 'sudo cp -r /var/lib/jenkins/workspace/cicd-test/*  .'
+                sh 'sudo cp -r /var/lib/jenkins/workspace/chasecroll-job/*  .'
                 sh 'npm install && npm run build'
                
             }
