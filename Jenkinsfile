@@ -44,7 +44,7 @@ pipeline {
         stage('create deployment directory'){
             steps{
 
-                sh 'cd ~ && mkdir deploy'
+                sh 'cd /home/ec2-user && mkdir deploy'
                 sh 'cd deploy && pwd'
             }
         }
