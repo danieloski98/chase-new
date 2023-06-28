@@ -44,14 +44,15 @@ pipeline {
         stage('create deployment directory'){
             steps{
 
-                sh 'sudo mkdir ~/deploy'
+                sh 'cd ~ && mkdir deploy'
+                sh 'cd deploy && pwd'
             }
         }
         stage('Build phase'){
             steps{
             
-                sh 'sudo cp -r /var/lib/jenkins/workspace/cicd-test/*  ~/deploy'
-                sh 'cd  ~/deploy && npm install && npm run build'
+                sh 'sudo cp -r /var/lib/jenkins/workspace/cicd-test/*  .'
+                sh 'npm install && npm run build'
                
             }
         }
