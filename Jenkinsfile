@@ -22,15 +22,6 @@ pipeline {
     }
         
     stages {
-
-        stage('Checkout SCM'){
-            steps{
-                script{
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github_creds', url: 'https://github.com/ChasescrollGit/chasescroll-web.git']])
-                }
-            }
-        }
-
         // stage('clone repo and release'){
         //     steps{
         //          sh 'git clone git@github.com:ChasescrollGit/chasescroll-web.git'
@@ -50,9 +41,17 @@ pipeline {
         //         """
         //     }
         // }
+        stage('create deployment directory'){
+            steps{
+
+                sh 'sudo mkdir ~/deploy'
+            }
+        }
         stage('Build phase'){
             steps{
-                sh 'cd  /var/lib/jenkins/workspace/cicd-test && npm install && npm run build'
+            
+                sh 'sudo cp -r /var/lib/jenkins/workspace/cicd-test/*  ~/deploy'
+                sh 'cd  ~/deploy && npm install && npm run build'
                
             }
         }
@@ -60,7 +59,7 @@ pipeline {
         stage('Deployment'){
             steps{
                 sh 'rm -rf ~/usr/share/nginx/html/*'
-                sh 'cp -r /var/lib/jenkins/workspace/cicd-test/* ~/usr/share/nginx/html'
+                sh 'cp -r ~/deploy/*  ~/usr/share/nginx/html'
             }
         }
 
