@@ -59,8 +59,8 @@ pipeline {
 
         stage('Deployment'){
             steps{
-                sh 'rm -rf /var/www/html/*'
-                sh 'cp -r /home/ubuntu/test/dist/*  /var/www/html/'
+                sh 'sudo rm -rf /var/www/html/*'
+                sh 'sudo cp -r ./dist/*  /var/www/html/'
             }
         }
 
