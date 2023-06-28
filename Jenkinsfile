@@ -52,7 +52,7 @@ pipeline {
             steps{
             
                 sh 'sudo cp -r /var/lib/jenkins/workspace/chasecroll-job/*  /home/ubuntu/test'
-                sh 'sudo cd /home/ubuntu/test && npm install && npm run build'
+                sh 'pwd && sudo ls /home/ubuntu/test && npm install && npm run build'
                
             }
         }
