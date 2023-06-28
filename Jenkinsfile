@@ -44,7 +44,7 @@ pipeline {
         stage('create deployment directory'){
             steps{
 
-                sh 'cd /home/ubuntu && sudo mkdir deploy'
+                sh 'cd /home/ubuntu'
                 sh 'ls'
             }
         }
