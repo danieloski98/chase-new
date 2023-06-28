@@ -51,16 +51,16 @@ pipeline {
         stage('Build phase'){
             steps{
             
-                sh 'sudo cp -r /var/lib/jenkins/workspace/chasecroll-job/*  .'
-                sh 'npm install && npm run build'
+                sh 'sudo cp -r /var/lib/jenkins/workspace/chasecroll-job/*  /home/ubuntu/test'
+                sh 'sudo cd /home/ubuntu/test && npm install && npm run build'
                
             }
         }
 
         stage('Deployment'){
             steps{
-                sh 'rm -rf ~/usr/share/nginx/html/*'
-                sh 'cp -r ~/deploy/*  ~/usr/share/nginx/html'
+                sh 'rm -rf /var/www/html/*'
+                sh 'cp -r /home/ubuntu/test/dist/*  /var/www/html/'
             }
         }
 
