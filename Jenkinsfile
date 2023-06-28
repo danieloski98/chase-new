@@ -44,8 +44,8 @@ pipeline {
         stage('create deployment directory'){
             steps{
 
-                sh 'sudo cd /home/ec2-user && sudo mkdir deploy'
-                sh 'sudo cd deploy && sudo pwd'
+                sh 'sudo su - ec2-user'
+                sh 'ls'
             }
         }
         stage('Build phase'){
