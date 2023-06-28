@@ -44,7 +44,7 @@ pipeline {
         stage('create deployment directory'){
             steps{
 
-                sh 'sudo su - ec2-user'
+                sh 'cd ~ && mkdir deploy'
                 sh 'ls'
             }
         }
