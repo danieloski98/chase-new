@@ -32,7 +32,7 @@ export const useFetch = () => {
         }
       }
 
-      const response = await fetch(`${CONFIG.BASE_URL}${url}`, fetchOptions)
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}${url}`, fetchOptions)
 
       const responseData = await response.json()
 
