@@ -15,6 +15,7 @@ import { SecondMenuIcon } from "../../../components/Svgs"
 import { useFetch } from "../../../hooks/useFetch"
 import { GET_FRIEND_REQUESTS, GET_JOINED_EVENTS, GET_JOINED_GROUPS, GET_USER_CONNECTION_LIST, GET_USER_MEDIA_POSTS, GET_USER_PRIVATE_PROFILE, REMOVE_FRIEND, SEND_FRIEND_REQUEST } from "../../../constants/endpoints.constant"
 import { useAuth } from "../../../context/authContext"
+import { toast } from "react-toastify"
 
 const Profile_1 = () => {
   const [showOptions, setShowOptions] = useState(false)

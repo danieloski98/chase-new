@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import OverlayWrapper from "@/components/OverlayWrapper"
 import { ChevronLeft } from "@/components/Svgs"
 import { previousPage } from "@/constants/index"
-import Settings from "../../Settings"
+import Settings from "../../settings"
 
 const PrivacyPage = () => {
   const [showMoreOptions, setShowMoreOptions] = useState(true)

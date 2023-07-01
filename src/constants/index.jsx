@@ -41,7 +41,7 @@ import Message from "../pages/authenticated/message"
 import Communities from "../pages/authenticated/communities"
 import Profile from "../pages/authenticated/profile"
 import Notifications from "../pages/authenticated/notifications"
-import Settings from "../pages/authenticated/Settings"
+import Settings from "../pages/authenticated/settings"
 import PaidTicketPage from "../pages/authenticated/explore/PaidTicketPage"
 import Comments from "../pages/authenticated/home/Comments"
 import FreeTicketPage from "../pages/authenticated/explore/FreeTicketPage"
@@ -96,6 +96,8 @@ import CommunityInfo from "../pages/authenticated/communities/CommunityInfo"
 import Community from "../pages/authenticated/communities/Community"
 import UserPosts from "../pages/authenticated/profile/UserPosts"
 import CONFIG from "../config"
+import Payment from '../pages/authenticated/settings/payment'
+import TransactionHistory from '../pages/authenticated/settings/payment/TransactionHistory'
 
 export const DEFAULT_AUTH_CONTEXT = { authorized: false }
 
@@ -156,7 +158,9 @@ export const PATH_NAMES = {
   reportBug: "/report-bug",
   attendees: "/event/attendees",
   setPrivacy: "/settings/account-settings",
-  posts: '/posts'
+  posts: '/posts',
+  payment: '/settings/payment',
+  transactionHistory: '/settings/payments/transaction-history',
 }
 
 export const CREATE_EVENT_HEADER = [
@@ -406,6 +410,14 @@ export const OTHER_AUTHENTICATED_ROUTES = [
   {
     path: PATH_NAMES.settings,
     element: Settings,
+  },
+  {
+    path: PATH_NAMES.payment,
+    element: Payment,
+  },
+  {
+    path: PATH_NAMES.transactionHistory,
+    element: TransactionHistory,
   },
   {
     path: `${PATH_NAMES.posts}/:userID/:postID`,
