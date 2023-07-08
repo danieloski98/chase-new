@@ -16,7 +16,7 @@ import selector from "../../../assets/svg/image.svg"
 import smiley from "../../../assets/svg/smiley.svg"
 import send from "../../../assets/svg/send-icon.svg"
 import { formatTime, formatTimeAgo, isEven } from "../../../utils/helpers"
-import { CHAT_MESSAGES, MESSAGE_MENU, PATH_NAMES } from "../../../constants"
+import { CHAT_MESSAGES, MESSAGE_MENU } from "../../../constants"
 import { Popover, Transition } from "@headlessui/react"
 import ButtonSpinner from "../../../components/ButtonSpinners"
 import Thread from "../../../components/communities/Thread"
@@ -24,6 +24,7 @@ import Share from "../home/Share"
 import addEventBtn from "../../../assets/svg/add-event.svg"
 import EventsToAdd from "../../../components/communities/EventsToAdd"
 import { toast } from "react-toastify"
+import { PATH_NAMES } from "@/constants/paths.constant"
 
 const Community = () => {
 	const { id } = useParams()

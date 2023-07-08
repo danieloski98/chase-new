@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { CalendarIcon, CaretLeftIcon, LocationIcon_2 } from '../Svgs'
 import PageWrapper from '../PageWrapper'
-import { PATH_NAMES } from '../../constants'
+import { PATH_NAMES } from '../../constants/paths.constant'
 import CONFIG from '../../config'
 import { Link } from 'react-router-dom'
 import { formatTime, formatTimestampToDate } from '../../utils/helpers'

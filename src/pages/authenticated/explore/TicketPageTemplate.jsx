@@ -8,7 +8,8 @@ import {
   AddProfileIcon,
 } from "@/components/Svgs"
 import Map from "@/components/map"
-import { EVENT_TYPE, PATH_NAMES, POLICY } from "@/constants"
+import { EVENT_TYPE, POLICY } from "@/constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
 import { formatDate, formatNumber, formatTime } from "@/utils/helpers"
 import { CaretLeftIcon } from "@/components/Svgs"
 import TicketPaymentModal from "@/components/explore/modals/TicketPaymentModal"

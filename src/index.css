@@ -73,3 +73,16 @@ button.is-active {
 .custom-classname.react-toggle--checked .react-toggle-track {
   background-color: #5d70f9 !important;
 }
+
+.wallet-custom-classname.react-toggle--checked .react-toggle-track {
+  background-color: #4d4d4d !important;
+}
+
+.react-toggle-track-check,
+.react-toggle-track-x {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

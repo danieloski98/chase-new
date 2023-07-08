@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import PageWrapper from '../../../components/PageWrapper'
 import ProfilePhoto from '../../../components/ProfilePhoto'
 import profilePhoto from "../../../assets/images/avatar.png"
-import { CLOSE_ENTITY, EVENTS_ARRAY, PATH_NAMES } from '../../../constants'
+import { CLOSE_ENTITY } from '../../../constants'
+import { PATH_NAMES } from '../../../constants/paths.constant'
 
 const Attendees = () => {
 	return (

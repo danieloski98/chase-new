@@ -6,7 +6,7 @@ import PageWrapper from "@/components/PageWrapper"
 import ProfilePhoto from "@/components/ProfilePhoto"
 import { CaretLeftIcon } from "@/components/Svgs"
 import image from "@/assets/images/avatar.png"
-import { COMMENTS, PATH_NAMES } from "@/constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
 import Comment from "@/components/home/Comment"
 import {
   ADD_POST_COMMENT,

@@ -5,7 +5,7 @@ import playStore from "@/assets/images/play-store.png"
 import appleStore from "@/assets/images/apple-store.png"
 import { ONBOARDING_FOOTER } from "@/constants"
 import TermsAndConditions from "@/components/onboarding/TermsAndConditions"
-import { PATH_NAMES } from "@/constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
 import LoginForm from "@/components/onboarding/LoginForm"
 import { GoogleIcon } from "../../../components/Svgs"
 import { toast } from "react-toastify"
@@ -46,7 +46,7 @@ const Onboarding = () => {
               </div>
               <div className="w-full max-w-[400px] flex flex-col gap-2">
                 <p className="text-2xl md:text-3xl font-medium text-center text-chasescrollDarkBlue">
-                  Your Well tailored virtual Community.
+                  Your well-tailored virtual Community.
                 </p>
                 <p className="text-2xl md:text-2xl text-center">
                   An efficient ecosystem for event management.

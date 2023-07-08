@@ -9,7 +9,7 @@ import { GET_USER_POSTS } from '../../../constants/endpoints.constant'
 import PageWrapper from '../../../components/PageWrapper'
 import Share from '../home/Share'
 import { CaretLeftIcon } from '../../../components/Svgs'
-import { PATH_NAMES } from '../../../constants'
+import { PATH_NAMES } from '../../../constants/paths.constant'
 import OverlayWrapper from '../../../components/OverlayWrapper'
 
 const UserPosts = ({ toggleUserPosts, userID, postID }) => {
@@ -28,11 +28,11 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 	const toggleMoreOptions = () => setShowMoreOptions(state => !state)
 	const toggleShare = () => setShowShareModal(state => !state)
 	const handleItemClick = (action, route, threadId) => {
-		setMenuAction(action)
+		// setMenuAction(action)
 		setIsThreadMenuOpen(!isThreadMenuOpen)
 		setThreadId(threadId)
-		navigate(`${route}/${threadId}`)
-		console.log({ menuAction, threadId })
+		// navigate(`${route}/${threadId}`)
+		// console.log({ menuAction, threadId })
 	}
 
 	const getUserFeedData = async () => {

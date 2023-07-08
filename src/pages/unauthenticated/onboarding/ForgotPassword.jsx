@@ -6,7 +6,7 @@ import { ClosedEyeIcon, OpenEyeIcon } from "@/components/Svgs"
 import Verify from "./Verify"
 import { useFetch } from "@/hooks/useFetch"
 import { SEND_EMAIL_TO_USER, CHANGE_PASSWORD } from "@/constants/endpoints.constant"
-import { PATH_NAMES } from "@/constants";
+import { PATH_NAMES } from "@/constants/paths.constant";
 import ButtonSpinner from "@/components/ButtonSpinners";
 import { useAuth } from "../../../context/authContext";
 

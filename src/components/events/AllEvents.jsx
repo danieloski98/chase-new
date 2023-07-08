@@ -7,7 +7,7 @@ import { useFetch } from "../../hooks/useFetch"
 import CONFIG from "../../config"
 import { formatTimestampToDate } from "../../utils/helpers"
 import { Link } from "react-router-dom"
-import { PATH_NAMES } from "../../constants"
+import { PATH_NAMES } from "../../constants/paths.constant"
 import { toast } from "react-toastify"
 import { BookmarkIconFill } from "../Svgs"
 

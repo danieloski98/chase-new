@@ -5,7 +5,7 @@ import { isEven } from "@/utils/helpers"
 import { REMOVE_POST } from "../../constants/endpoints.constant"
 import { useAuth } from "../../context/authContext"
 import { useFetch } from "../../hooks/useFetch"
-import { PATH_NAMES } from "../../constants"
+import { PATH_NAMES } from "../../constants/paths.constant"
 
 const ThreadMenu = ({
   handleItemClick,

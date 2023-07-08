@@ -10,7 +10,7 @@ import {
 import { CLOSE_ENTITY } from "@/constants"
 import { useFetch } from "../../../hooks/useFetch"
 import { SEND_EMAIL_TO_USER, SIGN_UP } from "../../../constants/endpoints.constant"
-import { PATH_NAMES } from "../../../constants"
+import { PATH_NAMES } from "../../../constants/paths.constant"
 import { toast } from "react-toastify"
 
 const SignUp = () => {

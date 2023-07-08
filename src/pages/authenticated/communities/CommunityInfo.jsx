@@ -6,7 +6,7 @@ import { useFetch } from '../../../hooks/useFetch'
 import { useAuth } from '../../../context/authContext'
 import { GET_GROUP, GET_GROUP_MEMBERS, GET_GROUP_POSTS } from '../../../constants/endpoints.constant'
 import CONFIG from '../../../config'
-import { PATH_NAMES } from '../../../constants'
+import { PATH_NAMES } from '../../../constants/paths.constant'
 
 const CommunityInfo = () => {
 	const [community, setCommunity] = useState({})

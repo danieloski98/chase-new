@@ -6,7 +6,7 @@ import smiley from "../../../assets/svg/smiley.svg"
 import send from "../../../assets/svg/send-icon.svg"
 import info from "../../../assets/svg/info-circle.svg"
 import { formatTime, formatTimeAgo, isEven } from "../../../utils/helpers"
-import { CHAT_MESSAGES, MESSAGE_MENU, PATH_NAMES } from "../../../constants"
+import { CHAT_MESSAGES, MESSAGE_MENU } from "../../../constants"
 import { useEffect, useRef, useState } from "react"
 import { AddIcon } from "../../../components/Svgs"
 import { Link } from "react-router-dom"
@@ -17,6 +17,7 @@ import { GET_CHAT, GET_MESSAGES, UPLOAD_IMAGE } from "../../../constants/endpoin
 import CONFIG from "../../../config"
 import ButtonSpinner from "../../../components/ButtonSpinners"
 import OverlayWrapper from "../../../components/OverlayWrapper"
+import { PATH_NAMES } from "@/constants/paths.constant"
 
 const Message = () => {
   const [message, setMessage] = useState("")

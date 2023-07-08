@@ -1,19 +1,10 @@
-import React from 'react'
+/* eslint-disable react-refresh/only-export-components */
 import { nanoid } from "nanoid"
 import {
-  HomeIcon,
-  SearchIcon,
-  BellIcon,
-  CalendarIcon,
-  MessageIcon,
-  SettingsIcon,
-  UsersIcon,
   PostGridIcon,
   NetworkIcon,
   EventsIcon,
   CommunitiesIcon,
-  TwoUsers,
-  Chat,
 } from "../components/Svgs"
 import image1 from "../assets/images/music-pic.jpg"
 import image2 from "../assets/images/art-pic.jpg"
@@ -26,28 +17,8 @@ import musicImg4 from "../assets/images/music-img4.jpg"
 
 import Suggestion from "../components/explore/Suggestion"
 import CarouselEvent from "../components/explore/CarouselEvent"
-import Home from "../pages/authenticated/home"
-
 import CommunityAvatar from "../assets/svg/community/community-avatar.svg"
-import CommunityBannerOne from "@/assets/svg/community/CommunityBannerOne.svg"
-import CommunityBannerTwo from "@/assets/svg/community/CommunityBannerTwo.svg"
-import CommunityBannerThree from "@/assets/svg/community/CommunityBannerThree.svg"
-import CommunityBannerFour from "@/assets/svg/community/CommunityBannerFour.svg"
-import CommunityBannerFive from "@/assets/svg/community/CommunityBannerFive.svg"
-
-import Explore from "../pages/authenticated/explore"
 //import Events from "../pages/authenticated/events/Events"
-import Message from "../pages/authenticated/message"
-import Communities from "../pages/authenticated/communities"
-import Profile from "../pages/authenticated/profile"
-import Notifications from "../pages/authenticated/notifications"
-import Settings from "../pages/authenticated/settings"
-import PaidTicketPage from "../pages/authenticated/explore/PaidTicketPage"
-import Comments from "../pages/authenticated/home/Comments"
-import FreeTicketPage from "../pages/authenticated/explore/FreeTicketPage"
-import SuggestionsPage from "../pages/authenticated/explore/SuggestionsPage"
-import SearchExplorePage from "../pages/authenticated/explore/SearchExplorePage"
-import SignUp from "../pages/unauthenticated/onboarding/SignUp"
 import freeTicketBanner from "../assets/images/event-01.webp"
 import paidTicketBanner from "../assets/images/event-02.webp"
 import eventLogo from "../assets/svg/eventlogo.svg"
@@ -55,10 +26,7 @@ import concert from "../assets/images/concert.jpeg"
 import avatar from "../assets/images/avatar.png"
 import image from "../assets/svg/Avatar.svg"
 import threadImage from "../assets/images/concert.jpeg"
-import MyEvents from "../pages/authenticated/events/MyEvents"
-import TicketNumber from "../pages/authenticated/events/SavedEvents"
 import img from "../assets/images/suggestprofile.png"
-import postGridIcon from "@/assets/images/postGridIcon.png"
 import paymentIcon from "../assets/images/paymentIcon.png"
 import profileCircle from "../assets/images/profile-circle.png"
 import blockedUserIcon from "../assets/images/blockedUserIcon.png"
@@ -67,37 +35,10 @@ import deleteAccountIcon from "../assets/images/deleteAccountIcon.png"
 import flaggedIcon from "../assets/images/flaggedIcon.png"
 import requestEnhancementIcon from "../assets/images/requestEnhancementIcon.png"
 import termsAndPrivacy from "../assets/images/termsAndPrivacy.png"
-import davido from "@/assets/images/davido.png"
 import davido2 from "../assets/svg/davido2.svg"
 import changePasswordIcon from "../assets/images/changePasswordIcon.png"
-import Verify from "../pages/unauthenticated/onboarding/Verify"
-import ForgotPassword from "../pages/unauthenticated/onboarding/ForgotPassword"
-import Share from "../pages/authenticated/home/Share"
-import ReportUser from "@/pages/authenticated/ReportUser"
-import ProfileDetails from "../pages/authenticated/events/ProfileDetails"
-import EventTicketPaid from "../components/events/EventTicketPaid"
-import CreateEvents from "@/pages/authenticated/events/CreateEvents"
-import BlockUsers from "../pages/authenticated/profile/BlockUsers"
-import ChangePassword from "../pages/authenticated/profile/ChangePassword"
-import CurrencySelectionForm from "../pages/authenticated/profile/CurrencySelectionForm"
-import EditProfile from "../pages/authenticated/profile/EditProfile"
-import MyNetwork from "../pages/authenticated/profile/MyNetwork"
-import PasswordUpdate from "../pages/authenticated/profile/PasswordUpdateForm"
-import PersonalInfoForm from "../pages/authenticated/profile/PersonalInformation"
-import SuggestionPage from "../pages/authenticated/profile/SuggestionPage"
-import ReportABug from "../pages/authenticated/profile/ReportABug"
-import TermsAndConditions from "../pages/authenticated/profile/TermsAndConditions"
-import { GridsIcon, ProfileIcon2 } from "../components/Svgs"
-import CreateGroup from "../pages/authenticated/message/CreateGroup"
-import Attendees from "../pages/authenticated/explore/Attendees"
-import PrivacyPage from "../pages/authenticated/profile/modals/PrivacyPage"
-import CreateCommunity from "../pages/authenticated/communities/CreateCommunity"
-import CommunityInfo from "../pages/authenticated/communities/CommunityInfo"
-import Community from "../pages/authenticated/communities/Community"
-import UserPosts from "../pages/authenticated/profile/UserPosts"
 import CONFIG from "../config"
-import Payment from '../pages/authenticated/settings/payment'
-import TransactionHistory from '../pages/authenticated/settings/payment/TransactionHistory'
+import { PATH_NAMES } from "./paths.constant"
 
 export const DEFAULT_AUTH_CONTEXT = { authorized: false }
 
@@ -116,51 +57,6 @@ export const videoConfig = {
   accessKeyId: CONFIG.AWS_ACCESS_KEY,
   secretAccessKey: CONFIG.AWS_SECRET_KEY,
   s3Url: CONFIG.AWS_BASE_URL,
-}
-
-export const PATH_NAMES = {
-  root: "/",
-  login: "/login",
-  signUp: "/sign-up",
-  forgotPassword: "/forgot-password",
-  home: "/home",
-  verify: "/verify",
-  comments: "/home/comments",
-  share: "/home/share",
-  report: "/home/report",
-  explore: "/explore",
-  events: "/events",
-  paidEvents: "/events/paid-events",
-  freeEvents: "/events/free-events",
-  suggestions: "/explore/suggestions",
-  event: "/event",
-  message: "/message",
-  createGroup: "/message/create-group",
-  communities: "/communities",
-  community: "/communities/community",
-  communityInfo: "/community/info",
-  createCommunity: "/community/create",
-  notifications: "/notifications",
-  settings: "/settings",
-  modal: "/modal",
-  profile: "/profile",
-  eventTickets: "/event/tickets",
-  createEvent: "/event/create",
-  SearchExplore: "/explore/search",
-  blockUsers: "/block-users",
-  changePassword: "/change-password",
-  currencySelectionForm: "/edit-currency",
-  editProfile: "/edit-profile",
-  passwordUpdate: "/password-update",
-  personalInfo: "/personal-information",
-  suggestionPage: "/suggestion-page",
-  termsAndConditions: "/terms-and-conditions",
-  reportBug: "/report-bug",
-  attendees: "/event/attendees",
-  setPrivacy: "/settings/account-settings",
-  posts: '/posts',
-  payment: '/settings/payment',
-  transactionHistory: '/settings/payments/transaction-history',
 }
 
 export const CREATE_EVENT_HEADER = [
@@ -224,219 +120,6 @@ export const ONBOARDING_FOOTER = [
   {
     label: "Help",
     path: "",
-  },
-]
-
-export const NAVIGATION_ROUTES = [
-  {
-    label: "Home",
-    path: PATH_NAMES.home,
-    icon: HomeIcon,
-    element: Home,
-    withMobile: true,
-  },
-  {
-    label: "Explore",
-    path: PATH_NAMES.explore,
-    icon: SearchIcon,
-    element: Explore,
-    withMobile: true,
-  },
-  // {
-  //   label: "Event",
-  //   path: PATH_NAMES.events,
-  //   icon: CalendarIcon,
-  //   element: <Events />,
-  //   withMobile: true,
-  // },
-  {
-    label: "Message",
-    path: PATH_NAMES.message,
-    icon: MessageIcon,
-    element: Message,
-    withMobile: false,
-    forMobile: true,
-  },
-  {
-    label: "Communities",
-    path: PATH_NAMES.communities,
-    icon: UsersIcon,
-    element: Communities,
-    withMobile: true,
-  },
-  {
-    label: "Notifications",
-    path: PATH_NAMES.notifications,
-    icon: BellIcon,
-    element: Notifications,
-    withMobile: false,
-    forMobile: true,
-  },
-  {
-    label: "Profile",
-    path: PATH_NAMES.profile,
-    icon: ProfileIcon2,
-    element: Profile,
-    withMobile: true,
-    forMobile: false,
-  },
-  // {
-  //   label: "Profile",
-  //   path: PATH_NAMES.profile,
-  //   icon: BellIcon,
-  //   element: Settings,
-  //   withMobile: false,
-  //   forMobile: true,
-  // },
-]
-
-export const OTHER_AUTHENTICATED_ROUTES = [
-  {
-    path: `${PATH_NAMES.comments}/:postID`,
-    element: Comments,
-  },
-  {
-    path: `${PATH_NAMES.share}/:id`,
-    element: Share,
-  },
-  {
-    path: `${PATH_NAMES.report}/:id`,
-    element: ReportUser,
-  },
-  {
-    path: `${PATH_NAMES.tickets}/:id`,
-    element: PaidTicketPage,
-  },
-  {
-    path: `${PATH_NAMES.event}/:id`,
-    element: PaidTicketPage,
-  },
-  {
-    path: `${PATH_NAMES.freeTickets}/:id`,
-    element: FreeTicketPage,
-  },
-  {
-    path: PATH_NAMES.suggestions,
-    element: SuggestionsPage,
-  },
-  {
-    path: PATH_NAMES.attendees,
-    element: Attendees,
-  },
-  {
-    path: PATH_NAMES.modal,
-    element: TicketNumber,
-  },
-  {
-    path: PATH_NAMES.events,
-    element: MyEvents,
-  },
-  {
-    path: PATH_NAMES.createCommunity,
-    element: CreateCommunity,
-  },
-  {
-    path: PATH_NAMES.communities,
-    element: Communities,
-  },
-  {
-    path: `${PATH_NAMES.community}/:id`,
-    element: Community,
-  },
-  {
-    path: `${PATH_NAMES.communityInfo}/:id`,
-    element: CommunityInfo,
-  },
-  {
-    path: `${PATH_NAMES.profile}/:userId`,
-    element: Profile,
-  },
-  {
-    path: PATH_NAMES.eventTickets,
-    element: EventTicketPaid,
-  },
-  {
-    path: PATH_NAMES.createEvent,
-    element: CreateEvents,
-  },
-  {
-    path: PATH_NAMES.blockUsers,
-    element: BlockUsers,
-  },
-  {
-    path: PATH_NAMES.changePassword,
-    element: ChangePassword,
-  },
-  {
-    path: PATH_NAMES.currencySelectionForm,
-    element: CurrencySelectionForm,
-  },
-  {
-    path: PATH_NAMES.editProfile,
-    element: EditProfile,
-  },
-  {
-    path: PATH_NAMES.passwordUpdate,
-    element: PasswordUpdate,
-  },
-  {
-    path: PATH_NAMES.personalInfo,
-    element: PersonalInfoForm,
-  },
-  {
-    path: PATH_NAMES.suggestionPage,
-    element: SuggestionPage,
-  },
-  {
-    path: PATH_NAMES.setPrivacy,
-    element: PrivacyPage,
-  },
-  {
-    path: PATH_NAMES.reportBug,
-    element: ReportABug,
-  },
-  {
-    path: PATH_NAMES.termsAndConditions,
-    element: TermsAndConditions,
-  },
-  {
-    path: PATH_NAMES.SearchExplore,
-    element: SearchExplorePage,
-  },
-  {
-    path: PATH_NAMES.createGroup,
-    element: CreateGroup,
-  },
-  {
-    path: PATH_NAMES.settings,
-    element: Settings,
-  },
-  {
-    path: PATH_NAMES.payment,
-    element: Payment,
-  },
-  {
-    path: PATH_NAMES.transactionHistory,
-    element: TransactionHistory,
-  },
-  {
-    path: `${PATH_NAMES.posts}/:userID/:postID`,
-    element: UserPosts,
-  },
-]
-
-export const OTHER_UNAUTHENTICATED_ROUTES = [
-  {
-    path: PATH_NAMES.signUp,
-    element: SignUp,
-  },
-  {
-    path: PATH_NAMES.verify,
-    element: Verify,
-  },
-  {
-    path: PATH_NAMES.forgotPassword,
-    element: ForgotPassword,
   },
 ]
 
@@ -1457,7 +1140,7 @@ export const SettingsPageList = [
   {
     id: nanoid(),
     type: "Payment",
-    route: PATH_NAMES?.payment,
+    route: PATH_NAMES.payments,
     icon: paymentIcon,
   },
   {
@@ -1618,3 +1301,21 @@ export const NOTIFICATIONS = Array(20).fill({
     "an event was created by your friends in the townhall different from balablu, bulublu and bulaba",
   time: "11 hrs ago",
 })
+
+export const TRANSACTION_PURPOSE = {
+  fundWallet: 'FUND_WALLET',
+  cashout: 'CASHOUT',
+  payForTicket: 'PAY_FOR_TICKET',
+}
+
+export const TRANSACTION_STATUS = {
+  started: 'STARTED',
+  paid: 'PAID',
+  cancelled: 'CANCELLED',
+  error: 'ERROR',
+}
+
+export const CURRENCY = {
+  USD: 'USD',
+  NGN: 'NGN',
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useRouteError } from "react-router-dom"
-import { PATH_NAMES } from "../../constants";
+import { PATH_NAMES } from "../../constants/paths.constant";
 import lostImage from "@/assets/svg/void.svg"
 
 const ErrorPage = () => {

@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useFetch } from "../../../hooks/useFetch"
 import { useAuth } from "../../../context/authContext"
 import { REJECT_FRIEND_REQUEST } from "../../../constants/endpoints.constant"
-import { PATH_NAMES } from "../../../constants"
+import { PATH_NAMES } from "../../../constants/paths.constant"
 import { Link } from "react-router-dom"
 
 const MyNetwork = ({ network, fetchNetwork, self, friendPerson, unfriendPerson }) => {
@@ -97,7 +97,7 @@ const MyNetwork = ({ network, fetchNetwork, self, friendPerson, unfriendPerson }
                   key={id}
                 >
                   <Link
-                    to={`${PATH_NAMES.profile}/${profile.userId}`}
+                    to={`${PATH_NAMES.profile}/${id}`}
                     className="flex gap-2 items-center"
                   >
                     <img src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" />

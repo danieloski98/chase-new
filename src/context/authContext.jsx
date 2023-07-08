@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useFetch } from '../hooks/useFetch';
 import { SIGN_IN } from "../constants/endpoints.constant"
-import { PATH_NAMES } from '../constants';
+import { PATH_NAMES } from '../constants/paths.constant';
 import { toast } from 'react-toastify';
 
 export const AuthContext = createContext({
@@ -32,26 +32,22 @@ export const AuthProvider = ({ children }) => {
   }, [token, userId, userName]);
 
   const login = async (credentials) => {
-    try {
-      const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
+    const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
 
-      const { access_token, user_id, user_name, expires_in } = responseData;
-      setToken(access_token);
-      setUserId(user_id)
-      setUserName(user_name)
-      setAuthorized(true);
+    const { access_token, user_id, user_name, expires_in } = responseData;
+    setToken(access_token);
+    setUserId(user_id)
+    setUserName(user_name)
+    setAuthorized(true);
 
-      // Set token expiration time to 'expires_in' seconds from now
-      const expirationTime = new Date().getTime() + expires_in * 1000;
+    // Set token expiration time to 'expires_in' seconds from now
+    const expirationTime = new Date().getTime() + expires_in * 1000;
 
-      if (responseData?.access_token) {
-        toast.success('Login successful!');
-        setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
-      }
-      localStorage.setItem('tokenExpiration', expirationTime);
-    } catch (error) {
-      throw error;
+    if (responseData?.access_token) {
+      toast.success('Login successful!');
+      setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
     }
+    localStorage.setItem('tokenExpiration', expirationTime);
   };
 
   const logout = () => {

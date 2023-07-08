@@ -1,3 +1,68 @@
+export const TicketPurchase = () => (
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="44" height="44" rx="22" fill="#5D70F9" />
+    <path d="M28.91 24.6927C28.91 25.9827 29.97 27.0327 31.26 27.0327C31.26 30.7827 30.32 31.7227 26.57 31.7227H17.19C13.44 31.7227 12.5 30.7827 12.5 27.0327V26.5727C13.79 26.5727 14.85 25.5127 14.85 24.2227C14.85 22.9327 13.79 21.8727 12.5 21.8727V21.4127C12.51 17.6627 13.44 16.7227 17.19 16.7227H26.56C30.31 16.7227 31.25 17.6627 31.25 21.4127V22.3527C29.96 22.3527 28.91 23.3927 28.91 24.6927Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M26.2111 16.7225H17.1211L20.0511 13.7925C22.4411 11.4025 23.6411 11.4025 26.0311 13.7925L26.6311 14.3925C26.0011 15.0225 25.8511 15.9525 26.2111 16.7225Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M19.8789 16.7227L19.8789 31.7227" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5" />
+  </svg>
+)
+
+export const CreditWallet = () => (
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="44" height="44" rx="22" fill="#0FA71E" />
+    <path d="M16.7283 29.7C17.5483 28.82 18.7983 28.89 19.5183 29.85L20.5283 31.2C21.3383 32.27 22.6483 32.27 23.4583 31.2L24.4683 29.85C25.1883 28.89 26.4383 28.82 27.2583 29.7C29.0383 31.6 30.4883 30.97 30.4883 28.31V17.04C30.4883 13.01 29.5483 12 25.7683 12H18.2083C14.4283 12 13.4883 13.01 13.4883 17.04V28.3C13.4983 30.97 14.9583 31.59 16.7283 29.7Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M19.25 20H24.75" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
+
+export const DebitWallet = () => (
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="44" height="44" rx="22" fill="#F04F4F" />
+    <path d="M16.7283 29.7C17.5483 28.82 18.7983 28.89 19.5183 29.85L20.5283 31.2C21.3383 32.27 22.6483 32.27 23.4583 31.2L24.4683 29.85C25.1883 28.89 26.4383 28.82 27.2583 29.7C29.0383 31.6 30.4883 30.97 30.4883 28.31V17.04C30.4883 13.01 29.5483 12 25.7683 12H18.2083C14.4283 12 13.4883 13.01 13.4883 17.04V28.3C13.4983 30.97 14.9583 31.59 16.7283 29.7Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M19.25 20H24.75" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
+
+export const CardIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 8.50391H22" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M6 16.5039H8" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M10.5 16.5039H14.5" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M6.44 3.50391H17.55C21.11 3.50391 22 4.38391 22 7.89391V16.1039C22 19.6139 21.11 20.4939 17.56 20.4939H6.44C2.89 20.5039 2 19.6239 2 16.1139V7.89391C2 4.38391 2.89 3.50391 6.44 3.50391Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
+
+export const FundWalletIcon = () => (
+  <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.7617 15.4375H9.76172" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12.2617 13V18" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M13.16 2.51814L13.13 2.58814L10.23 9.31814H7.37996C6.69996 9.31814 6.04996 9.45814 5.45996 9.70814L7.20996 5.52814L7.24996 5.42814L7.31996 5.26814C7.33996 5.20814 7.35996 5.14814 7.38996 5.09814C8.69996 2.06814 10.18 1.37814 13.16 2.51814Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M18.55 9.51953C18.1 9.37953 17.62 9.31953 17.14 9.31953H10.23L13.13 2.58953L13.16 2.51953C13.31 2.56953 13.45 2.63953 13.6 2.69953L15.81 3.62953C17.04 4.13953 17.9 4.66953 18.42 5.30953C18.52 5.42953 18.6 5.53953 18.67 5.66953C18.76 5.80953 18.83 5.94953 18.87 6.09953C18.91 6.18953 18.94 6.27953 18.96 6.35953C19.23 7.19953 19.07 8.22953 18.55 9.51953Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M22.0217 14.2003V16.1503C22.0217 16.3503 22.0117 16.5503 22.0017 16.7503C21.8117 20.2403 19.8617 22.0003 16.1617 22.0003H8.36172C8.12172 22.0003 7.88172 21.9803 7.65172 21.9503C4.47172 21.7403 2.77172 20.0403 2.56172 16.8603C2.53172 16.6303 2.51172 16.3903 2.51172 16.1503V14.2003C2.51172 12.1903 3.73172 10.4603 5.47172 9.71031C6.07172 9.46031 6.71172 9.32031 7.39172 9.32031H17.1517C17.6417 9.32031 18.1217 9.39031 18.5617 9.52031C20.5517 10.1303 22.0217 11.9903 22.0217 14.2003Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M7.21 5.52734L5.46 9.70734C3.72 10.4573 2.5 12.1873 2.5 14.1973V11.2673C2.5 8.42734 4.52 6.05734 7.21 5.52734Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M22.0186 11.2677V14.1977C22.0186 11.9977 20.5586 10.1277 18.5586 9.52766C19.0786 8.22766 19.2286 7.20766 18.9786 6.35766C18.9586 6.26766 18.9286 6.17766 18.8886 6.09766C20.7486 7.05766 22.0186 9.02766 22.0186 11.2677Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
+
+export const CashoutIcon = () => (
+  <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.5 15.3V9C2.5 5.5 4.5 4 7.5 4H17.5C20.5 4 22.5 5.5 22.5 9V15C22.5 18.5 20.5 20 17.5 20H9" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12.5 14.5C13.8807 14.5 15 13.3807 15 12C15 10.6193 13.8807 9.5 12.5 9.5C11.1193 9.5 10 10.6193 10 12C10 13.3807 11.1193 14.5 12.5 14.5Z" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M19 9.5V14.5" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M9.5 18C9.5 18.75 9.28998 19.46 8.91998 20.06C8.22998 21.22 6.96 22 5.5 22C4.04 22 2.77002 21.22 2.08002 20.06C1.71002 19.46 1.5 18.75 1.5 18C1.5 15.79 3.29 14 5.5 14C7.71 14 9.5 15.79 9.5 18Z" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M6.57141 19.0397L4.46143 16.9297" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M6.54016 16.9609L4.43018 19.0709" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
+
+export const MiniTicketIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.1825 11.0205C14.1825 11.988 14.9775 12.7755 15.945 12.7755C15.945 15.588 15.24 16.293 12.4275 16.293H5.3925C2.58 16.293 1.875 15.588 1.875 12.7755V12.4305C2.8425 12.4305 3.6375 11.6355 3.6375 10.668C3.6375 9.70047 2.8425 8.90547 1.875 8.90547V8.56047C1.8825 5.74797 2.58 5.04297 5.3925 5.04297H12.42C15.2325 5.04297 15.9375 5.74797 15.9375 8.56047V9.26547C14.97 9.26547 14.1825 10.0455 14.1825 11.0205Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12.1583 5.04187H5.34082L7.53832 2.84438C9.33082 1.05187 10.2308 1.05187 12.0233 2.84438L12.4733 3.29437C12.0008 3.76687 11.8883 4.46437 12.1583 5.04187Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M7.40918 5.04297L7.40918 16.293" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5" />
+  </svg>
+)
+
 export const StripeLogo = () => (
   <svg width="82" height="28" viewBox="0 0 82 28" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M81.7093 14.4671C81.7093 9.682 78.895 5.90625 73.5159 5.90625C68.1142 5.90625 64.8459 9.682 64.8459 14.4297C64.8459 20.056 68.7043 22.8971 74.2422 22.8971C76.9431 22.8971 78.9857 22.3924 80.5291 21.6822V17.9438C78.9857 18.5793 77.2154 18.9718 74.9685 18.9718C72.7669 18.9718 70.8151 18.3363 70.5654 16.1307H81.6639C81.6639 15.8877 81.7093 14.9157 81.7093 14.4671ZM70.4973 12.6914C70.4973 10.5792 72.0634 9.70069 73.4932 9.70069C74.8777 9.70069 76.353 10.5792 76.353 12.6914H70.4973Z" fill="#635BFF" />
@@ -14,7 +79,6 @@ export const ShareIcon2 = () => (
   <svg width="21" height="13" viewBox="0 0 21 13" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M11.3333 4.16797V4.91797L9.91667 5.08463C7.75 5.41797 6.16667 6.2513 5 7.33464C6.41667 6.91797 7.91667 6.66797 9.66667 6.66797H11.3333V7.7513L13.1667 6.0013L11.3333 4.16797ZM9.66667 0.167969L15.5 6.0013L9.66667 11.8346V8.41797C5.5 8.41797 2.58333 9.7513 0.5 12.668C1.33333 8.5013 3.83333 4.33464 9.66667 3.5013M14.6667 2.66797V0.167969L20.5 6.0013L14.6667 11.8346V9.33463L18 6.0013" fill="black" />
   </svg>
-
 )
 
 export const LeaveIcon = () => (

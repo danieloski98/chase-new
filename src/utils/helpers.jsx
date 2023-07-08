@@ -2,7 +2,8 @@ import moment from "moment"
 import momentTz from "moment-timezone"
 import formatter from "format-number"
 import { Link } from "react-router-dom"
-import { PATH_NAMES, TIMEZONE } from "../constants"
+import { TIMEZONE } from "../constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
 
 /**
  * returns a comma separated string representation of a number

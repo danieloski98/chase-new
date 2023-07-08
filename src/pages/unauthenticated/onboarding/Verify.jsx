@@ -4,7 +4,7 @@ import MiniScreensWrapper from "@/components/onboarding/MiniScreensWrapper"
 import { VERIFY_TOKEN } from "@/constants/endpoints.constant"
 import { useFetch } from "@/hooks/useFetch"
 import { useNavigate } from "react-router-dom"
-import { PATH_NAMES } from "../../../constants"
+import { PATH_NAMES } from "../../../constants/paths.constant"
 import { ToastContainer, toast } from "react-toastify";
 
 const Verify = ({ togglePasswordVisibility }) => {

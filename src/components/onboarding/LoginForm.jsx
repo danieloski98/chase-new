@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { ClosedEyeIcon, OpenEyeIcon } from "@/components/Svgs"
 import { useAuth } from "../../context/authContext"
-import { PATH_NAMES } from "../../constants"
+import { PATH_NAMES } from "../../constants/paths.constant"
 import { toast } from "react-toastify"
 import ButtonSpinner from "../ButtonSpinners"
 

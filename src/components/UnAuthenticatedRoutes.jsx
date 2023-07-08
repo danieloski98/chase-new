@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Onboarding from "@/pages/unauthenticated/onboarding"
 import ErrorPage from "@/pages/unauthenticated/ErrorPage"
-import { PATH_NAMES } from "@/constants"
-import { OTHER_UNAUTHENTICATED_ROUTES } from "@/constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
+import { OTHER_UNAUTHENTICATED_ROUTES } from "@/constants/routes.constant"
 
 const unAuthenticatedRoutes = createBrowserRouter([
   {

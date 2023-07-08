@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { PATH_NAMES, NAVIGATION_ROUTES, OTHER_AUTHENTICATED_ROUTES, OTHER_UNAUTHENTICATED_ROUTES } from "@/constants";
+import { NAVIGATION_ROUTES, OTHER_AUTHENTICATED_ROUTES, OTHER_UNAUTHENTICATED_ROUTES } from "@/constants/routes.constant";
 import ErrorPage from "@/pages/unauthenticated/ErrorPage";
 import { useAuth } from "@/context/authContext";
 import Onboarding from "../pages/unauthenticated/onboarding";
+import { PATH_NAMES } from "@/constants/paths.constant";
 
 const AuthenticatedRoutes = () => {
   const { authorized } = useAuth();

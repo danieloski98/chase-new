@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import CONFIG from "../../../config"
 import { Link, useParams } from "react-router-dom"
-import { PATH_NAMES } from "../../../constants"
+import { PATH_NAMES } from "../../../constants/paths.constant"
 import UserPosts from "./UserPosts"
 
 const Posts = ({ posts }) => {

@@ -3,12 +3,13 @@ import { Link, useLocation } from "react-router-dom"
 import chasescrollLogo from "@/assets/images/chasescroll-logo.png"
 import avatar from "@/assets/svg/bitmoji-profile-avatar.svg"
 import caretDown from "@/assets/svg/caret-down.svg"
-import { NAVIGATION_ROUTES, PATH_NAMES } from "@/constants"
+import { NAVIGATION_ROUTES } from "@/constants/routes.constant"
 import { AddIcon, PowerIcon, ExploreSearchIcon } from "./Svgs"
 import { useAuth } from "../context/authContext"
 import { useEffect, useState } from "react"
 import { NOTIFICATIONS } from "../constants/endpoints.constant"
 import { useFetch } from "../hooks/useFetch"
+import { PATH_NAMES } from "@/constants/paths.constant"
 
 const PageWrapper = ({ children, toggleFileUploader }) => {
   const location = useLocation()

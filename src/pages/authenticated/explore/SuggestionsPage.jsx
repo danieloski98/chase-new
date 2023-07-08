@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { PATH_NAMES } from "@/constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
 import PageWrapper from "@/components/PageWrapper"
 import { SUGGESTIONS_ARRAY } from "@/constants"
 import { CaretLeftIcon } from "@/components/Svgs"

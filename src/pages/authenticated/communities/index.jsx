@@ -10,7 +10,7 @@ import { toast } from "react-toastify"
 import { GET_JOINED_GROUPS } from "../../../constants/endpoints.constant"
 import { LEAVE_GROUP } from "../../../constants/endpoints.constant"
 import Loader from "../../../components/Loader"
-import { PATH_NAMES } from "../../../constants"
+import { PATH_NAMES } from "../../../constants/paths.constant"
 import { Link } from "react-router-dom"
 
 const Communities = () => {

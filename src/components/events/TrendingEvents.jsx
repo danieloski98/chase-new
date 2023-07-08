@@ -14,7 +14,7 @@ import { shuffleArray } from "../../utils/shuffleArray"
 import CONFIG from "../../config"
 import { BookmarkIconSmallFill } from "../Svgs"
 import { toast } from "react-toastify"
-import { PATH_NAMES } from "../../constants"
+import { PATH_NAMES } from "../../constants/paths.constant"
 import { Link } from "react-router-dom"
 
 const TrendingEvents = () => {

@@ -10,7 +10,7 @@ import {
   UploadIcon,
 } from "../Svgs"
 import { formatNumberWithK } from "@/utils/helpers"
-import { PATH_NAMES } from "@/constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
 import ProfilePhoto from "../ProfilePhoto"
 
 import {

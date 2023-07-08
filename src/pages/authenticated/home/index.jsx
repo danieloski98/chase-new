@@ -15,6 +15,7 @@ import {
 import imageIcon from "@/assets/svg/image.svg"
 import profilePhoto from "@/assets/images/avatar.png"
 import Share from "./Share"
+import { toast } from "react-toastify"
 
 const Home = () => {
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)

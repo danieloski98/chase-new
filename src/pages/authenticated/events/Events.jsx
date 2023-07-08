@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import PageWrapper from "@/components/PageWrapper"
 import { Link } from "react-router-dom"
-import { PATH_NAMES } from "@/constants"
+import { PATH_NAMES } from "@/constants/paths.constant"
 import Event from "@/components/events/Event"
 import Category from "@/components/events/Category"
 import TrendingEvents from "@/components/events/TrendingEvents"

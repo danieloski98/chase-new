@@ -9,7 +9,7 @@ import { LIKE_FEED_COMMENT } from "../../constants/endpoints.constant"
 import { useFetch } from "../../hooks/useFetch"
 import { useAuth } from "../../context/authContext"
 import { Link } from "react-router-dom"
-import { PATH_NAMES } from "../../constants"
+import { PATH_NAMES } from "../../constants/paths.constant"
 
 const Comment = ({ comment, time, likeCount, likeStatus, id, replyPerson, user }) => {
   const [isLiked, setIsLiked] = useState(likeStatus === "LIKED")
