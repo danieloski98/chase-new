@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import illustration from "@/assets/svg/sign-in-illustration-2.svg"
 import playStore from "@/assets/images/play-store.png"
@@ -17,10 +17,11 @@ const Onboarding = () => {
 
   const toggleTermsVisibility = () => setShowTerms(state => !state)
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = React.useCallback(async () => {
     try {
       const result = await signInWithPopup(auth, googleAuthProvider)
-      const credential = GoogleAuthProvider.credentialFromResult(result)
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      console.log(result);
       if (credential) {
         console.log(credential.idToken)
         toast.success("e don sup!")
@@ -28,7 +29,7 @@ const Onboarding = () => {
     } catch (error) {
       toast.error(error)
     }
-  }
+  }, [])
 
   return (
     <>
