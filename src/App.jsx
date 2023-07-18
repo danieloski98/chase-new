@@ -2,7 +2,10 @@ import { lazy, Suspense, useContext } from "react"
 import chasescrollLogo from "@/assets/images/chasescroll-logo-large.png"
 import { useAuth } from "./context/authContext"
 import { ToastContainer } from "react-toastify"
+import { ChakraProvider } from '@chakra-ui/react'
+import { QueryClientProvider, QueryClient } from 'react-query'
 import "react-toggle/style.css"
+import { theme } from "./theme"
 
 const AuthenticatedRoutes = lazy(() =>
   import("@/components/AuthenticatedRoutes")
@@ -10,6 +13,8 @@ const AuthenticatedRoutes = lazy(() =>
 const UnAuthenticatedRoutes = lazy(() =>
   import("@/components/UnAuthenticatedRoutes")
 )
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const { authorized } = useAuth()
@@ -27,8 +32,14 @@ const App = () => {
 
   return (
     <Suspense fallback={suspenseFallback}>
-      <ToastContainer />
-      {authorized ? <AuthenticatedRoutes /> : <UnAuthenticatedRoutes />}
+      <ChakraProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <>
+            <ToastContainer />
+            {authorized ? <AuthenticatedRoutes /> : <UnAuthenticatedRoutes />}
+          </>
+        </QueryClientProvider>
+      </ChakraProvider>
     </Suspense>
   )
 }

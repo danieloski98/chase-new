@@ -32,9 +32,9 @@ export const AuthProvider = ({ children }) => {
   }, [token, userId, userName]);
 
   const login = async (credentials) => {
-    const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
+    //const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
 
-    const { access_token, user_id, user_name, expires_in } = responseData;
+    const { access_token, user_id, user_name, expires_in } = credentials;
     setToken(access_token);
     setUserId(user_id)
     setUserName(user_name)
@@ -43,11 +43,8 @@ export const AuthProvider = ({ children }) => {
     // Set token expiration time to 'expires_in' seconds from now
     const expirationTime = new Date().getTime() + expires_in * 1000;
 
-    if (responseData?.access_token) {
-      toast.success('Login successful!');
-      setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
-    }
     localStorage.setItem('tokenExpiration', expirationTime);
+    setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
   };
 
   const logout = () => {

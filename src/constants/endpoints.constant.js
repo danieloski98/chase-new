@@ -228,6 +228,7 @@ export const STRIPE_ACCOUNT = "/stripe/account"
 export const STRIPE_ACCOUNT_BALANCE = "/stripe/balance"
 export const STRIPE_ACCOUNT_LINK = "/stripe/account/link"
 export const STRIPE_ACCOUNT_PAYOUT = "/stripe/payout"
+export const VERIFY_ACCOUNT_OTP = '/verification/verify-token'
 
 //ConferenceAPI
 export const CREATE_CONFERENCE = "/conference-api/create-conference"

@@ -48,8 +48,8 @@ export const COMPANY_NAME = "Chasescroll"
 
 export const CHASESCROLL_VIDEO_BUCKET = "chasescroll-videos"
 
-export const CLOSE_ENTITY = "<>&#x2715;</>"
-export const CLOSE_ENTITY_BOLD = "<>&#10006;</>"
+export const CLOSE_ENTITY = <>&#x2715;</>
+export const CLOSE_ENTITY_BOLD = <>&#10006;</>
 
 export const videoConfig = {
   bucketName: 'chasescroll-videos',

@@ -12,15 +12,15 @@ httpService.interceptors.request.use(async(config) => {
         if (token === null) {
             return config;
         }
-        config.headers!['authorization'] = `Bearer ${token}`;
+        config.headers['authorization'] = `Bearer ${token}`;
     
         return config;
     } else {
-        config.headers!['Content-Type'] = 'application/json';
+        config.headers['Content-Type'] = 'application/json';
         if (token === null) {
             return config;
         }
-        config.headers!['authorization'] = `Bearer ${token}`;
+        config.headers['authorization'] = `Bearer ${token}`;
     
         return config;
     }
@@ -32,17 +32,17 @@ httpService.interceptors.request.use(async(config) => {
 
 httpService.interceptors.response.use((data) => {
     return data;
-}, async(error: AxiosError<any, any>) => {
-    console.log(error.message);
-    // return Promise.reject('An Error occurred');
+}, async(error: AxiosError<any, unknown>) => {
     if (!error.response) {
         return Promise.reject(error.message);
     } else {
-        if (error.response?.data.message instanceof Array) {
-            const msg = error.response?.data.message as Array<any>;        
-            return Promise.reject(JSON.stringify(error.response?.data.message));
-        } else {
-            if (error.response.status === 401 || error.response.status === 403) {
+        if (error.response?.data instanceof Array) {
+            return Promise.reject(JSON.stringify(error.response?.data));
+        } else if (error.response?.data instanceof Object) {
+            return Promise.reject(error.response?.data.message);
+        }
+        else {
+            if (error.response?.status === 401 || error.response?.status === 403) {
              localStorage.setItem('token', '');
             }
             

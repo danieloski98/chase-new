@@ -6,6 +6,7 @@ import { useFetch } from "@/hooks/useFetch"
 import { useNavigate } from "react-router-dom"
 import { PATH_NAMES } from "../../../constants/paths.constant"
 import { ToastContainer, toast } from "react-toastify";
+import { VERIFY_ACCOUNT_OTP } from "@/constants/endpoints.constant"
 
 const Verify = ({ togglePasswordVisibility }) => {
   const [pin, setPin] = useState("")
@@ -14,14 +15,14 @@ const Verify = ({ togglePasswordVisibility }) => {
   const navigate = useNavigate()
 
   const verifyToken = async () => {
-    const response = await sendRequest(VERIFY_TOKEN, "POST", {
+    const response = await sendRequest(VERIFY_ACCOUNT_OTP, "POST", {
       token: pin
     })
     if (response?.statusCode === 0) {
       if (togglePasswordVisibility) {
         togglePasswordVisibility()
       } else {
-        navigate(PATH_NAMES.login)
+        navigate('/')
       }
     } else {
       toast.error(response?.statusDescription);

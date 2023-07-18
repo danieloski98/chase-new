@@ -5,73 +5,50 @@ import { useAuth } from "../../context/authContext"
 import { PATH_NAMES } from "../../constants/paths.constant"
 import { toast } from "react-toastify"
 import ButtonSpinner from "../ButtonSpinners"
+import { useForm } from "@/hooks/useForm"
+import { signInValidation } from "@/services/validations"
+import { useMutation } from "react-query"
+import httpService from "@/utils/httpService"
+import { SIGN_IN } from "@/constants/endpoints.constant"
+import { CustomInput } from "../Form/CustomInput"
+import { Box, Button } from '@chakra-ui/react'
 
 const LoginForm = () => {
-  const [userDetails, setUserDetails] = useState({
-    username: "",
-    password: "",
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-
-  const { username, password } = userDetails
   const { login } = useAuth()
-  const navigate = useNavigate()
 
-  const togglePasswordVisibility = () => setShowPassword(state => !state)
 
-  const handleChange = ({ target: { name, value } }) => {
-    setUserDetails(info => ({
-      ...info,
-      [name]: value,
-    }))
-  }
-
-  const handleLogin = async () => {
-    try {
-      await login(userDetails);
-    } catch (error) {
+  // react hoook form implementation
+  const { isLoading, mutate } = useMutation({
+    mutationFn: (data) => httpService.post(SIGN_IN, data),
+    onError: (error) => {
       toast.error(error);
-    } finally {
-      setLoading(false)
+      console.log(error);
+    },
+    onSuccess: (data) => {
+      toast.success('Login successful!');
+      login(data.data);
     }
-  };
+  })
+  const { renderForm } = useForm({
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+    validationSchema: signInValidation,
+    submit: (data) => {
+      console.log(data);
+      mutate(data);
+    },
+  });
 
-  const handleSubmit = event => {
-    event.preventDefault()
-    setLoading(true)
-    handleLogin()
-  }
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col max-w-[463px] w-full gap-4"
-    >
-      <input
-        className="w-full rounded-lg border border-purple-100 outline-chasescrollBlue px-3 py-2.5 text-chasescrollTextGrey"
-        placeholder="Username"
-        name="username"
-        onChange={handleChange}
-        type="text"
-        value={username}
-      />
-      <div className="relative w-full">
-        <input
-          className="w-full rounded-lg border border-purple-100 outline-chasescrollBlue px-3 py-2.5 text-chasescrollTextGrey"
-          placeholder="Password"
-          name="password"
-          onChange={handleChange}
-          type={showPassword ? "text" : "password"}
-          value={password}
-        />
-        <div
-          className="absolute right-2 top-2 cursor-pointer text-chasescrollTextGrey"
-          onClick={togglePasswordVisibility}
-        >
-          {!showPassword ? <ClosedEyeIcon /> : <OpenEyeIcon />}
-        </div>
-      </div>
+  return renderForm(
+    <>
+      <CustomInput name="username" placeholder="Username" type="text" />
+      <Box height='15px' />
+      <CustomInput name="password" placeholder="Password" type="password" isPassword />
+      <Box height='15px' />
+
       <div className="flex justify-between text-xs p-0.5">
         <Link to="/forgot-password" className="text-chasescrollBlue">
           Forgot password
@@ -83,14 +60,9 @@ const LoginForm = () => {
           </Link>
         </p>
       </div>
-      <button
-        type="submit"
-        className={`bg-chasescrollBlue text-white py-2.5 text-center rounded-lg font-bold text-xl flex items-center gap-4 justify-center ${loading && 'bg-opacity-50 cursor-not-allowed'}`}
-        disabled={loading}
-      >
-        Sign In {loading && <ButtonSpinner />}
-      </button>
-    </form>
+
+     <Button type="submit" isLoading={isLoading} bg='brand.chasescrollButtonBlue' height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign in</Button>
+    </>
   )
 }
 

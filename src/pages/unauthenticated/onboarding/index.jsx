@@ -62,6 +62,9 @@ const Onboarding = () => {
                 <h2 className="text-2xl lg:text-4xl text-chasescrollDarkBlue font-bold text-center">
                   Chasescroll
                 </h2>
+                <p className="text-md font-normal text-center">
+                  Welcome back, login to your account
+                </p>
                 <LoginForm />
               </div>
               <button
