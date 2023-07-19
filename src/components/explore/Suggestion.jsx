@@ -8,6 +8,7 @@ import { isEven } from "../../utils/helpers"
 import { useFetch } from "../../hooks/useFetch"
 import { BLOCK_USER, SEND_FRIEND_REQUEST } from "../../constants/endpoints.constant"
 import { useAuth } from "../../context/authContext"
+import { useNavigate } from 'react-router-dom'
 
 const Suggestion = ({
   mutuals = 0,
@@ -20,6 +21,8 @@ const Suggestion = ({
   const [isConnected, setIsConnected] = useState(false)
   const { token } = useAuth()
   const { sendRequest } = useFetch()
+
+  const navigate = useNavigate();
 
   const sendFriendRequest = async () => {
     const response = await sendRequest(
@@ -82,9 +85,13 @@ const Suggestion = ({
 
       <div className="flex flex-col lg:gap-2 gap-1 items-center">
         <div className="rounded-b-full rounded-tl-full w-20 h-20 border border-chasescrollBlue">
-          <img src={img} alt="" className="rounded-b-full rounded-tl-full w-20 h-20" />
+          <img 
+          onClick={() => navigate(`/profile/${userId}`)}
+          src={img} 
+          alt="" 
+          className="rounded-b-full rounded-tl-full w-20 h-20 cursor-pointer" />
         </div>
-        <h1 className="font-bold text-center text-sm">{firstName} {lastName}</h1>
+        <h1 onClick={() => navigate(`/profile/${userId}`)} className="font-bold text-center text-sm cursor-pointer">{firstName} {lastName}</h1>
         <h3 className="text-chasescrollGrey text-xs">
           {mutuals} Mutual Connection{mutuals === 1 ? "" : "s"}
         </h3>

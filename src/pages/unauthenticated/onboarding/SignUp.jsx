@@ -32,8 +32,8 @@ const SignUp = () => {
 
   // react hook form
   const sendMail = useMutation({
-    mutationFn: (data: any) => httpService.post(SEND_EMAIL_TO_USER, data),
-    onError: (error: any) => {
+    mutationFn: (data) => httpService.post(SEND_EMAIL_TO_USER, data),
+    onError: (error) => {
       console.log(error);
       toast.error(error.response.data);
     },
@@ -44,8 +44,8 @@ const SignUp = () => {
     }
   });
   const { isLoading, mutate } = useMutation({
-    mutationFn: (data: any) => httpService.post(SIGN_UP, data),
-    onError: (error: any) => {
+    mutationFn: (data) => httpService.post(SIGN_UP, data),
+    onError: (error) => {
       console.log(error);
       toast.error(error.response.data);
     },
@@ -68,7 +68,7 @@ const SignUp = () => {
       email: '',
     },
     validationSchema: signUpValidation,
-    submit: (data: any) => {
+    submit: (data) => {
       if (!termsAccepted) {
         alert('You must accept the terms and conditions');
         return;
@@ -145,7 +145,7 @@ const SignUp = () => {
                 required
                 value={phone}
                 
-                onChange={(e: any) => setPhone(e)}
+                onChange={(e) => setPhone(e)}
               />
 
               <CustomInput name='dob' placeholder="Date of Birth" type="date" isPassword={false} />

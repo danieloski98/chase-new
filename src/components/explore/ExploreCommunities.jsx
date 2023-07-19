@@ -6,11 +6,14 @@ import { GET_ALL_PUBLIC_GROUPS_TO_JOIN, JOIN_GROUP, LEAVE_GROUP, REQUEST_TO_JOIN
 import CONFIG from "../../config"
 import { toast } from "react-toastify"
 import Loader from "../Loader"
+import { useNavigate } from 'react-router-dom'
+import { Avatar } from '@chakra-ui/react'
 
 const ExploreCommunities = () => {
   const [communityList, setCommunityList] = useState([])
   const { sendRequest } = useFetch()
   const { token } = useAuth()
+  const navigate = useNavigate();
 
   const fetchCommunities = async () => {
     const data = await sendRequest(
@@ -59,18 +62,25 @@ const ExploreCommunities = () => {
       ) : communityList?.content?.map(community => (
         <div
           key={community.id}
-          className="flex items-center justify-between w-full p-3"
+          className="flex items-center justify-between w-full p-3 border-b"
         >
-          <div className="flex items-center">
+          <div className="flex items-center ">
             <div className="border-l-2 border-chasescrollBlue rounded-b-full rounded-tl-full w-32">
-              <img
+              {/* <img
                 src={`${CONFIG.RESOURCE_URL}${community.data.imgSrc}`}
                 alt="descriptive photograph"
                 className="rounded-b-full rounded-tl-full w-20 h-20 border-2 border-white"
+              /> */}
+              <Avatar 
+                src={`${CONFIG.RESOURCE_URL}${community.data.imgSrc}`}
+                alt="descriptive photograph"
+                className="rounded-b-full rounded-tl-full w-20 h-20 border-2 border-white cursor-pointer"
+                name={community.data.name}
+                onClick={() => navigate(`/communities/community/${community.id}`)}
               />
             </div>
             <div className="flex flex-col pl-2 w-full">
-              <h1 className="text-base md:text-[20px]">{community.data.name}</h1>
+              <h1 onClick={() => navigate(`/communities/community/${community.id}`)} className="text-base md:text-[20px] cursor-pointer">{community.data.name}</h1>
               <span className="text-xs text-[#2E2B2B] text-opacity-[67%]">
                 {community.data.description}
               </span>

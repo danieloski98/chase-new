@@ -1,8 +1,10 @@
 import EventBlob from "../../assets/svg/eventBlob.svg"
 import { EVENTS_LIST } from "../../constants"
 import { CalendarIcon, UploadIcon, LocationIcon_2, BookmarkIcon } from "../Svgs"
+import { useNavigate } from 'react-router-dom'
 
 const ExploreEvents = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <ul className="w-full max-w-xl mx-auto flex flex-col border rounded-3xl">
@@ -10,12 +12,12 @@ const ExploreEvents = () => {
           <li key={event.id} className="border-b p-2 ">
             <div className="flex my-4 justify-between">
               <div className="flex justify-start">
-                <img src={EventBlob} alt="profiles" className="w-full h-full" />
+                <img onClick={() => navigate(`/event/${event.id}`)} src={EventBlob} alt="profiles" className="w-full h-full cursor-pointer" />
               </div>
 
               <div>
                 <div className="flex flex-col gap-4 w-full justify-end pl-4">
-                  <h1 className="border-b text-[10.5px] md:text-sm">
+                  <h1 onClick={() => navigate(`/event/${event.id}`)}  className="border-b text-[10.5px] md:text-sm cursor-pointer">
                     {event.name}{" "}
                     <span className="pl-1 md:pl-4">{event.price}</span>
                   </h1>
