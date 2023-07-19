@@ -16,6 +16,7 @@ import { useFetch } from "../../../hooks/useFetch"
 import { GET_FRIEND_REQUESTS, GET_JOINED_EVENTS, GET_JOINED_GROUPS, GET_USER_CONNECTION_LIST, GET_USER_MEDIA_POSTS, GET_USER_PRIVATE_PROFILE, REMOVE_FRIEND, SEND_FRIEND_REQUEST } from "../../../constants/endpoints.constant"
 import { useAuth } from "../../../context/authContext"
 import { toast } from "react-toastify"
+import { IoMdSettings } from 'react-icons/io'
 
 const Profile_1 = () => {
   const [showOptions, setShowOptions] = useState(false)
@@ -156,32 +157,33 @@ const Profile_1 = () => {
     }
   }
 
-  let componentToRender
-
-  switch (activeComponent) {
-    case "component1":
-      componentToRender = <Posts posts={posts?.content} />
-      break
-    case "component2":
-      componentToRender = (
-        <MyNetwork
+  const switchComponent = React.useCallback(() => {
+    switch(activeComponent){
+      case "component1": {
+        return <Posts posts={posts?.content} />
+      }
+      case "component2": {
+        return <MyNetwork
           network={network}
           fetchNetwork={fetchNetwork}
           self={self}
           friendPerson={friendPerson}
           unfriendPerson={unfriendPerson}
         />
-      )
-      break
-    case "component3":
-      componentToRender = <SecondaryEvents events={events} />
-      break
-    case "component4":
-      componentToRender = <SecondaryCommunity communities={communities} />
-      break
-    default:
-      componentToRender = <Posts posts={posts} />
-  }
+      }
+      case "component3": {
+        return <SecondaryEvents events={events} />
+      }
+      case "component4": {
+        return <SecondaryCommunity communities={communities} />
+      }
+      default: {
+        return <Posts posts={posts?.content} />
+      }
+    }
+  }, [activeComponent])
+
+
 
   const handleShowOptions = () => {
     setShowOptions(state => !state)
@@ -214,7 +216,8 @@ const Profile_1 = () => {
                     onClick={handleShowOptions}
                     className="cursor-pointer hover:bg-white hover:bg-opacity-70"
                   >
-                    <SecondMenuIcon />
+                    {/* <SecondMenuIcon /> */}
+                    <IoMdSettings size="20px" color='white' />
                   </div>
                 </div>
 
@@ -261,7 +264,7 @@ const Profile_1 = () => {
               />
             </section>
             <div className="px-2">
-              {componentToRender}
+              {switchComponent()}
             </div>
           </div>
           {showOptions && (

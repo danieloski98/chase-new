@@ -10,10 +10,13 @@ import { useEffect, useState } from "react"
 import { NOTIFICATIONS } from "../constants/endpoints.constant"
 import { useFetch } from "../hooks/useFetch"
 import { PATH_NAMES } from "@/constants/paths.constant"
+import LogoutModal from "./LogoutModal"
 
 const PageWrapper = ({ children, toggleFileUploader }) => {
   const location = useLocation()
   const isExplorePage = location.pathname.includes("/explore")
+  const [showLogout, setShowLogout] = useState(false);
+
 
   const { logout, userId } = useAuth()
 
@@ -153,7 +156,7 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
               </Link>
             ))}
           </div>
-          <button onClick={logout} className="mt-auto flex gap-4 py-5 px-10 text-chasescrollGrey cursor-pointer font-bold hover:bg-slate-50">
+          <button onClick={() => setShowLogout(true)} className="mt-auto flex gap-4 py-5 px-10 text-chasescrollGrey cursor-pointer font-bold hover:bg-slate-50">
             <span className="">
               <PowerIcon />
             </span>
@@ -164,6 +167,10 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
           {children(notifications, getNotifications, notificationsFilter, filterNotifications)}
         </div>
       </div>
+
+      {showLogout && (
+        <LogoutModal handleClose={() => setShowLogout(false)} logout={logout}  />
+      )}
     </div>
   )
 }

@@ -68,9 +68,6 @@ dependencies:
   prop-types:
     specifier: ^15.8.1
     version: 15.8.1
-  react:
-    specifier: ^18.2.0
-    version: 18.2.0
   react-aws-s3:
     specifier: ^1.5.0
     version: 1.5.0
@@ -169,6 +166,9 @@ devDependencies:
   postcss:
     specifier: ^8.4.21
     version: 8.4.21
+  react:
+    specifier: link:@types/@chakra-ui/react
+    version: 18.2.0
   tailwindcss:
     specifier: ^3.2.7
     version: 3.2.7(postcss@8.4.21)

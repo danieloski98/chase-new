@@ -1,7 +1,11 @@
 import React from "react"
 import CONFIG from "../../../config"
+import { useNavigate } from 'react-router-dom'
+import { Avatar } from '@chakra-ui/react'
 
 const SecondaryCommunity = ({ communities }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="mb-[100px] flex flex-col gap-4 items-center">
       {communities?.content?.map(community => (
@@ -10,15 +14,25 @@ const SecondaryCommunity = ({ communities }) => {
           key={community.id}
         >
           <div className=" flex flex-row gap-4 md:gap-8 w-full items-center mb-2">
-            <div className="overflow-hidden border-l-2 border-chasescrollBlue rounded-l-full">
-              <img
+            <div className=" border-l-2 border-chasescrollBlue rounded-l-full">
+              {/* <img
                 src={`${CONFIG.RESOURCE_URL}${community.data.imgSrc}`}
                 alt="descriptive photograph"
                 className="rounded-b-full rounded-tl-full w-20 h-20 border-l-2 border-white"
+              /> */}
+              <Avatar 
+                src={`${CONFIG.RESOURCE_URL}${community.data.imgSrc}`}
+                name={community.data.name}
+                size='xl'
+                className="cursor-pointer rounded-b-full rounded-tl-full w-20 h-20 border-l-2 border-white"
+                title={`${community.data.name}`}
+                onClick={() => navigate(`/communities/community/${community.id}`)}
               />
             </div>
             <div className="flex flex-col gap-2">
-              <h2 className="text-2xl font-medium text-left">{community.data.name}</h2>
+              <h2 
+              onClick={() => navigate(`/communities/community/${community.id}`)}
+              className="text-2xl font-medium text-left cursor-pointer">{community.data.name}</h2>
               <div className="flex">
                 <p className="text-gray-600 text-sm">{community.data.description}</p>
               </div>

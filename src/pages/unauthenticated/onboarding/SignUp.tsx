@@ -69,6 +69,10 @@ const SignUp = () => {
     },
     validationSchema: signUpValidation,
     submit: (data: any) => {
+      if (!termsAccepted) {
+        alert('You must accept the terms and conditions');
+        return;
+      }
       const obj = {
         ...data,
         data: {
@@ -82,57 +86,10 @@ const SignUp = () => {
     }
   });
 
-  // const handleChange = ({ target: { name, value } }) => {
-  //   setUserDetails(info => ({
-  //     ...info,
-  //     [name]: value,
-  //   }))
-  // }
-
-  // const setPhoneNumber = event => {
-  //   setUserDetails(details => ({
-  //     ...details,
-  //     data: {
-  //       ...details.data,
-  //       mobilePhone: {
-  //         ...details.data.mobilePhone,
-  //         value: event?.target?.value
-  //       },
-  //     }
-  //   }))
-  // }
-
-  // const submitDetails = async () => {
-  //   const response = await sendRequest(SIGN_UP, "POST", 
-  //     userDetails
-  //   )
-  //   if (response?.statusCode === 0) {
-  //     sendRequest(SEND_EMAIL_TO_USER, "POST", { userEmail: userDetails.email,
-  //       emailType: 2 });
-  //     toast.success('Sign up successful!');
-  //     setTimeout(() => navigate(PATH_NAMES.verify), 5000)
-  //   } else {
-  //     console.log(response);
-  //     toast.error("");
-  //   }
-  // }
-
-  // const handleSubmit = event => {
-  //   event.preventDefault()
-
-  //   delete userDetails.confirmPassword
-  //   submitDetails()
-  // }
 
   const toggleTermsAcceptance = () => {
     setTermsAccepted(state => !state)
   }
-
-  // const disabled =
-  //   userDetails.password !== userDetails.confirmPassword ||
-  //   userDetails.password.length < 4 ||
-  //   userDetails.confirmPassword.length < 4 ||
-  //   !termsAccepted
 
   const navigate = useNavigate()
 
