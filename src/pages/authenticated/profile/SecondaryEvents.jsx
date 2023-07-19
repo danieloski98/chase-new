@@ -2,8 +2,12 @@ import React from "react"
 import { CalendarIcon, LocationIcon_2 } from "@/components/Svgs"
 import CONFIG from "../../../config"
 import { formatDate } from "../../../utils/helpers"
+import { Avatar } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 
 const SecondaryEvents = ({ events }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="mb-[100px] mx-auto flex flex-col gap-4">
       {events?.content?.map(
@@ -17,11 +21,14 @@ const SecondaryEvents = ({ events }) => {
                 <img
                   src={`${CONFIG.RESOURCE_URL}${event.currentPicUrl}`}
                   alt="descriptive photograph"
-                  className=" w-full h-full "
+                  className=" w-full h-full cursor-pointer"
+                  onClick={() => navigate(`/event/${event.id}`)}
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <h2 className="text-lg font-medium text-center md:text-left">
+                <h2 
+                onClick={() => navigate(`/event/${event.id}`)}
+                className="text-lg font-medium text-center md:text-left cursor-pointer">
                   {event.eventName}
                 </h2>
                 <div className="flex">

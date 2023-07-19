@@ -6,6 +6,7 @@ import { useAuth } from '../../context/authContext'
 import Toggle from 'react-toggle'
 import ProfilePhoto from '../ProfilePhoto'
 import { formatTimeAgo } from '../../utils/helpers'
+import { Avatar } from '@chakra-ui/react'
 
 const Notification = ({ notification, getNotifications }) => {
 	const [isRead, setIsRead] = useState(false)
@@ -32,7 +33,11 @@ const Notification = ({ notification, getNotifications }) => {
 	return (
 		<div className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
 			<div className="flex items-center gap-4 max-w-[75%]">
-				<ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`} />
+				{/* <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`} /> */}
+				<Avatar 
+					src={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`}
+					name={notification.title}
+				/>
 				<div className="flex flex-col">
 					<p className="font-bold text-chasescrollDarkBlue text-lg">
 						{notification.title}
@@ -40,15 +45,15 @@ const Notification = ({ notification, getNotifications }) => {
 					<p className="text-chasescrollTextGrey text-xs">
 						{notification.message}
 					</p>
-				</div>
+				A</div>
 			</div>
 			<p className="text-chasescrollBlue text-xs flex items-center gap-4">
 				{formatTimeAgo(notification.createdDate)}
-				<Toggle
+				{/* <Toggle
 					checked={isRead}
 					className="custom-classname"
 					onChange={() => toggleRead(notification.id)}
-				/>
+				/> */}
 			</p>
 		</div>
 	)

@@ -9,6 +9,7 @@ import { useAuth } from "../../../context/authContext"
 import { REJECT_FRIEND_REQUEST } from "../../../constants/endpoints.constant"
 import { PATH_NAMES } from "../../../constants/paths.constant"
 import { Link } from "react-router-dom"
+import { Avatar } from '@chakra-ui/react';
 
 const MyNetwork = ({ network, fetchNetwork, self, friendPerson, unfriendPerson }) => {
   const [activeTab, setActiveTab] = useState("Connects")
@@ -100,7 +101,12 @@ const MyNetwork = ({ network, fetchNetwork, self, friendPerson, unfriendPerson }
                     to={`${PATH_NAMES.profile}/${id}`}
                     className="flex gap-2 items-center"
                   >
-                    <img src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" />
+                    {/* <img src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
+
+                    <Avatar 
+                      src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`}
+                      name={`${fromUserID?.firstName} ${fromUserID?.lastName}`}
+                    />
                     <div className="inline-flex flex-col">
                       <p className="text-l text-black-800 capitalize">
                         {fromUserID?.firstName} {fromUserID?.lastName}
@@ -138,10 +144,15 @@ const MyNetwork = ({ network, fetchNetwork, self, friendPerson, unfriendPerson }
                   to={`${PATH_NAMES.profile}/${profile.userId}`}
                   className="flex gap-2 items-center"
                 >
-                  <img
+                  {/* <img
                     src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
                     className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
                     alt="connection"
+                  /> */}
+                  <Avatar 
+                      src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
+                      className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
+                      name={`${profile?.firstName} ${profile.lastName}`}
                   />
                   <div className="inline-flex flex-col">
                     <p className="text-l text-black-800">

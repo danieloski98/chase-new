@@ -31,7 +31,7 @@ const Home = () => {
   const [postFile, setPostFile] = useState()
   const [postInput, setPostInput] = useState("")
   const { sendRequest } = useFetch()
-  const { userName, token } = useAuth()
+  const { userName, token, userId } = useAuth()
   const threadListRef = useRef(null)
 
   const navigate = useNavigate()
@@ -156,9 +156,10 @@ const Home = () => {
                <div className="flex items-center bg-chasescrollPalePurple bg-opacity-30 rounded-xl pl-4">
                  <div className="w-8 h-7 rounded-b-full rounded-tr-full border border-chasescrollBlue flex items-center justify-center">
                    <img
+                      onClick={() => navigate(`/profile/${userId}`)}
                      src={profilePhoto}
                      alt=""
-                     className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue"
+                     className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
                    />
                  </div>
                  <input
