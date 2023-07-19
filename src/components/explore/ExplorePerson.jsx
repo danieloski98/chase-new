@@ -4,11 +4,14 @@ import { REMOVE_FRIEND, SEND_FRIEND_REQUEST } from '../../constants/endpoints.co
 import { useAuth } from '../../context/authContext'
 import { useFetch } from '../../hooks/useFetch'
 import CONFIG from '../../config'
+import { Avatar } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 
 const ExplorePerson = ({ person }) => {
 	const [isConnected, setIsConnected] = useState(false)
 	const { token } = useAuth()
 	const { sendRequest } = useFetch()
+	const navigate = useNavigate()
 
 	const unfriend = userId => {
 		sendRequest(
@@ -30,13 +33,20 @@ const ExplorePerson = ({ person }) => {
 	}
 
 	return (
-		<li className="flex py-4 md:gap-96">
+		<li className="flex py-4 md:gap-96 border-b">
 			<div className="flex py-4 w-full">
-				<div className="h-10 w-10 rounded-b-full rounded-tl-full border border-chasescrollBlue">
-					<img src={`${CONFIG.RESOURCE_URL}${person?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-full rounded-tl-full" />
+				<div className="h-auto w-auto rounded-b-full rounded-tl-full border border-chasescrollBlue overflow-hidden">
+					{/* <img src={`${CONFIG.RESOURCE_URL}${person?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-full rounded-tl-full" /> */}
+					<Avatar 
+						srrc={`${CONFIG.RESOURCE_URL}${person?.data?.imgMain?.value}`}
+						name={`${person?.firstName} ${person?.lastName}`}
+						className="h-full w-full rounded-b-full rounded-tl-full cursor-pointer"
+						size='md'
+						onClick={() => navigate(`/profile/${`${person?.userId}`}`)}
+					/>
 				</div>
 				<div className="flex flex-col pl-4">
-					<h1>{person?.firstName} {person?.lastName}</h1>
+					<h1 onClick={() => navigate(`/profile/${`${person?.userId}`}`)} className='cursor-pointer'>{person?.firstName} {person?.lastName}</h1>
 					<span className="text-[#2E2B2B] text-opacity-[67%]">
 						{person?.username}
 					</span>
