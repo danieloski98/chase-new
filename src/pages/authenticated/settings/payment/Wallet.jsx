@@ -201,13 +201,13 @@ const Wallet = () => {
 							<div className="flex flex-col gap-2">
 								<p className="text-center text-xl">Enter Amount</p>
 								<input
-									type="text"
+									type="number"
 									value={amount}
 									onChange={({ target: { value } }) => setAmount(value)}
 									className="text-center p-3 text-chasescrollTextGrey text-2xl outline-none bg-transparent w-full"
 									placeholder={`${currency === USD ? '$' : '₦'} 100`}
 								/>
-								<button onClick={topUpWallet} className="bg-chasescrollDarkBlue text-white text-base rounded-lg p-2.5">Fund</button>
+								<button disabled={amount ? false : true} onClick={topUpWallet} className={` ${amount ? " ": "  bg-opacity-25 "} bg-chasescrollDarkBlue text-white text-base rounded-lg p-2.5`}>Fund</button>
 							</div>
 						)}
 						{view === "history" && (
@@ -224,13 +224,13 @@ const Wallet = () => {
 							<div className="flex flex-col gap-2">
 								<p className="text-center text-xl">Enter Amount</p>
 								<input
-									type="text"
+									type="number"
 									value={amount}
 									onChange={({ target: { value } }) => setAmount(value)}
 									className="text-center p-3 text-chasescrollTextGrey text-2xl outline-none bg-transparent w-full"
 									placeholder={`${currency === USD ? '$' : '₦'} 100`}
 								/>
-								<button onClick={withdrawFromWallet} className="bg-chasescrollDarkBlue text-white text-base rounded-lg p-2.5">
+								<button disabled={amount ? false : true} onClick={withdrawFromWallet} className={` ${amount ? " ": "  bg-opacity-25 "} bg-chasescrollDarkBlue text-white text-base rounded-lg p-2.5`}>
 									Withdraw
 								</button>
 							</div>
