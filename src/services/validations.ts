@@ -24,7 +24,15 @@ const signInValidation = z.object({
     password: z.string().nonempty('Password cannot be empty'),
 })
 
+const personinforSchema = z.object({
+    email: z.string().nonempty().email(),
+    phone: z.string().nonempty().min(11),
+    gender: z.string().nonempty(),
+    dob: z.string().nonempty(),
+});
+
 export {
     signUpValidation,
-    signInValidation
+    signInValidation,
+    personinforSchema,
 }

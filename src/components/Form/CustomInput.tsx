@@ -22,6 +22,8 @@ export const CustomInput = ({ isPassword = false, name, type, placeholder }: IPr
                   {...register(name)}
                   className="w-full rounded-lg border border-gray-400 outline-chasescrollBlue px-3 py-2 text-chasescrollTextGrey"
                   placeholder={placeholder}
+                  data-date="DD MMMM YYYY"
+                  lang='pt_BR'
                   type={isPassword ? (showPassword ? 'text' : 'password') : type}
                 />
                 {isPassword && (

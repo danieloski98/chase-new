@@ -21,7 +21,7 @@ const LoginForm = () => {
   const { isLoading, mutate } = useMutation({
     mutationFn: (data) => httpService.post(SIGN_IN, data),
     onError: (error) => {
-      toast.error(error);
+      toast.error('An Error occurred');
       console.log(error);
     },
     onSuccess: (data) => {
