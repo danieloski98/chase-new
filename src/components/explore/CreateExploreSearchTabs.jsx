@@ -12,7 +12,7 @@ const CreateExploreSearchTabs = ({ activeTab, setActiveTab }) => {
   }
 
   return (
-    <div className="grid gap-2 md:gap-8">
+    <div className="grid gap-2 md:gap-8 w-full h-auto px-6 py-4 shadow-sm">
       <div className="flex gap-4 items-center ml-2">
         <button onClick={handleClose}>
           <CancelIcon />

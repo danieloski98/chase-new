@@ -1,5 +1,6 @@
 import PropTypes from "prop-types"
 import chasescrollLogo from "@/assets/images/chasescroll-logo-large.png"
+import { Spinner } from "@chakra-ui/react"
 
 const MiniScreensWrapper = ({
   children,
@@ -8,6 +9,7 @@ const MiniScreensWrapper = ({
 	description,
   action,
   handleClick,
+  isLoading
 }) => {
   return (
     <div
@@ -24,12 +26,13 @@ const MiniScreensWrapper = ({
       {children}
       <button
         disabled={disabled}
-        onClick={handleClick}
+        onClick={() => handleClick()}
         className={`${
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
         } w-full max-w-sm bg-chasescrollBlue text-white py-2.5 text-center rounded-lg font-bold text-xl`}
       >
-        {action}
+        { !isLoading && action }
+        { isLoading && <Spinner color="white" size='md' /> }
       </button>
     </div>
   )

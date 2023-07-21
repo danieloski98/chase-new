@@ -2,10 +2,28 @@ import PropTypes from "prop-types"
 import React, { useState } from "react"
 import OverlayWrapper from "@/components/OverlayWrapper"
 import ConfirmDeleteImage from "@/assets/images/ConfirmDeleteIcon.png"
+import { useMutation } from "react-query"
+import httpService from "@/utils/httpService"
+import { toast } from "react-toastify"
+import { useAuth } from '../../../../context/authContext'
+import { Spinner } from '@chakra-ui/react'
 
 const ConfirmDelete = ({ handleModalState }) => {
-  const [showMoreOptions, setShowMoreOptions] = useState(false)
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const { logout } = useAuth();
+  // react query
 
+  const { isLoading, mutate } = useMutation({
+    mutationFn: () => httpService.delete('/auth/user'),
+    onError: (error) => {
+      toast.error(error.response?.data);
+    },
+    onSuccess: (data) => {
+      toast.success('Account successfully deleted');
+      handleModalState(false);
+      logout();
+    }
+  });
   const toggleMoreOptions = () => {
     setShowMoreOptions(state => !state)
     handleModalState(showMoreOptions)
@@ -31,8 +49,11 @@ const ConfirmDelete = ({ handleModalState }) => {
             undone.
           </p>
           <div className="flex flex-col gap-2 justify-center items-center w-full mt-4">
-            <button className="w-full bg-red-500 text-white px-4 py-2 rounded-lg mr-2">
-              Delete
+            <button 
+            onClick={() => mutate()}
+            className="w-full bg-red-500 text-white px-4 py-2 rounded-lg mr-2">
+             { isLoading && <Spinner color="brand.chasescrollButtonBlue" size='md' /> }
+             { !isLoading && 'Delete Account' }
             </button>
             <button
               className="w-full border  text-gray-500 px-4 py-2 rounded-lg "

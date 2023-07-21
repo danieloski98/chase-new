@@ -17,6 +17,7 @@ import { GET_FRIEND_REQUESTS, GET_JOINED_EVENTS, GET_JOINED_GROUPS, GET_USER_CON
 import { useAuth } from "../../../context/authContext"
 import { toast } from "react-toastify"
 import { IoMdSettings } from 'react-icons/io'
+import { Avatar } from '@chakra-ui/react'
 
 const Profile_1 = () => {
   const [showOptions, setShowOptions] = useState(false)
@@ -197,16 +198,24 @@ const Profile_1 = () => {
             <section className="flex flex-col mb-5 pb-6 w-full text-chasescrollBlue border-b-2 border-b-gray-200 h-fit">
               <div className="grid place-items-center relative">
                 <div className="h-96 w-full relative">
+                  <div className="absolute w-full h-full bg-[#00000045] inset-0" />
                   <img
                     src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
                     alt="user cover background"
                     className="w-full h-full object-cover"
                   />
                   <div className="backdrop-blur-md absolute inset-0 flex justify-start items-end pb-40 md:pb-32 px-4">
-                    <img
+                    {/* <img
                       src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
                       alt="user profile photo"
                       className="border-2 border-white w-40 h-40 rounded-b-full rounded-tl-full shadow-md object-cover"
+                    /> */}
+                    <Avatar 
+                        src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
+                        alt="user profile photo"
+                        className="border-2 border-white w-40 h-40 rounded-b-full rounded-tl-full shadow-md object-cover"
+                        name={`${profile?.firstName} ${profile?.lastName}`}
+                        size='2xl'
                     />
                   </div>
                 </div>
@@ -217,7 +226,7 @@ const Profile_1 = () => {
                     className="cursor-pointer hover:bg-white hover:bg-opacity-70"
                   >
                     {/* <SecondMenuIcon /> */}
-                    <IoMdSettings size="20px" color='white' />
+                    <IoMdSettings size="20px" fontSize='30px' color='white' />
                   </div>
                 </div>
 

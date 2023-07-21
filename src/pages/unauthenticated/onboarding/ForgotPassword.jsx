@@ -9,6 +9,7 @@ import { SEND_EMAIL_TO_USER, CHANGE_PASSWORD } from "@/constants/endpoints.const
 import { PATH_NAMES } from "@/constants/paths.constant";
 import ButtonSpinner from "@/components/ButtonSpinners";
 import { useAuth } from "../../../context/authContext";
+import { FiX } from 'react-icons/fi'
 
 const ForgotPassword = () => {
   const [userDetails, setUserDetails] = useState({
@@ -70,10 +71,19 @@ const ForgotPassword = () => {
       ) : (
         <>
           <div
-            className="flex flex-col gap-10 items-center justify-center p-8"
+            className="flex flex-col gap-10  p-8"
             style={{ minHeight: "100vh" }}
           >
-            <div className="flex flex-col gap-8 w-full max-w-[463px]">
+            <div className="w-full h-10">
+              <p className="text-3xl cursor-pointer" onClick={() => navigate('/')}>
+                <FiX />
+              </p>
+            </div>
+
+          <div className="flex-1 w-full h-full flex flex-col items-center justify-center">
+
+
+          <div className="flex flex-col gap-8 w-full max-w-[463px]">
               <img src={chasescrollLogo} alt="" className="self-center w-28" />
               <p className="text-chasescrollDarkBlue font-bold text-3xl text-center">
                 Forgot Password
@@ -128,6 +138,10 @@ const ForgotPassword = () => {
                 </form>
               )}
             </div>
+
+          </div>
+
+
           </div>
         </>
       )}

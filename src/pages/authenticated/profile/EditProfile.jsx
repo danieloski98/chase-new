@@ -9,8 +9,12 @@ import { useFetch } from "../../../hooks/useFetch"
 import { useAuth } from "../../../context/authContext"
 import { UPDATE_PROFILE } from "../../../constants/endpoints.constant"
 import ButtonSpinner from "../../../components/ButtonSpinners";
+import { useQuery } from 'react-query'
+import httpService from "@/utils/httpService";
+import { Avatar } from '@chakra-ui/react'
 
 function EditProfile() {
+  const { token, userId } = useAuth()
   const [userProfile, setUserProfile] = useState({
     firstName: "",
     lastName: "",
@@ -18,11 +22,27 @@ function EditProfile() {
     website: "",
     about: "",
   })
+
+  const { isLoading: profileLoading } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`),{
+    onError: (error) => {
+      toast.error(error.response?.data);
+    },
+    onSuccess: (data) => {
+      console.log(data.data);
+      setUserProfile({
+        firstName: data.data.firstName,
+        lastName: data.data.lastName,
+        username: data.data.username,
+        website: data.data.website,
+        about: data.data.about
+      })
+    }
+  })
+  
   const [expanded, setExpanded] = useState(true)
   const [component, setComponent] = useState(false)
 
   const { sendRequest, isLoading } = useFetch()
-  const { token, userId } = useAuth()
 
   const handleChange = ({ target: { name, value } }) => {
     setUserProfile(info => ({
@@ -84,8 +104,14 @@ function EditProfile() {
           </div>
           <form onSubmit={updateUserProfile} className="w-full sm:w-1/2 overflow-auto">
             <div className="flex justify-center items-center mb-4">
-              <img
+              {/* <img
                 src={davido}
+                alt="Profile Image"
+                className="w-1/4 h-25 rounded-b-[32px] rounded-tl-[32px]"
+              /> */}
+              <Avatar 
+                name={`${userProfile.firstName} ${userProfile.lastName}`}
+                size='2xl'
                 alt="Profile Image"
                 className="w-1/4 h-25 rounded-b-[32px] rounded-tl-[32px]"
               />

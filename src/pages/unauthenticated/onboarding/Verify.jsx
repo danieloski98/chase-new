@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom"
 import { PATH_NAMES } from "../../../constants/paths.constant"
 import { ToastContainer, toast } from "react-toastify";
 import { VERIFY_ACCOUNT_OTP } from "@/constants/endpoints.constant"
+import { useMutation } from "react-query"
+import httpService from "@/utils/httpService"
 
 const Verify = ({ togglePasswordVisibility }) => {
   const [pin, setPin] = useState("")
@@ -14,27 +16,27 @@ const Verify = ({ togglePasswordVisibility }) => {
   const { sendRequest, isLoading, error } = useFetch()
   const navigate = useNavigate()
 
-  const verifyToken = async () => {
-    const response = await sendRequest(VERIFY_ACCOUNT_OTP, "POST", {
-      token: pin
-    })
-    if (response?.statusCode === 0) {
-      if (togglePasswordVisibility) {
-        togglePasswordVisibility()
-      } else {
-        navigate('/')
-      }
-    } else {
-      toast.error(response?.statusDescription);
+  // react query
+  const { isLoading: isVerifyLoading, mutate } = useMutation({
+    mutationFn: () => httpService.post(VERIFY_TOKEN, {
+      token: pin,
+    }),
+    onError: (error) => {
+      toast.error(error.response?.data);
+    },
+    onSuccess: (data) => {
+      toast.success('Account successfully verified');
+      navigate('/');
     }
-  }
+  });
 
   return (
     <MiniScreensWrapper
       title="Email Verification"
       description="A six digits code has been sent to your email for verification"
       action="Verify"
-      handleClick={verifyToken}
+      handleClick={mutate}
+      isLoading={isVerifyLoading}
     >
       <PinInput
         length={6}

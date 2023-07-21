@@ -19,6 +19,7 @@ import { toast } from "react-toastify"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import httpService from "@/utils/httpService"
 import { Spinner, Stack, Skeleton, SkeletonCircle, HStack } from '@chakra-ui/react'
+import { Avatar } from '@chakra-ui/react'
 
 const Home = () => {
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
@@ -30,6 +31,7 @@ const Home = () => {
   const [userFeedData, setUserFeedData] = useState([])
   const [postFile, setPostFile] = useState()
   const [postInput, setPostInput] = useState("")
+  const [user, setUser] = useState(null)
   const { sendRequest } = useFetch()
   const { userName, token, userId } = useAuth()
   const threadListRef = useRef(null)
@@ -48,6 +50,16 @@ const Home = () => {
     },
     onSuccess: (data) => {
       setUserFeedData(data.data.content);
+    }
+  });
+
+  const { isLoading: profileLoading, data } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
+    onError: (error) => {
+      toast.error(JSON.stringify(error.response?.data));
+    },
+    onSuccess: (data) => {
+      setUser(data.data);
+      console.log(data.data);
     }
   })
 
@@ -155,11 +167,13 @@ const Home = () => {
              <div className="hidden md:flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full max-w-lg rounded-xl p-3 shadow-md">
                <div className="flex items-center bg-chasescrollPalePurple bg-opacity-30 rounded-xl pl-4">
                  <div className="w-8 h-7 rounded-b-full rounded-tr-full border border-chasescrollBlue flex items-center justify-center">
-                   <img
-                      onClick={() => navigate(`/profile/${userId}`)}
-                     src={profilePhoto}
-                     alt=""
-                     className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
+                   
+                   <Avatar 
+                    // src={user.images.value ? user.images.value : ''}
+                    name={`${user.firstName} ${user.lastName}` || userName }
+                    className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
+                    onClick={() => navigate(`/profile/${userId}`)}
+                    size='sm'
                    />
                  </div>
                  <input
