@@ -15,6 +15,7 @@ import { useAuth } from "../../context/authContext"
 import { compressFile } from "./FileCompressor"
 import { toast } from "react-toastify"
 import { videoConfig } from "../../constants"
+import { Avatar } from '@chakra-ui/react'
 
 const UploadImage = ({ toggleFileUploader }) => {
   const [imageSrc, setImageSrc] = useState(null)
@@ -182,10 +183,15 @@ const UploadImage = ({ toggleFileUploader }) => {
                 {showCaption && (
                   <div className="flex flex-col gap-2 px-5 pt-3 pb-4 bg-white rounded-b-lg">
                     <div className="flex gap-2 items-center">
-                      <img
+                      {/* <img
                         src={profilePhoto}
                         alt=""
                         className="rounded-full w-14"
+                      /> */}
+                      <Avatar 
+                        // src={profilePhoto}
+                        name={userName}
+                        size='lg'
                       />
                       <h1 className="text-xl font-medium">{userName}</h1>
                     </div>

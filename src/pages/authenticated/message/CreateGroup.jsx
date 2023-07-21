@@ -11,6 +11,7 @@ import { useFetch } from "../../../hooks/useFetch"
 import { GET_CHAT, GET_USER_CONNECTION_LIST, UPLOAD_IMAGE } from "../../../constants/endpoints.constant"
 import CONFIG from "../../../config"
 import { toast } from "react-toastify"
+import { Avatar } from '@chakra-ui/react'
 
 const CreateGroup = () => {
   const [showMembers, setShowMembers] = useState(false)
@@ -141,10 +142,16 @@ const CreateGroup = () => {
                   <div className="flex gap-2 items-center flex-wrap">
                     {selectedMembers?.map(profile => (
                       <div key={profile?.userId} className="rounded-full flex items-center gap-1 p-1 bg-chasescrollNavyLight border border-chasescrollBlue">
-                        <img
+                        {/* <img
                           src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
                           alt="profile icon"
                           className="w-6 h-6 rounded-full"
+                        /> */}
+                        <Avatar 
+                           src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
+                           alt="profile icon"
+                           className="w-6 h-6 rounded-full"
+                           name={`${profile?.firstName} ${profile?.lastName}`}
                         />
                         <small className="text-[10px]">{profile?.username}</small>
                       </div>
@@ -159,10 +166,16 @@ const CreateGroup = () => {
                         to={`${PATH_NAMES.profile}/${profile.userId}`}
                         className="flex gap-2 items-center"
                       >
-                        <img
+                        {/* <img
                           src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
                           className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
                           alt="connection"
+                        /> */}
+                         <Avatar 
+                           src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
+                           className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
+                           alt="connection"
+                           name={`${profile?.firstName} ${profile?.lastName}`}
                         />
                         <div className="inline-flex flex-col">
                           <p className="text-l text-black-800">

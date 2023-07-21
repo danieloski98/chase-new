@@ -178,11 +178,11 @@ const Message = () => {
                           }}
                           className={`flex items-center gap-4 border-b py-2 border-gray-100 cursor-pointer hover:bg-slate-50`}
                         >
-                          <div className={`${thread?.type !== 'ONE_TO_ONE' ? 'border-l-4 border-chasescrollBlue pl-0.5 rounded-b-full rounded-tl-full' : ''}`}>
+                          <div className={`${thread?.type !== 'ONE_TO_ONE' ? 'border-l-4 border-chasescrollBlue pl-0.5 rounded-b-full rounded-tl-full cursor-pointer' : ''}`}>
                             <ProfilePhoto image={thread?.data?.imgMain?.objectPublic ? `${CONFIG.RESOURCE_URL}${thread?.data?.imgMain?.value}}` : `https://ui-avatars.com/api/?background=random&name=${thread?.otherUser?.firstName}&length=1`} />
                           </div>
                           <div className="flex flex-col">
-                            <p className="font-bold text-sm text-gray-800">
+                            <p className="font-bold text-sm text-gray-800 cursor-pointer">
                               {thread?.type !== "ONE_TO_ONE" ? thread?.name : `${thread?.otherUser?.firstName} ${thread?.otherUser?.lastName}`}
                             </p>
                             <small className="text-xs text-gray-400 truncate w-72">
@@ -199,11 +199,11 @@ const Message = () => {
                           onClick={() => toggleChatVisibility(thread.id)}
                           className={`flex items-center gap-4 border-b py-2 border-gray-100 cursor-pointer hover:bg-slate-50`}
                         >
-                          <div className={`${thread?.type !== 'ONE_TO_ONE' ? 'border-l-4 border-chasescrollBlue pl-0.5 rounded-b-full rounded-tl-full' : ''}`}>
+                          <div className={`${thread?.type !== 'ONE_TO_ONE' ? 'border-l-4 border-chasescrollBlue pl-0.5 rounded-b-full rounded-tl-full cursor-pointer' : ''}`}>
                             <ProfilePhoto image={thread?.data?.imgMain?.objectPublic ? `${CONFIG.RESOURCE_URL}${thread?.data?.imgMain?.value}}` : `https://ui-avatars.com/api/?background=random&name=${thread?.otherUser?.firstName}&length=1`} />
                           </div>
                           <div className="flex flex-col">
-                            <p className="font-bold text-sm text-gray-800">
+                            <p className="font-bold text-sm text-gray-800 cursor-pointer">
                               {thread?.type !== "ONE_TO_ONE" ? thread?.name : `${thread?.otherUser?.firstName} ${thread?.otherUser?.lastName}`}
                             </p>
                             <small className="text-xs text-gray-400 truncate w-72">
@@ -251,9 +251,11 @@ const Message = () => {
                 </div>
                 <div className="absolute top-0 left-0 w-full p-4 bg-white flex justify-between items-center z-10">
                   <div className="flex items-center gap-4">
-                    <ProfilePhoto image={currentUser?.data?.imgMain?.objectPublic ? `${CONFIG.RESOURCE_URL}${currentUser?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${currentUser?.otherUser?.firstName}&length=1`} />
+                    <span className="cursor-pointer">
+                      <ProfilePhoto image={currentUser?.data?.imgMain?.objectPublic ? `${CONFIG.RESOURCE_URL}${currentUser?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${currentUser?.otherUser?.firstName}&length=1`} />
+                    </span>
                     <div className="flex flex-col">
-                      <p className="text-chasescrollBlue font-bold ">
+                      <p className="text-chasescrollBlue font-bold cursor-pointer">
                         {currentUser?.type !== "ONE_TO_ONE" ? currentUser?.name : `${currentUser?.otherUser?.firstName} ${currentUser?.otherUser?.lastName}`}
                       </p>
                       {/* <small className="text-xs">online</small> */}
@@ -328,6 +330,11 @@ const Message = () => {
                       placeholder="Say Something..."
                       value={message}
                       onChange={handleChange}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          sendChatMessage(currentUser?.id)
+                        }
+                      }}
                     />
                     <img
                       alt=""
@@ -429,6 +436,11 @@ const Message = () => {
                     type="text"
                     className="outline-none px-4 rounded-l-xl w-full text-sm text-chasescrollBlue"
                     placeholder="Say Something..."
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        sendChatMessage(currentUser?.id)
+                      }
+                    }}
                   />
                   <img src={send} alt="" />
                 </div>
