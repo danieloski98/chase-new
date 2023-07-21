@@ -18,6 +18,7 @@ import RefundPolicy from "@/components/explore/modals/RefundPolicy"
 import SelectPaymentMethod from "../../../components/explore/modals/SelectPaymentMethod"
 import CONFIG from "../../../config"
 import { useAuth } from "../../../context/authContext"
+import { toast } from "react-toastify"
 import { useFetch } from "../../../hooks/useFetch"
 import { CREATE_TICKET, PAY_WITH_PAYSTACK, PAY_WITH_STRIPE, VERIFY_PAYSTACK_PAYMENT, VERIFY_STRIPE_PAYMENT } from "../../../constants/endpoints.constant"
 import SelectPaymentOptions from "../../../components/explore/modals/SelectPaymentOptions"
@@ -80,7 +81,7 @@ const TicketPageTemplate = ({
       { Authorization: `Bearer ${token}` }
     ).then((data) => {
       sendPaystackRequest(
-        `${PAY_WITH_PAYSTACK}?orderCode=${data?.orderCode}&email=${data?.email}&amount=${data?.orderTotal}&currency=${currency}`,
+        `${PAY_WITH_PAYSTACK}?orderCode=${data?.content?.orderCode}&email=${data?.content?.email}&amount=${data?.content?.orderTotal}&currency=${currency}`,
         "POST",
         null,
         { Authorization: `Bearer ${token}` }
@@ -99,15 +100,19 @@ const TicketPageTemplate = ({
         numberOfTickets: ticketCount
       },
       { Authorization: `Bearer ${token}` }
-    ).then((data) => {
-      sendStripeRequest(
-        `${PAY_WITH_STRIPE}?orderId=${data?.orderId}`,
-        "POST",
-        null,
-        { Authorization: `Bearer ${token}` }
-      ).then((response) => {
-        window.open(response?.checkout, "_blank");
-      })
+    ).then((data) => { 
+      if(!data?.content?.orderId){
+        toast.error(data?.message) 
+      } else { 
+        sendStripeRequest(
+          `${PAY_WITH_STRIPE}?orderId=${data?.content?.orderId}`,
+          "POST",
+          null,
+          { Authorization: `Bearer ${token}` }
+        ).then((response) => {
+          window.open(response?.checkout, "_blank");
+        }) 
+      } 
     })
   }
 
