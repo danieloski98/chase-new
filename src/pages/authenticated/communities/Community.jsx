@@ -462,6 +462,11 @@ const Community = () => {
 														placeholder="Say Something..."
 														value={message}
 														onChange={handleChange}
+														onKeyDown={(e) => {
+															if (e.key === "Enter") {
+																sendChatMessage(currentUser?.id);
+															}
+														}}
 													/>
 													<img
 														alt=""
@@ -590,6 +595,13 @@ const Community = () => {
 													type="text"
 													className="outline-none px-4 rounded-l-xl w-full text-sm text-chasescrollBlue"
 													placeholder="Say Something..."
+													value={message}
+													onChange={handleChange}
+													onKeyDown={(e) => {
+														if (e.key === "Enter") {
+															sendChatMessage(currentUser?.id);
+														}
+													}}
 												/>
 												<img src={send} alt="" />
 											</div>

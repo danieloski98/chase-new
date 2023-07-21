@@ -78,7 +78,7 @@ const SearchEventCard = (event: IEvent) => {
                      <LocationIcon_2 /> {event.location.address}
                    </span>
                    <div className="flex gap-2">
-                     <UploadIcon />
+                    
                      <span className="cursor-pointer" onClick={handleSave}>
                       { saveEvent.isLoading  && <Spinner size='md' color="brand.chasesccrollButtonBlue" /> }
                       { !saveEvent.isLoading && (

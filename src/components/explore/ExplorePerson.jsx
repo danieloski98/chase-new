@@ -58,14 +58,14 @@ const ExplorePerson = ({ person }) => {
 						className="text-[#F04F4F] text-xs md:text-sm hover:text-red-600 shadow-lg bg-white font-bold py-1 md:py-2 px-8 rounded"
 						onClick={() => unfriend(person.userId)}
 					>
-						Remove
+						Request Sent
 					</button>
 				) : (
 					<button
 						className="text-[#1732F7] text-xs md:text-sm hover:text-blue-500 shadow-lg bg-[#E2E5F3] font-bold py-1 md:py-2 px-8 rounded"
 						onClick={sendFriendRequest}
 					>
-						Add
+						Connect
 					</button>
 				)}
 			</div>
