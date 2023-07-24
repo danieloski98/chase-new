@@ -15,8 +15,7 @@ import LogoutModal from "./LogoutModal"
 const PageWrapper = ({ children, toggleFileUploader }) => {
   const location = useLocation()
   const isExplorePage = location.pathname.includes("/explore")
-  const [showLogout, setShowLogout] = useState(false);
-
+  const [showLogout, setShowLogout] = useState(false); 
 
   const { logout, userId } = useAuth()
 
@@ -163,7 +162,7 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
             <span>Logout</span>
           </button>
         </div>
-        <div className="overflow-auto w-full h-full">
+        <div className="overflow-auto w-full flex flex-col h-full">
           {children(notifications, getNotifications, notificationsFilter, filterNotifications)}
         </div>
       </div>

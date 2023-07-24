@@ -25,10 +25,10 @@ const CreateExploreSearchTabs = ({ activeTab, setActiveTab }) => {
           return (
             <button
               key={value}
-              className={`text-sm md:text-base md:p-2 md:px-8 px-2 ${
+              className={`text-[24px] md:font-bold md:p-2 md:px-8 px-2 ${
                 isActive
-                  ? "text-chasescrollBlue"
-                  : "text-gray-300 hover:bg-gray-50 hover:text-chasescrollBlue"
+                  ? "text-[#5D70F9]"
+                  : "text-black hover:bg-gray-50 hover:text-chasescrollBlue"
               }`}
               onClick={() => handleTabClick(value)}
             >

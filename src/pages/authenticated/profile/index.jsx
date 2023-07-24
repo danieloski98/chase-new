@@ -21,6 +21,7 @@ import { Avatar } from '@chakra-ui/react'
 
 const Profile_1 = () => {
   const [showOptions, setShowOptions] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [profile, setProfile] = useState({})
   const [displayConnect, setDisplayConnect] = useState(true)
   const [posts, setPosts] = useState([])
@@ -32,18 +33,22 @@ const Profile_1 = () => {
 
   const { userId } = useParams()
 
+
   const { sendRequest } = useFetch()
   const { token, userId: currentUserId } = useAuth()
+
+  // console.log(userId);
 
   const self = userId === currentUserId
 
   const fetchProfileInfo = async () => {
     const data = await sendRequest(
-      GET_USER_PRIVATE_PROFILE,
+      "/user/publicprofile/"+userId,
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
     )
+ 
     if (data) setProfile(data)
   }
 
@@ -101,9 +106,10 @@ const Profile_1 = () => {
     if (data) setCommunities(data)
   }
 
-  const friendPerson = async (userId) => {
+  const friendPerson = async () => {
+    setLoading(true)
     const data = await sendRequest(
-      `${SEND_FRIEND_REQUEST}${userId}`,
+      `${SEND_FRIEND_REQUEST}`,
       "POST",
       { toUserID: userId },
       { Authorization: `Bearer ${token}` }
@@ -111,10 +117,13 @@ const Profile_1 = () => {
     if (data) {
       toast.success(data.message);
       fetchNetwork()
+      fetchProfileInfo()
     }
+    setLoading(false)
   }
 
-  const unfriendPerson = async (userId) => {
+  const unfriendPerson = async () => {
+    setLoading(true)
     const data = await sendRequest(
       `${REMOVE_FRIEND}${userId}`,
       "DELETE",
@@ -124,7 +133,9 @@ const Profile_1 = () => {
     if (data) {
       toast.success(data.message);
       fetchNetwork()
+      fetchProfileInfo()
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -143,9 +154,7 @@ const Profile_1 = () => {
       if (isMyFriend) setDisplayConnect(false)
       else setDisplayConnect(true)
     }
-  }, [network])
-
-  console.log(displayConnect)
+  }, [network]) 
 
   const handleButtonClick = componentName => {
     if (
@@ -188,7 +197,7 @@ const Profile_1 = () => {
 
   const handleShowOptions = () => {
     setShowOptions(state => !state)
-  }
+  } 
 
   return (
     <PageWrapper>
@@ -238,19 +247,20 @@ const Profile_1 = () => {
                   </div>
                   {!self && (
                     <div className="flex items-center gap-4 justify-center text-sm md:text-base">
-                      {displayConnect ? (
+                      {/* {profile?.joinStatus === "FRIEND_REQUEST_SENT" } */}
+                      {profile?.joinStatus === "FRIEND_REQUEST_SENT" ? (
                         <button
-                          className="w-40 bg-chasescrollBlue text-white px-3 md:px-4 py-3 rounded-md"
-                          onClick={friendPerson}
+                          className="w-40 font-semibold bg-[#F04F4F] text-white px-3 md:px-4 py-3 rounded-md"
+                          onClick={unfriendPerson}
                         >
-                          Connect
+                          {loading ? "loading.." : "Pending"}
                         </button>
                       ) : (
                         <button
-                          className="w-40 bg-chasescrollBlue text-white px-3 md:px-4 py-3 rounded-md"
-                          onClick={unfriendPerson}
+                          className="w-40 font-semibold bg-chasescrollBlue text-white px-3 md:px-4 py-3 rounded-md"
+                          onClick={friendPerson}
                         >
-                          Disconnect
+                          {loading ? "loading.." : "Connect"}
                         </button>
                       )}
                       <Link
