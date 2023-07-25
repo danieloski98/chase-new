@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import { AxiosError, AxiosResponse } from "axios";
 import httpService from '../../utils/httpService';
 import { toast } from "react-toastify";
+import { Avatar } from '@chakra-ui/react';
 
 interface Iprops {
 	person: any
@@ -64,7 +65,13 @@ const ExplorePerson = (props: Iprops) => {
 						<img src={`https://chaseenv.chasescroll.com//resource-api/download/${person?.data?.imgMain?.value}`} alt="profiles" className="h-[57px] w-[57px] rounded-b-full rounded-tl-full" />
 					}
 					{!person?.data?.imgMain?.value && (
-						<div className=' w-[57px] h-[57px] bg-yellow-600 rounded-b-full rounded-tl-full ' />
+						<Avatar 
+							src={`https://chaseenv.chasescroll.com//resource-api/download/${person?.data?.imgMain?.value}`}
+							name={`${person?.firstName} ${person?.lastName}`}
+							className="h-[57px] w-[57px] rounded-b-full rounded-tl-full cursor-pointer"
+							size='md'
+							onClick={() => navigate(`/profile/${`${person?.userId}`}`)}
+						/> 
 					)}
 					{/* <Avatar 
 						srrc={`${CONFIG.RESOURCE_URL}${person?.data?.imgMain?.value}`}

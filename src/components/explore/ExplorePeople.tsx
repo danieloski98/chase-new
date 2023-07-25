@@ -35,10 +35,6 @@ const ExplorePeople = () => {
       setSuggestions(data.data.content);
     }
   })
-
-  console.log(suggestions);
-  
-
   // useEffect(() => {
   //   getSuggestions()
   // }, [])
