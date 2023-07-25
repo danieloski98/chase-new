@@ -1,4 +1,4 @@
-export interface IUser {
+export type IUser = {
     dob: string;
     firstName: string
     joinStatus: string;
@@ -45,3 +45,5 @@ export interface IUser {
         }
     }
 }
+
+// export { IUser }
