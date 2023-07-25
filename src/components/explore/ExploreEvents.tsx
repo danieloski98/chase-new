@@ -140,7 +140,7 @@ const ExploreEvents = () => {
        ))}
      </ul>
      )}
-     {events.length <= 0 && (
+     {!isLoading && events.length <= 0 && (
       <div className=' w-full py-5 flex justify-center font-bold text-2xl ' >
         No Records Found
       </div>

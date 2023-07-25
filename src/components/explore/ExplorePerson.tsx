@@ -48,14 +48,12 @@ const ExplorePerson = (props: Iprops) => {
 	const handleadd = React.useCallback(() => {
 		setLoading(person?.userId) 
 		addfriend.mutate({toUserID: person?.userId}) 
-	  }, [])  
-
-
+	}, [])   
 
 	const handleRemove = React.useCallback(() => {
 		setLoading(person?.userId) 
 		unfriend.mutate() 
-	  }, []) 
+	}, []) 
 
 	return (
 		<li className="flex py-4 px-4 md:gap-96 items-center border-b">
