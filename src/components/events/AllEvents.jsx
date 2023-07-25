@@ -144,12 +144,12 @@ const AllEvents = () => {
                   >
                     {interestedUsers.slice(0, 3).map(attendee => (
                       <div className="w-8 h-8 -mr-3">
-                        <img
+                        {/* <img
                           key={attendee.id}
                           src={`${CONFIG.RESOURCE_URL}${attendee.data.imgMain.value}`}
                           className="w-8 h-8 -mr-3 rounded-b-full rounded-tl-full"
                           alt=""
-                        />
+                        /> */}
                       </div>
                     ))}
 

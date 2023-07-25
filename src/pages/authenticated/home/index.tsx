@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState, useRef, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { useFetch } from "../../../hooks/useFetch"
 import CONFIG from "@/config"
@@ -11,15 +11,23 @@ import { useAuth } from "../../../context/authContext"
 import {
   CREATE_POST,
   GET_POST_LIST,
+  GET_USER_FEED_DATA,
 } from "../../../constants/endpoints.constant"
 import imageIcon from "@/assets/svg/image.svg"
 import profilePhoto from "@/assets/images/avatar.png"
 import Share from "./Share"
 import { toast } from "react-toastify"
-import { useMutation, useQuery, useQueryClient } from "react-query"
+import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "react-query"
 import httpService from "@/utils/httpService"
 import { Spinner, Stack, Skeleton, SkeletonCircle, HStack } from '@chakra-ui/react'
 import { Avatar } from '@chakra-ui/react'
+import {IUser} from '../../../models/User'
+import { AxiosError, AxiosResponse } from "axios"
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { IMediaContent, IMediaPost } from "src/models/MediaPost"
+import UserPosts from "../profile/UserPosts"
+import Loader from "@/components/Loader"
+import useInfiniteScroll from "@/hooks/useInfiniteScroll"
 
 const Home = () => {
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
@@ -28,11 +36,10 @@ const Home = () => {
   const [showShareModal, setShowShareModal] = useState(false)
   const [menuAction, setMenuAction] = useState(null)
   const [threadId, setThreadId] = useState(null)
-  const [userFeedData, setUserFeedData] = useState([])
+  const [userFeedData, setUserFeedData] = useState<any[]>([])
   const [postFile, setPostFile] = useState()
   const [postInput, setPostInput] = useState("")
-  const [user, setUser] = useState(null)
-  const { sendRequest } = useFetch()
+  const [user, setUser] = useState<IUser | null>(null)
   const { userName, token, userId } = useAuth()
   const threadListRef = useRef(null)
 
@@ -41,38 +48,94 @@ const Home = () => {
 
   const toggleMoreOptions = () => setShowMoreOptions(state => !state)
   const toggleFileUploader = () => setShowFileUploader(state => !state)
-  const toggleShare = () => setShowShareModal(state => !state)
+  const toggleShare = () => setShowShareModal(state => !state);
 
-  // react query
-  const { isLoading } = useQuery(['getFeedsData'], () => httpService.get(GET_POST_LIST), {
-    onError: (error) => {
-      toast.error(JSON.stringify(error.response?.data));
-    },
-    onSuccess: (data) => {
-      setUserFeedData(data.data.content);
+  // pagination details
+  const [pageParam, setPageParam] = useState(0);
+ const { isError, isLoading, results, hasNextPage, error } = useInfiniteScroll({ pageParam, userID: userId as any })
+ const intObserver = useRef<IntersectionObserver>();
+
+ const lastChildRef = useCallback((post) => {
+  if (isLoading) return;
+  if (intObserver.current) intObserver.current.disconnect();
+  intObserver.current = new IntersectionObserver((posts) => {
+    if (posts[0].isIntersecting && hasNextPage) {
+      setPageParam(prev => prev + 1);
     }
   });
+  if (post) intObserver.current.observe(post);
+ }, [isLoading, hasNextPage])
 
-  const { isLoading: profileLoading, data } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
-    onError: (error) => {
+ const content = results.map((post: IMediaContent, i: number) => {
+  if (results.length === i + 1) {
+    return (
+      <Thread
+        ref={lastChildRef}
+                    key={post?.id}
+                    postID={post?.id}
+                    text={post?.text}
+                    user={post?.user}
+                    time={post?.time}
+                    image={post?.mediaRef}
+                    mediaRef={post?.mediaRef}
+                    multipleMediaRef={post?.multipleMediaRef}
+                    shareCount={post?.shareCount}
+                    likeCount={post?.likeCount}
+                    commentCount={post?.commentCount}
+                    toggleMoreOptions={toggleMoreOptions}
+                    toggleShare={toggleShare}
+                    setThreadId={setThreadId}
+                    likeStatus={post?.likeStatus}
+                    type={post?.type}
+                    
+                  />
+    )
+  } else {
+    return (
+      <Thread
+                    key={post?.id}
+                    postID={post?.id}
+                    text={post?.text}
+                    user={post?.user}
+                    time={post?.time}
+                    image={post?.mediaRef}
+                    mediaRef={post?.mediaRef}
+                    multipleMediaRef={post?.multipleMediaRef}
+                    shareCount={post?.shareCount}
+                    likeCount={post?.likeCount}
+                    commentCount={post?.commentCount}
+                    toggleMoreOptions={toggleMoreOptions}
+                    toggleShare={toggleShare}
+                    setThreadId={setThreadId}
+                    likeStatus={post?.likeStatus}
+                    type={post?.type}
+                    
+                  />
+    )
+  }
+ })
+
+
+
+  const { isLoading: profileLoading } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
+    onError: (error: AxiosError<any, any>) => {
       toast.error(JSON.stringify(error.response?.data));
     },
     onSuccess: (data) => {
       setUser(data.data);
-      console.log(data.data);
     }
   })
 
   // mutation
   const { mutate, isLoading: postLoading } = useMutation({
-    mutationFn: () => httpService.post(CREATE_POST, { text: postInput }),
-    onError: (error) => {
+    mutationFn: () => httpService.post(CREATE_POST, { text: postInput, type: "NO_IMAGE_POST", sourceId: userId }),
+    onError: (error: AxiosError<any, any>) => {
       toast.error(JSON.stringify(error.response?.data));
     },
     onSuccess: (data) => {
       toast.success("Post created successfully");
       setPostInput("");
-      queryClient.invalidateQueries("getFeedsData");
+      queryClient.invalidateQueries("getFeedsData1");
     }
   })
   const handleItemClick = (action, route, threadId) => {
@@ -97,7 +160,7 @@ const Home = () => {
       }
       mutate();
     }
-  }, [postInput]);
+  }, [mutate, postInput, postLoading]);
 
   const createPost = React.useCallback(() => {
     if (postLoading) {
@@ -108,14 +171,13 @@ const Home = () => {
       return;
     }
    mutate();
-  }, [postInput])
-
+  }, [mutate, postInput, postLoading])
  
 
   return (
     <PageWrapper toggleFileUploader={toggleFileUploader}>
       {() => (
-        <>
+          <div id="container" className="w-full h-full">
           {showMoreOptions && (
             <ThreadMenu
               handleItemClick={handleItemClick}
@@ -134,43 +196,13 @@ const Home = () => {
           )}
           {showShareModal && <Share closeShareModal={toggleShare} />}
 
-          { isLoading && (
-            <Stack spacing={4} width='50%' className="flex items-center lg:items-start flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto">
-              <HStack width='100%' >
-                <SkeletonCircle />
-                <Skeleton height='100px' width="90%" />
-              </HStack>
-
-              <HStack width='100%' >
-                <SkeletonCircle />
-                <Skeleton height='100px' width="90%" />
-              </HStack>
-
-              <HStack width='100%' >
-                <SkeletonCircle />
-                <Skeleton height='100px' width="90%" />
-              </HStack>
-
-              <HStack width='100%' >
-                <SkeletonCircle />
-                <Skeleton height='100px' width="90%" />
-              </HStack>
-              
-            </Stack>
-          )}
-
-          { !isLoading && (
-             <div
-             className="flex items-center lg:items-start flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto"
-             ref={threadListRef}
-           >
-             <div className="hidden md:flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full max-w-lg rounded-xl p-3 shadow-md">
+            <div className="hidden md:flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full max-w-lg rounded-xl my-9 mx-4 lg:mx-28 mb-24 p-4 shadow-md">
                <div className="flex items-center bg-chasescrollPalePurple bg-opacity-30 rounded-xl pl-4">
-                 <div className="w-8 h-7 rounded-b-full rounded-tr-full border border-chasescrollBlue flex items-center justify-center">
+                 <div className="w-8 h-7 rounded-b-full rounded-tr-full border-chasescrollBlue flex items-center justify-center">
                    
                    <Avatar 
                     // src={user.images.value ? user.images.value : ''}
-                    name={`${user.firstName} ${user.lastName}` || userName }
+                    name={`${user?.firstName} ${user?.lastName}` || 'UU' }
                     className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
                     onClick={() => navigate(`/profile/${userId}`)}
                     size='sm'
@@ -205,30 +237,17 @@ const Home = () => {
                  Add Photos/Video to your post
                </div>
              </div>
-             {userFeedData?.map(post => (
-               <Thread
-                 key={post?.id}
-                 postID={post?.id}
-                 text={post?.text}
-                 user={post?.user}
-                 time={post?.time}
-                 image={post?.mediaRef}
-                 mediaRef={post?.mediaRef}
-                 multipleMediaRef={post?.multipleMediaRef}
-                 shareCount={post?.shareCount}
-                 likeCount={post?.likeCount}
-                 commentCount={post?.commentCount}
-                 toggleMoreOptions={toggleMoreOptions}
-                 toggleShare={toggleShare}
-                 setThreadId={setThreadId}
-                 likeStatus={post?.likeStatus}
-                 type={post?.type}
-               />
-             ))}
-           </div>
+      
+      
+          <div className="hidden md:flex flex-col gap-2 bg-white  w-full max-w-lg rounded-xl my-9 mx-4 lg:mx-28 mb-24 p-4">
+          { isLoading && (
+            <Loader />
           )}
 
-        </>
+          { !isLoading && content }
+          </div>
+      
+        </div>
       )}
     </PageWrapper>
   )

@@ -39,6 +39,7 @@
     "react-dropzone-textarea": "^1.2.2",
     "react-hook-form": "^7.45.2",
     "react-icons": "^4.10.1",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-leaflet": "^4.2.1",
     "react-loader-spinner": "^5.3.4",
     "react-phone-number-input": "^3.2.19",
