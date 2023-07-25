@@ -23,6 +23,7 @@ const Explore = () => {
   }
 
   const [topEvents, setTopEvents] = useState([])
+  const [checkData, setcheckData] = useState(false)
   const [suggestions, setSuggestions] = useState([])
   const { userName, token } = useAuth()
   const { sendRequest } = useFetch()
@@ -42,9 +43,12 @@ const Explore = () => {
   }
 
   useEffect(() => {
-    getTopEvents()
+    getTopEvents() 
+  }, []) 
+
+  useEffect(() => { 
     getSuggestions()
-  }, [])
+  }, [checkData])
 
   return (
     <PageWrapper>
@@ -92,10 +96,13 @@ const Explore = () => {
                   <Suggestion
                     key={suggestion.id}
                     userId={suggestion?.userId}
+                    data={suggestion}
                     firstName={suggestion?.firstName}
                     lastName={suggestion?.lastName}
                     publicProfile={suggestion?.publicProfile}
                     img={`${CONFIG.RESOURCE_URL}${suggestion?.data?.imgMain?.value}`}
+                    check={suggestion?.data?.imgMain?.value}
+                    setCheck={getSuggestions}
                   />
                 </div>
               ))}

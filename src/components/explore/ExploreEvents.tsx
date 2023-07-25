@@ -1,19 +1,19 @@
 import React from 'react';
-import EventBlob from "../../assets/svg/eventBlob.svg"
-import { EVENTS_LIST } from "../../constants"
-import { CalendarIcon, UploadIcon, LocationIcon_2, BookmarkIcon } from "../Svgs"
+import EventBlob from "../../assets/svg/eventBlob.svg" 
+import { CalendarIcon, LocationIcon_2 } from "../Svgs"
 import { useNavigate } from 'react-router-dom'
-import { useQuery, useMutation } from 'react-query';
-import httpService from "@/utils/httpService";
+import { useAuth } from '../../context/authContext'
+import { useQuery, useMutation, useQueryClient } from 'react-query'; 
 import { toast } from "react-toastify";
 import { Spinner } from "@chakra-ui/react";
 import { AxiosError, AxiosResponse } from "axios";
-import { IEvent } from 'src/models/Events';
-import { IoBookmark, IoBookmarkOutline } from 'react-icons/io5'
-import SavedEvent from '../events/SavedEvent';
+import { IEvent } from 'src/models/Events'; 
+import httpService from '../../utils/httpService';
 
 const SearchEventCard = (event: IEvent) => {
   const navigate = useNavigate();
+	const { userId } = useAuth() 
+  const queryClient = useQueryClient()
 
   // save event
   const saveEvent = useMutation({
@@ -23,19 +23,19 @@ const SearchEventCard = (event: IEvent) => {
     },
     onSuccess: (data: AxiosResponse<any>) => {
       toast.success(data.data?.message)
+      queryClient.invalidateQueries(['getEventSearch'])
     }
   });
 
   const deletedSavedEvent = useMutation({
-    mutationFn: (data: any) => {
-      console.log(data);
-      return httpService.delete('/events/remove-saved-event', data)
-    },
+    
+    mutationFn: (data: any) => httpService.post('/events/remove-saved-event', data),
     onError: (error: AxiosError<any, any>) => {
       toast.error(error.response?.data?.message);
     },
     onSuccess: (data: AxiosResponse<any>) => {
       toast.success(data.data?.message)
+      queryClient.invalidateQueries(['getEventSearch'])
     }
   });
 
@@ -43,30 +43,32 @@ const SearchEventCard = (event: IEvent) => {
     if (event.isSaved) {
       deletedSavedEvent.mutate({
         eventID: event.id,
-        typeID: event.id,
+        typeID: userId,
         type: 'EVENT'
       })
     } else {
       saveEvent.mutate({
         eventID: event.id,
-        typeID: event.id,
+        typeID: userId,
         type: 'EVENT'
       })
     }
-  }, [event, deletedSavedEvent, saveEvent])
+  }, [event, deletedSavedEvent, saveEvent])   
 
   return (
-    <li key={event.id} className="border-b p-2 ">
-           <div className="flex my-4 justify-between">
-             <div className="flex justify-start">
-               <img onClick={() => navigate(`/event/${event.id}`)} src={EventBlob} alt="profiles" className="w-full h-full cursor-pointer" />
+    <li key={event.id} className="border-b w-full p-2 px-4 ">
+           <div className="flex my-4 items-center w-full justify-between">
+             <div className="flex w-fit justify-start">
+               <img onClick={() => navigate(`/event/${event.id}`)} src={"https://chaseenv.chasescroll.com/resource-api/download/"+event?.currentPicUrl} alt="profiles" className="w-[270px] h-[150px] object-cover rounded-b-3xl rounded-tl-3xl cursor-pointer" />
              </div>
 
-             <div>
-               <div className="flex flex-col gap-4 w-full justify-end pl-4">
-                 <h1 onClick={() => navigate(`/event/${event.id}`)}  className="border-b text-[10.5px] md:text-sm cursor-pointer">
+             <div className=' w-[40%]' >
+               <div className="flex flex-col gap-4 flex-1 w-full justify-end pl-4">
+                 <h1 onClick={() => navigate(`/event/${event.id}`)}  className="border-b text-[18px] font-bold cursor-pointer">
                    {event.eventName}{" "}
-                   <span className="pl-1 md:pl-4">{event.maxPrice}</span>
+
+                   <span className="pl-1 md:pl-4">{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</span>
+                   {/* <span className="pl-1 md:pl-4">{event.maxPrice}</span> */}
                  </h1>
                  <span className="flex gap-2 text-xs md:text-sm text-[#2E2B2B] text-opacity-[67%]">
                    <CalendarIcon /> 
@@ -74,7 +76,7 @@ const SearchEventCard = (event: IEvent) => {
                  </span>
 
                  <div className="flex md:gap-8">
-                   <span className="flex gap-2 text-xs md:text-sm text-[#1732F7] font-bold">
+                   <span className="flex gap-2 w-full text-xs md:text-sm text-[#1732F7] font-bold">
                      <LocationIcon_2 /> {event.location.address}
                    </span>
                    <div className="flex gap-2">
@@ -83,8 +85,17 @@ const SearchEventCard = (event: IEvent) => {
                       { saveEvent.isLoading  && <Spinner size='md' color="brand.chasesccrollButtonBlue" /> }
                       { !saveEvent.isLoading && (
                          <span className='text-2xl'>
-                         { event.isSaved && <IoBookmark /> }
-                         { !event.isSaved && <IoBookmarkOutline /> }
+                         { event.isSaved && 
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                              <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z"  fill='black' stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z" fill='black' stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>}
+                         { !event.isSaved && 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg> 
+                          }
                         </span>
                       )}
                      </span>
@@ -98,11 +109,16 @@ const SearchEventCard = (event: IEvent) => {
 }
 
 const ExploreEvents = () => {
-  const [events, setEvents] = React.useState<IEvent[]>([]);
+  const [events, setEvents] = React.useState<IEvent[]>([]); 
 
+  const { searchValue } = useAuth()
 
   // react query
-  const { isLoading } = useQuery(['getEventSearch'], () => httpService.get('/events/events'), {
+  const { isLoading } = useQuery(['getEventSearch'+searchValue], () => httpService.get('/events/events', {
+    params: {
+      eventName: searchValue
+    }
+  }), {
     onError: (error: AxiosError<any, any>) => {
       toast.error(error.response?.data);
     }, 
@@ -118,11 +134,16 @@ const ExploreEvents = () => {
         </div>
       )}
      { !isLoading && events.length > 0 && (
-       <ul className="w-full max-w-xl mx-auto flex flex-col border rounded-3xl">
+       <ul className="w-full mx-auto flex flex-col border rounded-3xl">
        {events.map(event => (
          <SearchEventCard {...event} />
        ))}
      </ul>
+     )}
+     {!isLoading && events.length <= 0 && (
+      <div className=' w-full py-5 flex justify-center font-bold text-2xl ' >
+        No Records Found
+      </div>
      )}
     </div>
   )

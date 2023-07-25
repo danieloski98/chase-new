@@ -6,23 +6,28 @@ import { HollowEllipsisIcon } from "@/components/Svgs"
 import { SUGGESTION_MENU } from "@/constants"
 import { isEven } from "../../utils/helpers"
 import { useFetch } from "../../hooks/useFetch"
-import { BLOCK_USER, SEND_FRIEND_REQUEST } from "../../constants/endpoints.constant"
+import { BLOCK_USER, REMOVE_FRIEND, SEND_FRIEND_REQUEST } from "../../constants/endpoints.constant"
 import { useAuth } from "../../context/authContext"
 import { useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify";
 
 const Suggestion = ({
   mutuals = 0,
+  data,
   firstName,
   lastName,
   publicProfile = false,
   userId,
   img,
+  check,
+  setCheck
 }) => {
   const [isConnected, setIsConnected] = useState(false)
+  const [Loading, setLoading] = useState("0")
   const { token } = useAuth()
   const { sendRequest } = useFetch()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   const sendFriendRequest = async () => {
     const response = await sendRequest(
@@ -45,6 +50,36 @@ const Suggestion = ({
       { Authorization: `Bearer ${token}` }
     )
     if (response) console.log(response)
+  }
+
+  const friendPerson = async () => {
+    setLoading(userId)
+    const data = await sendRequest(
+      `${SEND_FRIEND_REQUEST}`,
+      "POST",
+      { toUserID: userId },
+      { Authorization: `Bearer ${token}` }
+    )
+    if (data) {
+      toast.success(data.message); 
+    }
+    setCheck()
+    setLoading("0")
+  }
+
+  const unfriendPerson = async () => {
+    setLoading(userId)
+    const data = await sendRequest(
+      `${REMOVE_FRIEND}${userId}`,
+      "DELETE",
+      null,
+      { Authorization: `Bearer ${token}` }
+    )
+    if (data) {
+      toast.success(data.message); 
+    }
+    setCheck()
+    setLoading("0")
   }
 
   return (
@@ -85,25 +120,41 @@ const Suggestion = ({
 
       <div className="flex flex-col lg:gap-2 gap-1 items-center">
         <div className="rounded-b-full rounded-tl-full w-20 h-20 border border-chasescrollBlue">
-          <img 
-          onClick={() => navigate(`/profile/${userId}`)}
-          src={img} 
-          alt="" 
-          className="rounded-b-full rounded-tl-full w-20 h-20 cursor-pointer" />
+          {check ?  
+            <img 
+              onClick={() => navigate(`/profile/${userId}`)}
+              src={img} 
+              alt="" 
+              className="rounded-b-full object-cover rounded-tl-full w-full h-full cursor-pointer" />
+              :
+            <div onClick={() => navigate(`/profile/${userId}`)} className="rounded-b-full rounded-tl-full w-full h-full cursor-pointer bg-yellow-400 " />
+          }
         </div>
         <h1 onClick={() => navigate(`/profile/${userId}`)} className="font-bold text-center text-sm cursor-pointer">{firstName} {lastName}</h1>
         <h3 className="text-chasescrollGrey text-xs">
           {mutuals} Mutual Connection{mutuals === 1 ? "" : "s"}
         </h3>
-        <button
-          onClick={sendFriendRequest}
-          className={`flex items-center justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${isConnected
-            ? "text-chasescrollBlue bg-blue-100"
-            : "bg-chasescrollBlue text-white"
-            }`}
-        >
-          {isConnected ? publicProfile ? "Requested" : "Connected" : "Connect"}
-        </button>
+        {data?.joinStatus === "FRIEND_REQUEST_SENT" ?
+          <button
+            onClick={unfriendPerson}
+            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${data?.joinStatus === "FRIEND_REQUEST_SENT"
+              ? "text-white bg-[#F04F4F]"
+              : "bg-chasescrollBlue text-white"
+              }`}
+          >
+            {Loading === userId ? "Loading..":data?.joinStatus === "FRIEND_REQUEST_SENT" ? "Pending" : isConnected ? "Connected" : "Connect"}
+          </button>
+          :
+          <button
+            onClick={friendPerson}
+            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${data?.joinStatus === "FRIEND_REQUEST_SENT"
+              ? "text-white bg-[#F04F4F]"
+              : "bg-chasescrollBlue text-white"
+              }`}
+          >
+            {Loading === userId? "Loading..":data?.joinStatus === "FRIEND_REQUEST_SENT" ? "Pending" : isConnected ? "Connected" : "Connect"}
+          </button>
+        }
       </div>
     </div>
   )

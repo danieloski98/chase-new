@@ -15,14 +15,13 @@ import LogoutModal from "./LogoutModal"
 const PageWrapper = ({ children, toggleFileUploader }) => {
   const location = useLocation()
   const isExplorePage = location.pathname.includes("/explore")
-  const [showLogout, setShowLogout] = useState(false);
-
+  const [showLogout, setShowLogout] = useState(false); 
 
   const { logout, userId } = useAuth()
 
   const [notifications, setNotifications] = useState()
   const [notificationsFilter, setNotificationsFilter] = useState("")
-  const { token } = useAuth()
+  const { token, setSearchValue, searchValue } = useAuth()
   const { sendRequest } = useFetch()
 
   const getNotifications = async () => {
@@ -63,7 +62,9 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
                     <ExploreSearchIcon />
                   </span>
                   <input
-                    className=" bg-white focus:outline-none focus:ring-0 text-sm placeholder-gray-500 pl-6 pr-3 py-2 "
+                    value={searchValue}
+                    onChange={(e)=> setSearchValue(e.target.value)}
+                    className=" bg-white focus:outline-none focus:ring-0 font-medium text-sm placeholder-gray-500 pl-6 pr-3 py-2 "
                     type="text"
                     placeholder="Search for users, event or ..."
                   />
@@ -102,7 +103,7 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
           </button>
         </div>
       </div>
-      <div className="fixed w-full bottom-0 left-0 right-0 md:hidden bg-white border-t border-opacity-10 z-40">
+      <div className="fixed z-[100]  w-full bottom-0 left-0 right-0 md:hidden bg-white border-t border-opacity-10">
         <div className="flex gap-6 w-full justify-center p-4">
           {NAVIGATION_ROUTES.filter(({ withMobile }) => withMobile).map(
             navLink => (
@@ -127,7 +128,7 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
         </div>
       </div>
       <div className="md:flex w-full h-full">
-        <div className="md:flex w-80 h-full hidden flex-col justify-between md:w-[320px] border-r border-gray-100 py-5 bg-white">
+        <div className="md:flex h-full hidden flex-col justify-between md:w-[320px] border-r border-gray-100 py-5 bg-white">
           <div className="flex flex-col overflow-auto">
             {NAVIGATION_ROUTES.map(navLink => (
               <Link
@@ -163,7 +164,7 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
             <span>Logout</span>
           </button>
         </div>
-        <div className="overflow-auto w-full h-full">
+        <div className="overflow-auto w-full flex flex-col h-full">
           {children(notifications, getNotifications, notificationsFilter, filterNotifications)}
         </div>
       </div>

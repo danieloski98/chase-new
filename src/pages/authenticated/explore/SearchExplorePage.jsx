@@ -14,7 +14,7 @@ const SearchExplorePage = () => {
   return (
     <PageWrapper>
       {() => (
-        <div className="w-full h-full flex flex-col">
+        <div className=" max-w-[850px] mx-auto h-full flex flex-col">
           <CreateExploreSearchTabs activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="w-full flex-1 overflow-auto pt-8">
             {activeTab === CREATE_EXPLORE_SEARCH_TABS[0].value && (
