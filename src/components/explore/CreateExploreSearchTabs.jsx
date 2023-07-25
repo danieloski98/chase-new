@@ -1,10 +1,14 @@
 import PropTypes from "prop-types"
 import { CREATE_EXPLORE_SEARCH_TABS } from "@/constants/index"
 import { CancelIcon } from "@/components/Svgs"
+import { useAuth } from "../../context/authContext"
 
 const CreateExploreSearchTabs = ({ activeTab, setActiveTab }) => {
+
+  const { setSearchValue } = useAuth()
   const handleTabClick = tabName => {
     setActiveTab(tabName)
+    setSearchValue("")
   }
   const handleClose = () => {
     window.close()

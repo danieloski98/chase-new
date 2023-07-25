@@ -12,12 +12,12 @@ import { Avatar } from '@chakra-ui/react'
 const ExploreCommunities = () => {
   const [communityList, setCommunityList] = useState([])
   const { sendRequest } = useFetch()
-  const { token, userId } = useAuth()
+  const { token, userId, searchValue } = useAuth()
   const navigate = useNavigate();
 
   const fetchCommunities = async () => {
     const data = await sendRequest(
-      GET_ALL_PUBLIC_GROUPS_TO_JOIN,
+      GET_ALL_PUBLIC_GROUPS_TO_JOIN+"?searchText="+searchValue,
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
@@ -56,7 +56,7 @@ const ExploreCommunities = () => {
 
   useEffect(() => {
     fetchCommunities()
-  }, []) 
+  }, [searchValue]) 
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col border rounded-3xl">

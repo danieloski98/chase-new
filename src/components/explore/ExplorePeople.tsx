@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import httpService from '../../utils/httpService';
+import { useAuth } from "../../context/authContext";
 
 const ExplorePeople = () => {
   
@@ -20,8 +21,13 @@ const ExplorePeople = () => {
   //   if (suggestions) setSuggestions(suggestions)
   // }
 
+  const { searchValue } = useAuth()
 
-  const { isLoading } = useQuery(['getconnect'], () => httpService.get('/user/suggest-connections'), {
+  const { isLoading } = useQuery(['getconnect'+searchValue], () => httpService.get('/user/suggest-connections', {
+    params: {
+      searchText: searchValue
+    }
+  }), {
     onError: (error: AxiosError<any, any>) => {
       toast.error(error.response?.data);
     }, 

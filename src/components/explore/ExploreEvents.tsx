@@ -109,8 +109,14 @@ const SearchEventCard = (event: IEvent) => {
 const ExploreEvents = () => {
   const [events, setEvents] = React.useState<IEvent[]>([]); 
 
+  const { searchValue } = useAuth()
+
   // react query
-  const { isLoading } = useQuery(['getEventSearch'], () => httpService.get('/events/events'), {
+  const { isLoading } = useQuery(['getEventSearch'+searchValue], () => httpService.get('/events/events', {
+    params: {
+      eventName: searchValue
+    }
+  }), {
     onError: (error: AxiosError<any, any>) => {
       toast.error(error.response?.data);
     }, 
@@ -131,6 +137,11 @@ const ExploreEvents = () => {
          <SearchEventCard {...event} />
        ))}
      </ul>
+     )}
+     {events.length <= 0 && (
+      <div className=' w-full py-5 flex justify-center font-bold text-2xl ' >
+        No Records Found
+      </div>
      )}
     </div>
   )

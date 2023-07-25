@@ -61,9 +61,7 @@ const Suggestion = ({
       { Authorization: `Bearer ${token}` }
     )
     if (data) {
-      toast.success(data.message);
-      // fetchNetwork()
-      // fetchProfileInfo()
+      toast.success(data.message); 
     }
     setCheck()
     setLoading("0")
@@ -78,9 +76,7 @@ const Suggestion = ({
       { Authorization: `Bearer ${token}` }
     )
     if (data) {
-      toast.success(data.message);
-      // fetchNetwork()
-      // fetchProfileInfo()
+      toast.success(data.message); 
     }
     setCheck()
     setLoading("0")
