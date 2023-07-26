@@ -64,10 +64,10 @@ const SearchEventCard = (event: IEvent) => {
 
              <div className=' w-[40%]' >
                <div className="flex flex-col gap-4 flex-1 w-full justify-end pl-4">
-                 <h1 onClick={() => navigate(`/event/${event.id}`)}  className="border-b text-[18px] font-bold cursor-pointer">
-                   {event.eventName}{" "}
+                 <h1 onClick={() => navigate(`/event/${event.id}`)}  className="border-b text-[18px] w-full flex items-center font-bold cursor-pointer">
+                   <span className=' w-40 ' >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}{" "}</span>
 
-                   <span className="pl-1 md:pl-4">{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</span>
+                   <span className=" pl-1 md:pl-4">{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</span>
                    {/* <span className="pl-1 md:pl-4">{event.maxPrice}</span> */}
                  </h1>
                  <span className="flex gap-2 text-xs md:text-sm text-[#2E2B2B] text-opacity-[67%]">
@@ -87,9 +87,9 @@ const SearchEventCard = (event: IEvent) => {
                          <span className='text-2xl'>
                          { event.isSaved && 
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                              <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z"  fill='black' stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z" fill='black' stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>}
+                            <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z"  fill='black' stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z" fill='black' stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>}
                          { !event.isSaved && 
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                                 <path d="M12.6133 1.5H5.38328C3.78578 1.5 2.48828 2.805 2.48828 4.395V14.9625C2.48828 16.3125 3.45578 16.8825 4.64078 16.23L8.30078 14.1975C8.69078 13.98 9.32078 13.98 9.70328 14.1975L13.3633 16.23C14.5483 16.89 15.5158 16.32 15.5158 14.9625V4.395C15.5083 2.805 14.2108 1.5 12.6133 1.5Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
