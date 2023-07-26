@@ -20,6 +20,7 @@ const Explore = () => {
     focus: "center",
     autoplay: true,
     padding: "5rem",
+    delay:"5000"
   }
 
   const [topEvents, setTopEvents] = useState([])
