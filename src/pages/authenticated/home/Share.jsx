@@ -8,6 +8,7 @@ import { GET_USER_CONNECTION_LIST, SHARE_POST } from "../../../constants/endpoin
 import ButtonSpinner from "../../../components/ButtonSpinners"
 import CONFIG from "../../../config"
 import { toast } from "react-toastify"
+import { Avatar } from '@chakra-ui/react'
 
 const Share = ({ closeShareModal }) => {
   const [searchText, setSearchText] = useState("")
@@ -106,7 +107,16 @@ const Share = ({ closeShareModal }) => {
               className="flex items-center justify-between rounded-lg bg-transparent px-2 py-1.5 hover:bg-[#f2f2f2]"
             >
               <div className="flex items-center gap-3">
-                <ProfilePhoto image={`${CONFIG.RESOURCE_URL}${friend?.data?.imgMain?.value}`} />
+                { friend.data.imgMain.value && (
+                  <ProfilePhoto image={`${CONFIG.RESOURCE_URL}${friend?.data?.imgMain?.value}`} />
+                )}
+                { !friend.data.imgMain.value && (
+                  <Avatar 
+                    name={`${friend?.firstName} ${friend?.lastName}`}
+                    size='md'
+                  />
+                )}
+                {/* <ProfilePhoto image={`${CONFIG.RESOURCE_URL}${friend?.data?.imgMain?.value}`} /> */}
                 <div className="flex flex-col justify-between">
                   <p className="font-bold text-sm">{friend?.firstName} {friend?.lastName}</p>
                   <p className="text-chasescrollTextGrey text-[10px]">

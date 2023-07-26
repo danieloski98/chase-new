@@ -36,11 +36,14 @@ const Home = () => {
   const [showShareModal, setShowShareModal] = useState(false)
   const [menuAction, setMenuAction] = useState(null)
   const [threadId, setThreadId] = useState(null)
+  const [postId, setPostId] = useState(null)
   const [userFeedData, setUserFeedData] = useState<any[]>([])
   const [postFile, setPostFile] = useState()
   const [postInput, setPostInput] = useState("")
-  const [user, setUser] = useState<IUser | null>(null)
-  const { userName, token, userId } = useAuth()
+  const [user, setUser] = useState<IUser | null>(null);
+  const [postMakerId, setPostMakerId] = useState(null)
+  const { userName, token, userId } = useAuth();
+
   const threadListRef = useRef(null)
 
   const navigate = useNavigate()
@@ -52,7 +55,7 @@ const Home = () => {
 
   // pagination details
   const [pageParam, setPageParam] = useState(0);
- const { isError, isLoading, results, hasNextPage, error } = useInfiniteScroll({ pageParam, userID: userId as any })
+ const { isError, isLoading, results, hasNextPage, error, mutate: loadMore, refresh  } = useInfiniteScroll({ pageParam, userID: userId as any })
  const intObserver = useRef<IntersectionObserver>();
 
  const lastChildRef = useCallback((post) => {
@@ -66,12 +69,18 @@ const Home = () => {
   if (post) intObserver.current.observe(post);
  }, [isLoading, hasNextPage])
 
- const content = results.map((post: IMediaContent, i: number) => {
+ const content = results.sort((a: IMediaContent, b: IMediaContent) => {
+  if (a.time.millis > b.time.millis) {
+    return 0;
+  } else {
+    return 1;
+  }
+ }).map((post: IMediaContent, i: number) => {
   if (results.length === i + 1) {
     return (
       <Thread
         ref={lastChildRef}
-                    key={post?.id}
+                    key={i}
                     postID={post?.id}
                     text={post?.text}
                     user={post?.user}
@@ -87,13 +96,13 @@ const Home = () => {
                     setThreadId={setThreadId}
                     likeStatus={post?.likeStatus}
                     type={post?.type}
-                    
+                    setPostId={setPostId}
                   />
     )
   } else {
     return (
       <Thread
-                    key={post?.id}
+                    key={i}
                     postID={post?.id}
                     text={post?.text}
                     user={post?.user}
@@ -109,7 +118,7 @@ const Home = () => {
                     setThreadId={setThreadId}
                     likeStatus={post?.likeStatus}
                     type={post?.type}
-                    
+                    setPostId={setPostId}
                   />
     )
   }
@@ -117,7 +126,7 @@ const Home = () => {
 
 
 
-  const { isLoading: profileLoading } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
+  const userProfile = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
     onError: (error: AxiosError<any, any>) => {
       toast.error(JSON.stringify(error.response?.data));
     },
@@ -135,7 +144,8 @@ const Home = () => {
     onSuccess: (data) => {
       toast.success("Post created successfully");
       setPostInput("");
-      queryClient.invalidateQueries("getFeedsData1");
+      loadMore()
+      //queryClient.refetchQueries(['getFeedsPosts'])
     }
   })
   const handleItemClick = (action, route, threadId) => {
@@ -184,14 +194,16 @@ const Home = () => {
               showMoreOptions={showMoreOptions}
               toggleMoreOptions={toggleMoreOptions}
               threadId={threadId}
+              postID={postId}
+              refresh={refresh}
             />
           )}
           {showFileUploader && (
-            <UploadImage toggleFileUploader={toggleFileUploader} />
+            <UploadImage toggleFileUploader={toggleFileUploader} loadMore={loadMore} />
           )}
           {isThreadMenuOpen && (
-            userFeedData?.map(post => (
-              <ThreadMenu postID={post?.id} key={post?.id} />
+            userFeedData?.map((post, i) => (
+              <ThreadMenu postID={postId} key={i} threadId={threadId} userId={userId} postMakerId={postMakerId} refresh={refresh} />
             ))
           )}
           {showShareModal && <Share closeShareModal={toggleShare} />}
@@ -240,11 +252,15 @@ const Home = () => {
       
       
           <div className="hidden md:flex flex-col gap-2 bg-white  w-full max-w-lg rounded-xl my-9 mx-4 lg:mx-28 mb-24 p-4">
-          { isLoading && (
-            <Loader />
-          )}
 
-          { !isLoading && content }
+          { results.length > 0 && content }
+
+          { isLoading && (
+            <div className="w-full h-24 flex items-center justify-center">
+              <p>Loading feeds...</p>
+              <Spinner color="brand.cchasescrollButtonBlue" size='md' />
+            </div>
+          )}
           </div>
       
         </div>
