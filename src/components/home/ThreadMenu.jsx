@@ -6,21 +6,34 @@ import { REMOVE_POST } from "../../constants/endpoints.constant"
 import { useAuth } from "../../context/authContext"
 import { useFetch } from "../../hooks/useFetch"
 import { PATH_NAMES } from "../../constants/paths.constant"
+import { useMutation, useQueryClient } from "react-query"
+import httpService from "@/utils/httpService"
+import { toast } from "react-toastify"
 
 const ThreadMenu = ({
   handleItemClick,
   toggleMoreOptions,
   threadId,
   postID,
+  userId,
+  postMakeId,
+  refresh
 }) => {
   const { sendRequest } = useFetch()
   const { token } = useAuth()
 
-  const deletePost = async () => {
-    await sendRequest(`${REMOVE_POST}/${postID}`, "DELETE", null, {
-      Authorization: `Bearer ${token}`,
-    })
-  }
+  // queryClient
+  const queryClient = useQueryClient();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: () => httpService.delete(`${REMOVE_POST}/${postID}`),
+    onSuccess: () => {
+      console.log(`this is the postID ${postID}`);
+      toast.success(`Post deleted`);
+      refresh(postID);
+    }
+  })
+
 
   const HOME_MENU_ACTIONS = [
     {
@@ -43,9 +56,14 @@ const ThreadMenu = ({
   return (
     <OverlayWrapper handleClose={toggleMoreOptions}>
       <div className="flex flex-col rounded-lg bg-white text-center w-80 shadow-lg">
-        <div className="py-3 cursor-pointer text-red-500" onClick={deletePost}>
-          Delete
-        </div>
+        {
+          userId === postMakeId && (
+            <div className="py-3 cursor-pointer text-red-500" onClick={mutate}>
+            { isLoading && <>Deleting...</> }
+            { !isLoading &&  'Delete' }
+            </div>
+          )
+        }
         {HOME_MENU_ACTIONS.map((menuItem, index) => (
           <div
             key={menuItem.key}

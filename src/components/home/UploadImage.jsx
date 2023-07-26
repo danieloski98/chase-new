@@ -15,9 +15,10 @@ import { useAuth } from "../../context/authContext"
 import { compressFile } from "./FileCompressor"
 import { toast } from "react-toastify"
 import { videoConfig } from "../../constants"
-import { Avatar } from '@chakra-ui/react'
+import { Avatar, Spinner } from '@chakra-ui/react'
+import { useQueryClient } from "react-query"
 
-const UploadImage = ({ toggleFileUploader }) => {
+const UploadImage = ({ toggleFileUploader, loadMore }) => {
   const [imageSrc, setImageSrc] = useState(null)
   const [videoSrc, setVideoSrc] = useState(null)
   const [caption, setCaption] = useState("")
@@ -25,9 +26,13 @@ const UploadImage = ({ toggleFileUploader }) => {
   const [submitted, setSubmitted] = useState(false)
   const [count, setCount] = useState(caption.length ?? 0)
   const [postFile, setPostFile] = useState(null)
+  const [loading, setLoading] = useState(false);
   const { sendRequest } = useFetch()
   const { userName, userId, token } = useAuth()
   // const ReactS3Client = new S3(videoConfig);
+
+  // query client
+  const queryClient = useQueryClient();
 
   const handleChange = ({ target: { value } }) => {
     setCaption(value)
@@ -40,6 +45,7 @@ const UploadImage = ({ toggleFileUploader }) => {
     const formData = new FormData();
     formData.append("file", postFile);
     console.log({ postFile });
+    setLoading(true);
 
     const mediaType = postFile.type;
 
@@ -58,13 +64,23 @@ const UploadImage = ({ toggleFileUploader }) => {
             text: caption,
             mediaRef: data?.fileName,
             sourceId: userId,
-            type: "WITH_VIDEO_POST"
+            type: "WITH_VIDEO_POST",
+            multipleMediaRef: [
+              data?.fileName,
+            ],
           },
           { Authorization: `Bearer ${token}` },
         ).then(() => {
-          setSubmitted(state => !state)
-          toast.success("Post created successfully!")
+          setSubmitted(state => !state);
+          loadMore()
+          //queryClient.invalidateQueries(["getFeedsPosts"]);
+          toast.success("Post with image created successfully!");
+          setLoading(false);
+        }).catch((error) => {
+          setLoading(false);
         })
+      }).catch((errorr) => {
+        setLoading(false);
       })
     } else if (mediaType.startsWith('image/')) {
       sendRequest(
@@ -74,20 +90,35 @@ const UploadImage = ({ toggleFileUploader }) => {
         { Authorization: `Bearer ${token}` },
         true
       ).then((data) => {
+        console.log({
+          text: caption,
+          mediaRef: data?.fileName,
+          sourceId: userId,
+          type: "WITH_IMAGE"
+        });
         sendRequest(
           CREATE_POST,
           "POST",
           {
             text: caption,
             mediaRef: data?.fileName,
+            multipleMediaRef: [
+              data?.fileName,
+            ],
             sourceId: userId,
             type: "WITH_IMAGE"
           },
           { Authorization: `Bearer ${token}` },
         ).then(() => {
-          setSubmitted(state => !state)
-          toast.success("Post created successfully!")
+          setSubmitted(state => !state);
+          toast.success("Post with image created successfully!");
+          loadMore()
+          //queryClient.invalidateQueries(["getFeedsPosts"]);
+        }).catch((error) => {
+          setLoading(false);
         })
+      }).catch((error) => {
+        setLoading(false);
       })
     } else {
       toast.error('File is not an image or video.');
@@ -164,7 +195,8 @@ const UploadImage = ({ toggleFileUploader }) => {
                       onClick={createPost}
                       className="basis-1/4 flex justify-end text-sm text-chasescrollBlue cursor-pointer"
                     >
-                      Create
+                      { !loading && 'Create' }
+                      { loading && <Spinner colorr='white' size='sm' /> }
                     </button>
                   )}
                 </div>

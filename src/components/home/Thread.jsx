@@ -26,6 +26,7 @@ import { formatTimeAgo } from "../../utils/helpers"
 import { COMPANY_NAME } from "../../constants"
 import VideoPlayer from "../VideoPlayer"
 import PhotoGallery from "../PhotoGallery"
+import { Avatar } from '@chakra-ui/react'
 
 const Thread = forwardRef(({
   text,
@@ -42,6 +43,8 @@ const Thread = forwardRef(({
   user,
   likeStatus,
   type,
+  setPostId,
+  setPostMakeId,
 }, ref) => {
   const [isLiked, setIsLiked] = useState(likeStatus === "LIKED")
   const [numOfLikes, setNumOfLikes] = useState(likeCount)
@@ -66,7 +69,17 @@ const Thread = forwardRef(({
             className="flex gap-2 items-center"
             to={`${PATH_NAMES.profile}/${userId}`}
           >
-            <ProfilePhoto image={user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.data?.firstName}&length=1`} />
+            { user.data.imgMain.value && (
+              <ProfilePhoto image={user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.data?.firstName}&length=1`} />
+            )}
+            {
+              !user.data.imgMain.value && (
+                <Avatar 
+                  name={`${user?.firstName} ${user?.lastName}`}
+                  size='md'
+                />
+              )
+            }
             <div className="flex flex-col capitalize">
               <small>{user.firstName} {user.lastName}</small>
               <div className="flex flex-col">
@@ -79,7 +92,10 @@ const Thread = forwardRef(({
             className="cursor-pointer flex pt-4 text-chasescrollBlue"
             onClick={() => {
               toggleMoreOptions()
-              setThreadId(postID)
+              setThreadId(postID);
+              setPostId(postID);
+              setPostMakeId(user.userId)
+              console.log(`${postID} this is the post id`)
             }}
           >
             <HollowEllipsisIcon />

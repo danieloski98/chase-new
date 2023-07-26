@@ -81,6 +81,8 @@ export interface IMediaContent {
         dayOfMonth: number;
         monthOfYear: number;
         year: number;
+        millis: number;
+
     },
     user: {
         dob: string;

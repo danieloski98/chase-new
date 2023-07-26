@@ -10,6 +10,7 @@ import { useFetch } from "../../hooks/useFetch"
 import { useAuth } from "../../context/authContext"
 import { Link } from "react-router-dom"
 import { PATH_NAMES } from "../../constants/paths.constant"
+import PageWrapper from "../PageWrapper"
 
 const Comment = ({ comment, time, likeCount, likeStatus, id, replyPerson, user }) => {
   const [isLiked, setIsLiked] = useState(likeStatus === "LIKED")
@@ -28,29 +29,33 @@ const Comment = ({ comment, time, likeCount, likeStatus, id, replyPerson, user }
   }
 
   return (
-    <div className="flex gap-3 w-full">
-      <ProfilePhoto image={avatar} />
-      <div className="flex flex-col w-full">
-        <div className="w-full text-sm">
-          {comment}
-        </div>
-        <div className="flex justify-between">
-          <div className="flex gap-4 text-[10px] items-center">
-            <span>{formatTimeAgo(time?.millis)}</span>
-            <span>{formatNumberWithK(numOfLikes)} like{numOfLikes > 1 || numOfLikes === 0 ? "s" : ""}</span>
-            <span
-              className="text-chasescrollPurple cursor-pointer"
-              onClick={() => replyPerson(user?.username)}
-            >
-              Reply
-            </span>
+    <PageWrapper>
+      {() => (
+        <div className="flex gap-3 w-full">
+        <ProfilePhoto image={avatar} />
+        <div className="flex flex-col w-full">
+          <div className="w-full text-sm">
+            {comment}
           </div>
-          <div className="cursor-pointer" onClick={() => toggleLike(id)}>
-            {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
+          <div className="flex justify-between">
+            <div className="flex gap-4 text-[10px] items-center">
+              <span>{formatTimeAgo(time?.millis)}</span>
+              <span>{formatNumberWithK(numOfLikes)} like{numOfLikes > 1 || numOfLikes === 0 ? "s" : ""}</span>
+              <span
+                className="text-chasescrollPurple cursor-pointer"
+                onClick={() => replyPerson(user?.username)}
+              >
+                Reply
+              </span>
+            </div>
+            <div className="cursor-pointer" onClick={() => toggleLike(id)}>
+              {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      )}
+    </PageWrapper>
   )
 }
 
