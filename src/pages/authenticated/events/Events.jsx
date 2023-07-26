@@ -9,6 +9,7 @@ import { FindEvent } from "@/components/Svgs"
 import { EVENT_CATEGORY } from "@/constants"
 import AllEvents from "@/components/events/AllEvents"
 import CONFIG from "@/config"
+import { Splide, SplideSlide } from "@splidejs/react-splide"
 import {
   GET_EVENTS_TYPES,
   GET_JOINED_EVENTS,
@@ -24,13 +25,14 @@ import { useAuth } from "../../../context/authContext"
 import { useFetch } from "../../../hooks/useFetch"
 import { formatTime, formatTimestampToDate } from "../../../utils/helpers"
 import { toast } from "react-toastify"
+import EventTiles from "../../../components/eventTiles"
+import Loader from "../../../components/Loader"
 
 const Events = () => {
   const [category, setCategory] = useState([])
   const [filter, setFilter] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [view, setView] = useState("")
-
-  const handleViewChange = ({ target: { value } }) => setView(value)
 
   const EVENTS_ARRAY = Array(1).fill(<TrendingEvents />)
 
@@ -38,7 +40,7 @@ const Events = () => {
   const [pastEvents, setPastEvents] = useState([])
   const [topEvents, setTopEvents] = useState([])
   const [savedEvents, setSavedEvents] = useState([])
-  const { userName, token, userId } = useAuth()
+  const { userName, token, userId, setEventCategory } = useAuth()
   const { sendRequest } = useFetch()
 
   const getMyEvents = async () => {
@@ -64,7 +66,7 @@ const Events = () => {
       { Authorization: `Bearer ${token}` }
     ).then((data) => {
       setCategory(data)
-      setFilter(data[0])
+      // setFilter(data[0])
     })
   }
 
@@ -80,6 +82,7 @@ const Events = () => {
   }
 
   const getSavedEvents = async () => {
+    setLoading(true)
     const savedEvents = await sendRequest(
       `${GET_SAVED_EVENTS}?typeID=${userId}`,
       "GET",
@@ -88,7 +91,8 @@ const Events = () => {
     )
     if (savedEvents && savedEvents.content) {
       setSavedEvents(savedEvents.content)
-    }
+    } 
+    setLoading(false)
   }
 
   const unSaveEvent = eventID => {
@@ -111,12 +115,32 @@ const Events = () => {
     })
   }
 
+
+  const handleViewChange = ({ target: { value } }) => {
+    setView(value)
+    getPastEvents()
+    getSavedEvents()
+  }
+  
   useEffect(() => {
     getMyEvents()
     getPastEvents()
     getSavedEvents()
     getEventsCategory()
-  }, [])
+  }, [view])
+
+  useEffect(()=> {
+    setEventCategory(filter)
+  }, [filter])
+
+  const splideOptions = {
+    type: "loop",
+    arrows: false,
+    focus: "center",
+    autoplay: true,
+    padding: "5rem",
+    delay:"5000"
+  }
 
   return (
     <PageWrapper>
@@ -124,7 +148,7 @@ const Events = () => {
         <div className="flex flex-col gap-2 pb-32 md:pb-16">
           <div className="flex justify-between items-center px-4 lg:px-8">
             <select
-              className="text-lg font-bold py-4 outline-none"
+              className="text-base font-bold !bg-white py-4 outline-none"
               onChange={handleViewChange}
             >
               <option value="">Find Events</option>
@@ -141,12 +165,7 @@ const Events = () => {
             <>
               <div>
                 <div className="flex justify-between">
-                  <h3 className="text-base font-medium pl-8">Event Category</h3>
-                  {/* <Link to={PATH_NAMES.suggestions}>
-                <h3 className="text-sm text-chasescrollBlue font-bold">
-                  See all
-                </h3>
-              </Link> */}
+                  <h3 className="text-base font-medium mt-4 mb-6 pl-8">Event Category</h3> 
                 </div>
                 <Category
                   category={category}
@@ -154,7 +173,11 @@ const Events = () => {
                   setFilter={setFilter}
                 />
               </div>
-              <AllEvents />
+              {!filter && ( 
+                <div className=" w-full lg:block hidden " > 
+                  <AllEvents /> 
+                </div>
+              )}
               <TrendingEvents />
             </>
           )}
@@ -275,56 +298,17 @@ const Events = () => {
           )}
 
           {view === "Saved Events" && (
-            <div className="mb-[100px] mx-auto">
-              {savedEvents.map(event => (
-                <div
-                  className="flex flex-col items-center justify-center mb-4 py-4 px-6 bg-white shadow rounded-b-[32px] rounded-tl-[32px] w-fit mx-auto"
-                  key={event?.id}
-                >
-                  <div className="flex flex-col md:flex-row gap-10 w-full items-center mb-2">
-                    <div className="rounded-b-[32px] rounded-tl-[32px] h-[130px] w-[200px] overflow-hidden">
-                      <img
-                        src={`${CONFIG.RESOURCE_URL}${event?.picUrls}`}
-                        alt="descriptive photograph"
-                        className=" w-full h-full "
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <h2 className="text-lg font-medium text-center md:text-left">
-                        {event?.eventName}
-                      </h2>
-                      <div className="flex">
-                        <span className="mr-1">
-                          <CalendarIcon />
-                        </span>
-                        <p className="text-gray-600 text-sm">
-                          {formatTimestampToDate(event?.startDate)}. {formatTime(event?.startTime)} - {formatTime(event?.endTime)}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <span className="mr-1">
-                          <LocationIcon_2 />
-                        </span>
-                        <p className="text-gray-600 text-sm">
-                          {event?.locationType}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="flex items-center mr-4">
-                          <span className="mr-1">Category:</span>
-                          <span className="text-blue-600">{event?.eventType}</span>
-                        </div>
-                        <button className="bg-blue-100 text-blue-600 text-sm px-2">
-                          {event?.status}
-                        </button>
-                        <div className="cursor-pointer" onClick={() => unSaveEvent(event?.id)}>
-                          {event?.isSaved ? <BookmarkIconFill /> : <BookmarkIcon />}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="mb-[100px] flex flex-col gap-5 mx-auto">
+              {loading && (
+                <Loader />
+              )}
+              {!loading && (
+                <> 
+                  {savedEvents.map(event => (
+                    <EventTiles event={event} getdata={getSavedEvents}  />
+                  ))}
+                </>
+              )}
             </div>
           )}
         </div>

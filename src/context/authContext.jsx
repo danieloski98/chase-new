@@ -10,7 +10,9 @@ export const AuthContext = createContext({
   userId: null,
   userName: null,
   searchValue: "",
-  setSearchValue: ""
+  setSearchValue: "",
+  eventCategory: "",
+  setEventCategory: ""
 });
 
 export const AuthProvider = ({ children }) => {
@@ -19,6 +21,7 @@ export const AuthProvider = ({ children }) => {
   const [userName, setUserName] = useState(localStorage.getItem('userName') || null);
   const [authorized, setAuthorized] = useState(Boolean(token));
   const [searchValue, setSearchValue] = useState("");
+  const [eventCategory, setEventCategory] = useState("");
 
   const { sendRequest } = useFetch();
 
@@ -77,7 +80,9 @@ export const AuthProvider = ({ children }) => {
       userId,
       userName,
       searchValue,
-      setSearchValue
+      setSearchValue,
+      eventCategory,
+      setEventCategory
     }}>
       {children}
     </AuthContext.Provider>
