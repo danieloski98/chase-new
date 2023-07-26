@@ -17,28 +17,53 @@ import { toast } from "react-toastify"
 import { PATH_NAMES } from "../../constants/paths.constant"
 import { Link } from "react-router-dom"
 import Loader from "../Loader"
+import Loader from "../Loader"
 
 const TrendingEvents = () => {
   const [allEvents, setAllEvents] = useState([])
+  const [loading, setLoading] = useState(false)
+  const { userId, token, eventCategory } = useAuth()
   const [loading, setLoading] = useState(false)
   const { userId, token, eventCategory } = useAuth()
   const { sendRequest } = useFetch()
 
   const getAllEvents = () => {
 
+    setLoading(true)
     sendRequest(
+      GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""),
       GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""),
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
     ).then(data => {
-      setAllEvents(data?.content) 
+      setAllEvents(data?.content)
+      setLoading(false)
     })
   }
 
   const saveEvent = eventID => {
     sendRequest(
       SAVE_EVENT, "POST", {
+      eventID: eventID ,
+      typeID: userId,
+      type: "EVENT"
+    }, {
+      Authorization: `Bearer ${token}`,
+    }).then(response => {
+      if (response?.updated) {
+        toast.success(response?.message)
+      } else {
+        toast.error(response?.message)
+      }
+    })
+    getAllEvents()
+  }
+
+  const unsaveEvent = eventID => {
+    sendRequest(
+      "/events/remove-saved-event", "POST", {
+      eventID: eventID ,
       eventID: eventID ,
       typeID: userId,
       type: "EVENT"
@@ -77,13 +102,11 @@ const TrendingEvents = () => {
       unsaveEvent(item?.id)
     } else {
       saveEvent(item?.id)
-    }  
+    }
   }
 
   useEffect(() => {
-    setLoading(true)
-    getAllEvents() 
-    setLoading(false)
+    getAllEvents()
   }, [eventCategory])
 
   return (
@@ -100,17 +123,17 @@ const TrendingEvents = () => {
             {allEvents.map(event => (
               <div className=" w-full border rounded-b-[36px] gap-4 rounded-tl-[36px] flex lg:flex-row flex-col items-center py-[11px] px-[15px] " >
                 <div className=" w-full lg:w-fit " >
-                  <a href={`${PATH_NAMES.event}/${event.id}`} className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
+                  <div className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
                     <img
                       src={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
                       alt=""
                       className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
                     />
-                  </a>
+                  </div>
                 </div>
                 <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >
                   <div className=" w-full flex items-center gap-2 py-2 border-b " > 
-                    <a href={`${PATH_NAMES.event}/${event.id}`} className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</a>
+                    <p className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</p>
                     <p className=" text-sm font-semibol " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
                   </div>
                   <div className="flex w-full gap-2 mt-6 lg:mt-auto" >
@@ -171,6 +194,20 @@ const TrendingEvents = () => {
                     </button>
                   </div>
                 </div>
+              </div> 
+            ))}
+          </>
+        )}
+      </div>
+      {!loading && (
+        <> 
+          {allEvents?.length <= 0 && (
+            <p className=" text-center py-6 text-lg font-semibold " >
+              No Records Founded
+            </p>
+          )}
+        </>
+      )}
               </div> 
             ))}
           </>
