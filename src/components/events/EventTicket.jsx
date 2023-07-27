@@ -16,11 +16,13 @@ import { convertToISO } from "../../utils/helpers"
 import CommunityFunnel from "./CommunityFunnel"
 import CONFIG from "../../config"
 import { CLOSE_ENTITY } from "../../constants"
+import CreateCommunity from "../../pages/authenticated/communities/CreateCommunity"
 
 const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isFree, setIsFree] = useState(false)
-  const [showFunnel, setShowFunnel] = useState(false)
+  const [showFunnel, setShowFunnel] = useState(false) 
+  const [addFunnel, setAddFunnel] = useState(false) 
   const [funnel, setFunnel] = useState(null)
 
   // const [categories, setCategories] = useState([])
@@ -77,7 +79,19 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
           funnel={funnel}
           setFunnel={setFunnel}
           setFormData={setFormData}
+          addFunnel={addFunnel} 
+          setaddfunnel={setAddFunnel}
+          formData={formData}
         />
+      )}
+      {addFunnel && (
+        <div className="flex flex-col gap-8 fixed overflow-auto bg-white inset-0 z-20 px-4 py-10">
+          <CreateCommunity 
+            modal={true}
+            setFunnel={toggleFunnel}
+            setaddfunnel={setAddFunnel}
+          />
+        </div>
       )}
       <div className="flex flex-col justify-center ">
         <div className="flex gap-2">
