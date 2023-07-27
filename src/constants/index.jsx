@@ -83,13 +83,15 @@ export const CREATE_EXPLORE_SEARCH_TABS = [
 export const PHYSICAL_LOCATION_OPTIONS = [
   { value: "lagos", label: "Lagos" },
   { value: "abuja", label: "Abuja" },
-  { value: "portharcourt", label: "Port Harcourt" },
+  { value: "portharcourt", label: "Port Harcourt" },,
+  { value: "other", label: "others" },
 ]
 
 export const ONLINE_PLATFORM_OPTIONS = [
   { value: "zoom", label: "Zoom" },
   { value: "meet", label: "Google Meet" },
   { value: "teams", label: "Microsoft Teams" },
+  { value: "other", label: "others" },
 ]
 
 export const ONBOARDING_FOOTER = [

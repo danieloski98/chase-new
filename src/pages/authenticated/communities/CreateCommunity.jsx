@@ -6,7 +6,7 @@ import { useAuth } from '../../../context/authContext'
 import { CREATE_GROUP, UPLOAD_IMAGE } from '../../../constants/endpoints.constant'
 import { toast } from 'react-toastify'
 
-const CreateCommunity = () => {
+const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 	const [communityInfo, setCommunityInfo] = useState({
 		data: {
 			address: "",
@@ -21,6 +21,7 @@ const CreateCommunity = () => {
 
 	const [image, setImage] = useState(null)
 	const [selectedImage, setSelectedImage] = useState(null)
+	const [loading, setLoading] = useState(false)
 
 	const { sendRequest } = useFetch()
 	const { token, userId } = useAuth()
@@ -42,6 +43,7 @@ const CreateCommunity = () => {
 	}))
 
 	const createCommunity = async event => {
+		setLoading(true)
 		event.preventDefault();
 
 		const formData = new FormData();
@@ -66,7 +68,11 @@ const CreateCommunity = () => {
 				"POST",
 				communityInfo,
 				{ Authorization: `Bearer ${token}` }
-			).then((data) => toast.success(data.message))
+			).then((data) =>  
+				toast.success(data.message), 
+				setLoading(false),
+				clickHandler()
+			)
 		})
 	}
 
@@ -79,8 +85,31 @@ const CreateCommunity = () => {
 		}
 	}
 
+	const clickHandler =()=> {
+		setFunnel()
+		setaddfunnel(false)
+	}
+
 	return (
-		<div className="flex flex-col gap-20 items-center h-[100vh] py-16">
+		<div className={`flex flex-col gap-20 items-center w-full ${modal ? "h-auto": "h-[100vh]"} py-16`}>
+			{modal && (
+				<div className=' w-full px-6 flex justify-end ' >
+					<button onClick={()=> clickHandler()} > 
+						<svg
+							width="12"
+							height="12"
+							viewBox="0 0 26 26"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+							d="M24.9234 2.7557C25.3871 2.29196 25.3871 1.54007 24.9234 1.07633C24.4596 0.612579 23.7078 0.612579 23.244 1.07633L13.0003 11.32L2.75668 1.07633C2.29293 0.612583 1.54105 0.612583 1.0773 1.07633C0.613555 1.54008 0.613555 2.29196 1.0773 2.75571L11.321 12.9994L1.07735 23.243C0.613598 23.7067 0.613598 24.4586 1.07735 24.9224C1.54109 25.3861 2.29298 25.3861 2.75672 24.9224L13.0003 14.6788L23.244 24.9224C23.7077 25.3861 24.4596 25.3861 24.9233 24.9224C25.3871 24.4586 25.3871 23.7067 24.9233 23.243L14.6797 12.9994L24.9234 2.7557Z"
+							fill="black"
+							/>
+						</svg>
+					</button>
+				</div>
+			)}
 			<label
 				htmlFor="file"
 				className="rounded-md"
@@ -96,7 +125,7 @@ const CreateCommunity = () => {
 						{selectedImage ? <img
 							src={selectedImage}
 							alt="group image"
-							className="object-cover w-full h-full rounded-b-full rounded-tl-full"
+							className="object-cover w-full object-center h-full rounded-b-full rounded-tl-full"
 						/> : (
 							<div className="flex items-center justify-center w-32 h-32 rounded-b-full rounded-tl-full bg-slate-500 cursor-pointer">
 								<div className="rounded-full flex items-center justify-center bg-white w-5 h-5">
@@ -144,7 +173,9 @@ const CreateCommunity = () => {
 						</div>
 					</div>
 				</div>
-				<button className="w-96 rounded-lg text-white text-center text-lg bg-chasescrollBlue p-2.5">Submit</button>
+				<button className="w-96 rounded-lg text-white text-center text-lg bg-chasescrollBlue p-2.5">
+					{loading ? "Loading...": "Submit"}
+				</button>
 			</form>
 		</div >
 	)

@@ -3,10 +3,10 @@ import { useFetch } from '../../hooks/useFetch'
 import { useAuth } from '../../context/authContext'
 import { GET_GROUP } from '../../constants/endpoints.constant'
 import CONFIG from '../../config'
-import { CloseIcon } from '../Svgs'
+import { AddIcon, CloseIcon } from '../Svgs'
 import { CLOSE_ENTITY } from '../../constants'
 
-const CommunityFunnel = ({ toggleFunnel, funnel, setFunnel, setFormData }) => {
+const CommunityFunnel = ({ toggleFunnel, funnel, setFunnel, setFormData, setaddfunnel, formData, addFunnel }) => {
 	const { userId, token } = useAuth()
 	const { sendRequest } = useFetch()
 
@@ -26,7 +26,14 @@ const CommunityFunnel = ({ toggleFunnel, funnel, setFunnel, setFormData }) => {
 
 	useEffect(() => {
 		fetchMyCommunities()
-	}, [])
+	}, [addFunnel])
+
+	const clickHandler =()=> {
+		toggleFunnel()
+		setaddfunnel(true)
+	}
+
+	console.log(communities);
 
 	return (
 		<div className="flex flex-col gap-8 fixed overflow-auto bg-white inset-0 z-20 px-4 py-10">
@@ -36,12 +43,21 @@ const CommunityFunnel = ({ toggleFunnel, funnel, setFunnel, setFormData }) => {
 				</span>
 				<span className="font-bold text-lg">
 					Communities
-				</span>
-				<span className="text-chasescrollBlue cursor-pointer" onClick={toggleFunnel}>
-					Done
-				</span>
+				</span> 
+				<div className=' flex gap-6  items-center' > 
+					<button onClick={()=> clickHandler()}> 
+						<AddIcon className=" cursor-pointer "  />
+					</button>
+				</div>
 			</div>
 			<div className="flex flex-col gap-4 self-center w-full max-w-xl">
+				{/* {formData?.eventFunnelGroupID && (
+					<div className=' w-full flex justify-end  mb-6' > 
+						<span className="text-chasescrollBlue cursor-pointer" onClick={toggleFunnel}>
+							Done
+						</span>
+					</div>
+				)} */}
 				{communities?.map(community => (
 					<div
 						key={community?.id}
@@ -52,6 +68,7 @@ const CommunityFunnel = ({ toggleFunnel, funnel, setFunnel, setFormData }) => {
 								...data,
 								eventFunnelGroupID: community?.id
 							}))
+							toggleFunnel()
 						}}
 					>
 						<img

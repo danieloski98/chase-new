@@ -9,6 +9,7 @@ import { convertToISO } from "../../utils/helpers"
 
 const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
   const [toBeAnnounced, setToBeAnnounced] = useState(false)
+  const [selectType, setSelectType] = useState("")
 
   const handleStartDateSelect = (date, dateString) => {
     setFormData(data => ({
@@ -25,6 +26,8 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
       startTime: Date.parse(convertToISO(dateString))
     }))
   }
+
+  console.log(formData.location?.locationDetails);
 
   return (
     <div>
@@ -46,7 +49,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                   </p>
                   <DatePicker
                     showTime
-                    format="YYYY-MM-DD h:mm a"
+                    format="DD-MM-YYYY h:mm a"
                     onChange={handleStartDateSelect}
                     className="text-xs md:text-sm px-2 w-40"
                     placeholder="Start date and time"
@@ -66,7 +69,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                   </p>
                   <DatePicker
                     showTime
-                    format="YYYY-MM-DD h:mm a"
+                    format="DD-MM-YYYY h:mm a"
                     onChange={handleEndDateSelect}
                     className="text-xs md:text-sm px-2 w-40"
                     placeholder="End date and time"
@@ -83,10 +86,28 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
               <div className="">
                 <div className="flex flex-row justify-between border-b p-2">
                   <label className="block text-[#667085] font-bold">
-                    Physical Location
+                    Location
                   </label>
                   <select
-                    className="text-sm underline text-chasescrollDarkBlue w-28"
+                    className="text-sm underline text-chasescrollDarkBlue w-36" 
+                    onChange={(e)=> setSelectType(e.target.value)}
+                  >
+                    <option value="" className="text-xs">add location</option>
+                    <option>Physical Location</option>
+                    <option>Online Location</option>
+                    {/* {PHYSICAL_LOCATION_OPTIONS.map((option, index) => (
+                      <option key={index} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))} */}
+                  </select>
+                </div>
+                {selectType === "Physical Location" &&( 
+                  <input
+                    type="text"
+                    placeholder="Enter Event Location"
+                    className="border w-full mt-4 text-sm rounded-md text-chasescrollTextGrey p-3"
+                    name="organizer"
                     onChange={({ target: { value } }) => setFormData(data => ({
                       ...data,
                       location: {
@@ -94,17 +115,11 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                         locationDetails: value
                       }
                     }))}
-                  >
-                    <option value="" className="text-xs">add location</option>
-                    {PHYSICAL_LOCATION_OPTIONS.map((option, index) => (
-                      <option key={index} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                    value={formData?.organizer}
+                  />
+                )}
 
-                <div className="mt-4 flex flex-row justify-between border-b p-2">
+                {/* <div className="mt-4 flex flex-row justify-between border-b p-2">
                   <label className="block text-[#667085] font-bold ">
                     Online Event
                   </label>
@@ -125,7 +140,23 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                       </option>
                     ))}
                   </select>
-                </div>
+                </div>  */}
+                {selectType === "Online Location" &&( 
+                  <input
+                    type="text"
+                    placeholder="Enter Online Link"
+                    className="border w-full mt-4 text-sm rounded-md text-chasescrollTextGrey p-3"
+                    name="organizer"
+                    onChange={({ target: { value } }) => setFormData(data => ({
+                      ...data,
+                      location: {
+                        ...data.location,
+                        locationDetails: value
+                      }
+                    }))}
+                    value={formData?.organizer}
+                  />
+                )}
               </div>
             </div>
           )}
@@ -143,9 +174,9 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
           {/* End of Location Type */}
 
           <div className="mt-3 mb-2">
-            <h1 className="text-base font-bold">Venue Location</h1>
+            <h1 className="text-base font-bold">Venue Details</h1>
             <textarea
-              placeholder="Church of 8 wheels, Oak Street"
+              placeholder="Example: Behind Chervon gas station "
               className="border w-full px-4 py-2 outline-none"
               rows={4}
               cols={48}
@@ -161,17 +192,17 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
           </div>
           {/* End of Venue */}
 
-          <div className="mt-3 mb-2">
+          {/* <div className="mt-3 mb-2">
             <h1 className="text-base font-bold">Location Map</h1>
             <div className="overflow-auto rounded-lg h-[189px]">
-              {/* <Map location={formData?.location} zoomLevel={17} /> */}
+              <Map location={formData?.location} zoomLevel={17} />
             </div>
-          </div>
+          </div> */}
           {/* End of Map */}
         </div>
       </div>
 
-      <div className="flex items-center justify-center text-chasescrollBlue  text-base md:text-lg font-bold my-4">
+      <div className="flex items-center justify-center text-chasescrollBlue  text-base md:text-lg pt-4 font-bold my-4">
         {/* <button onClick={handleBack}>Back</button> */}
         <button
           type="submit"
