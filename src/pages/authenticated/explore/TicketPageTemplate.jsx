@@ -191,7 +191,7 @@ const TicketPageTemplate = ({
       )}
       <div className="pl-4 lg:pl-12 pt-9 pb-24 pr-4 flex flex-col gap-2 relative">
         <button
-          onClick={() => navigate(PATH_NAMES.explore)}
+          onClick={() => navigate(-1)}
           className="absolute top-9 left-2 p-2"
         >
           <CaretLeftIcon />

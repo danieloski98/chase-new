@@ -49,7 +49,7 @@ const Suggestion = ({
       },
       { Authorization: `Bearer ${token}` }
     )
-    if (response) console.log(response)
+    // if (response) console.log(response)
   }
 
   const friendPerson = async () => {
@@ -62,9 +62,9 @@ const Suggestion = ({
     )
     if (data) {
       toast.success(data.message); 
+      setCheck((prev)=> !prev)
+      setLoading("0")
     }
-    setCheck()
-    setLoading("0")
   }
 
   const unfriendPerson = async () => {
@@ -77,9 +77,9 @@ const Suggestion = ({
     )
     if (data) {
       toast.success(data.message); 
+      setCheck((prev)=> !prev)
+      setLoading("0")
     }
-    setCheck()
-    setLoading("0")
   }
 
   return (
@@ -120,15 +120,29 @@ const Suggestion = ({
 
       <div className="flex flex-col lg:gap-2 gap-1 items-center">
         <div className="rounded-b-full rounded-tl-full w-20 h-20 border border-chasescrollBlue">
-          {check ?  
+          {/* {check ?  
             <img 
               onClick={() => navigate(`/profile/${userId}`)}
               src={img} 
               alt="" 
               className="rounded-b-full object-cover rounded-tl-full w-full h-full cursor-pointer" />
               :
-            <div onClick={() => navigate(`/profile/${userId}`)} className="rounded-b-full rounded-tl-full w-full h-full cursor-pointer bg-yellow-400 " />
-          }
+            <div onClick={() => navigate(`/profile/${userId}`)} className="rounded-b-full rounded-tl-full w-full h-full cursor-pointer bg-yellow-400 ">
+
+            </
+          } */}
+          {data?.data?.imgMain?.value &&  
+						<img src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-full rounded-tl-full" />
+					}
+					{!data?.data?.imgMain?.value && (
+						<Avatar 
+							src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`}
+							name={`${data?.firstName} ${data?.lastName}`}
+							className="h-full w-full rounded-b-full rounded-tl-full cursor-pointer"
+							size='md'
+							onClick={() => navigate(`/profile/${`${data?.userId}`}`)}
+						/> 
+					)}
         </div>
         <h1 onClick={() => navigate(`/profile/${userId}`)} className="font-bold text-center text-sm cursor-pointer">{firstName} {lastName}</h1>
         <h3 className="text-chasescrollGrey text-xs">
