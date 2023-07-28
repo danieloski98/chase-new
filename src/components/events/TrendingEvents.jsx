@@ -26,15 +26,13 @@ const TrendingEvents = () => {
 
   const getAllEvents = () => {
 
-    setLoading(true)
     sendRequest(
       GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""),
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
     ).then(data => {
-      setAllEvents(data?.content)
-      setLoading(false)
+      setAllEvents(data?.content) 
     })
   }
 
@@ -79,11 +77,13 @@ const TrendingEvents = () => {
       unsaveEvent(item?.id)
     } else {
       saveEvent(item?.id)
-    }
+    }  
   }
 
   useEffect(() => {
-    getAllEvents()
+    setLoading(true)
+    getAllEvents() 
+    setLoading(false)
   }, [eventCategory])
 
   return (
@@ -100,17 +100,17 @@ const TrendingEvents = () => {
             {allEvents.map(event => (
               <div className=" w-full border rounded-b-[36px] gap-4 rounded-tl-[36px] flex lg:flex-row flex-col items-center py-[11px] px-[15px] " >
                 <div className=" w-full lg:w-fit " >
-                  <div className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
+                  <a href={`${PATH_NAMES.event}/${event.id}`} className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
                     <img
                       src={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
                       alt=""
                       className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
                     />
-                  </div>
+                  </a>
                 </div>
                 <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >
                   <div className=" w-full flex items-center gap-2 py-2 border-b " > 
-                    <p className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</p>
+                    <a href={`${PATH_NAMES.event}/${event.id}`} className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</a>
                     <p className=" text-sm font-semibol " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
                   </div>
                   <div className="flex w-full gap-2 mt-6 lg:mt-auto" >

@@ -11,6 +11,7 @@ import { useFetch } from "../../../hooks/useFetch"
 
 const SuggestionsPage = () => {
   const [suggestions, setSuggestions] = useState([])
+  const [check, setCheck] = useState(false)
   const { token } = useAuth()
   const { sendRequest } = useFetch()
 
@@ -26,13 +27,13 @@ const SuggestionsPage = () => {
 
   useEffect(() => {
     getSuggestions()
-  }, [])
+  }, [check])
 
   return (
     <PageWrapper>
       {() => (
         <div className="bg-chasescrollBgBlue pb-20">
-          <header className="relative flex items-center justify-between bg-chasescrollNavyLight">
+          <header className="relative flex items-center justify-between bg-[#D0D4EB]">
             <Link
               to={PATH_NAMES.explore}
               className="absolute top-2 left-0 text-left justify-center items-center p-4"
@@ -46,12 +47,14 @@ const SuggestionsPage = () => {
             {suggestions?.map(suggestion => (
               <div key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
                 <Suggestion
+                  data={suggestion}
                   key={suggestion.id}
                   userId={suggestion?.userId}
                   firstName={suggestion?.firstName}
                   lastName={suggestion?.lastName}
                   publicProfile={suggestion?.publicProfile}
                   username={suggestion?.username}
+                  setCheck={setCheck}
                 />
               </div>
             ))}

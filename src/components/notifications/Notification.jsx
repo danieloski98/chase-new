@@ -35,7 +35,7 @@ const Notification = ({ notification, getNotifications }) => {
 			<div className="flex items-center gap-4 max-w-[75%]">
 				{/* <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`} /> */}
 				<Avatar 
-					src={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`}
+					src={`${CONFIG.RESOURCE_URL}/${notification?.createdBy?.data?.imgMain?.value}`}
 					name={notification.title}
 				/>
 				<div className="flex flex-col">

@@ -100,16 +100,24 @@ const CreateEvents = () => {
     }
   }
 
-  const handleChange = ({ target: { name, value, type } }) => {
-    const newValue =
-      type === 'radio'
-        ? (value === 'true')
-        : value;
-    setFormData(data => ({
-      ...data,
-      [name]: newValue
-    }));
-  };
+  const handleChange = (index, name, value) => {
+    const clone = {...formData}
+    if(clone.productTypeData.length-1 < index){
+      clone.productTypeData = [...clone.productTypeData, {
+        totalNumberOfTickets: 0,
+        ticketPrice: 0,
+        ticketType: "",
+        saleID: "regular",
+        minTicketBuy: 0,
+        maxTicketBuy: 0
+      },]
+    }
+    clone.productTypeData[index][name] = value 
+
+    setFormData(clone)
+  }; 
+
+  console.log(formData);
 
 
   const handleFileChange = (event) => {
