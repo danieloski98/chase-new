@@ -11,20 +11,41 @@ import { GoogleIcon } from "../../../components/Svgs"
 import { toast } from "react-toastify"
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { auth, googleAuthProvider } from "../../../config/firebase"
+import { useMutation } from "react-query"
+import httpService from "@/utils/httpService"
+import { AUTH_URL, SIGN_IN_WITH_CREDENTIALS } from "@/constants/endpoints.constant"
+import { Spinner } from "@chakra-ui/react"
 
 const Onboarding = () => {
   const [showTerms, setShowTerms] = useState(false)
 
-  const toggleTermsVisibility = () => setShowTerms(state => !state)
+  const toggleTermsVisibility = () => setShowTerms(state => !state);
+
+  // react-querry
+  const { isLoading, mutate } = useMutation({
+    mutationFn: (data) => httpService.get(`${SIGN_IN_WITH_CREDENTIALS}`, {
+      headers: {
+        Authorization: `${data}`,
+      }
+    }),
+    onSuccess: (data) => {
+      console.log(data.data);
+      toast.success('Signin with firebase successful');
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error('An error occured while using firebase');
+    }
+  })
 
   const signInWithGoogle = React.useCallback(async () => {
     try {
       const result = await signInWithPopup(auth, googleAuthProvider)
       const credential = GoogleAuthProvider.credentialFromResult(result);
-      console.log(result);
+      //console.log(result);
       if (credential) {
-        console.log(credential.idToken)
-        toast.success("e don sup!")
+        console.log(credential.idToken);
+        mutate(credential.idToken);
       }
     } catch (error) {
       toast.error(error)
@@ -72,8 +93,15 @@ const Onboarding = () => {
                 onClick={signInWithGoogle}
                 className="flex gap-4 bg-gray-200 items-center justify-center rounded-lg px-12 py-2.5 font-bold text-sm cursor-pointer"
               >
-                <GoogleIcon />
-                Sign in with Google
+                {
+                  isLoading && <Spinner />
+                }
+                { !isLoading && (
+                  <>
+                    <GoogleIcon />
+                    Sign in with Google
+                  </>
+                )}
               </button>
               <small className="text-chasescrollTextGrey text-center">
                 <span className="font-bold">Create a page</span> for events,
