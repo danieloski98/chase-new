@@ -1,114 +1,9 @@
-import { useEffect, useState } from "react"
-import PageWrapper from "@/components/PageWrapper"
-import { RANDOMCOMMUNITIES, REQUEST, COMMUNITY_TABS } from "@/constants"
-import { AddIcon, CancelIcon2, SearchIcon } from "../../../components/Svgs"
-import { useFetch } from "../../../hooks/useFetch"
-import { useAuth } from "../../../context/authContext"
-import { GET_ALL_PUBLIC_GROUPS_TO_JOIN, GET_GROUP_REQUESTS, JOIN_GROUP } from "../../../constants/endpoints.constant"
-import CONFIG from "../../../config"
-import { toast } from "react-toastify"
-import { GET_JOINED_GROUPS } from "../../../constants/endpoints.constant"
-import { LEAVE_GROUP } from "../../../constants/endpoints.constant"
-import Loader from "../../../components/Loader"
-import { PATH_NAMES } from "../../../constants/paths.constant"
-import { Link } from "react-router-dom"
+import React from 'react'
 
-const Communities = () => {
-  const [activeTab, setActiveTab] = useState(COMMUNITY_TABS[0])
-  const [communities, setCommunities] = useState()
-  const [myCommunities, setMyCommunities] = useState()
-  const [joinedCommunities, setJoinedCommunities] = useState()
-  const [requestedCommunities, setRequestedCommunities] = useState()
-  const [filter, setFilter] = useState("")
-
-  const { sendRequest } = useFetch()
-  const { token, userId } = useAuth()
-
-  const fetchCommunities = async () => {
-    const data = await sendRequest(
-      GET_ALL_PUBLIC_GROUPS_TO_JOIN,
-      "GET",
-      null,
-      { Authorization: `Bearer ${token}` }
-    )
-    if (data) setCommunities(data)
-  }
-
-  const fetchMyCommunities = async () => {
-    const data = await sendRequest(
-      `${GET_JOINED_GROUPS}?userID=${userId}`,
-      "GET",
-      null,
-      { Authorization: `Bearer ${token}` }
-    )
-    if (data) setMyCommunities(data)
-  }
-
-  const fetchMyRequests = async () => {
-    const data = await sendRequest(
-      `${GET_GROUP_REQUESTS}${userId}`,
-      "GET",
-      null,
-      { Authorization: `Bearer ${token}` }
-    )
-    if (data) setRequestedCommunities(data)
-  }
-
-  const handleJoinCommunity = async (groupID, joinID) => {
-    const data = await sendRequest(
-      JOIN_GROUP,
-      "POST",
-      {
-        groupID,
-        joinID,
-      },
-      { Authorization: `Bearer ${token}` }
-    )
-    if (data) {
-      toast.success(data.message)
-      fetchCommunities()
-      fetchMyCommunities()
-    }
-  }
-
-  const handleLeaveCommunity = async (groupID, userID) => {
-    const data = await sendRequest(
-      `${LEAVE_GROUP}?groupID=${groupID}&userID=${userID}`,
-      "DELETE",
-      null,
-      { Authorization: `Bearer ${token}` }
-    )
-    if (data) {
-      toast.success(data.message)
-      fetchMyCommunities()
-      fetchMyCommunities()
-    }
-  }
-
-  const handleAcceptRequest = () => {
-  }
-
-  const handleDeclineRequest = () => {
-  }
-
-  const handleTabClick = (tabName) => {
-    setActiveTab(tabName)
-  }
-
-  useEffect(() => {
-    fetchCommunities()
-    fetchMyCommunities()
-    fetchMyRequests()
-  }, [])
-
-  // useEffect(() => {
-  //   fetchCommunities()
-  // }, [filter])
-
+const componentName = () => {
   return (
-    <PageWrapper>
-      {() => (
-        <div className="mx-auto pb-20 flex flex-col ">
+    <>
+           <div className="mx-auto pb-20 flex flex-col ">
           <Link to={PATH_NAMES.createCommunity} className="self-end p-4">
             <AddIcon className="inline-block" />
           </Link>
@@ -285,8 +180,8 @@ const Communities = () => {
           </div>
         </div>
       )}
-    </PageWrapper >
+    </>
   )
 }
 
-export default Communities
+export default componentName
