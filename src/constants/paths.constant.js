@@ -13,7 +13,7 @@ export const PATH_NAMES = {
   paidEvents: "/events/paid-events",
   freeEvents: "/events/free-events",
   suggestions: "/explore/suggestions",
-  event: "/event",
+  event: "/events",
   message: "/message",
   createGroup: "/message/create-group",
   communities: "/communities",
