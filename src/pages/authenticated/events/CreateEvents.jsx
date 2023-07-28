@@ -117,6 +117,17 @@ const CreateEvents = () => {
     setFormData(clone)
   }; 
 
+  const handleChangeOther = ({ target: { name, value, type } }) => {
+    const newValue =
+      type === 'radio'
+        ? (value === 'true')
+        : value;
+    setFormData(data => ({
+      ...data,
+      [name]: newValue
+    }));
+  };
+
   console.log(formData);
 
 
@@ -140,7 +151,7 @@ const CreateEvents = () => {
           <div>
             <EventTheme
               formData={formData}
-              handleChange={handleChange}
+              handleChange={handleChangeOther}
               handleFileChange={handleFileChange}
               handleContinue={handleContinue}
               setImage={setImage}
@@ -152,7 +163,7 @@ const CreateEvents = () => {
         {activeStep === 1 && (
           <div>
             <EventInfo
-              handleChange={handleChange}
+              handleChange={handleChangeOther}
               formData={formData}
               handleContinue={handleContinue}
               handleBack={handleBack}

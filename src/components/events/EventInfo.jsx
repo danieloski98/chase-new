@@ -11,23 +11,21 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
   const [toBeAnnounced, setToBeAnnounced] = useState(false)
   const [selectType, setSelectType] = useState("")
 
-  const handleStartDateSelect = (date, dateString) => {
+  const handleStartDateSelect = (date, dateString) => {  
     setFormData(data => ({
       ...data,
-      endDate: Date.parse(convertToISO(dateString)),
-      endTime: Date.parse(convertToISO(dateString))
+      startDate: Date.parse(new Date(date?.$d).toJSON()),
+      startTime: Date.parse(new Date(date?.$d).toJSON())
     }))
   }
 
   const handleEndDateSelect = (date, dateString) => {
     setFormData(data => ({
       ...data,
-      startDate: Date.parse(convertToISO(dateString)),
-      startTime: Date.parse(convertToISO(dateString))
+      endDate: Date.parse(new Date(date?.$d).toJSON()),
+      endTime: Date.parse(new Date(date?.$d).toJSON()),
     }))
-  }
-
-  console.log(formData.location?.locationDetails);
+  } 
 
   return (
     <div>
@@ -107,7 +105,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                     type="text"
                     placeholder="Enter Event Location"
                     className="border w-full mt-4 text-sm rounded-md text-chasescrollTextGrey p-3"
-                    name="organizer"
+                    name="locationDetails"
                     onChange={({ target: { value } }) => setFormData(data => ({
                       ...data,
                       location: {
@@ -115,7 +113,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                         locationDetails: value
                       }
                     }))}
-                    value={formData?.organizer}
+                    value={formData?.location?.locationDetails}
                   />
                 )}
 

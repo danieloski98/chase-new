@@ -49,11 +49,11 @@ const Notification = ({ notification, getNotifications }) => {
 			</div>
 			<p className="text-chasescrollBlue text-xs flex items-center gap-4">
 				{formatTimeAgo(notification.createdDate)}
-				{/* <Toggle
+				<Toggle
 					checked={isRead}
 					className="custom-classname"
 					onChange={() => toggleRead(notification.id)}
-				/> */}
+				/>
 			</p>
 		</div>
 	)

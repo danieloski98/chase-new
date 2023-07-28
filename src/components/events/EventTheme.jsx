@@ -36,9 +36,11 @@ const EventTheme = ({
       null,
       { Authorization: `Bearer ${token}` }
     ).then((data) => {
+      console.log(data);
       setTypes(data)
     })
   }
+  
 
   useEffect(() => {
     getEventsCategory()

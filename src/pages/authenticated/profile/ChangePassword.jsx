@@ -48,7 +48,7 @@ function ChangePassword() {
             </span>
             <p className="text-gray-600 text-lg">Change Password</p>
           </div>
-          <div className="flex items-center justify-center w-full h-[70vh]">
+          <div className="flex pt-20 justify-center w-full h-[70vh]">
             <form onSubmit={changePassword} className="w-full sm:w-1/2 overflow-auto">
               <div className="flex flex-col justify-center items-center mb-6">
                 <img
