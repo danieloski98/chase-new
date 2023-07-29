@@ -9,7 +9,7 @@ export const useFetch = () => {
   const sendRequest = async (
     url,
     method = "GET",
-    body = null,
+    body,
     headers = {},
     isFormData = false
   ) => {
