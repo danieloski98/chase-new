@@ -17,12 +17,9 @@ import { toast } from "react-toastify"
 import { PATH_NAMES } from "../../constants/paths.constant"
 import { Link } from "react-router-dom"
 import Loader from "../Loader"
-import Loader from "../Loader"
 
 const TrendingEvents = () => {
   const [allEvents, setAllEvents] = useState([])
-  const [loading, setLoading] = useState(false)
-  const { userId, token, eventCategory } = useAuth()
   const [loading, setLoading] = useState(false)
   const { userId, token, eventCategory } = useAuth()
   const { sendRequest } = useFetch()
@@ -45,25 +42,6 @@ const TrendingEvents = () => {
   const saveEvent = eventID => {
     sendRequest(
       SAVE_EVENT, "POST", {
-      eventID: eventID ,
-      typeID: userId,
-      type: "EVENT"
-    }, {
-      Authorization: `Bearer ${token}`,
-    }).then(response => {
-      if (response?.updated) {
-        toast.success(response?.message)
-      } else {
-        toast.error(response?.message)
-      }
-    })
-    getAllEvents()
-  }
-
-  const unsaveEvent = eventID => {
-    sendRequest(
-      "/events/remove-saved-event", "POST", {
-      eventID: eventID ,
       eventID: eventID ,
       typeID: userId,
       type: "EVENT"
@@ -194,20 +172,6 @@ const TrendingEvents = () => {
                     </button>
                   </div>
                 </div>
-              </div> 
-            ))}
-          </>
-        )}
-      </div>
-      {!loading && (
-        <> 
-          {allEvents?.length <= 0 && (
-            <p className=" text-center py-6 text-lg font-semibold " >
-              No Records Founded
-            </p>
-          )}
-        </>
-      )}
               </div> 
             ))}
           </>
