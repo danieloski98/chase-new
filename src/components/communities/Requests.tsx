@@ -4,15 +4,17 @@ import { PATH_NAMES } from '../../constants/paths.constant'
 import { CancelIcon2 } from '../Svgs'
 import CONFIG from '../../config'
 import Loader from '../Loader'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import httpService from '../../utils/httpService'
 import { toast } from 'react-toastify'
+import { GET_GROUP_REQUESTS } from '../../constants/endpoints.constant'
+import { useAuth } from '../../context/authContext'
 
-interface IProps {
-    communities: Array<any>;
-    loading: boolean;
-    hasError: boolean;
-}
+// interface IProps {
+//     communities: Array<any>;
+//     loading: boolean;
+//     hasError: boolean;
+// }
 
 const Request = ({ community }) => {
     const queryClient = useQueryClient();
@@ -82,16 +84,25 @@ const Request = ({ community }) => {
     )
 }
 
-function Requests({ communities, loading, hasError }: IProps) {
+function Requests() {
     const handleAcceptRequest = (com: any) => {
         console.log(com);
   }
 
   const handleDeclineRequest = (com: any) => {
     console.log(com);
-  }
+  } 
 
-  if (loading) {
+  const {  userId } = useAuth()
+  const [requestedCommunities, setRequestedCommunities] = React.useState<any[]>([])
+
+  const getRequests = useQuery(['getRequests', userId], () => httpService.get(`${GET_GROUP_REQUESTS}${userId}`), {
+    onSuccess: (data) => {
+      setRequestedCommunities(data.data.content)
+    }
+  });
+
+  if (getRequests.isLoading) {
     return (
       <div className='w-full flex justify-center items-center'>
         <Loader />
@@ -99,7 +110,7 @@ function Requests({ communities, loading, hasError }: IProps) {
     )
   }
 
-  if (!loading && hasError) {
+  if (!getRequests.isLoading && getRequests.isError) {
     return (
       <div className="w-full flex justify-center items-center">
         <p className='text-4xl'>An error occured</p>
@@ -109,19 +120,23 @@ function Requests({ communities, loading, hasError }: IProps) {
 
   return (
     <div className="w-full flex flex-col items-center">
-    {communities?.length < 1 ? (
-      <div className="flex h-[80vh] justify-center items-center">
-        <p className="text-center text-gray-500 text-[20px] md:text-[48px] whitespace-pre-line max-w-xl">
-          You have no requests to join any of your communities
-        </p>
-      </div>
-    ) : (
-      <ul>
-        {communities?.map(community => (
-           <Request community={community} />
-        ))}
-      </ul>
-    )}
+      {!getRequests?.isLoading && (
+        <> 
+          {requestedCommunities?.length < 1 ? (
+            <div className="flex h-[80vh] justify-center items-center">
+              <p className="text-center text-gray-500 text-[20px] md:text-[48px] whitespace-pre-line max-w-xl">
+                You have no requests to join any of your communities
+              </p>
+            </div>
+          ) : (
+            <ul>
+              {requestedCommunities?.map(community => (
+                <Request community={community} />
+              ))}
+            </ul>
+          )}
+        </>
+      )}
   </div>
   )
 }

@@ -18,7 +18,7 @@ import CONFIG from "../../config"
 import { CLOSE_ENTITY } from "../../constants"
 import CreateCommunity from "../../pages/authenticated/communities/CreateCommunity"
 
-const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
+const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loading }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isFree, setIsFree] = useState(false)
   const [showFunnel, setShowFunnel] = useState(false) 
@@ -42,7 +42,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
   const handleExpirationDateSelect = (date, dateString) => {
     setFormData(data => ({
       ...data,
-      expirationDate: convertToISO(dateString)
+      expirationDate: Date.parse(new Date(date?.$d).toJSON()),
     }))
   }
 
@@ -220,8 +220,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
               onChange={e => handleChange("vipPrice", e.target.value)}
             />
           </div>
-        </div> */}
-
+        </div> */} 
         {ticketArray?.map((item, index)=> {
           return(
             <div className=" w-full " key={index} > 
@@ -234,9 +233,9 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
                     <input
                       type="text"
                       className="block text-xs md:text-sm w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                      placeholder="Enter amount"
-                      value={formData.regularPrice}
-                      name="regularPrice"
+                      placeholder="Enter Name"
+                      value={formData.productTypeData[index]?.ticketType}
+                      name="ticketType"
                       onChange={e => handleChange(index, "ticketType", e.target.value)}
                     /> 
                   </div>
@@ -247,12 +246,12 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
                   </label>
                   <div className="flex gap-2">
                     <input
-                      type="text"
+                      type="number"
                       className="block text-xs md:text-sm w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Enter amount"
-                      value={formData.regularPrice}
-                      name="regularPrice"
-                      onChange={e => handleChange(index, "regularPrice", e.target.value)}
+                      value={formData.productTypeData[index]?.ticketPrice}
+                      name="ticketPrice"
+                      onChange={e => handleChange(index, "ticketPrice", e.target.value)}
                     /> 
                   </div>
                 </div> 
@@ -264,13 +263,14 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
                   events
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="block w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   placeholder=" Type in available quantity"
-                  value={formData.totalTicketAvailable}
-                  name="totalTicketAvailable"
+                  // value={formData.totalTicketAvailable}
+                  value={formData.productTypeData[index]?.totalNumberOfTickets}
+                  name="totalNumberOfTickets"
                   onChange={e =>
-                    handleChange(index, "totalTicketAvailable", e.target.value)
+                    handleChange(index, "totalNumberOfTickets", e.target.value)
                   }
                 />
               </div>
@@ -281,18 +281,18 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
                   purchase for your event
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="block w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   placeholder="Type in minimum no of Tickets"
-                  value={formData.minTicketBuy}
+                  value={formData.productTypeData[index]?.minTicketBuy}
                   name="minTicketBuy"
                   onChange={e => handleChange(index, "minTicketBuy", e.target.value)}
                 />
                 <input
-                  type="text"
+                  type="number"
                   className="block mt-4 w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   placeholder="Type in maximum no. of Tickets"
-                  value={formData.maxTicketBuy}
+                  value={formData.productTypeData[index]?.maxTicketBuy}
                   name="maxTicketBuy"
                   onChange={e => handleChange(index, "maxTicketBuy", e.target.value)}
                 />
@@ -301,9 +301,9 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
           )
         })}
 
-        <p role="button" onClick={()=> setArray([...ticketArray, ""])} className=" mt-3 font-bold " >+ Add New Ticket</p>
+        <button onClick={()=> setArray([...ticketArray, ""])} className=" mt-3 font-bold border text-white bg-blue-600 rounded-md  py-2 w-fit px-3 " >+ Add New Ticket Type</button>
 
-        <div className="flex flex-col gap-4 mt-4 mb-4">
+        {/* <div className="flex flex-col gap-4 mt-4 mb-4">
           <h1>Ticket Expiration Date</h1>
           <div className="flex border w-fit">
             <div className="justify-center items-center flex px-4">
@@ -324,7 +324,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex mt-2 justify-between">
           <div className="flex cursor-pointer" onClick={toggleFunnel}>
@@ -374,7 +374,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit }) => {
           className="w-full py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
           onClick={handleSubmit}
         >
-          Submit
+          {loading? "loading" : "Submit"}
         </button>
       </div>
     </div>

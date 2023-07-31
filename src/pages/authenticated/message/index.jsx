@@ -151,7 +151,7 @@ const Message = () => {
                   />
                 </OverlayWrapper>
               )}
-              <div className="lg:basis-4/12 bg-white w-full h-full border-r">
+              <div className="lg:basis-4/12 bg-white w-full h-full mt-4 border-r">
                 <div className="flex flex-col">
                   <div className="p-4 border-gray-200 flex items-center justify-between">
                     <h1 className="text-2xl text-chasescrollBlue font-bold">
@@ -159,9 +159,10 @@ const Message = () => {
                     </h1>
                     <Link
                       to={PATH_NAMES.createGroup}
-                      className="text-chasescrollPurple"
+                      className="text-chasescrollPurple text-sm "
                     >
-                      <AddIcon />
+                      {/* <AddIcon /> */}
+                      Create Group Chat
                     </Link>
                   </div>
                   <div

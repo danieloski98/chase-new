@@ -146,14 +146,14 @@ const Events = () => {
     <PageWrapper>
       {() => (
         <div className="flex flex-col gap-2 pb-32 md:pb-16">
-          <div className="flex justify-between items-center px-4 lg:px-8">
+          <div className="flex justify-between items-center mt-5 px-4 lg:px-8">
             <select
               className="text-base font-bold !bg-white py-4 outline-none"
               onChange={handleViewChange}
             >
               <option value="">Find Events</option>
               <option value="My Events">My Events</option>
-              <option value="Passed Events">Passed Events</option>
+              <option value="Passed Events">Past Events</option>
               <option value="Saved Events">Saved Events</option>
             </select>
             <Link to={PATH_NAMES.createEvent}>

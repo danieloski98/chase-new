@@ -12,13 +12,16 @@ export const AuthContext = createContext({
   searchValue: "",
   setSearchValue: "",
   eventCategory: "",
-  setEventCategory: ""
+  setEventCategory: "",
+  notification:"", 
+  setnotification:"",
 });
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [userId, setUserId] = useState(localStorage.getItem('userId') || null);
   const [userName, setUserName] = useState(localStorage.getItem('userName') || null);
+  const [notification, setnotification] = useState("");
   const [authorized, setAuthorized] = useState(Boolean(token));
   const [searchValue, setSearchValue] = useState("");
   const [eventCategory, setEventCategory] = useState("");
@@ -81,6 +84,8 @@ export const AuthProvider = ({ children }) => {
       userName,
       searchValue,
       setSearchValue,
+      notification, 
+      setnotification,
       eventCategory,
       setEventCategory
     }}>

@@ -41,7 +41,7 @@ const CreateEvents = () => {
     endTime: "",
     startDate: "",
     endDate: "",
-    expirationDate: "",
+    // expirationDate: "",
     location: {
       link: "",
       address: "",
@@ -54,14 +54,14 @@ const CreateEvents = () => {
       {
         totalNumberOfTickets: 0,
         ticketPrice: 0,
-        ticketType: "",
-        saleID: "regular",
+        ticketType: "", 
         minTicketBuy: 0,
         maxTicketBuy: 0
       },
     ]
   })
   const [image, setImage] = useState('')
+  const [loading, setLoading] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
 
   const handleContinue = () => {
@@ -73,6 +73,7 @@ const CreateEvents = () => {
   }
 
   const handleSubmit = async () => {
+
     const fd = new FormData();
     fd.append("file", image);
 
@@ -86,19 +87,21 @@ const CreateEvents = () => {
       ).then(response => {
         setFormData(data => ({
           ...data,
-          picUrls: response?.fileName
-        }))
-        sendRequest(
-          CREATE_EVENT,
-          "POST",
-          formData,
-          { Authorization: `Bearer ${token}` }
-        ).then((response) => {
-          toast.success(response?.message)
-        })
+          picUrls: [response?.fileName]
+        })) 
+        if(response?.fileName){ 
+          sendRequest(
+            CREATE_EVENT,
+            "POST",
+            formData,
+            { Authorization: `Bearer ${token}` }
+          ).then((response) => {
+            toast.success(response?.message)
+          })
+        }
       })
     }
-  }
+  } 
 
   const handleChange = (index, name, value) => {
     const clone = {...formData}
@@ -116,6 +119,17 @@ const CreateEvents = () => {
 
     setFormData(clone)
   }; 
+
+  const handleChangeOther = ({ target: { name, value, type } }) => {
+    const newValue =
+      type === 'radio'
+        ? (value === 'true')
+        : value;
+    setFormData(data => ({
+      ...data,
+      [name]: newValue
+    }));
+  };
 
   console.log(formData);
 
@@ -140,7 +154,7 @@ const CreateEvents = () => {
           <div>
             <EventTheme
               formData={formData}
-              handleChange={handleChange}
+              handleChange={handleChangeOther}
               handleFileChange={handleFileChange}
               handleContinue={handleContinue}
               setImage={setImage}
@@ -152,7 +166,7 @@ const CreateEvents = () => {
         {activeStep === 1 && (
           <div>
             <EventInfo
-              handleChange={handleChange}
+              handleChange={handleChangeOther}
               formData={formData}
               handleContinue={handleContinue}
               handleBack={handleBack}
@@ -163,6 +177,7 @@ const CreateEvents = () => {
         {activeStep === 2 && (
           <div>
             <EventTicket
+              loading={loading}
               handleChange={handleChange}
               formData={formData}
               setFormData={setFormData}

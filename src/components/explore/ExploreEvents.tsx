@@ -59,15 +59,15 @@ const SearchEventCard = (event: IEvent) => {
     <li key={event.id} className="border-b w-full p-2 px-4 ">
            <div className="flex my-4 items-center w-full justify-between">
              <div className="flex w-fit justify-start">
-               <img onClick={() => navigate(`/event/${event.id}`)} src={"https://chaseenv.chasescroll.com/resource-api/download/"+event?.currentPicUrl} alt="profiles" className="w-[270px] h-[150px] object-cover rounded-b-3xl rounded-tl-3xl cursor-pointer" />
+               <img onClick={() => navigate(`/event/${event.id}`)} src={"https://chaseenv.chasescroll.com/resource-api/download/"+event?.picUrls[0]} alt="profiles" className=" w-[150px] lg:w-[270px] lg:h-[150px] object-cover rounded-b-3xl rounded-tl-3xl cursor-pointer" />
              </div>
 
-             <div className=' w-[40%]' >
+             <div className=' w-[60%]' >
                <div className="flex flex-col gap-4 flex-1 w-full justify-end pl-4">
                  <h1 onClick={() => navigate(`/event/${event.id}`)}  className="border-b text-[18px] w-full flex items-center font-bold cursor-pointer">
-                   <span className=' w-40 ' >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}{" "}</span>
+                   <span className=' ' >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}{" "}</span>
 
-                   <span className=" pl-1 md:pl-4">{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</span>
+                   <span className=" ml-auto w-20 lg:mr-16 text-left md:pl-4">{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</span>
                    {/* <span className="pl-1 md:pl-4">{event.maxPrice}</span> */}
                  </h1>
                  <span className="flex gap-2 text-xs md:text-sm text-[#2E2B2B] text-opacity-[67%]">

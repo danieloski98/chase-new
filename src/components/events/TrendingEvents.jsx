@@ -93,7 +93,7 @@ const TrendingEvents = () => {
           <Loader position={true} /> 
       )}
 
-      <p className={` ${eventCategory ? "text-center text-3xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory === "Corporate_Event" ? "Corporate Event" :eventCategory ? eventCategory : "Tending"}</p>
+      <p className={` ${eventCategory ? "text-center text-3xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory === "Corporate_Event" ? "Corporate Event" :eventCategory ? eventCategory : "Trending"}</p>
 
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
         {!loading && (
@@ -103,7 +103,7 @@ const TrendingEvents = () => {
                 <div className=" w-full lg:w-fit " >
                   <div className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
                     <img
-                      src={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
+                      src={`${CONFIG.RESOURCE_URL}/${event?.picUrls[0]}`}
                       alt=""
                       className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
                     />
