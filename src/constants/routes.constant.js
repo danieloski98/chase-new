@@ -43,6 +43,7 @@ import PaymentDetails from "@/pages/authenticated/settings/payment/PaymentDetail
 import Wallet from "@/pages/authenticated/settings/payment/Wallet"
 import { CalendarIcon } from "@/components/Svgs"
 import Events from "@/pages/authenticated/events/Events"
+import EventDashboard from "@/pages/authenticated/eventdashboard"
 
 export const NAVIGATION_ROUTES = [
   {
@@ -97,6 +98,14 @@ export const NAVIGATION_ROUTES = [
     withMobile: true,
     forMobile: false,
   },
+  // {
+  //   label: "eventDashboard",
+  //   path: PATH_NAMES.eventDashboard,
+  //   icon: ProfileIcon2,
+  //   element: EventDashboard,
+  //   withMobile: true,
+  //   forMobile: false,
+  // },
   // {
   //   label: "Profile",
   //   path: PATH_NAMES.profile,
@@ -162,6 +171,10 @@ export const OTHER_AUTHENTICATED_ROUTES = [
   {
     path: PATH_NAMES.events,
     element: MyEvents,
+  },
+  {
+    path: PATH_NAMES.eventDashboard,
+    element: EventDashboard,
   },
   {
     path: PATH_NAMES.createCommunity,

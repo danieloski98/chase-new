@@ -6,16 +6,31 @@ import React from "react"
 import MyNetwork from "../profile/MyNetwork"
 import SecondaryCommunity from "../profile/SecondaryCommunity"
 import { useNavigate } from "react-router-dom"
+import Requests from "../../../components/communities/Requests"
 
 const Notifications = () => {
 
 	const [show, setShow] = React.useState(false)
 	const [type, setType] = React.useState("") 
+  const [notification, setNotification] = React.useState([])
 
   const navigate = useNavigate()
 
   const clickHandler =()=> {
     setShow((prev)=> !prev)
+  } 
+
+  const fetchNotification = async () => {
+    if (userId) {
+      const data = await sendRequest(
+        `${"/notifications/notification"}`,
+        "GET",
+        null,
+        { Authorization: `Bearer ${token}` }
+      )
+      if (data){ setNotification(data)
+        console.log(data);}
+    }
   }
 
   return (
@@ -55,8 +70,8 @@ const Notifications = () => {
             </div>
           )}
           {show && (
-            <div className="flex flex-col gap-4 w-full h-full max-w-2xl self-center">
-              <div className=' w-full px-6 flex justify-end ' >
+            <div className="flex flex-col relative gap-4 w-full h-full max-w-2xl self-center">
+              <div className=' w-full px-6 flex absolute top-0 justify-end ' >
                 <button onClick={()=> setShow(false)} > 
                   <svg
                     width="12"
@@ -72,11 +87,14 @@ const Notifications = () => {
                   </svg>
                 </button>
               </div>
-              {type === "Friend Request" && ( 
+              {(type === "Friend Request" || type === "Friend Request Accepted") && ( 
                 <MyNetwork active={"Requests"} />
               )}
-              {type === "Group Join Requestt" && ( 
-                <SecondaryCommunity active={true} />
+              {(type === "Group Join Request" || type === "Group Invite") && ( 
+                <Requests />
+              )}
+              {type === "New message" && ( 
+                navigate("/message") 
               )} 
             </div>
           )}

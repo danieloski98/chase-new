@@ -8,7 +8,7 @@ import { useFetch } from "../../../hooks/useFetch"
 import { useAuth } from "../../../context/authContext"
 import { REJECT_FRIEND_REQUEST } from "../../../constants/endpoints.constant"
 import { PATH_NAMES } from "../../../constants/paths.constant"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { Avatar } from '@chakra-ui/react';
 import Loader from "../../../components/Loader"
 
@@ -19,6 +19,7 @@ const MyNetwork = (props) => {
   const [isLoading, setIsLoading] = React.useState(true)
   const { sendRequest } = useFetch()
   const { token, userId: currentUserId  } = useAuth()
+  const navigate = useNavigate()
 
   const { userId } = useParams() 
 
@@ -114,10 +115,12 @@ const MyNetwork = (props) => {
     if(props.active){
       setActiveTab(props.active)
     } 
-  }, [])
+  }, [userId])
+
+
 
   return (
-    <div className="flex justify-center px-4 py-4 w-full max-w-md mx-auto">
+    <div className="flex justify-center px-4  w-full max-w-md mx-auto">
 
       {isLoading && (
         <> 
@@ -128,8 +131,8 @@ const MyNetwork = (props) => {
           )}
         </>
       )}
-      {!isLoading && ( 
-        <div className="flex flex-col justify-center w-full my-6 mb-[100px]">
+      {!isLoading && (
+        <div className="flex flex-col justify-center w-full mb-[100px]">
           {self && (
             <div className="flex justify-center items-center px-1 py-1 bg-[#EFEFF0] rounded-lg mx-auto">
               <button
@@ -168,7 +171,7 @@ const MyNetwork = (props) => {
                     key={id}
                   >
                     <Link
-                      to={`${PATH_NAMES.profile}/${id}`}
+                      to={`${PATH_NAMES.profile}/${id}`} 
                       className="flex gap-2 items-center"
                     >
                       {/* <img src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
@@ -231,22 +234,24 @@ const MyNetwork = (props) => {
                       <small className="text-gray-500">@{profile?.username}</small>
                     </div>
                   </Link>
-                  {userId === profile.userId ? (
-                    <span className="px-4 py-2 text-chasescrollBlue font-bold">Me!</span>
-                  ) : profile?.joinStatus === "CONNECTED" ? (
-                    <button
-                      className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
-                      onClick={() => unfriendPerson(profile?.userId)}
-                    >
-                      <span className="text-sm">Disconnect</span>
-                    </button>
-                  ) : (
-                    <button
-                      className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
-                      onClick={() => friendPerson(profile?.userId)}
-                    >
-                      <span className="text-sm">Connect</span>
-                    </button>
+                  {userId === profile.userId && (
+                    <>
+                      {profile?.joinStatus === "CONNECTED" ? (
+                        <button
+                          className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
+                          onClick={() => unfriendPerson(profile?.userId)}
+                        >
+                          <span className="text-sm">Disconnect</span>
+                        </button>
+                      ) : (
+                        <button
+                          className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
+                          onClick={() => friendPerson(profile?.userId)}
+                        >
+                          <span className="text-sm">Connect</span>
+                        </button>
+                      )}
+                    </>  
                   )}
                 </div>
               ))}

@@ -208,7 +208,7 @@ const Home = () => {
           )}
           {showShareModal && <Share closeShareModal={toggleShare} />}
 
-            <div className="hidden md:flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full max-w-lg rounded-xl my-9 mx-4 lg:mx-28 mb-24 p-4 shadow-md">
+            <div className="hidden md:flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full max-w-lg rounded-xl mx-4 lg:mx-28 mb-10 p-4 shadow-md">
                <div className="flex items-center bg-chasescrollPalePurple bg-opacity-30 rounded-xl pl-4">
                  <div className="w-8 h-7 rounded-b-full rounded-tr-full border-chasescrollBlue flex items-center justify-center">
                    

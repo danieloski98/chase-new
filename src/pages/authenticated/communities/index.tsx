@@ -60,7 +60,7 @@ const Communities = () => {
         return <FindCommunities communities={communities} loading={getCommunities.isLoading} hasError={getCommunities.isError} searchText={searchText} handleSearch={setSearchText} search={handleRefechCommunities} />
       }
       case 3: {
-        return <Requests communities={requestedCommunities} loading={getRequests.isLoading} hasError={getRequests.isError} />
+        return <Requests />
       }
     }
   }, [active, myCommunities, getMyCommunities.isLoading, getMyCommunities.isError, communities, getCommunities.isLoading, getCommunities.isError, searchText, handleRefechCommunities, requestedCommunities, getRequests.isLoading, getRequests.isError]);
