@@ -15,8 +15,8 @@ const MyEvents = () => {
     const MyEvents = await sendRequest(GET_JOINED_EVENTS, "GET", null, {
       Authorization: `Bearer ${token}`,
     })
-    if (MYeVENTS && MYeVENTS.content) {
-      setMyEvents(MYeVENTS.content)
+    if (MyEvents && MyEvents.content) {
+      setMyEvents(MyEvents.content)
     }
   }
 

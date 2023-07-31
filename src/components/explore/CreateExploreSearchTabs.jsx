@@ -2,6 +2,7 @@ import PropTypes from "prop-types"
 import { CREATE_EXPLORE_SEARCH_TABS } from "@/constants/index"
 import { CancelIcon } from "@/components/Svgs"
 import { useAuth } from "../../context/authContext"
+import { LeftArrow } from "../Svgs"
 
 const CreateExploreSearchTabs = ({ activeTab, setActiveTab }) => {
 
@@ -17,19 +18,22 @@ const CreateExploreSearchTabs = ({ activeTab, setActiveTab }) => {
 
   return (
     <div className="grid gap-2 md:gap-8 w-full h-auto px-6 py-4 shadow-sm">
-      <div className="flex gap-4 items-center ml-2">
+      {/* <div className="flex gap-4 items-center ml-2">
         <button onClick={handleClose}>
           <CancelIcon />
         </button>
-      </div>
-      <div className="flex gap-16 justify-evenly md:justify-between">
+      </div> */}
+      <div className="flex items-center justify-evenly md:justify-between">
+        <button onClick={handleClose}>
+          <LeftArrow />
+        </button>
         {CREATE_EXPLORE_SEARCH_TABS.map(({ label, value }) => {
           const isActive = activeTab === value
 
           return (
             <button
               key={value}
-              className={`text-[24px] md:font-bold md:p-2 md:px-8 px-2 ${
+              className={`text-[18px] md:font-bold md:p-2 md:px-8 px-2 ${
                 isActive
                   ? "text-[#5D70F9]"
                   : "text-black hover:bg-gray-50 hover:text-chasescrollBlue"

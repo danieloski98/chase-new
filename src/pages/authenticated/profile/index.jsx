@@ -54,6 +54,7 @@ const Profile_1 = () => {
     if (data){ 
       setProfile(data)
       setIsLoading(false)
+      setActiveComponent("component1")
     }
   }
 
@@ -141,7 +142,7 @@ const Profile_1 = () => {
       fetchProfileInfo()
     }
     setLoading(false)
-  }
+  }  
 
   useEffect(() => {
     fetchProfileInfo()
@@ -149,7 +150,8 @@ const Profile_1 = () => {
     fetchOwnNetwork()
     fetchEvents()
     fetchCommunities()
-  }, [])
+    fetchNetwork()
+  }, [userId])
 
   useEffect(() => {
     if (ownNetwork) {
@@ -195,7 +197,7 @@ const Profile_1 = () => {
         return <Posts posts={posts?.content} />
       }
     }
-  }, [activeComponent])
+  }, [activeComponent, userId])
 
 
 
@@ -265,6 +267,13 @@ const Profile_1 = () => {
                           >
                             {loading ? "loading.." : "Pending"}
                           </button>
+                        ): profile?.joinStatus === "CONNECTED" ? (
+                          <button
+                            className="w-40 font-semibold bg-[#F04F4F] text-white px-3 md:px-4 py-3 rounded-md"
+                            onClick={unfriendPerson}
+                          >
+                            {loading ? "loading.." : "Disconnect"}
+                          </button>                        
                         ) : (
                           <button
                             className="w-40 font-semibold bg-chasescrollBlue text-white px-3 md:px-4 py-3 rounded-md"
@@ -292,7 +301,7 @@ const Profile_1 = () => {
                   communityCount={communities?.content?.length}
                 />
               </section>
-              <div className="px-2">
+              <div className="px-2 py-10 ">
                 {switchComponent()}
               </div>
             </div>
