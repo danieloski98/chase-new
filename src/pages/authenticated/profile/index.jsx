@@ -145,8 +145,7 @@ const Profile_1 = () => {
 
   useEffect(() => {
     fetchProfileInfo()
-    fetchPosts()
-    fetchNetwork()
+    fetchPosts() 
     fetchOwnNetwork()
     fetchEvents()
     fetchCommunities()
@@ -175,22 +174,22 @@ const Profile_1 = () => {
   const switchComponent = React.useCallback(() => {
     switch(activeComponent){
       case "component1": {
-        return <Posts posts={posts?.content} />
+        return <Posts   />
       }
       case "component2": {
         return <MyNetwork
-          network={network}
-          fetchNetwork={fetchNetwork}
-          self={self}
-          friendPerson={friendPerson}
-          unfriendPerson={unfriendPerson}
+          // network={network}
+          // fetchNetwork={fetchNetwork}
+          // self={self}
+          // friendPerson={friendPerson}
+          // unfriendPerson={unfriendPerson}
         />
       }
       case "component3": {
         return <SecondaryEvents events={events} />
       }
       case "component4": {
-        return <SecondaryCommunity communities={communities} />
+        return <SecondaryCommunity />
       }
       default: {
         return <Posts posts={posts?.content} />
