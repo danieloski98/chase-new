@@ -1148,7 +1148,7 @@ export const SettingsPageList = [
   {
     id: nanoid(),
     type: "Event Dash Board",
-    route: PATH_NAMES.event,
+    route: "/event-dashboard",
     icon: eventCalenderIcon,
   },
   {

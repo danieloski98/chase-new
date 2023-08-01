@@ -171,7 +171,7 @@ const AllEvents = () => {
               <div className="relative w-full ">
                 <div className="rounded-b-[32px] w-full rounded-tl-[32px] overflow-hidden">
                   <img
-                    src={`${CONFIG.RESOURCE_URL}${currentPicUrl}`}
+                    src={`${CONFIG.RESOURCE_URL}${picUrls[0]}`}
                     alt=""
                     className="w-full h-[300px] object-cover "
                   />
@@ -216,13 +216,7 @@ const AllEvents = () => {
                             <div className="w-8 h-8 -mr-4 rounded-b-full rounded-tl-full bg-yellow-500  flex justify-center items-center">
                               <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.firstName?.slice(0, 1)}</p> 
                               <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.lastName?.slice(0, 1)}</p>
-                            </div>
-                            // <Avatar
-                            //   src={`https://chaseenv.chasescroll.com//resource-api/download/${attendee?.data?.imgMain?.value}`}
-                            //   name={`${attendee?.firstName} ${attendee?.lastName}`}
-                            //   className="w-6 h-6 -mr-3 rounded-b-full rounded-tl-full"
-                            //   // size='md' 
-                            // /> 
+                            </div> 
                           }
                         </div>
                       ))}

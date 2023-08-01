@@ -71,11 +71,12 @@ const PaidTicketPage = () => {
     <PageWrapper>
       {() => (
         <TicketPageTemplate
+          data={event}
           eventID={event?.id}
           isBought={event?.isBought}
           eventName={event?.eventName}
           about={event?.eventDescription}
-          banner={event?.currentPicUrl}
+          banner={event?.picUrls ? event?.picUrls[0] : ""}
           isFree={event?.isFree}
           timeAndDate={event?.startDate}
           location={event?.location}
