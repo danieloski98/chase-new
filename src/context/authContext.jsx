@@ -15,6 +15,8 @@ export const AuthContext = createContext({
   setEventCategory: "",
   notification:"", 
   setnotification:"",
+  eventData:"", 
+  setEventData:"",
 });
 
 export const AuthProvider = ({ children }) => {
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }) => {
   const [authorized, setAuthorized] = useState(Boolean(token));
   const [searchValue, setSearchValue] = useState("");
   const [eventCategory, setEventCategory] = useState("");
+  const [eventData, setEventData] = useState(null);
 
   const { sendRequest } = useFetch();
 
@@ -87,7 +90,9 @@ export const AuthProvider = ({ children }) => {
       notification, 
       setnotification,
       eventCategory,
-      setEventCategory
+      setEventCategory,
+      eventData, 
+      setEventData
     }}>
       {children}
     </AuthContext.Provider>

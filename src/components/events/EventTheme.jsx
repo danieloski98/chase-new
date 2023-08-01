@@ -6,6 +6,7 @@ import { useAuth } from "../../context/authContext"
 import { useFetch } from "../../hooks/useFetch"
 import { GET_EVENTS_TYPES } from "../../constants/endpoints.constant"
 import { PictureIcon, VideoCameraIcon } from "../Svgs"
+import { toast } from "react-toastify"
 
 const EventTheme = ({
   formData,
@@ -14,7 +15,7 @@ const EventTheme = ({
   setImage,
   selectedImage,
   setSelectedImage,
-  handleContinue,
+  handleContinue, 
 }) => {
   const [types, setTypes] = useState([])
 
@@ -44,7 +45,19 @@ const EventTheme = ({
 
   useEffect(() => {
     getEventsCategory()
-  }, [])
+  }, []) 
+
+  const clickHandler =()=> {
+    if(!formData?.eventName){
+      toast.error("Enter Event Name")
+    } else if(!formData?.organizer){
+      toast.error("Enter Event Organizer")
+    } else if(!formData?.eventType){
+      toast.error("Enter Event Type")
+    } else {
+      handleContinue()
+    }
+  }
 
   return (
     <div className="px-4 mx-auto">
@@ -177,7 +190,7 @@ const EventTheme = ({
                 name="joinSetting"
                 value="public"
                 onChange={handleChange}
-                checked={formData?.joinSetting == "public"}
+                checked={formData?.joinSetting === "public"}
 
               />
             </label>
@@ -191,7 +204,7 @@ const EventTheme = ({
                 name="joinSetting"
                 value="private"
                 onChange={handleChange}
-                checked={formData?.joinSetting == "private"}
+                checked={formData?.joinSetting === "private"}
               />
             </label>
           </div>
@@ -206,6 +219,7 @@ const EventTheme = ({
                 type="radio"
                 id="publicVisibility"
                 name="isPublic"
+                value={true}
                 onChange={handleChange}
                 checked={formData?.isPublic}
               />
@@ -218,6 +232,7 @@ const EventTheme = ({
                 type="radio"
                 id="privateVisibility"
                 name="isPublic"
+                value={false}
                 onChange={handleChange}
                 checked={!formData?.isPublic}
               />
@@ -274,15 +289,7 @@ const EventTheme = ({
             ? "text-red-500 transition animate-pulse cursor-not-allowed"
             : "text-chasescrollBlue"
             }`}
-          onClick={handleContinue}
-          disabled={
-            !formData?.eventName ||
-            !formData?.organizer ||
-            !formData?.eventType ||
-            !formData?.eventDescription ||
-            !formData?.joinSetting ||
-            !formData?.attendeesVisibility
-          }
+          onClick={clickHandler} 
           id="continueButton"
         >
           Continue

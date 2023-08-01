@@ -192,7 +192,7 @@ const Events = () => {
                 >
                   <div className="flex flex-col md:flex-row gap-6 w-full items-center mb-2">
                     <img
-                      src={`${CONFIG.RESOURCE_URL}${event?.currentPicUrl}`}
+                      src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
                       alt="descriptive photograph"
                       className="w-44 h-40 object-cover rounded-b-[32px] rounded-tl-[32px]"
                     />
@@ -251,7 +251,7 @@ const Events = () => {
                   <div className="flex flex-col md:flex-row gap-10 w-full items-center mb-2">
                     <div className="rounded-b-[32px] rounded-tl-[32px] h-[130px] w-[200px] overflow-hidden">
                       <img
-                        src={event?.picUrls}
+                        src={event?.picUrls[0]}
                         alt="descriptive photograph"
                         className=" w-full h-full "
                       />

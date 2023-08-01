@@ -41,6 +41,7 @@ const TicketPageTemplate = ({
   isBought,
   minPrice,
   maxPrice,
+  data,
 }) => {
   const navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -51,7 +52,7 @@ const TicketPageTemplate = ({
   const [showPaymentOptions, setShowPaymentOptions] = useState(false)
   const [ticketCount, setTicketCount] = useState(1)
 
-  const { token } = useAuth()
+  const { token, setEventData } = useAuth()
   const { sendRequest: sendPaystackRequest, isLoading: paystackLoading } = useFetch()
   const { sendRequest: sendStripeRequest, isLoading: stripeLoading } = useFetch()
 
@@ -117,6 +118,11 @@ const TicketPageTemplate = ({
   }
 
   const isDisabled = !isFree && !selectedCategory?.ticketPrice
+
+  const clickHandler =()=> {
+    setEventData(data)
+    navigate("/event-dashboard")
+  }
 
   return (
     <>
@@ -325,6 +331,7 @@ const TicketPageTemplate = ({
               ) : (
                 <div className="flex items-center gap-2 lg:px-2 lg:pb-3 rounded-lg lg:border-b border-gray-300">
                   <button
+                    onClick={()=> clickHandler()}
                     className="border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize text-white bg-chasescrollBlue"
                   >
                     My Dashboard

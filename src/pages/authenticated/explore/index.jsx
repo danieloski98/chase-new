@@ -92,7 +92,7 @@ const Explore = () => {
               </Link>
             </div>
             <div className="flex gap-4 overflow-auto py-4">
-              {suggestions.length && suggestions?.slice(0, 6)?.map(suggestion => (
+              {suggestions?.slice(0, 6)?.map(suggestion => (
                 <div key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
                   <Suggestion
                     key={suggestion.id}

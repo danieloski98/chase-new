@@ -23,7 +23,7 @@ const ExplorePeople = () => {
 
   const { searchValue } = useAuth()
 
-  const { isLoading } = useQuery(['getconnect'+searchValue], () => httpService.get('/user/suggest-connections', {
+  const { isLoading } = useQuery(['getconnect'+searchValue], () => httpService.get('/user/search-users', {
     params: {
       searchText: searchValue
     }
