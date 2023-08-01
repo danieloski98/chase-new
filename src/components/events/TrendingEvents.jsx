@@ -28,8 +28,7 @@ const TrendingEvents = () => {
 
     setLoading(true)
     sendRequest(
-      GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""),
-      GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""),
+      GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""), 
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
@@ -93,7 +92,7 @@ const TrendingEvents = () => {
           <Loader position={true} /> 
       )}
 
-      <p className={` ${eventCategory ? "text-center text-3xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory === "Corporate_Event" ? "Corporate Event" :eventCategory ? eventCategory : "Trending"}</p>
+      <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory === "Corporate_Event" ? "Corporate Event" :eventCategory ? eventCategory.replace("_", " ") : "Trending"}</p>
 
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
         {!loading && (

@@ -73,35 +73,33 @@ const CreateEvents = () => {
   }
 
   const handleSubmit = async () => {
-
+    setLoading(true)
     const fd = new FormData();
     fd.append("file", image);
 
     if (image !== null) {
-      sendRequest(
+      const response = await sendRequest(
         `${UPLOAD_IMAGE}${userId}`,
         "POST",
         fd,
         { Authorization: `Bearer ${token}` },
         true
-      ).then(response => {
-        setFormData(data => ({
-          ...data,
-          picUrls: [response?.fileName]
-        })) 
-        if(response?.fileName){ 
-          sendRequest(
-            CREATE_EVENT,
-            "POST",
-            formData,
-            { Authorization: `Bearer ${token}` }
-          ).then((response) => {
-            toast.success(response?.message)
-          })
-        }
-      })
+      ) 
+      let newObj = {...formData, picUrls: [response?.fileName]}
+      handlerPayload(newObj)
     }
   } 
+
+  const handlerPayload = async (item) => { 
+    const response = await sendRequest(
+      CREATE_EVENT,
+      "POST",
+      item,
+      { Authorization: `Bearer ${token}` }
+    )
+
+    console.log(response);
+  }
 
   const handleChange = (index, name, value) => {
     const clone = {...formData}
@@ -109,8 +107,7 @@ const CreateEvents = () => {
       clone.productTypeData = [...clone.productTypeData, {
         totalNumberOfTickets: 0,
         ticketPrice: 0,
-        ticketType: "",
-        saleID: "regular",
+        ticketType: "", 
         minTicketBuy: 0,
         maxTicketBuy: 0
       },]
@@ -120,18 +117,25 @@ const CreateEvents = () => {
     setFormData(clone)
   }; 
 
-  const handleChangeOther = ({ target: { name, value, type } }) => {
-    const newValue =
-      type === 'radio'
-        ? (value === 'true')
-        : value;
+  const handleChangeOther = ({ target: { name, value, type } }) => { 
+    if(name === "isPublic" ||name === "attendeesVisibility"){ 
+      setFormData(data => ({
+        ...data,
+        [name]: value === "true" ? true: false
+      }));
+    } else {
+      setFormData(data => ({
+        ...data,
+        [name]: value
+      }));
+    }
+  };  
+  const handleChangeRadio = ({ name, value }) => {  
     setFormData(data => ({
       ...data,
-      [name]: newValue
+      [name]: value
     }));
   };
-
-  console.log(formData);
 
 
   const handleFileChange = (event) => {
@@ -155,6 +159,7 @@ const CreateEvents = () => {
             <EventTheme
               formData={formData}
               handleChange={handleChangeOther}
+              handleChangeRadio={handleChangeRadio}
               handleFileChange={handleFileChange}
               handleContinue={handleContinue}
               setImage={setImage}
