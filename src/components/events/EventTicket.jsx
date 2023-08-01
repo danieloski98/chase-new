@@ -47,6 +47,32 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
   }
 
   const [ticketArray, setArray] = React.useState([""])
+  // uctTypeData: [
+  //   // first is always standard
+  //   {
+  //     totalNumberOfTickets: 0,
+  //     ticketPrice: 0,
+  //     ticketType: "", 
+  //     minTicketBuy: 0,
+  //     maxTicketBuy: 0
+  //   },
+  // ]
+
+  const clickHandler =()=> {
+    if(!formData?.productTypeData[0].totalNumberOfTickets){
+      toast.error("Enter Event Total Ticket Number")
+    } else if(!formData?.productTypeData[0].ticketPrice){
+      toast.error("Enter Event Ticket Price")
+    } else if(!formData?.productTypeData[0].ticketType){
+      toast.error("Enter Event Ticket Type") 
+    } else if(!formData?.productTypeData[0].minTicketBuy){
+      toast.error("Enter Event Minimum Ticket Purchase")
+    } else if(!formData?.productTypeData[0].maxTicketBuy){
+      toast.error("Enter Event Maximum Ticket Purchase")
+    } else {
+      handleContinue()
+    } 
+  }
 
   return (
     <div className="py-6 flex flex-col justify-center items-center relative mx-auto w-full max-w-2xl">
@@ -372,7 +398,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
         {/* <button onClick={handleBack}>Back</button> */}
         <button
           className="w-full py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-          onClick={handleSubmit}
+          onClick={clickHandler}
         >
           {loading? "loading" : "Submit"}
         </button>

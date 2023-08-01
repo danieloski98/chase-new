@@ -6,6 +6,7 @@ import {
 import { ClockIcon, CalendarIcon } from "@/components/Svgs"
 import { DatePicker } from "antd"
 import { convertToISO } from "../../utils/helpers"
+import { toast } from "react-toastify"
 
 const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
   const [toBeAnnounced, setToBeAnnounced] = useState(false)
@@ -26,6 +27,28 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
       endTime: Date.parse(new Date(date?.$d).toJSON()),
     }))
   } 
+
+  // location: {
+  //   link: "",
+  //   address: "",
+  //   locationDetails: "",
+  //   latlng: "",
+  //   placeIds: ""
+  // },
+  const clickHandler =()=> {
+    if(!formData?.startDate){
+      toast.error("Enter Event Starting Date")
+    } else if(!formData?.endDate){
+      toast.error("Enter Event Ending Date")
+    } else if(!formData?.location?.locationDetails && !formData?.location?.link){
+      toast.error("Enter Event Location")
+      console.log(formData?.location?.locationDetails);
+    } else if(!formData?.location?.address){
+      toast.error("Enter Event Address")
+    } else {
+      handleContinue()
+    } 
+  }
 
   return (
     <div>
@@ -205,7 +228,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
         <button
           type="submit"
           className="hover:text-xl"
-          onClick={() => handleContinue()}
+          onClick={() => clickHandler()}
           id="continueButton"
         >
           Continue

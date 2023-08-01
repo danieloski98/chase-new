@@ -55,7 +55,7 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 
 	useEffect(() => {
 		getUserFeedData()
-	}, [])
+	}, []) 
 
 	return (
 		<OverlayWrapper handleClose={toggleUserPosts}>
@@ -84,24 +84,28 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 					{/* <Link to={`${PATH_NAMES.profile}/${userID}`} className="self-start">
 						<CaretLeftIcon />
 					</Link> */}
-					{userFeedData?.map(post => (
-						<Thread
-							ref={post?.id === postID ? itemRef : null}
-							key={post?.id}
-							postID={post?.id}
-							text={post?.text}
-							user={post?.user}
-							time={post?.time}
-							image={post?.mediaRef}
-							shareCount={post?.shareCount}
-							likeCount={post?.likeCount}
-							commentCount={post?.commentCount}
-							toggleMoreOptions={toggleMoreOptions}
-							toggleShare={toggleShare}
-							setThreadId={setThreadId}
-							likeStatus={post?.likeStatus}
-						/>
-					))}
+					{userFeedData?.map(post => { 
+						return( 
+							<Thread
+								ref={post?.id === postID ? itemRef : null}
+								key={post?.id}
+								postID={post?.id}
+								text={post?.text}
+								user={post?.user}
+								time={post?.time} 
+								shareCount={post?.shareCount}
+								mediaRef={post?.mediaRef}
+								multipleMediaRef={post?.multipleMediaRef}
+								likeCount={post?.likeCount}
+								commentCount={post?.commentCount}
+								toggleMoreOptions={toggleMoreOptions}
+								toggleShare={toggleShare}
+								type={post?.type}
+								setThreadId={setThreadId}
+								likeStatus={post?.likeStatus}
+							/>
+						)
+					})}
 				</div>
 			</>
 		</OverlayWrapper>

@@ -39,7 +39,7 @@ const Notification = ({ notification, getNotifications, setShow, setType }) => {
 	}, [notification]) 
 
 	return (
-		<button onClick={() => toggleRead(notification)} className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
+		<button disabled={isRead} onClick={() => toggleRead(notification)} className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
 			<div className="flex items-center gap-4 max-w-[75%]">
 				{/* <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`} /> */}
 				<Avatar  

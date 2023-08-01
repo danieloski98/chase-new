@@ -41,6 +41,7 @@ const Thread = forwardRef(({
   toggleMoreOptions,
   toggleShare,
   user,
+  image,
   likeStatus,
   type,
   setPostId,
@@ -59,7 +60,7 @@ const Thread = forwardRef(({
       setIsLiked(response?.likeStatus === "LIKED")
       setNumOfLikes(response?.likeCount)
     }
-  }
+  }  
 
   if (!ref) {
     return (
@@ -106,17 +107,30 @@ const Thread = forwardRef(({
         >
           {text}
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3"> 
           {type === "WITH_IMAGE" && multipleMediaRef?.length > 1 && (
             <div onDoubleClick={() => toggleLike(postID)}>
               <PhotoGallery images={multipleMediaRef} />
             </div>
           )}
-          {type === "WITH_IMAGE" && multipleMediaRef?.length < 2 && (
-            <div onDoubleClick={() => toggleLike(postID)}>
-              <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
-            </div>
+          {!multipleMediaRef && (
+            <>
+              {type === "WITH_IMAGE" && (
+                <div onDoubleClick={() => toggleLike(postID)}>
+                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+                </div>
+              )}
+            </>
           )}
+          {multipleMediaRef && (
+            <>
+              {type === "WITH_IMAGE" && multipleMediaRef?.length <= 1 && (
+                <div onDoubleClick={() => toggleLike(postID)}>
+                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+                </div>
+              )}
+            </>
+          )} 
           {type === "WITH_VIDEO_POST" && (
             <VideoPlayer videoUrl={`${mediaRef}`} />
           )}
@@ -200,10 +214,23 @@ const Thread = forwardRef(({
             <PhotoGallery images={multipleMediaRef} />
           </div>
         )}
-        {type === "WITH_IMAGE" && multipleMediaRef?.length < 2 && (
-          <div onDoubleClick={() => toggleLike(postID)}>
-            <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
-          </div>
+        {!multipleMediaRef && (
+          <>
+            {type === "WITH_IMAGE" && (
+              <div onDoubleClick={() => toggleLike(postID)}>
+                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+              </div>
+            )}
+          </>
+        )}
+        {multipleMediaRef && (
+          <>
+            {type === "WITH_IMAGE" && multipleMediaRef?.length <= 1 && (
+              <div onDoubleClick={() => toggleLike(postID)}>
+                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+              </div>
+            )}
+          </>
         )}
         {type === "WITH_VIDEO_POST" && (
           <VideoPlayer videoUrl={`${mediaRef}`} />
