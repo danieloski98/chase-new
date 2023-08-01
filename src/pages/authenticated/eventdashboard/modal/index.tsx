@@ -6,6 +6,7 @@ import httpService from "../../../../utils/httpService";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import React from "react";
+import CONFIG from "../../../../config";
 
 interface Props {
     data: any,
@@ -14,8 +15,7 @@ interface Props {
 
 function EventDashboardModal(props: Props) {
     const {
-        data,
-        setShow
+        data
     } = props
 
     const dataGraph = [
@@ -78,17 +78,30 @@ function EventDashboardModal(props: Props) {
             
             setHistory(data.data);
         }
-      })
-
-      console.log(history);
-      
+      }) 
       
     return (
         <div className=' w-full flex flex-col items-center py-6 ' >
             {!isLoading && ( 
                 <div className=' max-w-[700px] flex flex-col relative items-center ' >
-                    
-                    <img src={pic} alt="image" className="w-[80px] mt-6" />
+                    <p className=" text-center font-semibold mb-6 " >{data?.eventName}</p>
+                    {data?.interestedUsers?.slice(0, 3)?.map((attendee: any) => (
+                        <div className="w-8 h-8 -mr-3">
+                          {attendee?.data?.imgMain?.value ?
+                            <img
+                              key={attendee.id}
+                              src={`${CONFIG.RESOURCE_URL}${attendee?.data?.imgMain?.value}`}
+                              className="w-8 h-8 -mr-4 rounded-b-full rounded-tl-full"
+                              alt=""
+                            /> :   
+                            <div className="w-8 h-8 -mr-4 rounded-b-full rounded-tl-full bg-yellow-500  flex justify-center items-center">
+                              <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.firstName?.slice(0, 1)}</p> 
+                              <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.lastName?.slice(0, 1)}</p>
+                            </div> 
+                          }
+                        </div>
+                    ))}
+                    {/* <img src={pic} alt="image" className="w-[80px] mt-6" /> */}
                     <div className=" mt-8 w-full " >
                         <div className=" flex gap-3 text-sm font-normal " >
                             <p>Total</p>
@@ -141,11 +154,11 @@ function EventDashboardModal(props: Props) {
                     </div>
                     <div className=" w-full border-b border-[#D0D4EB] mt-8 py-7 px-4 " >
 
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width={500} height={500}>
                             <BarChart
                             width={400}
                             height={300}
-                            data={dataGraph}
+                            data={history}
                             margin={{
                                 top: 5,
                                 right: 30,
@@ -159,7 +172,9 @@ function EventDashboardModal(props: Props) {
                             <Tooltip />
                             <Legend />
                             <CartesianGrid strokeDasharray="3 3" />
-                            <Bar dataKey="pv" fill="#8884d8" background={{ fill: '#eee' }} />
+                            <Bar dataKey="totalActiveSales" fill="#B7B00E" background={{ fill: '#eee' }} />
+                            <Bar dataKey="totalRefunds" fill="#E90303" background={{ fill: '#eee' }} />
+                            <Bar dataKey="totalPendingSales" fill="#DB9E00" background={{ fill: '#eee' }} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

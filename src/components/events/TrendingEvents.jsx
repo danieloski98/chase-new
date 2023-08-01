@@ -15,7 +15,7 @@ import CONFIG from "../../config"
 import { BookmarkIconSmallFill } from "../Svgs"
 import { toast } from "react-toastify"
 import { PATH_NAMES } from "../../constants/paths.constant"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Loader from "../Loader"
 import Loader from "../Loader"
 
@@ -26,6 +26,7 @@ const TrendingEvents = () => {
   const [loading, setLoading] = useState(false)
   const { userId, token, eventCategory } = useAuth()
   const { sendRequest } = useFetch()
+  const navigate = useNavigate()
 
   const getAllEvents = () => {
 
@@ -137,6 +138,8 @@ const TrendingEvents = () => {
                 <div className=" w-full lg:w-fit " >
                   <div className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
                     <img
+                      role='button'
+                      onClick={() => navigate(`/events/${event.id}`)} 
                       src={`${CONFIG.RESOURCE_URL}/${event?.picUrls[0]}`}
                       alt=""
                       className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
@@ -164,7 +167,9 @@ const TrendingEvents = () => {
                   </div>
                 </div>
                 <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >
-                  <div className=" w-full flex items-center gap-2 py-2 border-b " > 
+                  <div
+                      role='button'
+                      onClick={() => navigate(`/events/${event.id}`)} className=" w-full flex items-center gap-2 py-2 border-b " > 
                     <p className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</p>
                     <p className=" text-sm font-semibol " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
                 <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >

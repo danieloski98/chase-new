@@ -3,6 +3,7 @@ import CONFIG from '../../config'
 import { SAVE_EVENT } from '../../constants/endpoints.constant'
 import { useAuth } from '../../context/authContext'
 import { useFetch } from '../../hooks/useFetch'
+import { useNavigate } from 'react-router-dom'
 
 
 function EventTiles(props) {
@@ -16,6 +17,7 @@ function EventTiles(props) {
     const [loading, setLoading] = useState(false)
     const { userId, token, eventCategory } = useAuth()
     const { sendRequest } = useFetch()
+    const navigate = useNavigate()
 
     const saveEvent = eventID => {
         sendRequest(
@@ -68,14 +70,18 @@ function EventTiles(props) {
         <div className=" w-full lg:w-fit " >
           <div className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
             <img
-              src={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
+              role='button'
+              onClick={() => navigate(`/events/${event.id}`)} 
+              src={`${CONFIG.RESOURCE_URL}/${event?.picUrls[0]}`}
               alt=""
               className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
             />
           </div>
         </div>
         <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >
-          <div className=" w-full flex items-center gap-2 py-2 border-b " > 
+          <div 
+              role='button'
+              onClick={() => navigate(`/events/${event.id}`)}  className=" w-full flex items-center gap-2 py-2 border-b " > 
             <p className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</p>
             <p className=" text-sm font-semibol " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
           </div>
