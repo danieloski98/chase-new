@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useFetch } from "../../../hooks/useFetch"
 import { useAuth } from "../../../context/authContext"
-import { useNavigate, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router-dom"
 import PageWrapper from "@/components/PageWrapper"
 import ProfilePhoto from "@/components/ProfilePhoto"
 import { CaretLeftIcon } from "@/components/Svgs"
@@ -12,14 +12,34 @@ import {
   ADD_POST_COMMENT,
   GET_ALL_POST_COMMENTS,
 } from "../../../constants/endpoints.constant"
+import { useMutation, useQuery, useQueryClient } from "react-query"
+import httpService from '../../../utils/httpService'
+import { toast } from "react-toastify"
+import { Spinner } from '@chakra-ui/react'
 
 const Comments = () => {
   const [userComments, setUserComments] = useState([])
   const [commentInput, setCommentInput] = useState("")
   const { sendRequest } = useFetch()
-  const { userName, token } = useAuth()
-  const navigate = useNavigate()
+  const { userName, token, userId } = useAuth()
   const { postID } = useParams()
+  const queryClient = useQueryClient();
+
+  const { isLoading } = useQuery(['getComments', postID], () => httpService.get(`${GET_ALL_POST_COMMENTS}?postID=${postID}`), {
+    onSuccess: (data) => {
+      console.log(data.data);
+      setUserComments(data.data.content);
+    }
+  });
+
+  const addComment = useMutation({
+    mutationFn: (data) => httpService.post('/feed/add-comment', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['getComments']);
+      setCommentInput("");
+      toast.success(`comment added`);
+    }
+  });
 
   const getUserComments = async () => {
     const response = await sendRequest(
@@ -33,19 +53,9 @@ const Comments = () => {
     if (response) setUserComments(response?.content)
   }
 
-  const addComment = async () => {
-    const response = await sendRequest(
-      ADD_POST_COMMENT,
-      "POST",
-      { postID: postID, comment: commentInput },
-      {
-        Authorization: `Bearer ${token}`,
-      }
-    )
-    if (response) {
-      setCommentInput("")
-      getUserComments()
-    }
+  const addCommentNew = async () => {
+    toast.warn(`An errorr`);
+    addComment.mutate({ postID: postID, comment: commentInput });
   }
 
   const replyPerson = (username) => {
@@ -70,7 +80,7 @@ const Comments = () => {
             <div className="flex items-center">
               <div
                 className="p-4 cursor-pointer"
-                onClick={() => navigate(PATH_NAMES.home)}
+                
               >
                 <CaretLeftIcon />
               </div>
@@ -86,18 +96,30 @@ const Comments = () => {
                     placeholder="Add Comment"
                     value={commentInput}
                     onChange={e => setCommentInput(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter") {
+                        addCommentNew()
+                      }
+                    }}
                   />
                   <button
                     className="outline-none bg-transparent py-2 px-4 text-chasescrollPurple text-sm"
-                    onClick={addComment}
+                    onClick={addCommentNew}
                   >
-                    send
+                    { addComment.isLoading && <Spinner /> }
+                    { !addComment.isLoading && 'send' }
                   </button>
                 </div>
               </div>
-              {userComments?.map(comment => (
+              {userComments.length > 0 && userComments?.map(comment => (
                 <Comment key={comment.id} {...comment} replyPerson={replyPerson} />
               ))}
+
+              {userComments.length < 1 && (
+                <div className="w-full">
+                  No comments
+                </div>
+              )}
             </div>
           </div>
         </div>

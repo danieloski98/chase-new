@@ -29,8 +29,7 @@ const Comment = ({ comment, time, likeCount, likeStatus, id, replyPerson, user }
   }
 
   return (
-    <PageWrapper>
-      {() => (
+    <div>
         <div className="flex gap-3 w-full">
         <ProfilePhoto image={avatar} />
         <div className="flex flex-col w-full">
@@ -54,8 +53,7 @@ const Comment = ({ comment, time, likeCount, likeStatus, id, replyPerson, user }
           </div>
         </div>
       </div>
-      )}
-    </PageWrapper>
+    </div>
   )
 }
 

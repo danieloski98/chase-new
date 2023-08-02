@@ -17,6 +17,7 @@ import { toast } from "react-toastify"
 import { videoConfig } from "../../constants"
 import { Avatar, Spinner } from '@chakra-ui/react'
 import { useQueryClient } from "react-query"
+import useUploader from "../../hooks/useUploader"
 
 const UploadImage = ({ toggleFileUploader, loadMore }) => {
   const [imageSrc, setImageSrc] = useState(null)
@@ -27,9 +28,10 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
   const [count, setCount] = useState(caption.length ?? 0)
   const [postFile, setPostFile] = useState(null)
   const [loading, setLoading] = useState(false);
-  const { sendRequest } = useFetch()
+  const { sendRequest, isLoading } = useFetch()
   const { userName, userId, token } = useAuth()
   // const ReactS3Client = new S3(videoConfig);
+  const { uploader } = useUploader();
 
   // query client
   const queryClient = useQueryClient();
@@ -41,6 +43,9 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
   const toggleCaption = () => setShowCaption(state => !state)
 
   const createPost = async () => {
+    if (isLoading) {
+      return;
+    }
     // const compressedFile = await compressFile(postFile)
     const formData = new FormData();
     formData.append("file", postFile);
@@ -130,6 +135,16 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
   }, [caption])
 
   function handleFileInputChange(event) {
+    if (event) {
+      uploader(event.target.files[0]);
+      return;
+    }
+    console.log(event.target.files[0]);
+    if (event.target.files[0].type.startsWith('video/') && event.target.files[0].size > 15000000) {
+      toast.warning("Video size should be less than 15MB");
+      return;
+    }
+    
     const file = event.target.files[0]
     setPostFile(file)
 

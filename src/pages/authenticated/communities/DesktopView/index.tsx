@@ -24,6 +24,8 @@ import selector from "../../../../assets/svg/image.svg"
 import smiley from "../../../../assets/svg/smiley.svg"
 import addEventBtn from "../../../../assets/svg/add-event.svg"
 import send from "../../../../assets/svg/send-icon.svg"
+import useInfinteScroller from 'src/hooks/useInfinteScroller';
+import { useAuth } from 'src/context/authContext';
 
 interface IProps {
     query: UseQueryResult<AxiosResponse<PaginatedResponse<ICommunity>, PaginatedResponse<ICommunity>>>;

@@ -151,7 +151,7 @@ const Thread = forwardRef(({
             </div>
             <div className="basis-1/3 flex items-center justify-center">
               <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
-                <CommentsIcon />
+                <CommentsIcon onClick={() => alert('Hey')} />
                 <Link
                   to={`${PATH_NAMES.comments}/${postID}`}
                   className="text-xs"
@@ -233,7 +233,7 @@ const Thread = forwardRef(({
           </>
         )}
         {type === "WITH_VIDEO_POST" && (
-          <VideoPlayer videoUrl={`${mediaRef}`} />
+          <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
         )}
         <div className="flex justify-between">
           <div className="basis-1/3 flex items-center justify-center">

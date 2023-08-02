@@ -25,7 +25,7 @@ const CommunityHeader = ({ community, setActive }: IProps) => {
         mutationFn: () => httpService.delete(`${LEAVE_GROUP}?groupID=${community.id}&userID=${userId}`),
         onSuccess: () => {
             toast.success('Action successful');
-            queryClient.invalidateQueries(['gejoinedGroups']);
+            queryClient.invalidateQueries(['getJoinedGroups']);
             setActive(null);
         }
     });
