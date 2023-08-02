@@ -17,7 +17,6 @@ import { toast } from "react-toastify"
 import { PATH_NAMES } from "../../constants/paths.constant"
 import { Link, useNavigate } from "react-router-dom"
 import Loader from "../Loader"
-import Loader from "../Loader"
 
 const TrendingEvents = () => {
   const [allEvents, setAllEvents] = useState([])
@@ -34,7 +33,9 @@ const TrendingEvents = () => {
 
     setLoading(true)
     sendRequest(
-      GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""),
+
+      GET_ALL_PUBLIC_EVENTS_TO_JOIN+(eventCategory?"?eventType="+eventCategory : ""), 
+
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
@@ -130,6 +131,7 @@ const TrendingEvents = () => {
 
       <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory === "Corporate_Event" ? "Corporate Event" :eventCategory ? eventCategory.replace("_", " ") : "Trending"}</p>
 
+
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
         {!loading && (
           <> 
@@ -145,35 +147,12 @@ const TrendingEvents = () => {
                       className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
                     />
                   </div>
-    <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
-      {loading && ( 
-          <Loader position={true} /> 
-      )}
-
-      <p className={` ${eventCategory ? "text-center text-3xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory === "Corporate_Event" ? "Corporate Event" :eventCategory ? eventCategory : "Tending"}</p>
-
-      <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
-        {!loading && (
-          <> 
-            {allEvents.map(event => (
-              <div className=" w-full border rounded-b-[36px] gap-4 rounded-tl-[36px] flex lg:flex-row flex-col items-center py-[11px] px-[15px] " >
-                <div className=" w-full lg:w-fit " >
-                  <div className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
-                    <img
-                      src={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
-                      alt=""
-                      className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
-                    />
-                  </div>
                 </div>
                 <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >
                   <div
                       role='button'
                       onClick={() => navigate(`/events/${event.id}`)} className=" w-full flex items-center gap-2 py-2 border-b " > 
-                    <p className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</p>
-                    <p className=" text-sm font-semibol " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
-                <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >
-                  <div className=" w-full flex items-center gap-2 py-2 border-b " > 
+
                     <p className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</p>
                     <p className=" text-sm font-semibol " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
                   </div>
