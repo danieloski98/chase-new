@@ -17,7 +17,6 @@ import { toast } from "react-toastify"
 import { videoConfig } from "../../constants"
 import { Avatar, Spinner } from '@chakra-ui/react'
 import { useQueryClient } from "react-query"
-import useUploader from "../../hooks/useUploader"
 
 const UploadImage = ({ toggleFileUploader, loadMore }) => {
   const [imageSrc, setImageSrc] = useState(null)
@@ -31,7 +30,6 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
   const { sendRequest, isLoading } = useFetch()
   const { userName, userId, token } = useAuth()
   // const ReactS3Client = new S3(videoConfig);
-  const { uploader } = useUploader();
 
   // query client
   const queryClient = useQueryClient();
