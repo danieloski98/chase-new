@@ -134,9 +134,10 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
     setCount(caption.length)
   }, [caption])
 
-  function handleFileInputChange(event) {
+  async function handleFileInputChange(event) {
     if (event) {
-      uploader(event.target.files[0]);
+      const data = await uploader(event.target.files[0]);
+      console.log(data);
       return;
     }
     console.log(event.target.files[0]);

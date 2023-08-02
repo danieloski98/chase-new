@@ -132,7 +132,7 @@ const Thread = forwardRef(({
             </>
           )} 
           {type === "WITH_VIDEO_POST" && (
-            <VideoPlayer videoUrl={`${mediaRef}`} />
+            <VideoPlayer videoUrl={mediaRef.startsWith('https') ? mediaRef: `${CONFIG.RESOURCE_URL}/${mediaRef}`} />
           )}
           <div className="flex justify-between ">
             <div className="basis-1/3 flex items-center justify-center">
