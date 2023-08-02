@@ -10,6 +10,8 @@ import { ADD_POST_COMMENT, LIKE_POST } from '../../../../constants/endpoints.con
 import { toast } from 'react-toastify';
 import { COLORS } from '../../../../utils/colors';
 import { formatTimeAgo } from '../../../../utils/helpers';
+import { useNavigate } from 'react-router-dom';
+import { CommentsIcon, EmptyHeartIcon, FilledHeartIcon } from '../../../../components/Svgs';
 
 interface IProps {
     messages: IMediaContent[];
@@ -19,6 +21,7 @@ const MessageChip = ({message, userId}: {
     message: IMediaContent,
     userId: string
 }) => {
+    const navigate = useNavigate();
     const [comment, setComment] = useState('');
 
     const queryClient = useQueryClient();
@@ -71,10 +74,10 @@ const MessageChip = ({message, userId}: {
             <HStack alignItems='center'>
                 <VStack spacing={0} cursor='pointer' onClick={() => mutate()}>
                     {!isLoading && (
-                        <>
-                            <FiHeart fontSize='20px' />
+                        <div className='cursor-pointer flex flex-col justify-center items-center'>
+                            { message.likeCount > 0 ? <FilledHeartIcon /> : <EmptyHeartIcon />}
                             <Text>{message.likeCount}</Text>
-                        </>
+                        </div>
                     )}
                     { isLoading && (
                         <Spinner color={COLORS.chasescrollBlue} />
@@ -86,10 +89,10 @@ const MessageChip = ({message, userId}: {
                         <Spinner color={COLORS.chasescrollBlue} />
                     )}
                     {!commentPost.isLoading && (
-                        <>
-                          <FiMessageSquare fontSize='20px' />
+                        <div onClick={() => navigate(`/home/comments/${message.id}`)} className='cursor-pointer flex flex-col justify-center items-center'>
+                          <CommentsIcon />
                           <Text>{message.commentCount}</Text>
-                        </>
+                        </div>
                     )}
                 </VStack>
             </HStack>

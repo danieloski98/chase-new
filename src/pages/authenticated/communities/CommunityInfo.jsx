@@ -7,24 +7,36 @@ import { useAuth } from '../../../context/authContext'
 import { GET_GROUP, GET_GROUP_MEMBERS, GET_GROUP_POSTS } from '../../../constants/endpoints.constant'
 import CONFIG from '../../../config'
 import { PATH_NAMES } from '../../../constants/paths.constant'
+import { FiEdit } from 'react-icons/fi'
+import EditCommunity from '@/components/communities/EditModal'
+import httpService from '@/utils/httpService'
+import { useQuery } from 'react-query'
 
 const CommunityInfo = () => {
-	const [community, setCommunity] = useState({})
+	const [community, setCommunity] = useState(null)
 	const [communityMembers, setCommunityMembers] = useState()
 	const [communityPosts, setCommunityPosts] = useState()
+	const [showModal, setShowModal] = React.useState(false);
 	const { id } = useParams()
 	const { sendRequest } = useFetch()
 	const { token, userId } = useAuth()
 
-	const fetchCommunity = async () => {
-		const data = await sendRequest(
-			`${GET_GROUP}?groupID=${id}`,
-			"GET",
-			null,
-			{ Authorization: `Bearer ${token}` }
-		)
-		if (data) setCommunity(data?.content[0])
-	}
+	const { isLoading } = useQuery(['GetCom'], () => httpService.get(`${GET_GROUP}?groupID=${id}`), {
+		onSuccess: (data) => {
+			console.log(data.data.content);
+			setCommunity(data.data.content[0])
+		}
+	});
+
+	// const fetchCommunity = async () => {
+	// 	const data = await sendRequest(
+	// 		`${GET_GROUP}?groupID=${id}`,
+	// 		"GET",
+	// 		null,
+	// 		{ Authorization: `Bearer ${token}` }
+	// 	)
+	// 	if (data) setCommunity(data?.content[0])
+	// }
 
 	const fetchCommunityMembers = async () => {
 		const data = await sendRequest(
@@ -47,14 +59,20 @@ const CommunityInfo = () => {
 	}
 
 	useEffect(() => {
-		fetchCommunity()
+		//fetchCommunity()
 		fetchCommunityMembers()
 		fetchCommunityPosts()
 	}, [])
+
+
+	const closeModal = () => {
+		setShowModal(false);
+	}
 	return (
 		<PageWrapper>
 			{() => (
 				<div className="flex justify-center">
+					{ showModal && <EditCommunity community={community} onClose={closeModal} />}
 					<div className="flex flex-col gap-5 w-full max-w-md py-8">
 						<div className="flex flex-col gap-5 items-center w-full p-6 rounded-3xl border">
 							<div className="flex justify-between items-center text-center w-full">
@@ -63,13 +81,13 @@ const CommunityInfo = () => {
 								</p>
 								<p className="font-bold">Community Info</p>
 								<p className="">
-									<ArrowRight />
+									<FiEdit fontSize={20} className="cursor-pointer" onClick={() => setShowModal(true)} />
 								</p>
 							</div>
 							<div className="flex flex-col gap-4 w-full items-center">
 								<div className="border-l-4 border-chasescrollBlue rounded-b-full rounded-tl-full w-32 h-32">
 									<img
-										src={`https://ui-avatars.com/api/?background=random&name=${community?.data?.name}&length=1`}
+										src={community ? `${CONFIG.RESOURCE_URL}${community?.data?.imgSrc}` : `https://ui-avatars.com/api/?background=random&name=${community?.data?.name}&length=1`}
 										alt=""
 										className='w-full rounded-b-full rounded-tl-full'
 									/>
@@ -79,14 +97,7 @@ const CommunityInfo = () => {
 									<p className="text-center text-xs text-chasescrollGrey">{community?.data?.memberCount} members</p>
 								</div>
 								<div className="flex items-center gap-4">
-									<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-chasescrollBlue text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
-										<BellIcon />
-										Mute
-									</div>
-									<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-chasescrollBlue text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
-										<Settings2 />
-										Settings
-									</div>
+									
 									<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-chasescrollBlue text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
 										<LeaveIcon />
 										Exit

@@ -44,7 +44,7 @@ function CommunityCard({ community, setSelected, smallScreen = false }: IProps) 
 
             <VStack alignItems='flex-start'>
                 <Heading size='md' as='h4'>{community.data.name}</Heading>
-                <Text>{community.data.description.length > 20 ? `${community.data.description.substring(0, 20)}...` : community.data.description}</Text>
+                <Text>{community?.data.description.length > 20 ? `${community?.data.description.substring(0, 20)}...` : community.data.description}</Text>
             </VStack>
         </HStack>
 

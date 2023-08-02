@@ -21,7 +21,6 @@ httpService.interceptors.request.use(async(config) => {
             return config;
         }
         config.headers['authorization'] = `Bearer ${token}`;
-        console.log(config.headers);
     
         return config;
     }
