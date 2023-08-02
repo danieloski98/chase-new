@@ -42,6 +42,9 @@ export type IUser = {
         },
         mobilePhone: {
             value: string;
+        },
+        imgMain: {
+            value: string
         }
     }
 }

@@ -132,6 +132,7 @@ const Home = () => {
     },
     onSuccess: (data) => {
       setUser(data.data);
+      console.log(data);
     }
   })
 
@@ -187,7 +188,7 @@ const Home = () => {
   return (
     <PageWrapper toggleFileUploader={toggleFileUploader}>
       {() => (
-          <div id="container" className="w-full h-full">
+          <div id="container" className="w-full h-full overflow-x-hidden pt-5 sm:px-5 lg:px-0">
           {showMoreOptions && (
             <ThreadMenu
               handleItemClick={handleItemClick}
@@ -208,12 +209,12 @@ const Home = () => {
           )}
           {showShareModal && <Share closeShareModal={toggleShare} />}
 
-            <div className="hidden md:flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full max-w-lg rounded-xl mx-4 lg:mx-28 mb-10 p-4 shadow-md">
+            <div className="flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full lg:max-w-lg rounded-xl lg:mx-28 mb-10 p-4 shadow-md">
                <div className="flex items-center bg-chasescrollPalePurple bg-opacity-30 rounded-xl pl-4">
                  <div className="w-8 h-7 rounded-b-full rounded-tr-full border-chasescrollBlue flex items-center justify-center">
                    
                    <Avatar 
-                    // src={user.images.value ? user.images.value : ''}
+                    src={user?.data.imgMain.value ? `${CONFIG.RESOURCE_URL}${user?.data?.imgMain?.value}`: ''}
                     name={`${user?.firstName} ${user?.lastName}` || 'UU' }
                     className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
                     onClick={() => navigate(`/profile/${userId}`)}
@@ -240,7 +241,7 @@ const Home = () => {
                <div
                  onClick={toggleFileUploader}
                  value={postFile}
-                 onChange={e => setPostFile(e.target.value)}
+                //  onChange={e => setPostFile(e.target.value)}
                  className="flex gap-2 items-center text-chasescrollTextGrey cursor-pointer w-fit text-sm"
                >
                  <span className="flex justify-center items-center rounded-r-lg">
@@ -251,7 +252,7 @@ const Home = () => {
              </div>
       
       
-          <div className="hidden md:flex flex-col gap-2 bg-white  w-full max-w-lg rounded-xl my-9 mx-4 lg:mx-28 mb-24 p-4">
+          <div className="flex flex-col gap-2 bg-white  w-full max-w-lg rounded-xl my-9 lg:mx-28 mb-24">
 
           { results.length > 0 && content }
 
