@@ -6,8 +6,9 @@ import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { toast } from "react-toastify";
 import { Spinner } from "@chakra-ui/react";
 import { AxiosError, AxiosResponse } from "axios";
-import { IEvent } from 'src/models/Events'; 
+import { IEvent } from '../../models/Events'; 
 import httpService from '../../utils/httpService';
+import useInfinteScroller from '../../hooks/useInfinteScroller';
 
 const SearchEventCard = (event: IEvent) => {
   const navigate = useNavigate();
@@ -112,6 +113,8 @@ const ExploreEvents = () => {
 
   const { searchValue } = useAuth()
 
+  const [page, setPage] = React.useState(1)
+
   // react query
   const { isLoading } = useQuery(['getEventSearch'+searchValue], () => httpService.get('/events/events', {
     params: {
@@ -124,7 +127,10 @@ const ExploreEvents = () => {
     onSuccess: (data) => {
       setEvents(data.data.content);
     }
-  })
+  }) 
+
+  // const {} = useInfinteScroller('/events/events', page, setPage)
+
   return (
     <div className="px-4 h-auto overflow-auto pb-96">
       { isLoading && (

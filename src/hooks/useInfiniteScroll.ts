@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { IMediaContent, IMediaPost } from '../models/MediaPost';
-import httpService from '@/utils/httpService'
+import httpService from '../utils/httpService'
 import { useMutation, useQuery } from 'react-query';
 
 // const getPosts = async (pageParam = 0, userId: string, options = {}) => {

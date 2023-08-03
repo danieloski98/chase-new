@@ -11,6 +11,7 @@ import PageWrapper from "../../../components/PageWrapper";
 import { useAuth } from "../../../context/authContext";
 import { CaretLeftIcon } from "../../../components/Svgs";
 import { useNavigate } from "react-router-dom";
+import RefundModal from "./refund";
 
 interface Props {}
 
@@ -155,8 +156,15 @@ function EventDashboard(props: Props) {
                                     </>
                                 )}
                                 {show && (
-                                    <EventDashboardModal data={data} setShow={setShow} />
+                                    <EventDashboardModal data={data} setRefund={setShowRefund} setShow={setShow} />
                                 )}
+                            </div>
+                        </div>
+                    )}
+                    {showRefund && (
+                        <div className=" w-full flex justify-center " > 
+                            <div className=' w-[600px] py-6 relative ' >
+                                <RefundModal setShow={setShowRefund} data={data} />
                             </div>
                         </div>
                     )}
