@@ -5,6 +5,7 @@ import { useFetch } from '../../../hooks/useFetch'
 import { useAuth } from '../../../context/authContext'
 import { CREATE_GROUP, UPLOAD_IMAGE } from '../../../constants/endpoints.constant'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 	const [communityInfo, setCommunityInfo] = useState({
@@ -17,7 +18,8 @@ const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 			imgSrc: "",
 			description: ""
 		}
-	})
+	});
+	const nav = useNavigate();
 
 	const [image, setImage] = useState(null)
 	const [selectedImage, setSelectedImage] = useState(null)
@@ -43,8 +45,13 @@ const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 	}))
 
 	const createCommunity = async event => {
-		setLoading(true)
 		event.preventDefault();
+		if (image === null) {
+			toast.error("Please select an image");
+			return;
+		}
+		setLoading(true)
+		
 
 		const formData = new FormData();
 		formData.append("file", image);
@@ -86,8 +93,9 @@ const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 	}
 
 	const clickHandler =()=> {
-		setFunnel()
+		//setFunnel()
 		setaddfunnel(false)
+		nav(-1);
 	}
 
 	return (

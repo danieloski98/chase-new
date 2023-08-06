@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useNavigation, useParams } from 'react-router-dom'
 import PageWrapper from '../../../components/PageWrapper'
 import { ArrowRight, BellIcon, CameraIcon, CaretLeftIcon, LeaveIcon, SearchIcon, Settings2 } from '../../../components/Svgs'
 import { useFetch } from '../../../hooks/useFetch'
@@ -18,6 +18,7 @@ const CommunityInfo = () => {
 	const [communityPosts, setCommunityPosts] = useState()
 	const [showModal, setShowModal] = React.useState(false);
 	const { id } = useParams()
+	const navigation = useNavigate()
 	const { sendRequest } = useFetch()
 	const { token, userId } = useAuth()
 
@@ -76,7 +77,7 @@ const CommunityInfo = () => {
 					<div className="flex flex-col gap-5 w-full max-w-md py-8">
 						<div className="flex flex-col gap-5 items-center w-full p-6 rounded-3xl border">
 							<div className="flex justify-between items-center text-center w-full">
-								<p className="">
+								<p className="cursor-pointer" onClick={() => navigation(`/communities/community/${id}`)}>
 									<CaretLeftIcon />
 								</p>
 								<p className="font-bold">Community Info</p>

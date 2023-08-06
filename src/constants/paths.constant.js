@@ -15,6 +15,7 @@ export const PATH_NAMES = {
   suggestions: "/explore/suggestions",
   event: "/events",
   message: "/message",
+  messageSettings: '/message/settings',
   createGroup: "/message/create-group",
   communities: "/communities",
   community: "/communities/community",

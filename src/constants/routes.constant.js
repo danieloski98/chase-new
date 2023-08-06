@@ -46,6 +46,7 @@ import Events from "@/pages/authenticated/events/Events"
 import EventDashboard from "@/pages/authenticated/eventdashboard"
 import EditEvents from "@/pages/authenticated/events/EditEvents"
 // import EventDashboard from "@/pages/authenticated/eventdashboard"
+import MessageSettings from "@/pages/authenticated/message/MessageSettings"
 
 export const NAVIGATION_ROUTES = [
   {
@@ -141,6 +142,10 @@ export const OTHER_AUTHENTICATED_ROUTES = [
   {
     path: `${PATH_NAMES.share}/:id`,
     element: Share,
+  },
+  {
+    path: `${PATH_NAMES.messageSettings}/:id`,
+    element: MessageSettings,
   },
   {
     path: `${PATH_NAMES.report}/:id`,

@@ -82,9 +82,12 @@ const Communities = () => {
             {/* CREATE COMUNITY BUTTON */}
             <div className="flex w-full justify-end items-center pr-10">
               <Link to={PATH_NAMES.createCommunity} className="self-end p-4">
-                <AddIcon />
+                <div className="flex">
+                  <AddIcon />
+                  <p className="text-chasescrollBlue text-md ml-2">Create Community</p>
+                </div>
               </Link>
-              <p className="text-chasescrollBlue text-md">Create Community</p>
+              
             </div>
             <div className="w-full">
               {SwitchTab()}
