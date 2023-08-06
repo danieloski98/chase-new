@@ -28,7 +28,8 @@ import VideoPlayer from "../VideoPlayer"
 import PhotoGallery from "../PhotoGallery"
 import { Avatar } from '@chakra-ui/react'
 
-const Thread = forwardRef(({
+const Thread = forwardRef
+(({
   text,
   time,
   commentCount,

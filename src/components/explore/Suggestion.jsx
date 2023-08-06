@@ -10,6 +10,7 @@ import { BLOCK_USER, REMOVE_FRIEND, SEND_FRIEND_REQUEST } from "../../constants/
 import { useAuth } from "../../context/authContext"
 import { useNavigate } from 'react-router-dom'
 import { toast } from "react-toastify";
+import {Avatar} from "@chakra-ui/react"
 
 const Suggestion = ({
   mutuals = 0,
@@ -135,7 +136,7 @@ const Suggestion = ({
 						<img src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-full rounded-tl-full" />
 					}
 					{!data?.data?.imgMain?.value && (
-						<Avatar 
+						<Avatar
 							src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`}
 							name={`${data?.firstName} ${data?.lastName}`}
 							className="h-full w-full rounded-b-full rounded-tl-full cursor-pointer"
@@ -158,7 +159,17 @@ const Suggestion = ({
           >
             {Loading === userId ? "Loading..":data?.joinStatus === "FRIEND_REQUEST_SENT" ? "Pending" : isConnected ? "Connected" : "Connect"}
           </button>
-          :
+           :data.joinStatus === "CONNECTED" ? (
+            <button
+            onClick={unfriendPerson}
+            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${data?.joinStatus === "FRIEND_REQUEST_SENT"
+              ? "text-white bg-[#F04F4F]"
+              : "bg-chasescrollBlue text-white"
+              }`}
+          >
+              {Loading === userId ? "Loading": "Disconnected"} 	
+            </button>
+          ):
           <button
             onClick={friendPerson}
             className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${data?.joinStatus === "FRIEND_REQUEST_SENT"

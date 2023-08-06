@@ -44,4 +44,5 @@ export const PATH_NAMES = {
   transactionHistory: '/settings/payments/transaction-history',
   wallet: '/settings/payments/wallet',
   eventDashboard: '/event-dashboard',
+  eventevent: '/event/edit',
 }

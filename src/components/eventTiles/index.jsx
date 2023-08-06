@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, forwardRef } from 'react'
 import CONFIG from '../../config'
 import { SAVE_EVENT } from '../../constants/endpoints.constant'
 import { useAuth } from '../../context/authContext'
 import { useFetch } from '../../hooks/useFetch'
 import { useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify"
 
 
-function EventTiles(props) {
+
+const EventTiles = React.forwardRef((props, ref) =>{
 
     const {
         event,
@@ -64,26 +66,30 @@ function EventTiles(props) {
     }
 
 
-    return (
-        
-        <div className=" w-full border rounded-b-[36px] gap-4 rounded-tl-[36px] flex lg:flex-row flex-col items-center py-[11px] px-[15px] " >
-        <div className=" w-full lg:w-fit " >
-          <div className=" rounded-b-[24px] rounded-tl-[24px] w-full lg:w-[152px] h-[250px] lg:h-[152px] bg-slate-700 " >
-            <img
-              role='button'
-              onClick={() => navigate(`/events/${event.id}`)} 
-              src={`${CONFIG.RESOURCE_URL}/${event?.picUrls[0]}`}
-              alt=""
-              className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
-            />
-          </div>
+    return ( 
+      <div ref={ref} className=" w-full border rounded-b-[36px] gap-4 rounded-tl-[36px] flex lg:flex-row flex-col items-center py-[11px] px-[15px] " >
+        <div className=" w-full lg:w-fit " > 
+          <div className="rounded-b-[32px] rounded-tl-[32px]  w-full lg:w-[152px] h-[250px] lg:h-[152px] overflow-hidden">
+            {event?.picUrls?.length > 0 ? (
+              <img
+                src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
+                alt="descriptive photograph"
+                className=" w-full h-full rounded-b-[32px] rounded-tl-[32px] object-cover "
+              />
+            ): (
+              <div className=" w-full h-full rounded-b-[32px] flex justify-center items-center rounded-tl-[32px] bg-slate-400" >
+                <p className=" text-2xl capitalize " >{event?.eventName?.slice(0,2)}</p>
+              </div>
+            )
+            }
+          </div> 
         </div>
-        <div className=" max-w-full lg:max-w-[250px] w-full lg:w-auto h-full flex flex-col pb-4 " >
+        <div className="  w-full h-full flex flex-col pb-4 " >
           <div 
               role='button'
-              onClick={() => navigate(`/events/${event.id}`)}  className=" w-full flex items-center gap-2 py-2 border-b " > 
+              onClick={() => navigate(`/events/${event.id}`)}  className=" w-full flex items-center justify-between gap-2 py-2 border-b " > 
             <p className=" font-bold text-lg " >{event.eventName?.length >= 17 ? event.eventName.slice(0, 17)+"..." : event.eventName}</p>
-            <p className=" text-sm font-semibol " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
+            <p className=" text-sm font-medium " >{event?.currency === "USD" ? "$" : "₦"}{event?.maxPrice}</p>
           </div>
           <div className="flex w-full gap-2 mt-6 lg:mt-auto" >
             <svg className=" mt-[2px] " width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,9 +110,9 @@ function EventTiles(props) {
               </g>
               </g>
             </svg>  
-            <p className="text-[#747070] font-medium " >Oct 20th at 09:00 am</p>
+            <p className="text-[#747070] font-medium " >{new Date(event.startDate).toDateString()}</p>
           </div>
-          <div className="flex w-full gap-2 mt-1" >
+          <div className="flex w-full items-center justify-between gap-2 mt-1" >
             <svg className=" mt-[2px] " width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g id="Hicon / Bold / Location">
               <g id="Location">
@@ -115,7 +121,7 @@ function EventTiles(props) {
               </g>
             </svg>
             <p className=" font-medium text-[#1732F7] " >{event?.location.address?.length >= 17 ? event?.location.address.slice(0, 17)+"..." : event?.location.address}</p>
-            <button onClick={() => handleEvent(event)} className=" ml-auto " > 
+            <button onClick={() => handleEvent(event)} className=" w-8 ml-auto " > 
               {event.isSaved && 
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g id="vuesax/linear/frame">
@@ -145,6 +151,6 @@ function EventTiles(props) {
         </div>
       </div>
     )
-}
+})
 
 export default EventTiles

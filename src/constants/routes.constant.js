@@ -44,6 +44,8 @@ import Wallet from "@/pages/authenticated/settings/payment/Wallet"
 import { CalendarIcon } from "@/components/Svgs"
 import Events from "@/pages/authenticated/events/Events"
 import EventDashboard from "@/pages/authenticated/eventdashboard"
+import EditEvents from "@/pages/authenticated/events/EditEvents"
+// import EventDashboard from "@/pages/authenticated/eventdashboard"
 
 export const NAVIGATION_ROUTES = [
   {
@@ -203,6 +205,10 @@ export const OTHER_AUTHENTICATED_ROUTES = [
   {
     path: PATH_NAMES.createEvent,
     element: CreateEvents,
+  },
+  {
+    path: PATH_NAMES.editevent,
+    element: EditEvents,
   },
   {
     path: PATH_NAMES.blockUsers,

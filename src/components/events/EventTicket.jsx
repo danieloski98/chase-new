@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 // import DatePicker from "react-datepicker"
 // import TimePicker from "react-time-picker"
 import GroupAvatar from "@/assets/svg/group-avatar.svg"
+import { toast } from "react-toastify"
+
 
 import {
   ClockIcon,
@@ -18,7 +20,7 @@ import CONFIG from "../../config"
 import { CLOSE_ENTITY } from "../../constants"
 import CreateCommunity from "../../pages/authenticated/communities/CreateCommunity"
 
-const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loading }) => {
+const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loading, handleChangeOther, HandlerDeleteTicket, HandleDeleteAllTicket, HandleAddTicket }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isFree, setIsFree] = useState(false)
   const [showFunnel, setShowFunnel] = useState(false) 
@@ -38,6 +40,8 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
       }))
     }
   }
+
+  
 
   const handleExpirationDateSelect = (date, dateString) => {
     setFormData(data => ({
@@ -61,8 +65,6 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
   const clickHandler =()=> {
     if(!formData?.productTypeData[0].totalNumberOfTickets){
       toast.error("Enter Event Total Ticket Number")
-    } else if(!formData?.productTypeData[0].ticketPrice){
-      toast.error("Enter Event Ticket Price")
     } else if(!formData?.productTypeData[0].ticketType){
       toast.error("Enter Event Ticket Type") 
     } else if(!formData?.productTypeData[0].minTicketBuy){
@@ -70,9 +72,9 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
     } else if(!formData?.productTypeData[0].maxTicketBuy){
       toast.error("Enter Event Maximum Ticket Purchase")
     } else {
-      handleContinue()
+      handleSubmit()
     } 
-  }
+  } 
 
   return (
     <div className="py-6 flex flex-col justify-center items-center relative mx-auto w-full max-w-2xl">
@@ -121,9 +123,11 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
           />
         </div>
       )}
+
       <div className="flex flex-col justify-center ">
         <div className="flex gap-2">
           <label
+            onClick={()=> HandleDeleteAllTicket("", null)}
             className={`text-[#667085] border rounded-lg hover:text-chasescrollBlue hover:bg-chasescrollBlue hover:bg-opacity-[5%] cursor-pointer basis-1/3 p-2 flex justify-center items-center gap-2 ${!isFree
               ? "bg-chasescrollBlue bg-opacity-[5%] text-chasescrollBlue"
               : ""
@@ -140,6 +144,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
             Paid
           </label>
           <label
+            onClick={()=> HandleDeleteAllTicket("Free", 0)}
             className={`text-[#667085] border rounded-lg hover:text-chasescrollBlue hover:bg-chasescrollBlue hover:bg-opacity-[5%] cursor-pointer basis-1/3 p-2 flex justify-center items-center gap-2 ${isFree
               ? "bg-chasescrollBlue bg-opacity-[5%] text-chasescrollBlue"
               : ""
@@ -247,7 +252,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
             />
           </div>
         </div> */} 
-        {ticketArray?.map((item, index)=> {
+        {formData.productTypeData?.map((item, index)=> {
           return(
             <div className=" w-full " key={index} > 
               <div className=" w-full flex gap-3 " >
@@ -260,6 +265,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
                       type="text"
                       className="block text-xs md:text-sm w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Enter Name"
+                      disabled={formData.productTypeData[index]?.ticketType === "Free" ? true : false}
                       value={formData.productTypeData[index]?.ticketType}
                       name="ticketType"
                       onChange={e => handleChange(index, "ticketType", e.target.value)}
@@ -276,6 +282,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
                       className="block text-xs md:text-sm w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Enter amount"
                       value={formData.productTypeData[index]?.ticketPrice}
+                      disabled={formData.productTypeData[index]?.ticketType === "Free" ? true : false}
                       name="ticketPrice"
                       onChange={e => handleChange(index, "ticketPrice", e.target.value)}
                     /> 
@@ -323,13 +330,34 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
                   onChange={e => handleChange(index, "maxTicketBuy", e.target.value)}
                 />
               </div>
+              {formData.productTypeData[index]?.ticketType && (
+                <> 
+                  {index !== 0 && ( 
+                    <button onClick={()=> HandlerDeleteTicket(formData.productTypeData[index]?.ticketType)} className=" mt-3 font-bold border text-white bg-red-600 rounded-md  py-2 w-fit px-3 " >Remove</button>
+                  )}
+                </>
+              )}
             </div>
           )
         })}
 
-        <button onClick={()=> setArray([...ticketArray, ""])} className=" mt-3 font-bold border text-white bg-blue-600 rounded-md  py-2 w-fit px-3 " >+ Add New Ticket Type</button>
+        {formData.productTypeData[0]?.ticketType !== "Free" && (
+          <button onClick={()=> HandleAddTicket(formData?.productTypeData?.length)} className=" mt-3 font-bold border text-white bg-blue-600 rounded-md  py-2 w-fit px-3 " >+ Add New Ticket Type</button>
+        )}
 
-        {/* <div className="flex flex-col gap-4 mt-4 mb-4">
+        <select
+            type="text"
+            className="block my-4 w-full px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+            placeholder="Type in maximum no. of Tickets"
+            value={formData.currency}
+            name="currency"
+            onChange={handleChangeOther}
+          >
+            <option>NGN</option>
+            <option>USD</option>
+          </select>      
+          
+          {/* <div className="flex flex-col gap-4 mt-4 mb-4">
           <h1>Ticket Expiration Date</h1>
           <div className="flex border w-fit">
             <div className="justify-center items-center flex px-4">
@@ -363,6 +391,8 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
             <QuestionIcon />
           </div>
         </div>
+
+
 
         {/* TODO: add funnel */}
         {/* <div className="mt-4 flex rounded-xl shadow-lg pl-4 py-4">

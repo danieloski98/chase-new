@@ -10,6 +10,7 @@ import { EVENT_CATEGORY } from "@/constants"
 import AllEvents from "@/components/events/AllEvents"
 import CONFIG from "@/config"
 import { Splide, SplideSlide } from "@splidejs/react-splide"
+// import { toast } from "react-toastify"
 import {
   GET_EVENTS_TYPES,
   GET_JOINED_EVENTS,
@@ -27,6 +28,11 @@ import { formatTime, formatTimestampToDate } from "../../../utils/helpers"
 import { toast } from "react-toastify"
 import EventTiles from "../../../components/eventTiles"
 import Loader from "../../../components/Loader"
+import useInfinteScroller from "../../../hooks/useInfinteScroller"
+import { Spinner } from "@chakra-ui/react";
+import MyEventTab from "./components/MyEvent"
+import PastEventsTab from "./components/PastEvent"
+import SavedEventTab from "./components/SavedEvent"
 
 const Events = () => {
   const [category, setCategory] = useState([])
@@ -40,6 +46,7 @@ const Events = () => {
   const [pastEvents, setPastEvents] = useState([])
   const [topEvents, setTopEvents] = useState([])
   const [savedEvents, setSavedEvents] = useState([])
+  const [newUrl, setNewUrl] = useState("")
   const { userName, token, userId, setEventCategory } = useAuth()
   const { sendRequest } = useFetch()
 
@@ -71,15 +78,24 @@ const Events = () => {
   }
 
   const getPastEvents = async () => {
-    const pastEvents = await sendRequest(
+    sendRequest(
       GET_PAST_EVENTS,
       "GET",
       null,
-      { Authorization: `Bearer ${token}` })
-    if (pastEvents && pastEvents.content) {
-      setPastEvents(pastEvents.content)
-    }
+      { Authorization: `Bearer ${token}` }
+      ).then((data) => {
+        console.log(data);
+        setPastEvents(data?.content)
+        // setFilter(data[0])
+      })
+      // console.log(pastEvents);
+    // if (pastEvents.content) {
+    //   console.log(pastEvents);
+    //   setPastEvents(pastEvents.content)
+    // }
   }
+
+  console.log(pastEvents);
 
   const getSavedEvents = async () => {
     setLoading(true)
@@ -118,6 +134,7 @@ const Events = () => {
 
   const handleViewChange = ({ target: { value } }) => {
     setView(value)
+    refetch()
     getPastEvents()
     getSavedEvents()
   }
@@ -142,6 +159,23 @@ const Events = () => {
     delay:"5000"
   }
 
+  const [page, setPage] = useState(0) 
+
+  const { results, isLoading, lastChildRef, refetch } = useInfinteScroller({url: newUrl, pageNumber:page, setPageNumber:setPage})
+
+  React.useEffect(()=> {
+      if(view === "Saved Events"){
+        setNewUrl("/events/get-saved-events?typeID="+userId)
+      } else if (view === "My Events"){
+        setNewUrl("/events/joined-events/"+userId)
+      } else {
+        setNewUrl("/events/get-past-events")
+      }
+      refetch()
+  }, [view])
+
+  console.log(results);
+
   return (
     <PageWrapper>
       {() => (
@@ -156,8 +190,9 @@ const Events = () => {
               <option value="Passed Events">Past Events</option>
               <option value="Saved Events">Saved Events</option>
             </select>
-            <Link to={PATH_NAMES.createEvent}>
+            <Link to={PATH_NAMES.createEvent} className=" flex items-center gap-3 " > 
               <FindEvent />
+              Create Events
             </Link>
           </div>
 
@@ -183,134 +218,52 @@ const Events = () => {
           )}
 
           {view === "My Events" && (
-            <div className="mb-[100px] mx-auto">
-              {myEvents.map(event => (
-                <Link
-                  to={`${PATH_NAMES.event}/${event.id}`}
-                  className="flex flex-col items-center justify-center mb-4 py-4 px-6 bg-white shadow rounded-b-[32px] rounded-tl-[32px] w-full mx-auto max-w-xl"
-                  key={event?.id}
-                >
-                  <div className="flex flex-col md:flex-row gap-6 w-full items-center mb-2">
-                    <img
-                      src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
-                      alt="descriptive photograph"
-                      className="w-44 h-40 object-cover rounded-b-[32px] rounded-tl-[32px]"
-                    />
-                    <div className="flex flex-col gap-2">
-                      <h2 className="text-lg font-medium text-center md:text-left">
-                        {event?.eventName}
-                      </h2>
-                      <div className="flex">
-                        <span className="mr-1">
-                          <CalendarIcon />
-                        </span>
-                        <p className="text-gray-600 text-sm">
-                          {formatTimestampToDate(event?.startDate)}. {formatTime(event?.startTime)} - {formatTime(event?.endTime)}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <span className="mr-1">
-                          <LocationIcon_2 />
-                        </span>
-                        <p className="text-gray-600 text-sm">
-                          {event?.location?.address}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        {/* <div className="flex items-center mr-4">
-                        <span className="mr-1">Category:</span>
-                        <span className="text-blue-600">{event?.category}</span>
-                      </div> */}
-                        <button className="bg-blue-100 text-blue-600 text-sm px-2">
-                          {event?.status}
-                        </button>
-                      </div>
-                      <p className="text-gray-600 text-sm flex items-center gap-2">
-                        Category: <span className=" text-blue-500 hover:text-blue-600 font-bold cursor-pointer">
-                          {event?.eventType}
-                        </span>
-                        <span className="bg-chasescrollBgBlue text-chasescrollBlue px-2 py-1 rounded-md">
-                          {event?.isOrganizer ? "Organizer" : "Attending"}
-                        </span>
-                      </p>
-
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <MyEventTab />
           )}
 
-          {view === "Past Events" && (
-            <div className="mb-[100px] mx-auto">
-              {pastEvents.map(event => (
-                <div
-                  className="flex flex-col items-center justify-center mb-4 py-4 px-6 bg-white shadow rounded-b-[32px] rounded-tl-[32px] w-fit mx-auto"
-                  key={event?.id}
-                >
-                  <div className="flex flex-col md:flex-row gap-10 w-full items-center mb-2">
-                    <div className="rounded-b-[32px] rounded-tl-[32px] h-[130px] w-[200px] overflow-hidden">
-                      <img
-                        src={event?.picUrls[0]}
-                        alt="descriptive photograph"
-                        className=" w-full h-full "
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <h2 className="text-lg font-medium text-center md:text-left">
-                        {event?.eventName}
-                      </h2>
-                      <div className="flex">
-                        <span className="mr-1">
-                          <CalendarIcon />
-                        </span>
-                        <p className="text-gray-600 text-sm">
-                          {formatTimestampToDate(event?.startDate)}. {formatTime(event?.startTime)} - {formatTime(event?.endTime)}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <span className="mr-1">
-                          <LocationIcon_2 />
-                        </span>
-                        <p className="text-gray-600 text-sm capitalize">
-                          {event?.locationType}
-                        </p>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="flex items-center mr-4">
-                          <span className="mr-1">Category:</span>
-                          <span className="text-blue-600">
-                            {event?.eventType}
-                          </span>
-                        </div>
-                        <button className="bg-blue-100 text-blue-600 text-sm px-2">
-                          {event?.status}
-                        </button>
-                      </div>
-                      <div className=" text-blue-500 hover:text-blue-600 font-bold py-2 px-4 rounded cursor-pointer">
-                        View Ticket
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          {view === "Passed Events" && (
+            <PastEventsTab />
           )}
 
           {view === "Saved Events" && (
-            <div className="mb-[100px] flex flex-col gap-5 mx-auto">
-              {loading && (
-                <Loader />
-              )}
-              {!loading && (
-                <> 
-                  {savedEvents.map(event => (
-                    <EventTiles event={event} getdata={getSavedEvents}  />
-                  ))}
-                </>
-              )}
-            </div>
+            <SavedEventTab />
           )}
+          {/* {!isLoading && (
+            <>  
+              {view === "Saved Events" && (
+                <div className="mb-[100px] flex flex-col gap-5 mx-auto">  
+                  {results.map((event, i) => { 
+                    if (results.length === i + 1) {
+                      return( 
+                        <EventTiles event={event} ref={lastChildRef} getdata={getSavedEvents}  />
+                      )
+                    } else {
+                      return( 
+                        <EventTiles event={event} getdata={getSavedEvents}  />
+                      )
+                    }
+                  })} 
+                </div>
+              )}
+
+            </>
+          )} */}
+          {/* {!isLoading && (
+            <>
+              {results.length < 0 && (
+
+              <div className="w-full h-32 flex justify-center items-center">
+                <p className=" font-semibold " >No Records Found</p>
+              </div>
+              )}
+            </>
+          )}
+          
+          {isLoading && (
+            <div className="w-full h-32 flex justify-center items-center">
+              <Spinner size='md' color='brand.chasescrollButtonBlue' />
+            </div>
+          )} */}
         </div>
       )}
     </PageWrapper>
@@ -319,3 +272,144 @@ const Events = () => {
 
 export default Events
 
+
+
+// {view === "My Events" && (
+//   <div className="mb-[100px] mx-auto">
+//     {results.map((event, i) =>  { 
+//       if (results.length === i + 1) {
+//         return (
+//           <Link
+//             ref={lastChildRef}
+//             to={`${PATH_NAMES.event}/${event.id}`}
+//             className="flex flex-col items-center justify-center mb-4 py-4 px-6 bg-white shadow rounded-b-[32px] rounded-tl-[32px] w-full mx-auto max-w-xl"
+//             key={event?.id}
+//           >
+//             <div className="flex flex-col md:flex-row gap-6 w-full items-center mb-2"> 
+//               <div className="w-44 h-40 object-cover rounded-b-[32px] rounded-tl-[32px]">
+//                 {event?.picUrls?.length > 0 ? (
+//                   <img
+//                     src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
+//                     alt="descriptive photograph"
+//                     className=" w-full h-full rounded-b-[32px] rounded-tl-[32px] object-cover "
+//                   />
+//                 ): (
+//                   <div className=" w-full h-full rounded-b-[32px] flex justify-center items-center rounded-tl-[32px] bg-slate-400" >
+//                     <p className=" text-2xl capitalize " >{event?.eventName?.slice(0,2)}</p>
+//                   </div>
+//                 )
+//                 }
+//               </div>
+//               <div className="flex flex-col gap-2">
+//                 <h2 className="text-lg font-medium text-center md:text-left">
+//                   {event?.eventName}
+//                 </h2>
+//                 <div className="flex">
+//                   <span className="mr-1">
+//                     <CalendarIcon />
+//                   </span>
+//                   <p className="text-gray-600 text-sm">
+//                     {formatTimestampToDate(event?.startDate)}. {formatTime(event?.startTime)} - {formatTime(event?.endTime)}
+//                   </p>
+//                 </div>
+//                 <div className="flex items-center">
+//                   <span className="mr-1">
+//                     <LocationIcon_2 />
+//                   </span>
+//                   <p className="text-gray-600 text-sm">
+//                     {event?.location?.address}
+//                   </p>
+//                 </div>
+//                 <div className="flex items-center">
+//                   {/* <div className="flex items-center mr-4">
+//                   <span className="mr-1">Category:</span>
+//                   <span className="text-blue-600">{event?.category}</span>
+//                 </div> */}
+//                   <button className="bg-blue-100 text-blue-600 text-sm px-2">
+//                     {event?.status}
+//                   </button>
+//                 </div>
+//                 <p className="text-gray-600 text-sm flex items-center gap-2">
+//                   Category: <span className=" text-blue-500 hover:text-blue-600 font-bold cursor-pointer">
+//                     {event?.eventType?.replace("_", " ")}
+//                   </span>
+//                   <span className="bg-chasescrollBgBlue text-chasescrollBlue px-2 py-1 rounded-md">
+//                     {event?.isOrganizer ? "Organizer" : "Attending"}
+//                   </span>
+//                 </p>
+
+//               </div>
+//             </div>
+//           </Link>
+//         )} else {
+//         return (
+//           <Link
+//             to={`${PATH_NAMES.event}/${event.id}`}
+//             className="flex flex-col items-center justify-center mb-4 py-4 px-6 bg-white shadow rounded-b-[32px] rounded-tl-[32px] w-full mx-auto max-w-xl"
+//             key={event?.id}
+//           >
+//             <div className="flex flex-col md:flex-row gap-6 w-full items-center mb-2">
+//               {/* <img
+//                 src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
+//                 alt="descriptive photograph"
+//                 className="w-44 h-40 object-cover rounded-b-[32px] rounded-tl-[32px]"
+//               /> */}
+//               <div className="w-44 h-40 object-cover rounded-b-[32px] rounded-tl-[32px]">
+//                 {event?.picUrls?.length > 0 ? (
+//                   <img
+//                     src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
+//                     alt="descriptive photograph"
+//                     className=" w-full h-full rounded-b-[32px] rounded-tl-[32px] object-cover "
+//                   />
+//                 ): (
+//                   <div className=" w-full h-full rounded-b-[32px] flex justify-center items-center rounded-tl-[32px] bg-slate-400" >
+//                     <p className=" text-2xl capitalize " >{event?.eventName?.slice(0,2)}</p>
+//                   </div>
+//                 )
+//                 }
+//               </div>
+//               <div className="flex flex-col gap-2">
+//                 <h2 className="text-lg font-medium text-center md:text-left">
+//                   {event?.eventName}
+//                 </h2>
+//                 <div className="flex">
+//                   <span className="mr-1">
+//                     <CalendarIcon />
+//                   </span>
+//                   <p className="text-gray-600 text-sm">
+//                     {formatTimestampToDate(event?.startDate)}. {formatTime(event?.startTime)} - {formatTime(event?.endTime)}
+//                   </p>
+//                 </div>
+//                 <div className="flex items-center">
+//                   <span className="mr-1">
+//                     <LocationIcon_2 />
+//                   </span>
+//                   <p className="text-gray-600 text-sm">
+//                     {event?.location?.address}
+//                   </p>
+//                 </div>
+//                 <div className="flex items-center">
+//                   {/* <div className="flex items-center mr-4">
+//                   <span className="mr-1">Category:</span>
+//                   <span className="text-blue-600">{event?.category}</span>
+//                 </div> */}
+//                   <button className="bg-blue-100 text-blue-600 text-sm px-2">
+//                     {event?.status}
+//                   </button>
+//                 </div>
+//                 <p className="text-gray-600 text-sm flex items-center gap-2">
+//                   Category: <span className=" text-blue-500 hover:text-blue-600 font-bold cursor-pointer">
+//                     {event?.eventType?.replace("_", " ")}
+//                   </span>
+//                   <span className="bg-chasescrollBgBlue text-chasescrollBlue px-2 py-1 rounded-md">
+//                     {event?.isOrganizer ? "Organizer" : "Attending"}
+//                   </span>
+//                 </p>
+
+//               </div>
+//             </div>
+//           </Link>
+//       )} 
+//     })}
+//   </div>
+// )}

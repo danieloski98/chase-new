@@ -1,6 +1,6 @@
 // import React from 'react'
 import { useQuery } from "react-query";
-import pic from "../../../../assets/images/identify.png"
+// import pic from "../../../../assets/images/identify.png"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import httpService from "../../../../utils/httpService";
 import { AxiosError } from "axios";
@@ -10,12 +10,14 @@ import CONFIG from "../../../../config";
 
 interface Props {
     data: any,
-    setShow: any
+    setShow: any,
+    setRefund: any
 }
 
 function EventDashboardModal(props: Props) {
     const {
-        data
+        data,
+        setRefund
     } = props
 
     const dataGraph = [
@@ -79,35 +81,41 @@ function EventDashboardModal(props: Props) {
             setHistory(data.data);
         }
       }) 
+
+      console.log(data);
+      
       
     return (
         <div className=' w-full flex flex-col items-center py-6 ' >
             {!isLoading && ( 
                 <div className=' max-w-[700px] flex flex-col relative items-center ' >
                     <p className=" text-center font-semibold mb-6 " >{data?.eventName}</p>
-                    {data?.interestedUsers?.slice(0, 3)?.map((attendee: any) => (
-                        <div className="w-8 h-8 -mr-3">
-                          {attendee?.data?.imgMain?.value ?
-                            <img
-                              key={attendee.id}
-                              src={`${CONFIG.RESOURCE_URL}${attendee?.data?.imgMain?.value}`}
-                              className="w-8 h-8 -mr-4 rounded-b-full rounded-tl-full"
-                              alt=""
-                            /> :   
-                            <div className="w-8 h-8 -mr-4 rounded-b-full rounded-tl-full bg-yellow-500  flex justify-center items-center">
-                              <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.firstName?.slice(0, 1)}</p> 
-                              <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.lastName?.slice(0, 1)}</p>
-                            </div> 
-                          }
-                        </div>
-                    ))}
+
+                    <div className=' w-full flex justify-center relative ' > 
+                        {data?.interestedUsers?.slice(0, 3)?.map((attendee: any) => (
+                            <div className="w-8 h-8 -mr-3">
+                            {attendee?.data?.imgMain?.value ?
+                                <img
+                                key={attendee.id}
+                                src={`${CONFIG.RESOURCE_URL}${attendee?.data?.imgMain?.value}`}
+                                className="w-8 h-8 -mr-4 rounded-b-full rounded-tl-full"
+                                alt=""
+                                /> :   
+                                <div className="w-8 h-8 -mr-4 rounded-b-full rounded-tl-full bg-yellow-500  flex justify-center items-center">
+                                <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.firstName?.slice(0, 1)}</p> 
+                                <p className=" font-extrabold text-sm text-black capitalize " >{attendee?.lastName?.slice(0, 1)}</p>
+                                </div> 
+                            }
+                            </div>
+                        ))}
+                    </div>
                     {/* <img src={pic} alt="image" className="w-[80px] mt-6" /> */}
                     <div className=" mt-8 w-full " >
                         <div className=" flex gap-3 text-sm font-normal " >
                             <p>Total</p>
                             <p>$13,600</p>
                         </div>
-                        <div className=" text-white bg-[#E90303] px-2 py-[2px] mt-1 items-center w-fit flex text-[13px] font-normal gap-1 rounded-md " >
+                        <div role="button" onClick={()=> setRefund(true)} className=" text-white bg-[#E90303] px-2 py-[2px] mt-1 items-center w-fit flex text-[13px] font-normal gap-1 rounded-md " >
                             <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Group">
                                 <path id="Vector" d="M0.75 14.75V2.75C0.75 2.35218 0.908035 1.97064 1.18934 1.68934C1.47064 1.40804 1.85218 1.25 2.25 1.25H9.75C10.1478 1.25 10.5294 1.40804 10.8107 1.68934C11.092 1.97064 11.25 2.35218 11.25 2.75V14.75L9 13.25L7.5 14.75L6 13.25L4.5 14.75L3 13.25L0.75 14.75Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
@@ -117,7 +125,7 @@ function EventDashboardModal(props: Props) {
                             Refund
                         </div>
                     </div>
-                    <div className=" w-full border-t border-b border-[#D0D4EB] mt-8 py-7 px-4 " >
+                    <div className=" w-full border-t border-b border-[#D0D4EB] flex justify-center mt-8 py-7 px-4 " >
                         <div className=" rounded-[36px] px-8 py-6 w-fit bg-[#D0F2D9] " >
                             <div className=" flex items-center gap-2 " > 
                                 <div className=" w-10 h-10 bg-[#101828] rounded-full flex justify-center items-center " >
@@ -158,7 +166,7 @@ function EventDashboardModal(props: Props) {
                             <BarChart
                             width={400}
                             height={300}
-                            data={history}
+                            data={history.tickets}
                             margin={{
                                 top: 5,
                                 right: 30,
@@ -167,7 +175,7 @@ function EventDashboardModal(props: Props) {
                             }}
                             barSize={20}
                             >
-                            <XAxis dataKey="name" scale="point" padding={{ left: 10, right: 10 }} />
+                            <XAxis dataKey="ticketType" scale="point" padding={{ left: 10, right: 10 }} />
                             <YAxis />
                             <Tooltip />
                             <Legend />

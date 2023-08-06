@@ -36,8 +36,7 @@ const EventTheme = ({
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
-    ).then((data) => {
-      console.log(data);
+    ).then((data) => { 
       setTypes(data)
     })
   }
@@ -54,6 +53,8 @@ const EventTheme = ({
       toast.error("Enter Event Organizer")
     } else if(!formData?.eventType){
       toast.error("Enter Event Type")
+    } else if(!formData?.eventDescription){
+      toast.error("Enter Event Description")
     } else {
       handleContinue()
     }

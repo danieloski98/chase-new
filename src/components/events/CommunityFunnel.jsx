@@ -31,9 +31,7 @@ const CommunityFunnel = ({ toggleFunnel, funnel, setFunnel, setFormData, setaddf
 	const clickHandler =()=> {
 		toggleFunnel()
 		setaddfunnel(true)
-	}
-
-	console.log(communities);
+	} 
 
 	return (
 		<div className="flex flex-col gap-8 fixed overflow-auto bg-white inset-0 z-20 px-4 py-10">
