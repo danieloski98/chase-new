@@ -49,7 +49,8 @@ const Thread = forwardRef
   setPostMakeId,
 }, ref) => {
   const [isLiked, setIsLiked] = useState(likeStatus === "LIKED")
-  const [numOfLikes, setNumOfLikes] = useState(likeCount)
+  const [numOfLikes, setNumOfLikes] = useState(likeCount);
+  const [showMore, setShowMore] = useState(false)
   const { token, userId } = useAuth()
   const { sendRequest } = useFetch()
 
@@ -106,7 +107,15 @@ const Thread = forwardRef
         <div
           className='text-md font-normal'
         >
-          {text}
+          { text && text.length < 100 && (
+            <span>{text}</span>
+          )}
+          {text && showMore && (
+            <span>{ text } <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show Less</span></span>
+          )}
+          {text && !showMore && text.length > 100 && (
+            <span>{text.substring(0, 100)}... <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show More</span></span>
+          )}
         </div>
         <div className="flex flex-col gap-3"> 
           {type === "WITH_IMAGE" && multipleMediaRef?.length > 1 && (
@@ -151,15 +160,15 @@ const Thread = forwardRef
               </div>
             </div>
             <div className="basis-1/3 flex items-center justify-center">
-              <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
-                <CommentsIcon onClick={() => alert('Hey')} />
-                <Link
-                  to={`${PATH_NAMES.comments}/${postID}`}
-                  className="text-xs"
-                >
-                  {formatNumberWithK(commentCount)} comments
-                </Link>
-              </div>
+              <Link
+                to={`${PATH_NAMES.comments}/${postID}`}
+                className="text-xs"
+              >
+                <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
+                  <CommentsIcon onClick={() => alert('Hey')} />
+                    {formatNumberWithK(commentCount)} comments
+                </div>
+              </Link>
             </div>
             <div className="basis-1/3 flex items-center justify-center">
               <div

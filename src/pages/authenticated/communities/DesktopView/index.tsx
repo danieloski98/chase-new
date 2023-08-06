@@ -24,8 +24,8 @@ import selector from "../../../../assets/svg/image.svg"
 import smiley from "../../../../assets/svg/smiley.svg"
 import addEventBtn from "../../../../assets/svg/add-event.svg"
 import send from "../../../../assets/svg/send-icon.svg"
-import useInfinteScroller from 'src/hooks/useInfinteScroller';
-import { useAuth } from 'src/context/authContext';
+import useInfinteScroller from '../../../../hooks/useInfinteScroller';
+import { useAuth } from '../../../../context/authContext';
 
 interface IProps {
     query: UseQueryResult<AxiosResponse<PaginatedResponse<ICommunity>, PaginatedResponse<ICommunity>>>;
@@ -38,7 +38,8 @@ function DesktopViewChat({ query }: IProps) {
     const [showEventModal, setShowEventModal] = useState(false);
     const [messages, setMessages] = useState<IMediaContent[]>([]);
     const [image, setImage] = useState('');
-    const [post, setPost] = useState('');    
+    const [post, setPost] = useState('');   
+    const { userId } = useAuth(); 
 
     // refs
     const filePickerRef = useRef<HTMLInputElement>();
@@ -163,17 +164,14 @@ function DesktopViewChat({ query }: IProps) {
 
     const handlePost = useCallback(() => {
         if (Post.isLoading || imagePost.isLoading) return;
-        if (post === '') {
-            toast.warn("Please enter a post");
-            return;
-        }
+
         if (image === '') {
             // make normal post
             Post.mutate();
         } else {
             imagePost.mutate();
         }
-    }, [Post, image, imagePost, post])
+    }, [Post, image, imagePost])
 
     if (showEventModal) {
           {/* EVENTS TO ADD MODAL */}
@@ -189,7 +187,7 @@ function DesktopViewChat({ query }: IProps) {
         <HStack width='100%' height='100%' gap={0}>
 
             {/* HIDDEN FILE PICKER */}
-            <input className='hidden' type='file' accept='image/*' ref={filePickerRef} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
+            <input className='hidden' type='file' accept='image/*' ref={filePickerRef as any} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
           
             {/* SIDE PANEL */}
             <VStack flex='0.3' bg='white' height='100%' shadow='md' zIndex={3}>
@@ -198,7 +196,7 @@ function DesktopViewChat({ query }: IProps) {
                 <HStack justifyContent='space-between' alignItems='center' width='100%' height='60px' px='20px'>
                     <Heading color='brand.chasescrollButtonBlue'>Communities</Heading>
                     <Link
-                        to={PATH_NAMES.createGroup}
+                        to={PATH_NAMES.createCommunity}
                         className="text-chasescrollPurple"
                     >
                         <AddIcon />
@@ -223,7 +221,9 @@ function DesktopViewChat({ query }: IProps) {
                 </VStack>
             </VStack>
 
+
             {/* CHAT AREA */}
+            
             <VStack flex='0.7' height='100%' spacing={0} zIndex={1} className='bg-[url("/src/assets/images/chat-bg.png")]'>
                 {activeCommunity === null && (
                     <VStack width='100%' height='100%' justifyContent='center' alignItems='center'>
@@ -237,14 +237,22 @@ function DesktopViewChat({ query }: IProps) {
 
                         {/* DESCRRIPTION AND MESSAGE AREA */}
                         <Flex flexDirection='column' flex='1' overflow={'auto'} width='100%' height='auto' paddingBottom='100px'  >
-                            {events.length > 0 && (
-                                 <Box width='100%' height='120px'>
-                                    <EventsPanel communityId={activeCommunity.id} events={events} toggleEvents={toggleEvents} />
-                                </Box>
+                            {userId === activeCommunity?.creator.userId && (
+                                <>
+                                    {events.length > 0 && (
+                                        <Box width='100%' height='120px'>
+                                            <EventsPanel communityId={activeCommunity.id} events={events} toggleEvents={toggleEvents} />
+                                        </Box>
+                                    )}
+                                </>
                             )}
                             <HStack width='100%' height='50px' justifyContent='center' paddingX='50px' marginTop='10px'>
-                                {events.length < 1 && (
-                                    <Image onClick={() => setShowEventModal(true)} src={addEventBtn} width='40px' height='40px' cursor='pointer' />
+                                { userId === activeCommunity?.creator.userId && (
+                                    <>
+                                        {events.length < 1 && (
+                                            <Image onClick={() => setShowEventModal(true)} src={addEventBtn} width='40px' height='40px' cursor='pointer' />
+                                        )}
+                                    </>
                                 )}
                                 <HStack justifyContent='center' flex={1} marginX='20px' >
                                     <Text fontSize='xs' width='60%' color='grey' textAlign={'center'}>{activeCommunity.data.description}</Text>
@@ -279,9 +287,11 @@ function DesktopViewChat({ query }: IProps) {
                                 <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' />
                             </InputGroup>
                         </HStack>
+                        
                     </VStack>
                 )}
             </VStack>
+
         </HStack>
     )
 }

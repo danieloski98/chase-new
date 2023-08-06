@@ -19,7 +19,7 @@ import Share from "./Share"
 import { toast } from "react-toastify"
 import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "react-query"
 import httpService from "@/utils/httpService"
-import { Spinner, Stack, Skeleton, SkeletonCircle, HStack } from '@chakra-ui/react'
+import { Spinner, Stack, Skeleton, SkeletonCircle, HStack, Textarea } from '@chakra-ui/react'
 import { Avatar } from '@chakra-ui/react'
 import {IUser} from '../../../models/User'
 import { AxiosError, AxiosResponse } from "axios"
@@ -221,13 +221,15 @@ const Home = () => {
                     size='sm'
                    />
                  </div>
-                 <input
-                   type="text"
+                 <Textarea
                    placeholder={`Add your thought ${userName}`}
                    value={postInput}
-                   onKeyDown={handleEnterKeyPress}
                    onChange={e => setPostInput(e.target.value)}
-                   className="outline-none bg-transparent w-full px-6 py-2.5"
+                   borderWidth={0}
+                   backgroundColor={'transparent'}
+                   height={'20px'}
+                   cols={1}
+                   size='sm'
                  />
                  <button
                    className="w-14 pl-2 pr-6 flex justify-center items-center cursor-pointer border-r border-white"

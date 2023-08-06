@@ -86,9 +86,9 @@ const EditCommunity = ({ community, onClose }: IProps) => {
 
   return (
     <OverlayWrapper handleClose={onClose}>
-        <input type='file' hidden accept='image/*' ref={filePickerRef} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
+        <input type='file' hidden accept='image/*' ref={filePickerRef as any} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
         <VStack padding='20px' width={['100%', '30%']} height='auto' bg='white' shadow='md'>
-            <Heading>Edit Community</Heading>
+            <Heading size='md'>Edit Community</Heading>
 
             <Avatar 
                 src={`${CONFIG.RESOURCE_URL}/${image}`}

@@ -12,6 +12,7 @@ import { COLORS } from '../../../../utils/colors';
 import { formatTimeAgo } from '../../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import { CommentsIcon, EmptyHeartIcon, FilledHeartIcon } from '../../../../components/Svgs';
+import VideoPlayer from '../../../../components/VideoPlayer';
 
 interface IProps {
     messages: IMediaContent[];
@@ -23,6 +24,7 @@ const MessageChip = ({message, userId}: {
 }) => {
     const navigate = useNavigate();
     const [comment, setComment] = useState('');
+    console.log(message);
 
     const queryClient = useQueryClient();
     const { mutate, isLoading } = useMutation({
@@ -50,14 +52,26 @@ const MessageChip = ({message, userId}: {
                 } `}
             >
             {message?.mediaRef !== null ? (
-                <div className="flex flex-col gap-2">
-                    <img
-                        src={`${CONFIG.RESOURCE_URL}${message?.mediaRef}`}
-                        alt="media"
-                        className="cursor-pointer sm:max-w-[100%] lg:max-w-[400px]"
-                        // onClick={() => toggleMediaVisibility(`${CONFIG.RESOURCE_URL}${message?.mediaRef}`)}
-                    />
-                    {message?.text ? message?.text : ''}
+                <div>
+                    { message.type === 'WITH_IMAGE' &&  message.mediaRef.split('.')[1] ==='mp4' && (
+                         <div className="flex flex-col gap-2">
+                            <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${message?.mediaRef}`}/>
+                            {message?.text ? message?.text : ''}
+                        </div>
+                    )}
+                    {
+                         message.type === 'WITH_IMAGE' && message.mediaRef.split('.')[1] !=='mp4' && (
+                            <div className="flex flex-col gap-2">
+                                <img
+                                    src={`${CONFIG.RESOURCE_URL}${message?.mediaRef}`}
+                                    alt="media"
+                                    className="cursor-pointer sm:max-w-[100%] lg:max-w-[400px]"
+                                    // onClick={() => toggleMediaVisibility(`${CONFIG.RESOURCE_URL}${message?.mediaRef}`)}
+                                />
+                            {message?.text ? message?.text : ''}
+                            </div>
+                         )
+                    }
                 </div>
             ) : message?.text}
             <Text size='xs' color='gray.400' textAlign={message?.user.userId === userId ? 'right' : 'left'}>{formatTimeAgo(message.timeInMilliseconds)}</Text>
@@ -101,7 +115,8 @@ const MessageChip = ({message, userId}: {
     )
 }
 const MessagePanel = ({messages, isLoading}: IProps) => {
-    const { userId } = useAuth()
+    const { userId } = useAuth();
+    const id: string | null = userId as string | null
   return (
     <div className={`flex flex-col w-full h-full gap-4 sm:px-5  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
     {messages?.map((message, i) => (
@@ -109,7 +124,7 @@ const MessagePanel = ({messages, isLoading}: IProps) => {
             ? "rounded-bl-xl self-end"
             : "rounded-br-xl self-start"
             }`}>
-            <MessageChip message={message} userId={userId as string} />
+            <MessageChip message={message} userId={id as string} />
         </div>
         ))}
 </div>

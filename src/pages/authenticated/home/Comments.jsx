@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useFetch } from "../../../hooks/useFetch"
 import { useAuth } from "../../../context/authContext"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams, useRoutes } from "react-router-dom"
 import PageWrapper from "@/components/PageWrapper"
 import ProfilePhoto from "@/components/ProfilePhoto"
 import { CaretLeftIcon } from "@/components/Svgs"
@@ -15,20 +15,34 @@ import {
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import httpService from '../../../utils/httpService'
 import { toast } from "react-toastify"
-import { Spinner } from '@chakra-ui/react'
+import { Avatar, Spinner } from '@chakra-ui/react'
+import CONFIG from "../../../config"
 
 const Comments = () => {
   const [userComments, setUserComments] = useState([])
-  const [commentInput, setCommentInput] = useState("")
+  const [commentInput, setCommentInput] = useState("");
+  const [user, setUser] = useState(null)
   const { sendRequest } = useFetch()
   const { userName, token, userId } = useAuth()
   const { postID } = useParams()
+  const nav = useNavigate();  
   const queryClient = useQueryClient();
+
+  const userProfile = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
+    onError: (error) => {
+      toast.error(JSON.stringify(error.response?.data));
+    },
+    onSuccess: (data) => {
+      setUser(data.data);
+      console.log(data);
+    }
+  })
+
 
   const { isLoading } = useQuery(['getComments', postID], () => httpService.get(`${GET_ALL_POST_COMMENTS}?postID=${postID}`), {
     onSuccess: (data) => {
-      console.log(data.data);
       setUserComments(data.data.content);
+      console.log(data.data.content);
     }
   });
 
@@ -80,7 +94,7 @@ const Comments = () => {
             <div className="flex items-center">
               <div
                 className="p-4 cursor-pointer"
-                
+                onClick={() => nav(-1)}
               >
                 <CaretLeftIcon />
               </div>
@@ -88,7 +102,14 @@ const Comments = () => {
             </div>
             <div className="flex items-center lg:items-start flex-col gap-10 py-4 px-4 lg:px-28">
               <div className="flex items-center gap-3 w-full">
-                <ProfilePhoto image={image} />
+                { !isLoading && (user).data.imgMain.value && (
+                  <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}`} />
+                )}
+                { !isLoading && !(user).data.imgMain.value && (
+                  <Avatar 
+                    name={`${(user).firstName} ${(user).lastName}`}
+                  />
+                )}
                 <div className="flex items-center bg-white w-full h-fit rounded-lg border border-blue-100">
                   <input
                     type="text"
@@ -111,8 +132,8 @@ const Comments = () => {
                   </button>
                 </div>
               </div>
-              {userComments.length > 0 && userComments?.map(comment => (
-                <Comment key={comment.id} {...comment} replyPerson={replyPerson} />
+              {userComments.length > 0 && userComments?.map((comment, i) => (
+                <Comment key={i} {...comment} replyPerson={replyPerson} />
               ))}
 
               {userComments.length < 1 && (
