@@ -68,7 +68,7 @@ const Explore = () => {
                   className="flex items-center w-full cursor-pointer"
                 >
                   <Link
-                    to={`/event/${event?.id}`}
+                    to={`/events/${event?.id}`}
                     className="flex items-center w-full cursor-pointer"
                   >
                     <CarouselEvent
