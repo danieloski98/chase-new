@@ -28,6 +28,7 @@ const SuggestionsPage = () => {
   useEffect(() => {
     getSuggestions()
   }, [check])
+  console.log(suggestions);
 
   return (
     <PageWrapper>

@@ -7,6 +7,8 @@ import UserPosts from "./UserPosts"
 import { useFetch } from "../../../hooks/useFetch"
 import { GET_USER_MEDIA_POSTS } from "../../../constants/endpoints.constant"
 import { useAuth } from "../../../context/authContext"
+import useInfinteScroller from "../../../hooks/useInfinteScroller"
+ 
 
 const Posts = () => {
   const [showUserPosts, setShowUserPosts] = useState(false)
@@ -31,22 +33,27 @@ const Posts = () => {
     }
   }
 
-  const fetchPosts = async () => {
-    const data = await sendRequest(
-      `${GET_USER_MEDIA_POSTS}?userID=${userId}`,
-      "GET",
-      null,
-      { Authorization: `Bearer ${token}` }
-    )
-    if (data) setPosts(data) 
-  }
+  // const fetchPosts = async () => {
+  //   const data = await sendRequest(
+  //     `${GET_USER_MEDIA_POSTS}?userID=${userId}`,
+  //     "GET",
+  //     null,
+  //     { Authorization: `Bearer ${token}` }
+  //   )
+  //   if (data) setPosts(data) 
+  // }
 
-  useEffect(()=>{
-    fetchPosts()
-  }, [])
+  // useEffect(()=>{
+  //   fetchPosts()
+  // }, []) 
+  
+  const [page, setPage] = React.useState(0)
+  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/feed/get-users-media-posts?userID='+userId, pageNumber:page, setPageNumber:setPage, search: true})
+
 
   return (
     <section className="mb-[100px] flex justify-center">
+
       {showUserPosts && (
         <UserPosts
           toggleUserPosts={closeUserPosts}
@@ -55,21 +62,48 @@ const Posts = () => {
         />
       )}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center w-fit">
-        {posts?.content?.map((post) => (
+        {results?.map((post, i) => {
           // <Link to={`${PATH_NAMES.posts}/${userId}/${post?.id}`}>
-          <img
-            key={post?.id}
-            src={`${CONFIG.RESOURCE_URL}${post?.mediaRef ?? post?.multipleMediaRef[0]}`}
-            className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover"
-            alt="media from user post"
-            onClick={() => {
-              openUserPosts()
-              setPostID(post?.id)
-            }}
 
-          />
+        if (results?.length === i + 1) {
+          return( 
+            <div ref={lastChildRef} >
+              {post?.mediaRef || post?.multipleMediaRef > 0 ? 
+                <img 
+                  key={post?.id}
+                  src={`${CONFIG.RESOURCE_URL}${post?.mediaRef ?? post?.multipleMediaRef[0]}`}
+                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover"
+                  alt="media from user post"
+                  onClick={() => {
+                    openUserPosts()
+                    setPostID(post?.id)
+                  }} 
+                /> :
+                <div  className="rounded-b-[32px] rounded-tl-[32px] bg-slate-400 w-48 h-48 object-cover"/>
+              }
+            </div>
+          )
+        }else { 
+          return( 
+            <div>
+              {post?.mediaRef || post?.multipleMediaRef > 0 ? 
+                <img 
+                  key={post?.id}
+                  src={`${CONFIG.RESOURCE_URL}${post?.mediaRef ?? post?.multipleMediaRef[0]}`}
+                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover"
+                  alt="media from user post"
+                  onClick={() => {
+                    openUserPosts()
+                    setPostID(post?.id)
+                  }} 
+                /> :
+                <div  className="rounded-b-[32px] rounded-tl-[32px] bg-slate-400 w-48 h-48 object-cover"/>
+              }
+            </div>
+          )
+        }
           // </Link>
-        ))}
+        })}
       </div>
     </section>
   )

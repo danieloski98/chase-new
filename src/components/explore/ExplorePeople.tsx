@@ -1,29 +1,28 @@
-import {useState } from "react" 
+import {useState, useEffect } from "react" 
 import ExplorePerson from "./ExplorePerson"
 import Loader from "../Loader"
 import { useQuery } from 'react-query'; 
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import httpService from '../../utils/httpService';
+// import httpService from '../../utils/httpService';
 import { useAuth } from "../../context/authContext";
+import { Spinner } from "@chakra-ui/react";
+import useInfinteScroller from "../../hooks/useInfinteScroller";
+// import page from "src/pages/authenticated/home/page";
+import React from "react";
+import httpService from "../../utils/httpService";
 
-const ExplorePeople = () => {
-  
-  const [suggestions, setSuggestions] = useState([] as any) 
-
-  // const getSuggestions = async () => {
-  //   const suggestions = await sendRequest(
-  //     GET_SUGGESTED_FRIENDS,
-  //     'GET',
-  //     null,
-  //     { Authorization: `Bearer ${token}` }
-  //   )
-  //   if (suggestions) setSuggestions(suggestions)
-  // }
-
+const ExplorePeople = () => { 
+ 
   const { searchValue } = useAuth()
 
-  const { isLoading } = useQuery(['getconnect'+searchValue], () => httpService.get('/user/search-users', {
+  const [dataInfo, setData] = useState([] as any)
+
+  const [page, setPage] = React.useState(0)
+
+  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/user/search-users', pageNumber:page, setPageNumber:setPage})
+
+  const { data } = useQuery(['getconnect'+searchValue], () => httpService.get('/user/search-users', {
     params: {
       searchText: searchValue
     }
@@ -32,21 +31,57 @@ const ExplorePeople = () => {
       toast.error(error.response?.data);
     }, 
     onSuccess: (data) => {
-      setSuggestions(data.data.content);
+      console.log(data);
+      
+      setData(data.data.content);
     }
   })
-  // useEffect(() => {
-  //   getSuggestions()
-  // }, [])
+
+  useEffect(() => {
+    if(!searchValue){ 
+      setData(results)
+    }
+  }, [data, results])
 
   return (
     <div className="w-full flex justify-center items-center ">
       <ul>
-        {isLoading ? (
+        {/* {dataInfo?.length < 0 ? (
           <Loader />
-        ) : suggestions?.map((person: any) => (
-          <ExplorePerson key={person?.userId} person={person} />
-        ))}
+        ) :  */}
+        {dataInfo?.map((person: any, i: number) => {
+          if(searchValue){
+            return (
+                <ExplorePerson key={person?.userId} person={person} /> 
+            )
+          } else { 
+            if (results.length === i + 1) {
+              return (
+                <ExplorePerson key={person?.userId} person={person} ref={lastChildRef} /> 
+                )
+            } else {
+              return (
+                  <ExplorePerson key={person?.userId} person={person} /> 
+              )
+            }
+          }
+         })
+         
+        //  suggestions?.map((person: any) => (
+        //   <ExplorePerson key={person?.userId} person={person} />
+        // ))
+        }
+
+     { isLoading && (
+       <div className="w-full h-32 flex justify-center items-center">
+         <Spinner size='md' color='brand.chasescrollButtonBlue' />
+       </div>
+     )}
+     {!isLoading && dataInfo.length <= 0 && (
+      <div className=' w-full py-5 flex justify-center font-bold text-2xl ' >
+        No Records Found
+      </div>
+     )}
       </ul>
     </div>
   )

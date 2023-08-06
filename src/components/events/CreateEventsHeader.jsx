@@ -2,10 +2,35 @@ import PropTypes from "prop-types"
 import { CREATE_EVENT_HEADER } from "@/constants/index"
 import { CancelIcon } from "@/components/Svgs"
 
-const CreateEventsHeader = ({ activeStep, setActiveStep }) => {
+const CreateEventsHeader = ({ activeStep, setActiveStep, formData }) => {
   const handleClose = () => {
     window.close()
     window.history.back()
+  }
+
+  const getValidationInfo =()=> {
+
+    if(!formData?.startDate){
+      return true
+    } else if(!formData?.endDate){
+      return true
+    } else if(!formData?.location?.locationDetails && !formData?.location?.link){
+      return true
+    } else {
+      return false      
+    } 
+  }
+
+  const getValidationTheme =()=> {
+    if(!formData?.eventName){
+      return true
+    } else if(!formData?.eventType){
+      return true
+    } else if(!formData?.eventDescription){
+      return true
+    } else {
+      return false   
+    }
   }
 
   return (
@@ -20,10 +45,11 @@ const CreateEventsHeader = ({ activeStep, setActiveStep }) => {
       <div className="flex gap-4 justify-evenly md:justify-between w-full">
         {CREATE_EVENT_HEADER.map(({ label, value }) => {
           const isActive = activeStep === value
-
+          
           return (
             <button
               key={value}
+              disabled={label === "Information" ? getValidationTheme(): label === "Tickets" ? false : false}
               className={`text-sm md:text-base md:p-2 md:px-8 px-2 ${isActive
                 ? "text-chasescrollBlue"
                 : "text-gray-300 hover:bg-gray-50 hover:text-chasescrollBlue"

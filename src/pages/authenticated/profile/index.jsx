@@ -205,6 +205,8 @@ const Profile_1 = () => {
     setShowOptions(state => !state)
   } 
 
+  console.log(posts);
+
   return (
     <PageWrapper>
       {() => (
@@ -296,9 +298,9 @@ const Profile_1 = () => {
                   activeComponent={activeComponent}
                   handleButtonClick={handleButtonClick}
                   networkCount={network.length}
-                  postCount={posts?.content?.length}
-                  eventCount={events?.content?.length}
-                  communityCount={communities?.content?.length}
+                  postCount={posts?.totalElements}
+                  eventCount={events?.totalElements}
+                  communityCount={communities?.totalElements}
                 />
               </section>
               <div className="px-2 py-10 ">

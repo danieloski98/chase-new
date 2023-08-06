@@ -14,6 +14,7 @@ const SecondaryNavbar = ({
   useEffect(() => {
     setMenu(SECONDARY_NAV.map((item) => {
       if (item.name === "Posts") {
+        
         return {
           ...item,
           count: postCount

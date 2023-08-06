@@ -43,12 +43,12 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
     } else if(!formData?.location?.locationDetails && !formData?.location?.link){
       toast.error("Enter Event Location")
       console.log(formData?.location?.locationDetails);
-    } else if(!formData?.location?.address){
-      toast.error("Enter Event Address")
     } else {
       handleContinue()
     } 
   }
+
+  console.log();
 
   return (
     <div>
@@ -112,6 +112,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                   <select
                     className="text-sm underline text-chasescrollDarkBlue w-36" 
                     onChange={(e)=> setSelectType(e.target.value)}
+                    value={formData?.location?.link ? "Online Location" : formData?.location?.link ? "Physical Location": ""}
                   >
                     <option value="" className="text-xs">add location</option>
                     <option>Physical Location</option>
@@ -123,7 +124,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                     ))} */}
                   </select>
                 </div>
-                {selectType === "Physical Location" &&( 
+                {(selectType === "Physical Location" || formData?.location?.locationDetails) &&( 
                   <input
                     type="text"
                     placeholder="Enter Event Location"
@@ -162,7 +163,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                     ))}
                   </select>
                 </div>  */}
-                {selectType === "Online Location" &&( 
+                {(selectType === "Online Location" || formData?.location?.link )&&( 
                   <input
                     type="text"
                     placeholder="Enter Online Link"

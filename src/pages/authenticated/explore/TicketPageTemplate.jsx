@@ -20,12 +20,13 @@ import CONFIG from "../../../config"
 import { useAuth } from "../../../context/authContext"
 import { toast } from "react-toastify"
 import { useFetch } from "../../../hooks/useFetch"
-import { CREATE_TICKET, PAY_WITH_PAYSTACK, PAY_WITH_STRIPE, VERIFY_PAYSTACK_PAYMENT, VERIFY_STRIPE_PAYMENT } from "../../../constants/endpoints.constant"
+import { CREATE_TICKET, PAY_WITH_PAYSTACK, PAY_WITH_STRIPE, SEND_FRIEND_REQUEST, VERIFY_PAYSTACK_PAYMENT, VERIFY_STRIPE_PAYMENT } from "../../../constants/endpoints.constant"
 import SelectPaymentOptions from "../../../components/explore/modals/SelectPaymentOptions"
 
 const TicketPageTemplate = ({
   banner,
   eventID,
+  userId,
   eventName,
   eventLogo,
   attendees,
@@ -41,6 +42,7 @@ const TicketPageTemplate = ({
   isBought,
   minPrice,
   maxPrice,
+  username,
   data,
 }) => {
   const navigate = useNavigate()
@@ -122,7 +124,27 @@ const TicketPageTemplate = ({
   const clickHandler =()=> {
     setEventData(data)
     navigate("/event-dashboard")
+  } 
+
+  const editHandler =()=> {
+    setEventData(data)
+    navigate("/event/create")
+  } 
+  const { sendRequest } = useFetch()
+  
+  const friendPerson = async () => { 
+    const data = await sendRequest(
+      `${SEND_FRIEND_REQUEST}`,
+      "POST",
+      { toUserID: userId },
+      { Authorization: `Bearer ${token}` }
+    )
+    if (data) {
+      toast.success(data.message);  
+    }
   }
+
+  console.log(data);
 
   return (
     <>
@@ -216,7 +238,9 @@ const TicketPageTemplate = ({
               </p>
             </div>
             <div className="flex justify-between items-center">
-              <div className="bg-green-600 text-white px-3 py-2 rounded-3xl text-sm">Attending</div>
+              {data?.isBought && (
+                <div className="bg-green-600 text-white px-3 py-2 rounded-3xl text-sm">Attending</div>
+              )}
               {attendees?.slice(0, 3).length && (
                 <div className="flex items-center justify-end">
                   <div
@@ -253,16 +277,24 @@ const TicketPageTemplate = ({
                 alt="convener logo"
                 className="w-12 h-12 object-cover rounded-b-full rounded-tl-full bg-black"
               />
-              <div className="flex flex-col gap-1">
-                <h3>Convener</h3>
-                <p className="text-xs font-bold">{convener}</p>
+              <div className="flex flex-col">
+                <h3>{convener}</h3>
+                <p className="text-xs font-bold">@{username}</p>
               </div>
             </div>
             {!isOrganizer && (
               <div className="flex flex-row gap-4 justify-center items-center">
-                <button className="p-2">
-                  <AddProfileIcon className="w-6 h-6" />
-                </button>
+                {data?.createdBy?.joinStatus !== "CONNECTED" && (
+                  <button onClick={friendPerson} className="p-2">
+                    <AddProfileIcon className="w-6 h-6" />
+                  </button>
+                )}
+                {data?.createdBy?.joinStatus === "CONNECTED" && (
+                  <p className=" text-chasescrollBlue font-bold " >Connected</p>
+                )}
+                {data?.createdBy?.joinStatus === "FRIEND_REQUEST_SENT" && (
+                  <p className=" text-chasescrollBlue font-bold " >Pending</p>
+                )} 
                 <button className="p-2">
                   <MessageIcon className="w-6 h-6" />
                 </button>
@@ -337,6 +369,7 @@ const TicketPageTemplate = ({
                     My Dashboard
                   </button>
                   <button
+                    onClick={()=> editHandler()}
                     className="border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize bg-white text-chasescrollBlue"
                   >
                     Edit Event

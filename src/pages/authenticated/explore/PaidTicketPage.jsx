@@ -81,7 +81,9 @@ const PaidTicketPage = () => {
           timeAndDate={event?.startDate}
           location={event?.location}
           locationType={event?.locationType}
-          convener={event?.createdBy?.firstName}
+          convener={event?.createdBy?.firstName+" "+event?.createdBy?.lastName}
+          username={event?.createdBy?.username}
+          userId={event?.createdBy?.userId}
           ticketInfo={event?.productTypeData}
           eventLogo={event?.createdBy?.data?.imgMain?.value}
           price={event?.productTypeData}

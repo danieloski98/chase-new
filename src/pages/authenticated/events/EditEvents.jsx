@@ -6,7 +6,6 @@ import EventInfo from "@/components/events/EventInfo"
 import { CREATE_EVENT_HEADER } from "@/constants/index"
 import { useAuth } from "../../../context/authContext"
 import { useFetch } from "../../../hooks/useFetch"
-import { useNavigate } from "react-router-dom"
 import {
   CREATE_EVENT,
   CREATE_TICKET,
@@ -14,9 +13,8 @@ import {
 } from "../../../constants/endpoints.constant"
 import { toast } from "react-toastify"
 
-const CreateEvents = () => {
+const EditEvents = () => {
   const [activeStep, setActiveStep] = useState(0)
-  const navigate = useNavigate()
   const { userName, userId, token, eventData } = useAuth()
   const { sendRequest } = useFetch()
   const [formData, setFormData] = useState({
@@ -64,7 +62,7 @@ const CreateEvents = () => {
   })
   const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [selectedImage, setSelectedImage] = useState('')
+  const [selectedImage, setSelectedImage] = useState('') 
 
   const handleContinue = () => {
     setActiveStep(prevStep => prevStep + 1)
@@ -78,20 +76,17 @@ const CreateEvents = () => {
     setLoading(true)
     const fd = new FormData();
     fd.append("file", image);
-    if(!eventData?.eventName){ 
-      if (image !== null) {
-        const response = await sendRequest(
-          `${UPLOAD_IMAGE}${userId}`,
-          "POST",
-          fd,
-          { Authorization: `Bearer ${token}` },
-          true
-        ) 
-        let newObj = {...formData, picUrls: [response?.fileName]}
-        handlerPayload(newObj)
-      }
-    } else {
-      handleUpdatePayload()
+
+    if (image !== null) {
+      const response = await sendRequest(
+        `${UPLOAD_IMAGE}${userId}`,
+        "POST",
+        fd,
+        { Authorization: `Bearer ${token}` },
+        true
+      ) 
+      let newObj = {...formData, picUrls: [response?.fileName]}
+      handlerPayload(newObj)
     }
   } 
 
@@ -102,17 +97,6 @@ const CreateEvents = () => {
       item,
       { Authorization: `Bearer ${token}` }
     ) 
-    navigate("/events")
-  }
-  const handleUpdatePayload = async () => { 
-    const response = await sendRequest(
-      "events/update-event",
-      "PUT",
-      formData,
-      { Authorization: `Bearer ${token}` }
-    ) 
-
-    navigate("/events")
   }
 
   const handleChange = (index, name, value) => {
@@ -196,7 +180,6 @@ const CreateEvents = () => {
     }))
   }
 
-
   const handleFileChange = (event) => {
     const file = event.target.files[0]
     console.log({ file });
@@ -206,37 +189,6 @@ const CreateEvents = () => {
     }
   }
 
-  React.useEffect(()=> {
-    if(eventData?.eventName){ 
-      setFormData({
-        id: eventData?.id,
-        picUrls: eventData?.picUrls,
-        eventType: eventData?.eventType,
-        eventName: eventData?.eventName,
-        eventDescription: eventData?.eventDescription,
-        joinSetting: eventData?.joinSetting,
-        locationType: eventData?.locationType,
-        currency: eventData?.currency,
-        currentPicUrl: eventData?.currentPicUrl,
-        eventFunnelGroupID: eventData?.eventFunnelGroupID,
-        mediaType: eventData?.mediaType,
-        currentVideoUrl: eventData?.currentVideoUrl,
-        isPublic: eventData?.isPublic,
-        isExclusive: eventData?.isExclusive,
-        mask: eventData?.mask,
-        attendeesVisibility: eventData?.attendeesVisibility,
-        minPrice: eventData?.minPrice,
-        maxPrice: eventData?.maxPrice,
-        startTime: eventData?.startTime,
-        endTime: eventData?.endTime,
-        startDate: eventData?.startDate,
-        endDate: eventData?.endDate,
-        // expirationDate: eventData?.,
-        location: eventData?.location,
-        productTypeData:  eventData?.productTypeData
-      })
-    }
-  }, [])
 
   return (
     <div className="flex flex-col gap-2 md:px-16 pt-8">
@@ -292,4 +244,4 @@ const CreateEvents = () => {
   )
 }
 
-export default CreateEvents
+export default EditEvents

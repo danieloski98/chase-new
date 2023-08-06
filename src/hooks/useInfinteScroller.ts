@@ -7,21 +7,30 @@ import { AxiosResponse } from 'axios';
 type IProps = {
     url: string;
     pageNumber: number;
-    setPageNumber:  (value: React.SetStateAction<number>) => void
+    setPageNumber:  (value: React.SetStateAction<number>) => void;
+    search?: boolean
 }
 
-function useInfinteScroller<T>({ url, pageNumber, setPageNumber }: IProps) {
+function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProps) {
     const [results, setResults] = React.useState<T[]>([]);
     const [hasNextPage, setHasNextPage] = React.useState(false);
     const intObserver = React.useRef<IntersectionObserver>();
 
     // useQuery
-    const { data, isLoading, isError, error, refetch } = useQuery<AxiosResponse<PaginatedResponse<T>, PaginatedResponse<T>>>([`get${url}`, pageNumber, url], () => httpService.get(`${url}&page=${pageNumber}`), {
+    const { data, isLoading, isError, error, refetch, isRefetching } = useQuery<AxiosResponse<PaginatedResponse<T>, PaginatedResponse<T>>>([`get${url}`, pageNumber ], () => httpService.get(`${url}`, {
+      params : {
+        page: pageNumber
+      }
+    }), {
         onSuccess: (data) => {
           const item: PaginatedResponse<T> = data.data as PaginatedResponse<T>
-          console.log(item);
-          results.push(...item.content);
+          // console.log(item);
+          if(!isRefetching){ 
+            results.push(...item.content);
             setResults(results);
+          } else{
+            setResults(item.content);
+          }
             setHasNextPage(item.last ? false:true);
             window.scrollTo(0, window.innerHeight);
         }
@@ -32,7 +41,7 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber }: IProps) {
         if (intObserver.current) intObserver.current.disconnect();
         intObserver.current = new IntersectionObserver((posts) => {
           if (posts[0].isIntersecting && hasNextPage) {
-            setPageNumber(prev => prev + 1);
+            setPageNumber(prev => prev + 1); 
           }
         });
         if (post) intObserver.current.observe(post);
