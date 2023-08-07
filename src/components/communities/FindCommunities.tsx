@@ -49,7 +49,7 @@ const Community = ({ community }) => {
         <img
           src={community.data.imgSrc ? `${CONFIG.RESOURCE_URL}/${community.data.imgSrc}` : `https://ui-avatars.com/api/?background=random&name=${community.data.name}&length=1`}
           alt={community.name}
-          className="flex-grow w-24 max-w-[96px] h-24 object-cover border-l-4 border-white rounded-b-full rounded-tl-full"
+          className="flex-grow w-[50px] max-w-[96px] h-[50px] object-cover border-l-4 border-white rounded-b-full rounded-tl-full"
         />
       </div>
       <div className="flex justify-between items-center w-full">

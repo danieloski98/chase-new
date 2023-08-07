@@ -19,6 +19,7 @@ interface IProps {
 }
 
 const CommunityHeader = ({ community, setActive }: IProps) => {
+    console.log(community.id);
     const queryClient = useQueryClient();
     const { userId } = useAuth();
     const { isLoading, mutate } = useMutation({
