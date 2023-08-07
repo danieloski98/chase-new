@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { IMediaContent, IMediaPost } from '../models/MediaPost';
 import httpService from '../utils/httpService'
 import { useMutation, useQuery } from 'react-query';
