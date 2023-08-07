@@ -33,7 +33,7 @@ const Comments = () => {
       toast.error(JSON.stringify(error.response?.data));
     },
     onSuccess: (data) => {
-      setUser(data.data);
+      setUser(data?.data);
       console.log(data);
     }
   })
@@ -41,8 +41,8 @@ const Comments = () => {
 
   const { isLoading } = useQuery(['getComments', postID], () => httpService.get(`${GET_ALL_POST_COMMENTS}?postID=${postID}`), {
     onSuccess: (data) => {
-      setUserComments(data.data.content);
-      console.log(data.data.content);
+      setUserComments(data?.data?.content);
+      console.log(data?.data?.content);
     }
   });
 

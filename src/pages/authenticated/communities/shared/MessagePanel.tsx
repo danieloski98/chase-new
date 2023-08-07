@@ -24,7 +24,6 @@ const MessageChip = ({message, userId}: {
 }) => {
     const navigate = useNavigate();
     const [comment, setComment] = useState('');
-    console.log(message);
 
     const queryClient = useQueryClient();
     const { mutate, isLoading } = useMutation({
@@ -71,6 +70,19 @@ const MessageChip = ({message, userId}: {
                             {message?.text ? message?.text : ''}
                             </div>
                          )
+                    }
+                    {
+                        message.type === 'WITH_FILE' && (
+                            <div className="flex flex-col gap-2">
+                                <div className="w-32 h-32 flex items-center justify-center">
+                                    {/* {message.mediaRef !== '' || message.mediaRef.length < 1 && message.mediaRef.split('.')[1].toUpperCase()} */}
+                                    { (
+                                        <span className='text-3xl'>FILE</span>
+                                    )}
+                                </div>
+                            {message?.text ? message?.text : ''}
+                            </div>
+                        )
                     }
                 </div>
             ) : message?.text}

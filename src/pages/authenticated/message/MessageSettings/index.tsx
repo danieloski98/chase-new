@@ -2,7 +2,7 @@ import { HStack, Text, VStack, Skeleton, Spacer, Avatar, Heading, InputGroup, In
 import React from 'react'
 import PageWrapper from '../../../../components/PageWrapper'
 import { useAuth } from '../../../../context/authContext'
-import { FiChevronLeft, FiEdit2, FiSearch, FiLogOut, FiSettings } from 'react-icons/fi'
+import { FiChevronLeft, FiEdit, FiSearch, FiLogOut, FiSettings } from 'react-icons/fi'
 import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import httpService from '../../../../utils/httpService'
@@ -85,7 +85,7 @@ const MessageSettings = () => {
                                 </HStack>
 
                                 { userId === chat?.createdBy.userId && (
-                                    <FiEdit2 fontSize='30px' color="black" />
+                                    <FiEdit fontSize='30px' color="black" />
                                 )}
                             </HStack>
 

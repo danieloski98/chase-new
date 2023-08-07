@@ -13,10 +13,11 @@ import { PATH_NAMES } from "../../constants/paths.constant"
 import PageWrapper from "../PageWrapper"
 import { IComment, Subcomment } from "../../models/Comment"
 import CONFIG from "../../config"
-import { Avatar, Input, Spinner } from "@chakra-ui/react"
+import { Avatar, HStack, Heading, Input, Spinner, Text } from "@chakra-ui/react"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import httpService from "../../utils/httpService"
 import { toast } from "react-toastify"
+
 
 interface IProps {
   replyPerson: (username: string) => void
@@ -28,16 +29,17 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
   const [show, setShow] = useState(false);
   const  [value, setValue] = useState(`@${user.username} `);
   const [subcomments, setSubcomment] = useState<Array<Subcomment>>([]);
+  const [showR, setShowR] = useState(false);
   const { token } = useAuth()
   const { sendRequest } = useFetch();
 
   const queryClient = useQueryClient(); 
 
 
-  const { isLoading: subLoading,} = useQuery(['getSubcomment'], () => httpService.get(`/feed/get-all-sub-comments?commentID=${id}`), {
+  const { isLoading: subLoading,} = useQuery(['getSubcomment', id], () => httpService.get(`/feed/get-all-sub-comments?commentID=${id}`), {
     onSuccess: (data) => {
-      console.log(data.data.content);
-      setSubcomment(data.data.content);
+      console.log(data?.data?.content);
+      setSubcomment(data?.data?.content);
     }
   });
 
@@ -47,6 +49,7 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
       queryClient.invalidateQueries(['getSubcomment']);
       toast.success('Comment saved');
       setShow(false);
+      setValue(`@${user.username} `)
     }
   });
 
@@ -66,9 +69,19 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
         {user.data.imgMain.value && <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user.data.imgMain.value}`} />}
         { !user.data.imgMain.value && <Avatar name={`${user.firstName} ${user.lastName}`} />}
         <div className="flex flex-col w-full">
-          <div className="w-full text-sm">
-            {comment}
-          </div>
+          <Link
+            to={`/profile/${user.userId}`}
+          >
+            <Heading size='sm'>{user.firstName} {user.lastName}</Heading>
+          </Link>
+          <HStack>
+            <div className="w-[305px] text-sm">
+              {comment}
+            </div>
+            <div className="cursor-pointer" onClick={() => toggleLike(id)}>
+              {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
+            </div>
+          </HStack>
 
           <div className="flex justify-between">
             <div className="flex gap-4 text-[10px] items-center">
@@ -78,12 +91,21 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
                 className="text-chasescrollPurple cursor-pointer"
                 onClick={() => setShow(prev => !prev)}
               >
-                Reply
+                {subcomments.length} Reply
               </span>
+              { subcomments.length > 0 && (
+                  <span
+                  className="text-chasescrollPurple cursor-pointer"
+                  onClick={() => setShowR(prev => !prev)}
+                >
+                  { !showR && 'Show Replies' }
+                  { showR && 'Hide Replies' }
+                </span>
+              )}
             </div>
-            <div className="cursor-pointer" onClick={() => toggleLike(id)}>
+            {/* <div className="cursor-pointer" onClick={() => toggleLike(id)}>
               {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
-            </div>
+            </div> */}
           </div>
 
           { show && (
@@ -98,8 +120,8 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
           )}
 
           {
-            !subLoading && subcomments.length > 0 && (
-              <div className="ml-4">
+            showR && !subLoading && subcomments.length > 0 && (
+              <div className="ml-0">
                 {subcomments.map((comment, i) => (
                   <SubComment
                     key={i}
@@ -136,9 +158,16 @@ function SubComment({ user, comment, commentID, likeCount, time }: Subcomment) {
     {user.data.imgMain.value && <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user.data.imgMain.value}`} />}
     { !user.data.imgMain.value && <Avatar name={`${user.firstName} ${user.lastName}`} />}
     <div className="flex flex-col w-full">
-      <div className="w-full text-sm">
-        {comment}
-      </div>
+      <Text>{user.firstName} {user.lastName}</Text>
+      <HStack>
+        <div className="w-64 text-sm ">
+          {comment}
+        </div>
+        <div className="cursor-pointer" onClick={() => mutate()}>
+          { !isLoading && isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
+          { isLoading && <Spinner color='brand.chasescrollBlue' />}
+        </div>
+      </HStack>
 
       <div className="flex justify-between">
         <div className="flex gap-4 text-[10px] items-center">
@@ -150,10 +179,10 @@ function SubComment({ user, comment, commentID, likeCount, time }: Subcomment) {
             Reply
           </span> */}
         </div>
-        <div className="cursor-pointer" onClick={() => mutate()}>
+        {/* <div className="cursor-pointer" onClick={() => mutate()}>
           { !isLoading && isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
           { isLoading && <Spinner color='brand.chasescrollBlue' />}
-        </div>
+        </div> */}
       </div>
 
     </div>
