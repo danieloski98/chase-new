@@ -11,6 +11,7 @@ import Share from '../home/Share'
 import { CaretLeftIcon } from '../../../components/Svgs'
 import { PATH_NAMES } from '../../../constants/paths.constant'
 import OverlayWrapper from '../../../components/OverlayWrapper'
+import useInfinteScroller from './../../../hooks/useInfinteScroller'
 
 const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 	const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
@@ -34,6 +35,10 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 		// navigate(`${route}/${threadId}`)
 		// console.log({ menuAction, threadId })
 	}
+
+	const [page, setPage] = React.useState(0)
+	const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/feed/get-users-media-posts?userID='+userID, pageNumber:page, setPageNumber:setPage, search: true})
+  
 
 	const getUserFeedData = async () => {
 		const userFeedData = await sendRequest(`${GET_USER_POSTS}?userID=${userID}`, "GET", null, {
@@ -74,39 +79,60 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 					))
 				)}
 				{showShareModal && <Share closeShareModal={toggleShare} />}
-
-				<div
-					className="flex items-center flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto"
-					ref={threadListRef}
-					id='overlay'
-					onClick={toggleUserPosts}
-				>
-					{/* <Link to={`${PATH_NAMES.profile}/${userID}`} className="self-start">
-						<CaretLeftIcon />
-					</Link> */}
-					{userFeedData?.map(post => { 
-						return( 
-							<Thread
-								ref={post?.id === postID ? itemRef : null}
-								key={post?.id}
-								postID={post?.id}
-								text={post?.text}
-								user={post?.user}
-								time={post?.time} 
-								shareCount={post?.shareCount}
-								mediaRef={post?.mediaRef}
-								multipleMediaRef={post?.multipleMediaRef}
-								likeCount={post?.likeCount}
-								commentCount={post?.commentCount}
-								toggleMoreOptions={toggleMoreOptions}
-								toggleShare={toggleShare}
-								type={post?.type}
-								setThreadId={setThreadId}
-								likeStatus={post?.likeStatus}
-							/>
-						)
-					})}
-				</div>
+				{!isLoading && ( 
+					<div
+						className="flex items-center flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto"
+						ref={threadListRef}
+						id='overlay'
+						onClick={toggleUserPosts}
+					> 
+						{results?.map((post, i) => { 
+							if (results?.length === i + 1) {
+								return( 
+									<Thread
+										ref={lastChildRef}
+										key={post?.id}
+										postID={post?.id}
+										text={post?.text}
+										user={post?.user}
+										time={post?.time} 
+										shareCount={post?.shareCount}
+										mediaRef={post?.mediaRef}
+										multipleMediaRef={post?.multipleMediaRef}
+										likeCount={post?.likeCount}
+										commentCount={post?.commentCount}
+										toggleMoreOptions={toggleMoreOptions}
+										toggleShare={toggleShare}
+										type={post?.type}
+										setThreadId={setThreadId}
+										likeStatus={post?.likeStatus}
+									/>
+								)
+							} else {
+								return( 
+									<Thread
+										ref={post?.id === postID ? itemRef : null}
+										key={post?.id}
+										postID={post?.id}
+										text={post?.text}
+										user={post?.user}
+										time={post?.time} 
+										shareCount={post?.shareCount}
+										mediaRef={post?.mediaRef}
+										multipleMediaRef={post?.multipleMediaRef}
+										likeCount={post?.likeCount}
+										commentCount={post?.commentCount}
+										toggleMoreOptions={toggleMoreOptions}
+										toggleShare={toggleShare}
+										type={post?.type}
+										setThreadId={setThreadId}
+										likeStatus={post?.likeStatus}
+									/>
+								)
+							}
+						})}
+					</div>
+				)}
 			</>
 		</OverlayWrapper>
 	)

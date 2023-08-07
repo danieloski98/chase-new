@@ -26,10 +26,10 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
           const item: PaginatedResponse<T> = data.data as PaginatedResponse<T>
           // console.log(item);
           if(!isRefetching){ 
-            results.push(...item.content);
+            results?.push(...item?.content);
             setResults(results);
           } else{
-            setResults(item.content);
+            setResults(item?.content);
           }
             setHasNextPage(item.last ? false:true);
             window.scrollTo(0, window.innerHeight);

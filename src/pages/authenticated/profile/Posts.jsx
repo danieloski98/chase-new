@@ -8,7 +8,7 @@ import { useFetch } from "../../../hooks/useFetch"
 import { GET_USER_MEDIA_POSTS } from "../../../constants/endpoints.constant"
 import { useAuth } from "../../../context/authContext"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
- 
+import { Spinner } from "@chakra-ui/react";
 
 const Posts = () => {
   const [showUserPosts, setShowUserPosts] = useState(false)
@@ -18,10 +18,7 @@ const Posts = () => {
   const [posts, setPosts] = useState([])
   const { token, userId: currentUserId } = useAuth()
 
-  // console.log(userId);
-
   const self = userId === currentUserId
-
 
   const openUserPosts = (event) => {
     setShowUserPosts(true)
@@ -52,7 +49,7 @@ const Posts = () => {
 
 
   return (
-    <section className="mb-[100px] flex justify-center">
+    <section className="mb-[100px] flex-col flex items-center">
 
       {showUserPosts && (
         <UserPosts
@@ -105,6 +102,13 @@ const Posts = () => {
           // </Link>
         })}
       </div>
+
+            
+      {isLoading && (
+          <div className="w-full h-32 flex justify-center items-center">
+              <Spinner size='md' color='brand.chasescrollButtonBlue' />
+          </div>
+      )}
     </section>
   )
 }

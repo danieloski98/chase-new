@@ -15,8 +15,7 @@ const PastEvents = () => {
   const getTopEvents = async () => {
     const pastEvents = await sendRequest(GET_PAST_EVENTS, "GET", null, {
       Authorization: `Bearer ${token}`,
-    })
-    console.log(pastEvents);
+    }) 
     // if (pastEvents && pastEvents.content) {
     //   setPastEvents(pastEvents.content)
     //   setLoading(false)

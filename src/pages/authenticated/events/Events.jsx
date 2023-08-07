@@ -83,8 +83,7 @@ const Events = () => {
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
-      ).then((data) => {
-        console.log(data);
+      ).then((data) => { 
         setPastEvents(data?.content)
         // setFilter(data[0])
       })
@@ -93,9 +92,7 @@ const Events = () => {
     //   console.log(pastEvents);
     //   setPastEvents(pastEvents.content)
     // }
-  }
-
-  console.log(pastEvents);
+  } 
 
   const getSavedEvents = async () => {
     setLoading(true)
@@ -172,9 +169,7 @@ const Events = () => {
         setNewUrl("/events/get-past-events")
       }
       refetch()
-  }, [view])
-
-  console.log(results);
+  }, [view]) 
 
   return (
     <PageWrapper>

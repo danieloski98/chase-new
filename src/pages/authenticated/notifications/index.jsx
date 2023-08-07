@@ -87,7 +87,7 @@ const Notifications = () => {
                   </svg>
                 </button>
               </div>
-              {(type === "Friend Request Accepted") && ( 
+              {/* {(type === "Friend Request Accepted") && ( 
                 <MyNetwork active={"Requests"} />
               )}
               {(type === "Friend Request") && ( 
@@ -101,7 +101,7 @@ const Notifications = () => {
               )}
               {(type === "Group Join Request") && ( 
                 <Requests />
-              )}
+              )} */}
               {type === "New message" && ( 
                 navigate("/message") 
               )} 

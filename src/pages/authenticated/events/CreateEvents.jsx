@@ -102,6 +102,7 @@ const CreateEvents = () => {
       item,
       { Authorization: `Bearer ${token}` }
     ) 
+    toast.success("Event Created")
     navigate("/events")
   }
   const handleUpdatePayload = async () => { 
@@ -112,6 +113,7 @@ const CreateEvents = () => {
       { Authorization: `Bearer ${token}` }
     ) 
 
+    toast.success("Event Updated")
     navigate("/events")
   }
 
