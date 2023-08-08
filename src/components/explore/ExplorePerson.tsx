@@ -7,14 +7,16 @@ import { toast } from "react-toastify";
 import { Avatar } from '@chakra-ui/react';
 
 interface Iprops {
-	person: any
+	person: any,
+	refetch: any,
 }
 
 const ExplorePerson = React.forwardRef(
 	(props: Iprops, ref: any) => { 
 
 	const {
-		person
+		person,
+		refetch
 	} = props
 
 	const queryClient = useQueryClient() 
@@ -31,6 +33,7 @@ const ExplorePerson = React.forwardRef(
 		  toast.success(data.data?.message)
 		  queryClient.invalidateQueries(['getconnect'])
 		  setLoading("0")
+		  refetch()
 		}
 	});
 
@@ -43,6 +46,8 @@ const ExplorePerson = React.forwardRef(
 		  toast.success(data.data?.message)
 		  queryClient.invalidateQueries(['getconnect'])
 		  setLoading("0")
+		  refetch()
+		//   Re
 		}
 	}); 
 

@@ -87,14 +87,13 @@ const TrendingEvents = () => {
   }
 
   useEffect(() => {
-    // getAllEvents()
     refetch()
   }, [eventCategory])
 
 
   const [page, setPage] = useState(0) 
 
-  const { results, isLoading, lastChildRef, refetch } = useInfinteScroller({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, pageNumber:page, setPageNumber:setPage})
+  const { results, isLoading, lastChildRef, refetch, isRefetching } = useInfinteScroller({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, pageNumber:page, setPageNumber:setPage})
  
   return (
     <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
@@ -108,6 +107,8 @@ const TrendingEvents = () => {
         {!isLoading && (
           <> 
             {results.map((event, i) => {
+
+              console.log(event);
               if (results.length === i + 1) {
                 return(
                   <div ref={lastChildRef} className=" w-full border rounded-b-[36px] gap-4 rounded-tl-[36px] flex lg:flex-row flex-col items-center py-[11px] px-[15px] " >

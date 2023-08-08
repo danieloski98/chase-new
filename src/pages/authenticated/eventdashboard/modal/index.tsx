@@ -91,7 +91,7 @@ function EventDashboardModal(props: Props) {
                 <div className=' max-w-[700px] flex flex-col relative items-center ' >
                     <p className=" text-center font-semibold mb-6 " >{data?.eventName}</p>
 
-                    <div className=' w-full flex justify-center relative ' > 
+                    {/* <div className=' w-full flex justify-center relative ' > 
                         {data?.interestedUsers?.slice(0, 3)?.map((attendee: any) => (
                             <div className="w-8 h-8 -mr-3">
                             {attendee?.data?.imgMain?.value ?
@@ -108,12 +108,12 @@ function EventDashboardModal(props: Props) {
                             }
                             </div>
                         ))}
-                    </div>
+                    </div> */}
                     {/* <img src={pic} alt="image" className="w-[80px] mt-6" /> */}
                     <div className=" mt-8 w-full " >
                         <div className=" flex gap-3 text-sm font-normal " >
                             <p>Total</p>
-                            <p>$13,600</p>
+                            <p>0</p>
                         </div>
                         <div role="button" onClick={()=> setRefund(true)} className=" text-white bg-[#E90303] px-2 py-[2px] mt-1 items-center w-fit flex text-[13px] font-normal gap-1 rounded-md " >
                             <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">

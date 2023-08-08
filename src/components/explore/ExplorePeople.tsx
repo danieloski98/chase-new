@@ -20,7 +20,7 @@ const ExplorePeople = () => {
 
   const [page, setPage] = React.useState(0)
 
-  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/user/search-users', pageNumber:page, setPageNumber:setPage})
+  const { results, isLoading, lastChildRef, refetch } = useInfinteScroller({url:'/user/search-users', pageNumber:page, setPageNumber:setPage})
 
   const { data } = useQuery(['getconnect'+searchValue], () => httpService.get('/user/search-users', {
     params: {
@@ -41,7 +41,7 @@ const ExplorePeople = () => {
     if(!searchValue){ 
       setData(results)
     }
-  }, [data, results])
+  }, [data, results, searchValue])
 
   return (
     <div className="w-full flex justify-center items-center ">
@@ -52,16 +52,16 @@ const ExplorePeople = () => {
         {dataInfo?.map((person: any, i: number) => {
           if(searchValue){
             return (
-                <ExplorePerson key={person?.userId} person={person} /> 
+                <ExplorePerson key={person?.userId} person={person} refetch={refetch} /> 
             )
           } else { 
             if (results.length === i + 1) {
               return (
-                <ExplorePerson key={person?.userId} person={person} ref={lastChildRef} /> 
+                <ExplorePerson key={person?.userId} person={person} ref={lastChildRef} refetch={refetch} /> 
                 )
             } else {
               return (
-                  <ExplorePerson key={person?.userId} person={person} /> 
+                  <ExplorePerson key={person?.userId} person={person} refetch={refetch} /> 
               )
             }
           }
@@ -72,7 +72,7 @@ const ExplorePeople = () => {
         // ))
         }
 
-     { isLoading && (
+     {isLoading && (
        <div className="w-full h-32 flex justify-center items-center">
          <Spinner size='md' color='brand.chasescrollButtonBlue' />
        </div>

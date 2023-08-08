@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import CONFIG from '../../config'
 import { READ_NOTIFICATIONS } from '../../constants/endpoints.constant'
 import { useFetch } from '../../hooks/useFetch'
@@ -10,7 +10,7 @@ import { Avatar } from '@chakra-ui/react'
 import MyNetwork from '../../pages/authenticated/profile/MyNetwork'
 import { useNavigate } from 'react-router-dom'
 
-const Notification = ({ notification, getNotifications, setShow, setType }) => {
+const Notification = forwardRef(({ notification, getNotifications, setShow, setType },ref) => {
 	const [isRead, setIsRead] = useState(false) 
 	const { token, setnotification } = useAuth()
 	const { sendRequest } = useFetch()
@@ -39,7 +39,7 @@ const Notification = ({ notification, getNotifications, setShow, setType }) => {
 	}, [notification]) 
 
 	return (
-		<button disabled={isRead} onClick={() => toggleRead(notification)} className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
+		<button ref={ref} disabled={isRead} onClick={() => toggleRead(notification)} className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
 			<div className="flex items-center gap-4 max-w-[75%]">
 				{/* <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`} /> */}
 				<Avatar  
@@ -66,6 +66,6 @@ const Notification = ({ notification, getNotifications, setShow, setType }) => {
 			</p>
 		</button>  
 	)
-}
+})
 
 export default Notification

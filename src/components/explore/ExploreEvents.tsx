@@ -187,13 +187,13 @@ const ExploreEvents = () => {
   }) 
 
   const [page, setPage] = React.useState(0)
-  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/events/events?searchText='+searchValue, pageNumber:page, setPageNumber:setPage})
+  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/events/events', pageNumber:page, setPageNumber:setPage})
 
   React.useEffect(()=> {
     if(!searchValue){
       setData(results)
     }
-  }, [results, searchValue ])
+  }, [results, searchValue])
 
   return (
     <div className="px-4 h-auto overflow-auto pb-96">

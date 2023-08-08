@@ -137,7 +137,7 @@ const EventTheme = ({
             />
           </div>
 
-          <div className="grid text-sm relative">
+          {/* <div className="grid text-sm relative">
             <label className="absolute text-xs md:text-sm left-6 -top-2 bg-white px-2">
               Organizer <span className="text-chasescrollRed"> *</span>
             </label>
@@ -149,7 +149,7 @@ const EventTheme = ({
               onChange={handleChange}
               value={formData?.organizer}
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-col gap-8 w-full max-w-sm text-chasescrollTextGrey">

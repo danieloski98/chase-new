@@ -7,6 +7,8 @@ import MyNetwork from "../profile/MyNetwork"
 import SecondaryCommunity from "../profile/SecondaryCommunity"
 import { useNavigate } from "react-router-dom"
 import Requests from "../../../components/communities/Requests"
+import useInfinteScroller from "../../../hooks/useInfinteScroller"
+import { Spinner } from "@chakra-ui/react"
 
 const Notifications = () => {
 
@@ -31,7 +33,10 @@ const Notifications = () => {
       if (data){ setNotification(data)
         console.log(data);}
     }
-  }
+  } 
+  
+  const [page, setPage] = React.useState(0)
+  const { results, isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/notifications/notification', pageNumber:page, setPageNumber:setPage})
 
   return (
     <PageWrapper>
@@ -50,23 +55,43 @@ const Notifications = () => {
                   </option>
                 ))}
               </select>
-              {!notifications?.content && (
+              {/* {isLoading && (
                 <Loader />
-              )}
-              {notifications?.content && notifications?.content?.length < 1 && (
+              )} */}
+              {!isLoading && results < 1 && (
                 <div className="h-full w-full flex items-center gap-2 font-semibold text-xl justify-center text-chasescrollBlue">
                   No <span className="!lowercase">{notificationsFilter}</span> notifications
                 </div>
               )}
-              {notifications?.content?.map((notification, index) => (
-                <Notification
-                  key={index}
-                  notification={notification}
-                  getNotifications={getNotifications}
-                  setShow={clickHandler} 
-                  setType={setType}
-                />
-              ))}
+              {results?.map((notification, index) => { 
+                if (results?.length === index + 1) {
+                  return(
+                    <Notification
+                      key={index}
+                      ref={lastChildRef}
+                      notification={notification}
+                      getNotifications={getNotifications}
+                      setShow={clickHandler} 
+                      setType={setType}
+                    />
+                  )
+                  } else {
+                    return(
+                      <Notification
+                        key={index}
+                        notification={notification}
+                        getNotifications={getNotifications}
+                        setShow={clickHandler} 
+                        setType={setType}
+                      />
+                    )
+                  }
+              })}
+            </div>
+          )}
+          {isLoading && (
+            <div className="w-full h-32 flex justify-center items-center">
+              <Spinner size='md' color='brand.chasescrollButtonBlue' />
             </div>
           )}
           {show && (
@@ -87,7 +112,7 @@ const Notifications = () => {
                   </svg>
                 </button>
               </div>
-              {/* {(type === "Friend Request Accepted") && ( 
+              {(type === "Friend Request Accepted") && ( 
                 <MyNetwork active={"Requests"} />
               )}
               {(type === "Friend Request") && ( 
@@ -101,7 +126,7 @@ const Notifications = () => {
               )}
               {(type === "Group Join Request") && ( 
                 <Requests />
-              )} */}
+              )}
               {type === "New message" && ( 
                 navigate("/message") 
               )} 

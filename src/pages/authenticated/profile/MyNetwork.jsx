@@ -41,9 +41,11 @@ const MyNetwork = (props) => {
     // setIsLoading(false)
   }
 
+  
+
   const acceptRequest = async (id) => {
     const data = await sendRequest(
-      ACCEPT_FRIEND_REQUEST,
+      "/user/accept-friend-request",
       "POST",
       { friendRequestID: id },
       { Authorization: `Bearer ${token}` }
@@ -56,14 +58,16 @@ const MyNetwork = (props) => {
 
   const rejectRequest = async (id) => {
     const data = await sendRequest(
-      REJECT_FRIEND_REQUEST,
+      REJECT_FRIEND_REQUEST+"/"+id,
       "DELETE",
-      { friendRequestID: id },
+      // { friendRequestID: id },
+      null,
       { Authorization: `Bearer ${token}` }
     )
     if (data) {
       toast.success(data.message);
-      fetchRequests()
+      // fetchRequests()
+      refetch()
     }
   }
 
@@ -90,9 +94,9 @@ const MyNetwork = (props) => {
     )
     if (data) {
       toast.success(data.message);
-      fetchNetwork()
+      // fetchNetwork()
       refetch()
-      fetchProfileInfo()
+      // fetchProfileInfo()
     }
     // setLoading(false)
   }
@@ -115,8 +119,8 @@ const MyNetwork = (props) => {
   }
 
   useEffect(()=>{
-    fetchNetwork()
-    fetchRequests()
+    // fetchNetwork()
+    // fetchRequests()
     if(props.active){
       setActiveTab(props.active)
     } 
@@ -128,8 +132,10 @@ const MyNetwork = (props) => {
   const { results, isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/friend-requests', pageNumber:page, setPageNumber:setPage})
 
 
+  console.log(results);
+
   return (
-    <div className="flex justify-center px-4  w-full max-w-md mx-auto">
+    <div className="flex justify-center px-4 pb-8 w-full max-w-md mx-auto">
 
       {isLoading && (
         <> 
@@ -162,7 +168,7 @@ const MyNetwork = (props) => {
                   }`}
                 onClick={() => {
                   handleTabChange("Requests")
-                  fetchRequests()
+                  // fetchRequests()
                 }}
               >
                 Requests
@@ -174,9 +180,10 @@ const MyNetwork = (props) => {
             <>
             
             {activeTab === "Requests" && (
-                <div className="flex flex-col gap-6 justify-center items-center mt-10 mb-[100px] w-full">
+              <> 
+                <div className="flex flex-col gap-6 justify-center items-center mt-10 w-full">
                   {results?.map(
-                    ({ toUserID, id }, i) => { 
+                    ({ fromUserID, id }, i) => { 
                       if (results?.length === i + 1) {
                         return (
                           <div
@@ -188,17 +195,17 @@ const MyNetwork = (props) => {
                               to={`${PATH_NAMES.profile}/${id}`} 
                               className="flex gap-2 items-center"
                             >
-                              {/* <img src={`${CONFIG.RESOURCE_URL}${toUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
+                              {/* <img src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
 
                               <Avatar 
-                                src={`${CONFIG.RESOURCE_URL}${toUserID?.data?.imgMain?.value}`}
-                                name={`${toUserID?.firstName} ${toUserID?.lastName}`}
+                                src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`}
+                                name={`${fromUserID?.firstName} ${fromUserID?.lastName}`}
                               />
                               <div className="inline-flex flex-col">
                                 <p className="text-l text-black-800 capitalize">
-                                  {toUserID?.firstName} {toUserID?.lastName}
+                                  {fromUserID?.firstName} {fromUserID?.lastName}
                                 </p>
-                                <small className="text-gray-500">@{toUserID?.username}</small>
+                                <small className="text-gray-500">@{fromUserID?.username}</small>
                               </div>
                             </Link>
                             <div className="flex gap-2">
@@ -224,20 +231,20 @@ const MyNetwork = (props) => {
                             key={id}
                           >
                             <Link
-                              to={`${PATH_NAMES.profile}/${id}`} 
+                              to={`${PATH_NAMES.profile}/${userId}`} 
                               className="flex gap-2 items-center"
                             >
                               {/* <img src={`${CONFIG.RESOURCE_URL}${toUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
 
                               <Avatar 
-                                src={`${CONFIG.RESOURCE_URL}${toUserID?.data?.imgMain?.value}`}
-                                name={`${toUserID?.firstName} ${toUserID?.lastName}`}
+                                src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`}
+                                name={`${fromUserID?.firstName} ${fromUserID?.lastName}`}
                               />
                               <div className="inline-flex flex-col">
                                 <p className="text-l text-black-800 capitalize">
-                                  {toUserID?.firstName} {toUserID?.lastName}
+                                  {fromUserID?.firstName} {fromUserID?.lastName}
                                 </p>
-                                <small className="text-gray-500">@{toUserID?.username}</small>
+                                <small className="text-gray-500">@{fromUserID?.username}</small>
                               </div>
                             </Link>
                             <div className="flex gap-2">
@@ -260,7 +267,13 @@ const MyNetwork = (props) => {
                     }
                   )}
                 </div>
-              )}
+                {results.length < 1 && ( 
+                  <div className=' w-full py-2 flex justify-center font-bold text-2xl ' >
+                    No Records Found
+                  </div>
+                )}
+              </>
+            )}
             </>
           )}
 
@@ -414,7 +427,7 @@ const ConnectTab =()=> {
   const unfriendPerson = async (item) => {
     // setLoading(true)
     const data = await sendRequest(
-      `${REMOVE_FRIEND}${userId}`,
+      `${REMOVE_FRIEND}${item}`,
       "DELETE",
       null,
       { Authorization: `Bearer ${token}` }

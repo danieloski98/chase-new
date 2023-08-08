@@ -27,8 +27,7 @@ const MyEvent = () => {
       {myEvents.map(event => (
         <div
           className="border rounded-b-[32px] rounded-tl-[32px] px-2 py-4"
-          key={event?.id}
-        >
+          key={event?.id} >
           <div className="grid grid-cols-5 gap-4">
             <div className="grid col-start-1 col-end-4 place-items-center">
               <img

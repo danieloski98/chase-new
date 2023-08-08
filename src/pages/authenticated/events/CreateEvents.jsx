@@ -87,7 +87,7 @@ const CreateEvents = () => {
           { Authorization: `Bearer ${token}` },
           true
         ) 
-        let newObj = {...formData, picUrls: [response?.fileName]}
+        let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName}
         handlerPayload(newObj)
       }
     } else {

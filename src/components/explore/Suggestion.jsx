@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { forwardRef, useState } from "react"
 import PropTypes from "prop-types"
 import { Popover, Transition } from "@headlessui/react"
 // import img from "@/assets/images/suggestprofile.png"
@@ -11,8 +11,10 @@ import { useAuth } from "../../context/authContext"
 import { useNavigate } from 'react-router-dom'
 import { toast } from "react-toastify";
 import {Avatar} from "@chakra-ui/react"
-
-const Suggestion = ({
+import useInfinteScroller from "../../hooks/useInfinteScroller"
+ 
+const Suggestion = forwardRef
+(({
   mutuals = 0,
   data,
   firstName,
@@ -22,7 +24,7 @@ const Suggestion = ({
   img,
   check,
   setCheck
-}) => {
+}, ref) => {
   const [isConnected, setIsConnected] = useState(false)
   const [Loading, setLoading] = useState("0")
   const { token } = useAuth()
@@ -81,10 +83,10 @@ const Suggestion = ({
       setCheck((prev)=> !prev)
       setLoading("0")
     }
-  }
+  } 
 
   return (
-    <div className="flex flex-col gap-3 bg-chasescrollWhite rounded-b-3xl rounded-tl-3xl border border-chasescrollLightGrey shadow-lg px-3 pt-3 pb-6 w-40">
+    <div ref={ref} className="flex flex-col gap-3 bg-chasescrollWhite rounded-b-3xl rounded-tl-3xl border border-chasescrollLightGrey shadow-lg px-3 pt-3 pb-6 w-40">
       <Popover className="relative w-fit self-end">
         <Popover.Button className="flex outline-none">
           <div className="flex self-end text-chasescrollBlue">
@@ -183,7 +185,7 @@ const Suggestion = ({
       </div>
     </div>
   )
-}
+})
 
 Suggestion.propTypes = {
   name: PropTypes.string,

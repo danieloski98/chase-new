@@ -55,7 +55,8 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
     refetch,
     hasNextPage,
     lastChildRef,
-    results
+    results,
+    isRefetching
   }
 }
 
