@@ -29,6 +29,7 @@ import { useAuth } from '../../../../context/authContext';
 import PreviewContainer from '../shared/PreviewContainer';
 import PreviewVideo from '../shared/PreviewVideo';
 import PreviewFile from '../shared/PreviewFile';
+import Fab, { IList } from '../../../../components/general/Fab';
 
 interface IProps {
     query: UseQueryResult<AxiosResponse<PaginatedResponse<ICommunity>, PaginatedResponse<ICommunity>>>;
@@ -46,6 +47,24 @@ function DesktopViewChat({ query }: IProps) {
     const [post, setPost] = useState(''); 
     const [type, setType] = useState('');  
     const { userId } = useAuth(); 
+
+    const ITems: IList[] = [
+        {
+            title: 'Upload Document',
+            action: () => openPicker(),
+            icon: <FiFileText fontSize='30px' color='white' />
+        },
+        {
+            title: 'Upload Video',
+            action: () => openPicker(),
+            icon: <FiVideo fontSize='30px' color='white' />
+        },
+        {
+            title: 'Upload Image',
+            action: () => openPicker(),
+            icon: <FiImage fontSize='30px' color='white' />
+        }
+    ];
 
     // refs
     const filePickerRef = useRef<HTMLInputElement>();
@@ -190,6 +209,7 @@ function DesktopViewChat({ query }: IProps) {
             queryClient.invalidateQueries(['getMessages']);
             setVideo('');
             setPost('');
+            setFile('');
             document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
@@ -371,7 +391,8 @@ function DesktopViewChat({ query }: IProps) {
 
                         {/* INPUT FIELD AREAD */}
                         <HStack width='100%' height='70px' alignItems='flex-start' px='20px'>
-                            <span className='cursor-pointer mt-3'>
+                            <Fab items={ITems} />
+                            {/* <span className='cursor-pointer mt-3'>
                                 <Image src={selector} width='30px' height='30px' onClick={openPicker} />
                             </span>
                             <span className='cursor-pointer mt-3'>
@@ -379,7 +400,7 @@ function DesktopViewChat({ query }: IProps) {
                             </span>
                             <span className='cursor-pointer mt-3'>
                                 <FiFileText color={COLORS.chasescrollBlue} fontSize='30px' onClick={openPicker} />
-                            </span>
+                            </span> */}
                             {
                                 uploadImage.isLoading && (
                                     <Spinner colorScheme='blue' size='md' marginTop='12px' />

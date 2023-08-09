@@ -4,6 +4,7 @@ import { useQuery } from "react-query"
 import httpService from "../../../utils/httpService"
 import { HStack } from "@chakra-ui/react"
 import DesktopChatView from "./DesktopView"
+import MobileChatView from "./MobileView"
 
 const Message = () => {
 
@@ -19,6 +20,7 @@ const Message = () => {
       {() => (
        <HStack width='100%' height='100%'>
         <DesktopChatView query={getChats} />
+        <MobileChatView query={getChats} />
        </HStack>
       )}
     </PageWrapper>

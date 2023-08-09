@@ -1,33 +1,26 @@
-import React, { useEffect, useState, useRef, useCallback } from "react"
+import React, { useState, useRef, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
-import { useFetch } from "../../../hooks/useFetch"
-import CONFIG from "@/config"
-import PageWrapper from "@/components/PageWrapper"
-import Thread from "@/components/home/Thread"
-import ThreadMenu from "@/components/home/ThreadMenu"
-import { AddIcon, SendIcon } from "@/components/Svgs"
-import UploadImage from "@/components/home/UploadImage"
+import CONFIG from "../../../config"
+import PageWrapper from "../../../components/PageWrapper"
+import Thread from "../../../components/home/Thread"
+import ThreadMenu from "../../../components/home/ThreadMenu"
+import { SendIcon } from "../../../components/Svgs"
+import UploadImage from "../../../components/home/UploadImage"
 import { useAuth } from "../../../context/authContext"
 import {
   CREATE_POST,
-  GET_POST_LIST,
-  GET_USER_FEED_DATA,
 } from "../../../constants/endpoints.constant"
 import imageIcon from "@/assets/svg/image.svg"
-import profilePhoto from "@/assets/images/avatar.png"
 import Share from "./Share"
 import { toast } from "react-toastify"
-import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "react-query"
-import httpService from "@/utils/httpService"
-import { Spinner, Stack, Skeleton, SkeletonCircle, HStack, Textarea } from '@chakra-ui/react'
+import { useMutation, useQuery, useQueryClient } from "react-query"
+import httpService from "../../../utils/httpService"
+import { Spinner, Textarea } from '@chakra-ui/react'
 import { Avatar } from '@chakra-ui/react'
 import {IUser} from '../../../models/User'
-import { AxiosError, AxiosResponse } from "axios"
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { IMediaContent, IMediaPost } from "src/models/MediaPost"
-import UserPosts from "../profile/UserPosts"
-import Loader from "@/components/Loader"
-import useInfiniteScroll from "@/hooks/useInfiniteScroll"
+import { AxiosError } from "axios"
+import { IMediaContent } from "src/models/MediaPost"
+import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 
 const Home = () => {
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
@@ -80,44 +73,22 @@ const Home = () => {
     return (
       <Thread
         ref={lastChildRef}
-                    key={i}
-                    postID={post?.id}
-                    text={post?.text}
-                    user={post?.user}
-                    time={post?.time}
-                    image={post?.mediaRef}
-                    mediaRef={post?.mediaRef}
-                    multipleMediaRef={post?.multipleMediaRef}
-                    shareCount={post?.shareCount}
-                    likeCount={post?.likeCount}
-                    commentCount={post?.commentCount}
-                    toggleMoreOptions={toggleMoreOptions}
-                    toggleShare={toggleShare}
-                    setThreadId={setThreadId}
-                    likeStatus={post?.likeStatus}
-                    type={post?.type}
-                    setPostId={setPostId}
+        key={i}
+        post={post}
+        toggleMoreOptions={toggleMoreOptions}
+        toggleShare={toggleShare}
+        setThreadId={setThreadId}
+        setPostId={setPostId}
                   />
     )
   } else {
     return (
       <Thread
                     key={i}
-                    postID={post?.id}
-                    text={post?.text}
-                    user={post?.user}
-                    time={post?.time}
-                    image={post?.mediaRef}
-                    mediaRef={post?.mediaRef}
-                    multipleMediaRef={post?.multipleMediaRef}
-                    shareCount={post?.shareCount}
-                    likeCount={post?.likeCount}
-                    commentCount={post?.commentCount}
+                    post={post}
                     toggleMoreOptions={toggleMoreOptions}
                     toggleShare={toggleShare}
                     setThreadId={setThreadId}
-                    likeStatus={post?.likeStatus}
-                    type={post?.type}
                     setPostId={setPostId}
                   />
     )
@@ -145,7 +116,7 @@ const Home = () => {
     onSuccess: (data) => {
       toast.success("Post created successfully");
       setPostInput("");
-      loadMore()
+      // loadMore()
       //queryClient.refetchQueries(['getFeedsPosts'])
     }
   })

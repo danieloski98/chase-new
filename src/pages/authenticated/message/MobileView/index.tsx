@@ -14,8 +14,8 @@ import { toast } from 'react-toastify';
 import send from "../../../../assets/svg/send-icon.svg"
 import selector from "../../../../assets/svg/image.svg"
 import Message from '../Shared/Message';
-import { FiFileText, FiVideo, FiImage } from 'react-icons/fi';
 import Fab, { IList } from '../../../../components/general/Fab';
+import { FiFileText, FiVideo, FiImage } from 'react-icons/fi';
 
 
 
@@ -23,7 +23,7 @@ interface IProps {
     query: UseQueryResult<AxiosResponse<PaginatedResponse<any>>, any>
 }
 
-function DesktopChatView({ query }: IProps) {
+function MobileChatView({ query }: IProps) {
     const navigate = useNavigate();
     // STATES
     const [chats, setChats] = React.useState<Array<Chat>>([]);
@@ -138,13 +138,14 @@ function DesktopChatView({ query }: IProps) {
         Post.mutate(data);
     }, [Post, activeChat, image, post]);
   return (
-    <HStack display={['none', 'flex']} width='100%' height='100%' gap={0}>
+    <HStack display={['block', 'none']} width='100%' height='100%' gap={0}>
 
         {/* HIDDEN FILE PICKER */}
         <input className='hidden' type='file' accept='image/*' ref={filePickerRef as any} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
 
         {/* SIDEBAR PANEL */}
-        <VStack flex={0.3} height='100%' >
+        { activeChat === null && (
+            <VStack flex={1} height='100%' >
             {/* HEADER SECTION */}
             <HStack width='100%' justifyContent='space-between' alignItems='center' paddingX='20px' height='100px' borderBottomWidth='1px' borderBottomColor='gray.200'>
                 <Heading size='md' color='brand.chasescrollButtonBlue'>Chats</Heading>
@@ -168,58 +169,56 @@ function DesktopChatView({ query }: IProps) {
                     ))}
             </VStack>
         </VStack>
+        )}
 
         {/* MAIN CHAT AREA */}
-        <VStack flex={0.7} height='100%' spacing={0} zIndex={1} className='bg-[url("/src/assets/images/chat-bg.png")]'>
-        {activeChat === null && (
-            <VStack width='100%' height='100%' justifyContent='center' alignItems='center'>
-                <Heading color='brand.chasescrollButtonBlue' size='md'>No chat Selected</Heading>
-            </VStack>
+        { activeChat !== null && (
+             <VStack flex={1} height='100%' spacing={0} zIndex={1} className='bg-[url("/src/assets/images/chat-bg.png")]'>
+          
+                 <VStack flex={1} width='100%' spacing={0} overflow='hidden'>
+                     <ChatHeader chat={activeChat} setActive={(data) => setActiveChat(data)} />
+     
+                     {/* DESCRRIPTION AND MESSAGE AREA */}
+                     <Flex flexDirection='column' flex={0.85} overflow={'auto'} width='100%'  paddingBottom='100px' marginBottom='20px'  >
+                                
+                                
+                                 <Box height='100%' width='100%' paddingBottom='100px' >
+                                     {/* <MessagePanel messages={messages} isLoading={getMessages.isLoading} /> */}
+                                     <Message isLoading={getMessages.isLoading} messages={getMessages.data?.data} />
+                                 </Box>
+     
+                                 <Box height='100px' />
+                    </Flex>
+     
+                      {/* INPUT FIELD AREAD */}
+                     <HStack width='100%' height={'70px'} alignItems='flex-start' px='20px'>
+                        <Fab items={ITems} />
+                         {/* <span className='cursor-pointer mt-3'>
+                             <Image src={selector} width='30px' height='30px' onClick={openPicker} />
+                         </span> */}
+                         {
+                             uploadImage.isLoading && (
+                                 <Spinner colorScheme='blue' size='md' />
+                             )
+                         }
+                         { !uploadImage.isLoading && image !== '' && (
+                             <Image src={`${CONFIG.RESOURCE_URL}/${image}`} width='60px' height='60px' borderRadius='10px' />
+                         )}
+                         <InputGroup>
+                             <InputRightElement marginRight='10px' marginTop='6px'>
+                                 { !Post.isLoading  && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }
+                                 { Post.isLoading && <Spinner colorScheme='blue' size='md' />}
+                             </InputRightElement>
+                             <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' />
+                         </InputGroup>
+                     </HStack>
+                 </VStack>
+
+             </VStack>
         )}
-        {activeChat !== null && (
-            <VStack flex='1' width='100%' height='100%' spacing={0}>
-                <ChatHeader chat={activeChat} setActive={(data) => setActiveChat(data)} />
-
-                {/* DESCRRIPTION AND MESSAGE AREA */}
-                <Flex flexDirection='column' flex='1' overflow={'auto'} width='100%' height='auto' paddingBottom='100px'  >
-                           
-                           
-                            <Box flex='1' height='100%' width='100%' >
-                                {/* <MessagePanel messages={messages} isLoading={getMessages.isLoading} /> */}
-                                <Message isLoading={getMessages.isLoading} messages={getMessages.data?.data} />
-                            </Box>
-
-                            <Box height='100px' />
-                        </Flex>
-
-                 {/* INPUT FIELD AREAD */}
-                <HStack width='100%' height='70px' alignItems='flex-start' px='20px'>
-                    {/* <span className='cursor-pointer mt-3'>
-                        <Image src={selector} width='30px' height='30px' onClick={openPicker} />
-                    </span> */}
-                    <Fab items={ITems} />
-                    {
-                        uploadImage.isLoading && (
-                            <Spinner colorScheme='blue' size='md' />
-                        )
-                    }
-                    { !uploadImage.isLoading && image !== '' && (
-                        <Image src={`${CONFIG.RESOURCE_URL}/${image}`} width='60px' height='60px' borderRadius='10px' />
-                    )}
-                    <InputGroup>
-                        <InputRightElement marginRight='10px' marginTop='6px'>
-                            { !Post.isLoading  && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }
-                            { Post.isLoading && <Spinner colorScheme='blue' size='md' />}
-                        </InputRightElement>
-                        <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' />
-                    </InputGroup>
-                </HStack>
-            </VStack>
-        )}
-        </VStack>
     </HStack>
   )
 }
 
 
-export default DesktopChatView
+export default MobileChatView

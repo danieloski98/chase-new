@@ -133,11 +133,11 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
   }, [caption])
 
   async function handleFileInputChange(event) {
-    if (event) {
-      const data = await uploader(event.target.files[0]);
-      console.log(data);
-      return;
-    }
+    // if (event) {
+    //   const data = await uploader(event.target.files[0]);
+    //   console.log(data);
+    //   return;
+    // }
     console.log(event.target.files[0]);
     if (event.target.files[0].type.startsWith('video/') && event.target.files[0].size > 15000000) {
       toast.warning("Video size should be less than 15MB");

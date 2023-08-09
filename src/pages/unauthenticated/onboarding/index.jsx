@@ -15,9 +15,11 @@ import { useMutation } from "react-query"
 import httpService from "@/utils/httpService"
 import { AUTH_URL, SIGN_IN_WITH_CREDENTIALS } from "@/constants/endpoints.constant"
 import { Spinner } from "@chakra-ui/react"
+import { useAuth } from "@/context/authContext"
 
 const Onboarding = () => {
   const [showTerms, setShowTerms] = useState(false)
+  const { login } = useAuth();
 
   const toggleTermsVisibility = () => setShowTerms(state => !state);
 
@@ -25,12 +27,13 @@ const Onboarding = () => {
   const { isLoading, mutate } = useMutation({
     mutationFn: (data) => httpService.get(`${SIGN_IN_WITH_CREDENTIALS}`, {
       headers: {
-        Authorization: `${data}`,
+        Authorization: `Bearer ${data}`,
       }
     }),
     onSuccess: (data) => {
       console.log(data.data);
       toast.success('Signin with firebase successful');
+      login(data.data);
     },
     onError: (error) => {
       console.log(error);

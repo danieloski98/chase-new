@@ -7,10 +7,12 @@ import { useAuth } from '../../../context/authContext'
 import { GET_GROUP, GET_GROUP_MEMBERS, GET_GROUP_POSTS } from '../../../constants/endpoints.constant'
 import CONFIG from '../../../config'
 import { PATH_NAMES } from '../../../constants/paths.constant'
-import { FiEdit } from 'react-icons/fi'
+import { FiEdit, FiTrash } from 'react-icons/fi'
 import EditCommunity from '@/components/communities/EditModal'
 import httpService from '@/utils/httpService'
 import { useQuery } from 'react-query'
+import { HStack } from '@chakra-ui/react'
+import { COLORS } from '../../../utils/colors'
 
 const CommunityInfo = () => {
 	const [community, setCommunity] = useState(null)
@@ -86,7 +88,7 @@ const CommunityInfo = () => {
 								</p>
 							</div>
 							<div className="flex flex-col gap-4 w-full items-center">
-								<div className="border-l-4 border-chasescrollBlue rounded-b-full rounded-tl-full w-32 h-32">
+								<div className="border-l-4 border-chasescrollBlue rounded-b-full rounded-tl-full w-32 h-32 overflow-hidden">
 									<img
 										src={community ? `${CONFIG.RESOURCE_URL}${community?.data?.imgSrc}` : `https://ui-avatars.com/api/?background=random&name=${community?.data?.name}&length=1`}
 										alt=""
@@ -97,13 +99,24 @@ const CommunityInfo = () => {
 									<p className="text-center text-xl font-bold text-chasescrollBlue capitalize">{community?.data?.name}</p>
 									<p className="text-center text-xs text-chasescrollGrey">{community?.data?.memberCount} members</p>
 								</div>
-								<div className="flex items-center gap-4">
-									
-									<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-chasescrollBlue text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
-										<LeaveIcon />
-										Exit
+
+								<HStack>
+									<div className="flex items-center gap-4">
+						
+										<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-chasescrollBlue text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
+											<LeaveIcon />
+											Exit
+										</div>
 									</div>
-								</div>
+
+									<div className="flex items-center gap-4">
+										<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
+											<FiTrash fontSize='25px' color={COLORS.chasescrollRed} />
+											Delete
+										</div>
+									</div>
+								</HStack>
+
 							</div>
 						</div>
 						<div className="flex flex-col items-center w-full pt-6 px-4 pb-1 rounded-3xl border relative">

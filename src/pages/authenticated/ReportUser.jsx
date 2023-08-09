@@ -2,15 +2,34 @@ import OverlayWrapper from "@/components/OverlayWrapper"
 import { THREAD_DATA } from "@/constants"
 import ProfilePhoto from "@/components/ProfilePhoto"
 import Home from "@/pages/authenticated/home"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { REPORT_TYPE, CLOSE_ENTITY } from "@/constants"
+import { useMutation } from "react-query"
+import httpService from "../../utils/httpService"
+import { toast } from "react-toastify"
+import { Spinner } from '@chakra-ui/react'
 
 const ReportUser = () => {
   const [reportType, setReportType] = useState("")
+  const [title, setTitle] = useState("")
   const [extraInformation, setExtraInformation] = useState("")
   const [count, setCount] = useState(extraInformation.length)
   const navigate = useNavigate()
+  const { id } = useParams();
+
+  // mutation
+  const { isLoading, mutate } = useMutation({
+    mutationFn: (data) => httpService.post(`/report/report`, data),
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success('Report posted');
+      navigate(-1);
+    },
+    onError: (error) => {
+      toast.error('An error occured while sending report');
+    }
+  });
 
   const handleReportTypeChange = ({ target: { value } }) => {
     setReportType(value)
@@ -22,7 +41,17 @@ const ReportUser = () => {
 
   useEffect(() => {
     setCount(extraInformation.length)
-  }, [extraInformation])
+  }, [extraInformation]);
+
+  const handleSubmit = () => {
+    const obj = {
+      title,
+      description: extraInformation,
+      reportType,
+      typeID: id
+    }
+    mutate(obj);
+  }
 
   return (
     <>
@@ -59,6 +88,7 @@ const ReportUser = () => {
                 <option value={type}>{type}</option>
               ))}
             </select>
+            <input placeholder='Report title' value={title} onChange={(e) => setTitle(e.target.value)} className="outline-none w-full border border-chasescrollPurple border-opacity-30 rounded-md px-4 py-2 text-sm" />
             <textarea
               value={extraInformation}
               maxLength={300}
@@ -67,8 +97,9 @@ const ReportUser = () => {
               className="outline-none w-full h-full border border-chasescrollPurple border-opacity-30 rounded-md px-4 py-2 text-sm"
             />
             <div className="flex w-full justify-end text-chasescrollBlue text-sm">{`${count}/300`}</div>
-            <button className="bg-chasescrollBlue font-bold py-2.5 rounded-lg w-full text-white">
-              Submit Report
+            <button onClick={handleSubmit} className="bg-chasescrollBlue font-bold py-2.5 rounded-lg w-full text-white">
+              { !isLoading && 'Submit Report' }
+              { isLoading && <Spinner /> }
             </button>
           </div>
         </div>

@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 import CommunityCard from '../shared/CommunityCard';
 import CommunityHeader from '../shared/CommunityHeader';
 import httpService from '../../../../utils/httpService';
-import { CREATE_POST, GET_GROUP_POSTS, GET_SAVED_EVENTS, SAVE_EVENT, UPLOAD_IMAGE } from '../../../../constants/endpoints.constant';
+import { CREATE_POST, GET_GROUP_POSTS, GET_SAVED_EVENTS, SAVE_EVENT, UPLOAD_IMAGE, UPLOAD_VIDEO } from '../../../../constants/endpoints.constant';
 import { IEvent } from '../../../../models/Events';
 import EventsToAdd from '../../../../components/communities/EventsToAdd';
 import { toast } from 'react-toastify';
@@ -21,6 +21,12 @@ import CONFIG from '../../../../config';
 import selector from "../../../../assets/svg/image.svg"
 import addEventBtn from "../../../../assets/svg/add-event.svg"
 import send from "../../../../assets/svg/send-icon.svg"
+import Fab, { IList } from '../../../../components/general/Fab';
+import { FiCalendar, FiImage, FiSend, FiVideo, FiFileText } from 'react-icons/fi'
+import PreviewFile from '../shared/PreviewFile';
+import PreviewVideo from '../shared/PreviewVideo';
+import PreviewContainer from '../shared/PreviewContainer';
+
 
 interface IProps {
     query: UseQueryResult<AxiosResponse<PaginatedResponse<ICommunity>, PaginatedResponse<ICommunity>>>;
@@ -33,7 +39,28 @@ function MobileViewChat({ query }: IProps) {
     const [showEventModal, setShowEventModal] = useState(false);
     const [messages, setMessages] = useState<IMediaContent[]>([]);
     const [image, setImage] = useState('');
-    const [post, setPost] = useState('');    
+    const [post, setPost] = useState('');   
+    const [video, setVideo] = useState('');
+    const [file, setFile] =  useState('');
+    const [type, setType] = useState('');  
+    
+    const ITems: IList[] = [
+        {
+            title: 'Upload Document',
+            action: () => openPicker(),
+            icon: <FiFileText fontSize='30px' color='white' />
+        },
+        {
+            title: 'Upload Video',
+            action: () => openPicker(),
+            icon: <FiVideo fontSize='30px' color='white' />
+        },
+        {
+            title: 'Upload Image',
+            action: () => openPicker(),
+            icon: <FiImage fontSize='30px' color='white' />
+        }
+    ];
 
     // refs
     const filePickerRef = useRef<HTMLInputElement>();
@@ -91,6 +118,27 @@ function MobileViewChat({ query }: IProps) {
         }
     });
 
+    const uploadVideo = useMutation({
+        mutationFn: (data: FormData) => httpService.post(`${UPLOAD_VIDEO}/${activeCommunity?.id}`, data),
+        onSuccess: (data) => {
+            console.log(data.data);
+            toast.success("Video uploaded");
+            setVideo(data.data.fileName);
+            setImage('');
+        }
+    });
+
+    const uploadFile = useMutation({
+        mutationFn: (data: FormData) => httpService.post(`${UPLOAD_VIDEO}/${activeCommunity?.id}`, data),
+        onSuccess: (data) => {
+            console.log(data.data);
+            toast.success("File uploaded");
+            setFile(data.data.fileName);
+            setImage('');
+            setVideo('')
+        }
+    });
+
     const imagePost = useMutation({
         mutationFn: () => httpService.post(`${CREATE_POST}`, {
             text: post,
@@ -110,6 +158,53 @@ function MobileViewChat({ query }: IProps) {
             queryClient.invalidateQueries(['getMessages']);
             setImage('');
             setPost('');
+            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
+        }
+    });
+
+    const videoPost = useMutation({
+        mutationFn: () => httpService.post(`${CREATE_POST}`, {
+            text: post,
+            mediaRef: video,
+            multipleMediaRef: [
+              video,
+            ],
+            sourceId: activeCommunity?.id,
+            type: "WITH_IMAGE"
+        }),
+        onError: (error) => {
+            toast.error(`An error occured`);
+        },
+        onSuccess: (data) => {
+            console.log(data.data)
+            toast.success("Post created");
+            queryClient.invalidateQueries(['getMessages']);
+            setVideo('');
+            setPost('');
+            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
+        }
+    });
+
+    const filePost = useMutation({
+        mutationFn: () => httpService.post(`${CREATE_POST}`, {
+            text: post,
+            mediaRef: file,
+            multipleMediaRef: [
+              file,
+            ],
+            sourceId: activeCommunity?.id,
+            type: "WITH_FILE"
+        }),
+        onError: (error) => {
+            toast.error(`An error occured`);
+        },
+        onSuccess: (data) => {
+            console.log(data.data)
+            toast.success("Post created");
+            queryClient.invalidateQueries(['getMessages']);
+            setVideo('');
+            setPost('');
+            setFile('');
             document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
@@ -148,13 +243,34 @@ function MobileViewChat({ query }: IProps) {
     }, []);
 
     const handleFilePicked = useCallback((file: FileList) => {
-        fileReader.current.readAsDataURL(file[0]);
+        // fileReader.current.readAsDataURL(file[0]);
+        console.log(file[0]);
 
         // upload the image
-        const formData = new FormData();
-        formData.append('file', file[0]);
-        uploadImage.mutate(formData);
-    }, [uploadImage]);
+        
+        
+        if (file[0].type.startsWith('image')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadImage.mutate(formData);
+            setType('image');
+            return;
+        }
+        if (file[0].type.startsWith('video')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadVideo.mutate(formData);
+            setType('video');
+            return;
+        }
+        if (file[0].type.startsWith('application')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadFile.mutate(formData);
+            setType('file');
+            return;
+        }
+    }, [uploadImage, uploadVideo, uploadFile]);
 
     const handlePost = useCallback(() => {
         if (Post.isLoading || imagePost.isLoading) return;
@@ -257,17 +373,34 @@ function MobileViewChat({ query }: IProps) {
 
                       {/* INPUT FIELD AREAD */}
                       <HStack flex='0.2' width='100%' height='70px' alignItems='flex-start' px='20px'>
-                          <span className='cursor-pointer mt-3'>
+                          {/* <span className='cursor-pointer mt-3'>
                               <Image src={selector} width='30px' height='30px' onClick={openPicker} />
-                          </span>
+                          </span> */}
+                          <Fab items={ITems} />
                           {
-                              uploadImage.isLoading && (
-                                  <Spinner colorScheme='blue' size='md' />
-                              )
-                          }
-                          { !uploadImage.isLoading && image !== '' && (
-                              <Image src={`${CONFIG.RESOURCE_URL}/${image}`} width='60px' height='60px' borderRadius='10px' />
-                          )}
+                                uploadImage.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                            {
+                                uploadVideo.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                             {
+                                uploadFile.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                            { !uploadImage.isLoading && image !== '' && (
+                                <PreviewContainer src={`${CONFIG.RESOURCE_URL}/${image}`} deleteImg={() => setImage('')} />
+                            )}
+                            { !uploadVideo.isLoading && video !== '' && (
+                                <PreviewVideo src={`${CONFIG.RESOURCE_URL}/${video}`} deleteImg={() => setVideo('')} />
+                            )}
+                            { !uploadFile.isLoading && file !== '' && (
+                                <PreviewFile src={file} deleteImg={() => setFile('')} />
+                            )}
                           <InputGroup>
                               <InputRightElement marginRight='10px' marginTop='6px'>
                                   { !Post.isLoading && !imagePost.isLoading && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }

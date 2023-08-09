@@ -36,11 +36,11 @@ const ThreadMenu = ({
 
 
   const HOME_MENU_ACTIONS = [
-    {
-      key: "share_post",
-      label: "Share Post",
-      route: PATH_NAMES.share,
-    },
+    // {
+    //   key: "share_post",
+    //   label: "Share Post",
+    //   route: PATH_NAMES.share,
+    // },
     {
       key: "report_user",
       label: "Report User",
