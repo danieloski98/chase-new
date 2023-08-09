@@ -19,17 +19,23 @@ function EventDashboard(props: Props) {
     const {} = props 
 
     const [history, setHistory] = React.useState([] as any)
-    const { eventData } = useAuth()
+    const { eventData, userId } = useAuth()
 
     const [show, setShow] = React.useState(false)
     const [showRefund, setShowRefund] = React.useState(false)
     const [data, setData] = React.useState({} as any)
 
-    const { isLoading } = useQuery(['myevent'], () => httpService.get('/events/events'), {
+    const { isLoading } = useQuery(['myevent'], () => httpService.get('/events/events', {
+        params : {
+            createdBy: userId
+        }
+    }), {
         onError: (error: AxiosError<any, any>) => {
             toast.error(error.response?.data);
         }, 
         onSuccess: (data) => {
+            console.log(data);
+            
             setHistory(data.data.content);
         }
     }) 
@@ -152,6 +158,15 @@ function EventDashboard(props: Props) {
                                                     )
                                                 })}
                                             </div>
+                                        )}
+                                        {!isLoading && (
+                                            <>
+                                                {history?.length < 1 && ( 
+                                                    <div className=" w-full py-4 flex justify-center " >
+                                                        No Records Found
+                                                    </div>
+                                                )}
+                                            </>
                                         )}
                                     </>
                                 )}
