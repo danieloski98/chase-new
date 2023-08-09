@@ -22,10 +22,11 @@ import { formatTimeAgo } from "../../utils/helpers"
 import { COMPANY_NAME } from "../../constants"
 import VideoPlayer from "../VideoPlayer"
 import PhotoGallery from "../PhotoGallery"
-import { Avatar } from '@chakra-ui/react'
+import { Avatar, Spinner } from '@chakra-ui/react'
 import { IMediaContent } from "../../models/MediaPost"
-import { useQuery, useQueryClient } from "react-query"
+import { useMutation, useQuery, useQueryClient } from "react-query"
 import httpService from "../../utils/httpService"
+import { toast } from "react-toastify"
 
 interface IProps {
   setThreadId: (id: string) => void;
@@ -44,7 +45,8 @@ const Thread = forwardRef<any, IProps>
   setPostId,
   setPostMakeId,
 }, ref) => {
-  const [post, setPost] = useState(postData);
+  console.log(postData);
+  const [post, setPost] = useState<any>(postData);
   const [isLiked, setIsLiked] = useState(postData.likeStatus === "LIKED");
   const [numOfLikes, setNumOfLikes] = useState(postData.likeCount);
   const [showMore, setShowMore] = useState(false)
@@ -54,19 +56,28 @@ const Thread = forwardRef<any, IProps>
 
   const { user, text, time, type, multipleMediaRef, mediaRef, id: postID, commentCount } = post;
 
-  const getPost = useQuery([`getPost-${postData.id}`, post.id], () => httpService.get(`${GET_POST}/${post.id}`), {
+  const getPost = useQuery([`getPost-${post.id}`, post.id], () => httpService.get(`${GET_POST}/${post.id}`), {
     onSuccess:  (data) => {
       setPost(data.data);
     }
+  });
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: () => httpService.post(`${LIKE_POST}/${post.id}`),
+    onSuccess: (data) => {
+      // console.log(data.data);
+      // queryClient.invalidateQueries([`getPost-${postData.id}`]);
+      setPost(data.data);
+      setIsLiked(data.data.likeStatus === 'LIKED');
+      setNumOfLikes(data.data.likeCount);
+    },  
+    onError: (data) => {
+      toast.error('An error occured');
+    },
   })
 
   const toggleLike = async () => {
-    const response = await sendRequest(`${LIKE_POST}/${post.id}`, "POST", null, {
-      Authorization: `Bearer ${token}`,
-    })
-    if (response) {
-      queryClient.invalidateQueries([`getPost-${postData.id}`]);
-    }
+    mutate();
   }  
 
   if (!ref) {
@@ -151,18 +162,27 @@ const Thread = forwardRef<any, IProps>
           )}
           <div className="flex justify-between ">
             <div className="basis-1/3 flex items-center justify-center">
+            {
+            !isLoading && (
               <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
-                <div
-                  className="cursor-pointer transition-all"
-                  onClick={() => toggleLike()}
-                >
-                  {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
-                </div>
-                <span className="text-xs text-chasescrollTextGrey">
-                  {formatNumberWithK(numOfLikes)}{" "}
-                  like{numOfLikes > 1 || numOfLikes === 0 ? "s" : ""}
-                </span>
+              <div
+                className="cursor-pointer transition-all"
+                onClick={() => toggleLike()}
+              >
+                {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
               </div>
+              <span className="text-xs text-chasescrollTextGrey">
+                {formatNumberWithK(numOfLikes)}{" "}
+                like{numOfLikes > 1 || numOfLikes === 0 ? "s" : ""}
+              </span>
+            </div>
+            )
+          }
+          {
+            isLoading && (
+              <Spinner />
+            )
+          }
             </div>
             <div className="basis-1/3 flex items-center justify-center">
               <Link
@@ -252,7 +272,9 @@ const Thread = forwardRef<any, IProps>
         )}
         <div className="flex justify-between">
           <div className="basis-1/3 flex items-center justify-center">
-            <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
+          {
+            !isLoading && (
+              <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
               <div
                 className="cursor-pointer transition-all"
                 onClick={() => toggleLike()}
@@ -264,6 +286,13 @@ const Thread = forwardRef<any, IProps>
                 like{numOfLikes > 1 || numOfLikes === 0 ? "s" : ""}
               </span>
             </div>
+            )
+          }
+          {
+            isLoading && (
+              <Spinner />
+            )
+          }
           </div>
           <div className="basis-1/3 flex items-center justify-center">
             <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
