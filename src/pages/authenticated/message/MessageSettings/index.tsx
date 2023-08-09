@@ -1,22 +1,25 @@
-import { HStack, Text, VStack, Skeleton, Spacer, Avatar, Heading, InputGroup, InputLeftElement, Input } from '@chakra-ui/react'
+import { HStack, Text, VStack, Skeleton, Spacer, Avatar, Heading, InputGroup, InputLeftElement, Input, Spinner } from '@chakra-ui/react'
 import React from 'react'
 import PageWrapper from '../../../../components/PageWrapper'
 import { useAuth } from '../../../../context/authContext'
 import { FiChevronLeft, FiEdit, FiSearch, FiLogOut, FiSettings } from 'react-icons/fi'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import httpService from '../../../../utils/httpService'
 import { Chat, ChatMember } from '../../../../models/Chat'
 import CONFIG from '../../../../config'
 import { toast } from 'react-toastify'
 import { COLORS } from '../../../../utils/colors'
+import { FiTrash } from 'react-icons/fi';
+import data from '@iconify/icons-mdi/map-marker'
 
-const ActionChip = ({ icon, text, action  }: { icon: any, text: string, action: () => void }) => {
+const ActionChip = ({ icon, text, action, isLoading = false  }: { icon: any, text: string, action: () => void, isLoading?: boolean }) => {
     
     return (
-        <VStack width='70px' height='70px' borderRadius='10px' bg='white' shadow='md' cursor='pointer' justifyContent='center' alignItems='center'>
+        <VStack onClick={() => action()} width='70px' height='70px' borderRadius='10px' bg='white' shadow='md' cursor='pointer' justifyContent='center' alignItems='center'>
             {icon}
-            <Text color={COLORS.chasescrollBlue} fontSize='md'>{text}</Text>
+            { !isLoading && <Text color={COLORS.chasescrollBlue} fontSize='md'>{text}</Text> }
+            { isLoading && <Spinner /> }
         </VStack>
     )
 }
@@ -25,9 +28,11 @@ const ActionChip = ({ icon, text, action  }: { icon: any, text: string, action: 
 const MessageSettings = () => {
     const { userId } = useAuth();
     const { id } = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [chat, setChat] = React.useState<Chat | null>(null);
     const [members, setMembers] = React.useState<ChatMember[]>([]) 
+    const [creator, setCreator] = React.useState<ChatMember | null>(null);
 
     const { isLoading } = useQuery(['getGroupInfo', id], () => httpService.get(`/chat/chat`, {
         params: {
@@ -48,8 +53,52 @@ const MessageSettings = () => {
     }), {
         onSuccess: (data) => {
             setMembers(data.data.content);
+            const members: ChatMember[] = data.data.content;
+            const creatorArr = members.filter((item) => item.role === 'CREATOR');
+            setCreator(creatorArr[0]);
         },
         onError: (error: any) => {
+            toast.error(error.message);
+        }
+    });
+
+    const { isLoading: deleteLoading, mutate } = useMutation({
+        mutationFn: () => httpService.delete(`/chat/chat?chatID=${chat?.id}`),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['getGroupInfo'])
+            navigate(-1);
+        },
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error.message);
+        }
+    });
+
+    const { isLoading: lchatLoading, mutate: leaveChat } = useMutation({
+        mutationFn: () => httpService.delete(`/chat/leave-chat?chatID=${chat?.id}`),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['getGroupInfo'])
+            navigate(-1);
+        },
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error.message);
+        }
+    });
+
+    const { isLoading: memberLoading, mutate: deleteMember } = useMutation({
+        mutationFn: (data: string) => httpService.delete(`/chat/delete-chat-member`, {
+            params: {
+                chatID: chat?.id,
+                chatMemberrs: [data],
+            }
+        }),
+        onSuccess: (data) => {
+            toast.success(`Member removed`);
+            queryClient.invalidateQueries(['getChatMembers'])
+        },
+        onError: (error: any) => {
+            console.log(error);
             toast.error(error.message);
         }
     });
@@ -112,7 +161,7 @@ const MessageSettings = () => {
 
                                 {/* ACTIONS LISTS */}
                                 <HStack marginTop='20px'>
-                                    <ActionChip text='Exit' action={() => null} icon={<FiLogOut fontSize='20px' color={COLORS.chasescrollBlue} />} />
+                                    <ActionChip text='Exit' action={() => leaveChat()} icon={<FiLogOut fontSize='20px' color={COLORS.chasescrollBlue} />} isLoading={lchatLoading} />
                                     <ActionChip text='Settings' action={() => null} icon={<FiSettings fontSize='20px' color={COLORS.chasescrollBlue} />} />
                                 </HStack>
 
@@ -132,7 +181,17 @@ const MessageSettings = () => {
                                                 </VStack>
                                             </HStack>
 
-                                            <Text fontSize='sm' color='brand.chasescrollBlue'>{ item.role !== 'ADMIN' ? item.role !== 'CREATOR' ? 'Member' : 'Creator' : 'Admin'}</Text>
+                                            { item.role === 'CREATOR' || item.role === 'ADMIN' && (
+                                                <Text fontSize='sm' color='brand.chasescrollBlue'>{ item.role !== 'ADMIN' ? item.role !== 'CREATOR' ? 'Member' : 'Creator' : 'Admin'}</Text>
+                                            )}
+                                            { 
+                                            userId === creator?.user.userId && (
+                                              <>
+                                                 { !memberLoading &&  <FiTrash color='red' fontSize={25} className='cursor-pointer' onClick={() => deleteMember(item.user.userId)} /> }
+                                                 { memberLoading && <Spinner /> }
+                                              </>
+                                            )
+                                            }
                                         </HStack>
                                     ))}
                                 </VStack>
@@ -140,29 +199,34 @@ const MessageSettings = () => {
                                 {/* OPTIONS */}
                                  <VStack width={['100%', '60%']} height='auto' maxH='300px' borderWidth='1px' borderColor='grey' borderRadius={10} marginTop='20px' overflow='auto' paddingX='20px'  paddingY='20px'> 
 
-                                    <HStack borderBottomWidth={1} borderBottomColor='grey' paddingY='20px' width='100%' height='30px' justifyContent='space-between' alignItems='center' paddingX='20px'>
+                                    {/* <HStack borderBottomWidth={1} borderBottomColor='grey' paddingY='20px' width='100%' height='30px' justifyContent='space-between' alignItems='center' paddingX='20px'>
                                         <HStack>
                                             <Text>Media Files</Text>
                                         </HStack>
-                                    </HStack>
+                                    </HStack> */}
 
-                                    <HStack borderBottomWidth={1} borderBottomColor='grey' paddingY='20px' width='100%' height='30px' justifyContent='space-between' alignItems='center' paddingX='20px'>
+                                    {/* <HStack borderBottomWidth={1} borderBottomColor='grey' paddingY='20px' width='100%' height='30px' justifyContent='space-between' alignItems='center' paddingX='20px'>
                                         <HStack>
                                             <Text color='red'>Clear Chat</Text>
                                         </HStack>
-                                    </HStack>
+                                    </HStack> */}
 
                                     <HStack borderBottomWidth={1} borderBottomColor='grey' paddingY='20px' width='100%' height='30px' justifyContent='space-between' alignItems='center' paddingX='20px'>
-                                        <HStack>
+                                        <HStack cursor='pointer' onClick={() => navigate(`/home/report/${chat?.id}`)}>
                                             <Text color='red'>Report Group</Text>
                                         </HStack>
                                     </HStack>
 
-                                    <HStack paddingY='20px' width='100%' height='30px' justifyContent='space-between' alignItems='center' paddingX='20px'>
-                                        <HStack>
-                                            <Text color='red'>Delete Group</Text>
-                                        </HStack>
-                                    </HStack>
+                                    {
+                                        userId === creator?.user.userId && (
+                                            <HStack cursor='pointer' onClick={() => mutate()} paddingY='20px' width='100%' height='30px' justifyContent='space-between' alignItems='center' paddingX='20px'>
+                                                <HStack>
+                                                    { !deleteLoading && <Text color='red'>Delete Group</Text> }
+                                                    { deleteLoading && <Spinner /> }
+                                                </HStack>
+                                            </HStack>
+                                        )
+                                    }
 
                                 </VStack>
 

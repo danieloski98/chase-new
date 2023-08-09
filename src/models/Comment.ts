@@ -20,6 +20,7 @@ export type Subcomment = {
     comment: string;
     data: string;
     commentID: string;
+    id: string;
     likeCount: number;
     likeSatus: 'LIKED'|'NOT_LIKED';
     postID: string;

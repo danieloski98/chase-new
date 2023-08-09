@@ -152,7 +152,7 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
   )
 }
 
-function SubComment({ user, comment, commentID, likeCount, time }: Subcomment) {
+function SubComment({ user, comment, commentID, likeCount, time, id }: Subcomment) {
   const [isLiked, setIsLiked] = useState(likeCount > 0)
   const [numOfLikes, setNumOfLikes] = useState(likeCount)
  
@@ -160,7 +160,7 @@ function SubComment({ user, comment, commentID, likeCount, time }: Subcomment) {
   const queryClient = useQueryClient(); 
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: () => httpService.post(`/feed/like-sub-comments/${commentID}`),
+    mutationFn: () => httpService.post(`/feed/like-sub-comment/${id}`),
     onSuccess: () => {
       toast.success('liked');
       queryClient.invalidateQueries(['getSubcomment']);

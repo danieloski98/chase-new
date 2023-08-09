@@ -4,7 +4,7 @@ import CONFIG from '../../../../config';
 import { ICommunity } from '../../../../models/Communitty';
 import { FiAlertCircle, FiChevronLeft } from 'react-icons/fi'
 import { COLORS } from '../../../../utils/colors';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { PATH_NAMES } from '../../../../constants/paths.constant';
 import { useAuth } from '../../../../context/authContext';
 import { useMutation, useQueryClient } from 'react-query';
@@ -19,8 +19,8 @@ interface IProps {
 }
 
 const CommunityHeader = ({ community, setActive }: IProps) => {
-    console.log(community.id);
     const queryClient = useQueryClient();
+    const nav = useNavigate()
     const { userId } = useAuth();
     const { isLoading, mutate } = useMutation({
         mutationFn: () => httpService.delete(`${LEAVE_GROUP}?groupID=${community.id}&userID=${userId}`),
@@ -59,7 +59,7 @@ const CommunityHeader = ({ community, setActive }: IProps) => {
                     <Text size='xs' color='red.500'>Exit community</Text>
                     { isLoading && <Spinner size='sm' colorScheme='red' marginLeft='10px'/> }
                 </MenuItem>
-                <MenuItem height='50px'>
+                <MenuItem height='50px' onClick={() => nav(`/home/report/${community.id}`)}>
                     <Text size='xs' color='red.500'>Report community</Text>
                 </MenuItem>
             </MenuList>

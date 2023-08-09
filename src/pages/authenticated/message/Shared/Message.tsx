@@ -8,7 +8,7 @@ import { useAuth } from '../../../../context/authContext';
 import { ChatMessage } from '../../../../models/ChatMessage';
 import { PaginatedResponse } from '../../../../models/PaginatedResponse';
 import httpService from '../../../../utils/httpService';
-import { Text } from '@chakra-ui/react'
+import { HStack, Text, Avatar, VStack } from '@chakra-ui/react'
 import { formatTimeAgo } from '../../../../utils/helpers';
 
 interface IProps {
@@ -43,37 +43,50 @@ const MessageChip = ({message, userId}: {
     })
     return (
         <React.Fragment key={message?.id}>
-            <div
-            className={`rounded-t-xl p-3 text-sm w-full ${message?.self
-                ? "bg-white text-gray-800 rounded-bl-xl"
-                : "bg-white text-gray-800 rounded-br-xl"
-                } `}
-            >
-            {message?.mediaType !== null ? (
-                <div>
-                    { message.mediaType === 'VIDEO' &&  message.media.split('.')[1] ==='mp4' && (
-                         <div className="flex flex-col gap-2">
-                            <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${message?.media}`}/>
-                            {message?.message ? message?.message : ''}
+            <HStack flexDirection={message?.self ? 'row':'row-reverse' } alignItems='flex-start'>
+                <div
+                className={`rounded-t-xl p-3 text-sm w-full ${message?.self
+                    ? "bg-chasescrollBlue text-white rounded-bl-xl"
+                    : "bg-white text-gray-800 rounded-br-xl"
+                    } `}
+                >
+                    {message?.mediaType !== null ? (
+                        <div>
+                            <Text textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
+                            { message.mediaType === 'VIDEO' &&  message.media.split('.')[1] ==='mp4' && (
+                                <div className="flex flex-col gap-2">
+                                    <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${message?.media}`}/>
+                                    {message?.message ? message?.message : ''}
+                                </div>
+                            )}
+                            {
+                                message.mediaType === 'PICTURE' && message.media.split('.')[1] !== 'mp4' && (
+                                    <div className="flex flex-col gap-2">
+                                        <img
+                                            src={`${CONFIG.RESOURCE_URL}${message?.media}`}
+                                            alt="media"
+                                            className="cursor-pointer sm:max-w-[100%] lg:max-w-[300px]"
+                                            // onClick={() => toggleMediaVisibility(`${CONFIG.RESOURCE_URL}${message?.mediaRef}`)}
+                                        />
+                                    <Text textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>{message?.message ? message?.message : ''}</Text>
+                                    </div>
+                                )
+                            }
                         </div>
+                    ) : (
+                        <VStack alignItems={'flex-end'} width='100%'>
+                            <Text width='100%' textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
+                            <Text width='100%'>{message?.message}</Text>
+                        </VStack>
                     )}
-                    {
-                         message.mediaType === 'PICTURE' && message.media.split('.')[1] !== 'mp4' && (
-                            <div className="flex flex-col gap-2">
-                                <img
-                                    src={`${CONFIG.RESOURCE_URL}${message?.media}`}
-                                    alt="media"
-                                    className="cursor-pointer sm:max-w-[100%] lg:max-w-[400px]"
-                                    // onClick={() => toggleMediaVisibility(`${CONFIG.RESOURCE_URL}${message?.mediaRef}`)}
-                                />
-                            {message?.message ? message?.message : ''}
-                            </div>
-                         )
-                    }
+                    <Text size='xs' color={message.self ? 'white':'black'} textAlign={message?.self ? 'right' : 'left'}>{formatTimeAgo(message.createdDate)}</Text>
                 </div>
-            ) : message?.message}
-            <Text size='xs' color='gray.400' textAlign={message?.self ? 'right' : 'left'}>{formatTimeAgo(message.createdDate)}</Text>
-        </div>
+                <Avatar 
+                    src={`${CONFIG.RESOURCE_URL}/${message?.createdBy.data.imgMain.value}`}
+                    name={`${message?.createdBy?.username}`}
+                    size={['xs', 'sm']}
+                />
+            </HStack>
 
         </React.Fragment>
     )

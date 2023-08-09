@@ -1,79 +1,84 @@
-import { useState, useEffect, forwardRef } from "react"
+import { useState, forwardRef } from "react"
 import { Link } from "react-router-dom"
-import PropTypes from "prop-types"
 import {
   CommentsIcon,
   EmptyHeartIcon,
   FilledHeartIcon,
   HollowEllipsisIcon,
-  UploadIcon,
 } from "../Svgs"
-import { formatNumberWithK } from "@/utils/helpers"
-import { PATH_NAMES } from "@/constants/paths.constant"
+import { formatNumberWithK } from "../../utils/helpers"
+import { PATH_NAMES } from "../../constants/paths.constant"
 import ProfilePhoto from "../ProfilePhoto"
 
 import {
-  GET_ALL_POST_COMMENTS,
+  GET_POST,
   LIKE_POST,
-  SHARE_POST,
 } from "../../constants/endpoints.constant"
 import { useFetch } from "../../hooks/useFetch"
 import { useAuth } from "../../context/authContext"
 import CONFIG from "../../config"
-import Share from "../../pages/authenticated/home/Share"
 import BlurredImage from "../BlurredImage"
 import { formatTimeAgo } from "../../utils/helpers"
 import { COMPANY_NAME } from "../../constants"
 import VideoPlayer from "../VideoPlayer"
 import PhotoGallery from "../PhotoGallery"
 import { Avatar } from '@chakra-ui/react'
+import { IMediaContent } from "../../models/MediaPost"
+import { useQuery, useQueryClient } from "react-query"
+import httpService from "../../utils/httpService"
 
-const Thread = forwardRef
+interface IProps {
+  setThreadId: (id: string) => void;
+  toggleMoreOptions: () => void;
+  toggleShare: () => void;
+  setPostId: (id: string) => void;
+  setPostMakeId: (id: string) => void;
+  post: IMediaContent
+}
+
+const Thread = forwardRef<any, IProps>
 (({
-  text,
-  time,
-  commentCount,
-  shareCount,
-  likeCount,
-  postID,
-  mediaRef,
-  multipleMediaRef,
+  post: postData,
   setThreadId,
   toggleMoreOptions,
-  toggleShare,
-  user,
-  image,
-  likeStatus,
-  type,
   setPostId,
   setPostMakeId,
 }, ref) => {
-  const [isLiked, setIsLiked] = useState(likeStatus === "LIKED")
-  const [numOfLikes, setNumOfLikes] = useState(likeCount);
+  const [post, setPost] = useState(postData);
+  const [isLiked, setIsLiked] = useState(postData.likeStatus === "LIKED");
+  const [numOfLikes, setNumOfLikes] = useState(postData.likeCount);
   const [showMore, setShowMore] = useState(false)
   const { token, userId } = useAuth()
   const { sendRequest } = useFetch()
+  const queryClient = useQueryClient();
+
+  const { user, text, time, type, multipleMediaRef, mediaRef, id: postID, commentCount } = post;
+
+  const getPost = useQuery([`getPost-${postData.id}`, post.id], () => httpService.get(`${GET_POST}/${post.id}`), {
+    onSuccess:  (data) => {
+      setPost(data.data);
+    }
+  })
 
   const toggleLike = async () => {
-    const response = await sendRequest(`${LIKE_POST}/${postID}`, "POST", null, {
+    const response = await sendRequest(`${LIKE_POST}/${post.id}`, "POST", null, {
       Authorization: `Bearer ${token}`,
     })
     if (response) {
-      setIsLiked(response?.likeStatus === "LIKED")
-      setNumOfLikes(response?.likeCount)
+      queryClient.invalidateQueries([`getPost-${postData.id}`]);
     }
   }  
 
   if (!ref) {
     return (
-      <div id={postID} className="flex flex-col gap-4 justify-between p-5 w-full max-w-lg border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
+      <div id={post.id} className="flex flex-col gap-4 justify-between p-5 w-full max-w-lg border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
         <div className="flex justify-between items-stretch text-black lg:w-full sm:w-full">
           <Link
             className="flex gap-2 items-center"
             to={`${PATH_NAMES.profile}/${userId}`}
           >
-            { user.data.imgMain.value && (
-              <ProfilePhoto image={user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.data?.firstName}&length=1`} />
+            { post.user.data.imgMain.value && (
+              <ProfilePhoto image={post.user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
             )}
             {
               !user.data.imgMain.value && (
@@ -95,10 +100,10 @@ const Thread = forwardRef
             className="cursor-pointer flex pt-4 text-chasescrollBlue"
             onClick={() => {
               toggleMoreOptions()
-              setThreadId(postID);
-              setPostId(postID);
+              setThreadId(post.id);
+              setPostId(post.id);
               setPostMakeId(user.userId)
-              console.log(`${postID} this is the post id`)
+              console.log(`${post.id} this is the post id`)
             }}
           >
             <HollowEllipsisIcon />
@@ -119,14 +124,14 @@ const Thread = forwardRef
         </div>
         <div className="flex flex-col gap-3"> 
           {type === "WITH_IMAGE" && multipleMediaRef?.length > 1 && (
-            <div onDoubleClick={() => toggleLike(postID)}>
+            <div onDoubleClick={() => toggleLike()}>
               <PhotoGallery images={multipleMediaRef} />
             </div>
           )}
           {!multipleMediaRef && (
             <>
               {type === "WITH_IMAGE" && (
-                <div onDoubleClick={() => toggleLike(postID)}>
+                <div onDoubleClick={() => toggleLike()}>
                   <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
                 </div>
               )}
@@ -135,7 +140,7 @@ const Thread = forwardRef
           {multipleMediaRef && (
             <>
               {type === "WITH_IMAGE" && multipleMediaRef?.length <= 1 && (
-                <div onDoubleClick={() => toggleLike(postID)}>
+                <div onDoubleClick={() => toggleLike()}>
                   <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
                 </div>
               )}
@@ -149,7 +154,7 @@ const Thread = forwardRef
               <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
                 <div
                   className="cursor-pointer transition-all"
-                  onClick={() => toggleLike(postID)}
+                  onClick={() => toggleLike()}
                 >
                   {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
                 </div>
@@ -165,12 +170,12 @@ const Thread = forwardRef
                 className="text-xs"
               >
                 <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
-                  <CommentsIcon onClick={() => alert('Hey')} />
+                  <CommentsIcon />
                     {formatNumberWithK(commentCount)} comments
                 </div>
               </Link>
             </div>
-            <div className="basis-1/3 flex items-center justify-center">
+            {/* <div className="basis-1/3 flex items-center justify-center">
               <div
                 className="flex flex-col items-center justify-center text-chasescrollTextGrey"
                 onClick={toggleShare}
@@ -180,7 +185,7 @@ const Thread = forwardRef
                   {formatNumberWithK(shareCount)} shares
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -194,7 +199,7 @@ const Thread = forwardRef
           className="flex gap-2 items-center"
           to={`${PATH_NAMES.profile}/${userId}`}
         >
-          <ProfilePhoto image={user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.data?.firstName}&length=1`} />
+          <ProfilePhoto image={user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
           <div className="flex flex-col capitalize">
             <small>{user.firstName} {user.lastName}</small>
             <div className="flex flex-col">
@@ -220,14 +225,14 @@ const Thread = forwardRef
       </div>
       <div className="flex flex-col gap-3">
         {type === "WITH_IMAGE" && multipleMediaRef?.length > 1 && (
-          <div onDoubleClick={() => toggleLike(postID)}>
+          <div onDoubleClick={() => toggleLike()}>
             <PhotoGallery images={multipleMediaRef} />
           </div>
         )}
         {!multipleMediaRef && (
           <>
             {type === "WITH_IMAGE" && (
-              <div onDoubleClick={() => toggleLike(postID)}>
+              <div onDoubleClick={() => toggleLike()}>
                 <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
               </div>
             )}
@@ -236,7 +241,7 @@ const Thread = forwardRef
         {multipleMediaRef && (
           <>
             {type === "WITH_IMAGE" && multipleMediaRef?.length <= 1 && (
-              <div onDoubleClick={() => toggleLike(postID)}>
+              <div onDoubleClick={() => toggleLike()}>
                 <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
               </div>
             )}
@@ -250,7 +255,7 @@ const Thread = forwardRef
             <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
               <div
                 className="cursor-pointer transition-all"
-                onClick={() => toggleLike(postID)}
+                onClick={() => toggleLike()}
               >
                 {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
               </div>
@@ -271,7 +276,7 @@ const Thread = forwardRef
               </Link>
             </div>
           </div>
-          <div className="basis-1/3 flex items-center justify-center">
+          {/* <div className="basis-1/3 flex items-center justify-center">
             <div
               className="flex flex-col items-center justify-center text-chasescrollTextGrey"
               onClick={toggleShare}
@@ -281,25 +286,11 @@ const Thread = forwardRef
                 {formatNumberWithK(shareCount)} shares
               </span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
   )
 })
-
-Thread.propTypes = {
-  toggleMoreOptions: PropTypes.func,
-  text: PropTypes.string,
-  time: PropTypes.string,
-  commentCount: PropTypes.string,
-  shareCount: PropTypes.string,
-  likeCount: PropTypes.string,
-  postID: PropTypes.string,
-  mediaRef: PropTypes.string,
-  setThreadId: PropTypes.string,
-  user: PropTypes.object,
-  likeStatus: PropTypes.bool
-}
 
 export default Thread
