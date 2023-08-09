@@ -50,9 +50,7 @@ function MyEventTab() {
         )
         if (data) {
           toast.success(data.message); 
-          refetch()
-        //   setCheck((prev)=> !prev)
-        //   setLoading("0")
+          refetch() 
         }
     }
 
