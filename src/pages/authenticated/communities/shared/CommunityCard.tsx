@@ -40,7 +40,7 @@ function CommunityCard({ community, setSelected, smallScreen = false }: IProps) 
             <ProfilePhoto image={community.data?.imgSrc === "string" || !community.data?.imgSrc ? `https://ui-avatars.com/api/?background=random&name=${community?.data?.name}&length=1` : `${CONFIG.RESOURCE_URL}${community?.data?.imgSrc}`} />
 
             <VStack alignItems='flex-start'>
-                <Heading size='sm' as='h4'>{community.data.name}</Heading>
+                <Heading size='sm' as='h4'>{community.data.name.length > 20 ? `${community?.data.name.substring(0, 20)}...` : `${community?.data.name}`}</Heading>
                 <Text>{community?.data.description.length > 20 ? `${community?.data.description.substring(0, 20)}...` : community.data.description}</Text>
             </VStack>
         </HStack>

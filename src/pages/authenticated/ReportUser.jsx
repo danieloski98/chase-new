@@ -10,6 +10,13 @@ import httpService from "../../utils/httpService"
 import { toast } from "react-toastify"
 import { Spinner } from '@chakra-ui/react'
 
+const reports = [
+  'REPORT_BUG', 
+  'REPORT_USER', 
+  'REPORT_ENHANCEMENT', 
+  'REPORT_COMMUNITY',
+]
+
 const ReportUser = () => {
   const [reportType, setReportType] = useState("")
   const [title, setTitle] = useState("")
@@ -28,6 +35,7 @@ const ReportUser = () => {
     },
     onError: (error) => {
       toast.error('An error occured while sending report');
+      console.log(error);
     }
   });
 
@@ -69,7 +77,7 @@ const ReportUser = () => {
                 </span>
               </div>
               <div className="basis-2/4 py-3 flex justify-center font-bold">
-                Report a User
+                Submit a Report
               </div>
               <div className="basis-1/4 py-3 flex items-center justify-end font-bold text-xs text-chasescrollBlue">
                 <span className="cursor-pointer">Select All</span>
@@ -84,7 +92,7 @@ const ReportUser = () => {
               onChange={handleReportTypeChange}
             >
               <option value="">-- Report Type --</option>
-              {REPORT_TYPE.map(type => (
+              {reports.map(type => (
                 <option value={type}>{type}</option>
               ))}
             </select>

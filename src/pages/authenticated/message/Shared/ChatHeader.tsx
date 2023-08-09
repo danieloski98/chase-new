@@ -10,7 +10,6 @@ import { PATH_NAMES } from '../../../../constants/paths.constant';
 import { useAuth } from '../../../../context/authContext';
 import { useMutation, useQueryClient } from 'react-query';
 import httpService from '../../../../utils/httpService';
-import { LEAVE_GROUP } from '../../../../constants/endpoints.constant';
 import { toast } from 'react-toastify';
 import { Chat } from 'src/models/Chat';
 
@@ -25,11 +24,14 @@ const ChatHeader = ({ chat, setActive }: IProps) => {
     const navigate = useNavigate();
     const { userId } = useAuth();
     const { isLoading, mutate } = useMutation({
-        mutationFn: () => httpService.delete(`${LEAVE_GROUP}?groupID=${chat.id}&userID=${userId}`),
+        mutationFn: () => httpService.delete(`/chat/leave-chat?chatID=${chat.id}`),
         onSuccess: () => {
             toast.success('Action successful');
-            queryClient.invalidateQueries(['getJoinedGroups']);
+            queryClient.invalidateQueries(['getChats']);
             setActive(null);
+        },
+        onError: (error: any) => {
+            toast.error(JSON.stringify(error.response?.data));
         }
     });
 
@@ -87,12 +89,12 @@ const ChatHeader = ({ chat, setActive }: IProps) => {
             </MenuButton>
             <MenuList p='0px'>
                 <MenuItem borderBottomWidth='1px' borderBottomColor='gray.200' height='50px' onClick={() => mutate()}>
-                    <Text size='xs' color='red.500'>Exit community</Text>
+                    <Text size='xs' color='red.500'>Leave Chat</Text>
                     { isLoading && <Spinner size='sm' colorScheme='red' marginLeft='10px'/> }
                 </MenuItem>
-                <MenuItem height='50px'>
-                    <Text size='xs' color='red.500'>Report community</Text>
-                </MenuItem>
+                {/* <MenuItem height='50px'>
+                    <Text size='xs' color='red.500'>Delete Group</Text>
+                </MenuItem> */}
             </MenuList>
         </Menu>
     </HStack>
