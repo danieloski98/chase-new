@@ -79,6 +79,7 @@ const PaidTicketPage = () => {
           banner={event?.picUrls ? event?.currentPicUrl : ""}
           isFree={event?.isFree}
           timeAndDate={event?.startDate}
+          endtimeAndDate={event?.endDate}
           location={event?.location}
           locationType={event?.locationType}
           convener={event?.createdBy?.firstName+" "+event?.createdBy?.lastName}

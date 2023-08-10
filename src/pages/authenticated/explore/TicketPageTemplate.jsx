@@ -33,6 +33,7 @@ const TicketPageTemplate = ({
   price,
   convener,
   timeAndDate,
+  endtimeAndDate,
   location,
   locationType,
   about,
@@ -93,6 +94,7 @@ const TicketPageTemplate = ({
       })
     })
   }
+
   const payWithStripe = () => {
     sendStripeRequest(
       CREATE_TICKET,
@@ -142,9 +144,7 @@ const TicketPageTemplate = ({
     if (data) {
       toast.success(data.message);  
     }
-  }
-
-  console.log(data);
+  } 
 
   return (
     <>
@@ -220,14 +220,22 @@ const TicketPageTemplate = ({
       <div className="pl-4 lg:pl-12 pt-9 pb-24 pr-4 flex flex-col gap-2 relative">
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-9 left-2 p-2"
+          className="absolute top-9 z-20 left-2 p-2"
         >
           <CaretLeftIcon />
         </button>
+
+        <div className="backdrop-blur-sm absolute inset-0 px-3 pt-9 flex justify-center items-center rounded-b-[36px] rounded-tl-[36px] h-72">
+          <img
+            src={`${CONFIG.RESOURCE_URL}${banner}`}
+            alt="Blurred Image"
+            className="h-80  blur-md w-full object-cover mx-2 rounded-b-[36px] rounded-tl-[36px]]"
+          />
+        </div>
         <img
           src={`${CONFIG.RESOURCE_URL}${banner}`}
           alt="ticket banner"
-          className="w-full h-72 object-cover rounded-b-[36px] rounded-tl-[36px]"
+          className="w-full h-72 z-20 object-contain rounded-b-[36px] rounded-tl-[36px]"
         />
         <div className="flex flex-col gap-6">
           <div className="lg:px-2 flex justify-between gap-1">
@@ -308,7 +316,7 @@ const TicketPageTemplate = ({
               <BlueCalendarIcon className="w-12" />
               <div className="flex flex-col gap-2">
                 <div className="hidden lg:block text-xs text-gray-500">
-                  Event date and time
+                  Event Start date and time
                 </div>
                 <div className="">
                   <h3 className="text-chasescrollDarkBlue font-bold">
@@ -321,6 +329,22 @@ const TicketPageTemplate = ({
               </div>
             </div>
             <div className="flex flex-row gap-2 rounded-lg lg:px-2 lg:py-3 lg:w-80 w-full items-center lg:items-end lg:border-b border-gray-300">
+              <BlueCalendarIcon className="w-12" />
+              <div className="flex flex-col gap-2">
+                <div className="hidden lg:block text-xs text-gray-500">
+                  Event End date and time
+                </div>
+                <div className="">
+                  <h3 className="text-chasescrollDarkBlue font-bold">
+                    {formatDate(endtimeAndDate)}
+                  </h3>
+                  <p className="text-xs font-bold">
+                    {formatTime(endtimeAndDate)} (GMT+1)
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* <div className="flex flex-row gap-2 rounded-lg lg:px-2 lg:py-3 lg:w-80 w-full items-center lg:items-end lg:border-b border-gray-300">
               <LocationIcon className="w-16" />
               <div className="flex flex-col gap-2">
                 <div className="hidden lg:block text-xs text-gray-500">
@@ -328,12 +352,13 @@ const TicketPageTemplate = ({
                 </div>
                 <div className="">
                   <h3 className="text-chasescrollDarkBlue font-bold">
-                    {location?.address}
+                    {location?.locationDetails ? (location.locationDetails?.length >= 17 ? location.locationDetails : location.locationDetails):
+                      location?.link ? (location.link?.length >= 17 ? location.link : location.link): ""}
                   </h3>
                   <p className="text-xs font-bold">{locationType}</p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex flex-col gap-2 justify-end lg:w-[430px] w-full">
               <div className="hidden lg:block text-xs text-gray-500 lg:ml-2">
@@ -379,17 +404,33 @@ const TicketPageTemplate = ({
 
             </div>
           </div>
+
+          <div className="flex flex-row gap-2 rounded-lg lg:px-2 lg:py-3 lg:w-80 w-full items-center lg:items-end lg:border-b border-gray-300">
+            <LocationIcon className="w-16" />
+            <div className="flex flex-col gap-2">
+              <div className="hidden lg:block text-xs text-gray-500">
+                Event location
+              </div>
+              <div className="">
+                <h3 className="text-chasescrollDarkBlue font-bold">
+                  {location?.locationDetails ? (location.locationDetails?.length >= 17 ? location.locationDetails : location.locationDetails):
+                    location?.link ? (location.link?.length >= 17 ? location.link : location.link): ""}
+                </h3>
+                <p className="text-xs font-bold">{locationType}</p>
+              </div>
+            </div>
+          </div>
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-bold">About this event</h2>
             <p className="text-sm leading-6">{about}</p>
           </div>
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <h2 className="text-xl font-bold">Location </h2>
             <div className="overflow-auto rounded-lg">
-              {/* <Map location={location} zoomLevel={17} /> */}
+              <Map location={location} zoomLevel={17} />
             </div>
-          </div>
+          </div> */}
 
           <div className="flex items-center justify-center">
             <button

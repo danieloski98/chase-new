@@ -78,7 +78,9 @@ const SearchEventCard = React.forwardRef(
 
               <div className="flex md:gap-8">
                 <span className="flex gap-2 w-full text-xs md:text-sm text-[#1732F7] font-bold">
-                  <LocationIcon_2 /> {event.location.address}
+                  <LocationIcon_2 />{event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
+                      event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      
                 </span>
                 <div className="flex gap-2">
                 
@@ -133,7 +135,9 @@ const SearchEventCard = React.forwardRef(
 
               <div className="flex md:gap-8">
                 <span className="flex gap-2 w-full text-xs md:text-sm text-[#1732F7] font-bold">
-                  <LocationIcon_2 /> {event.location.address}
+                  <LocationIcon_2 /> {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
+                      event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      
                 </span>
                 <div className="flex gap-2">
                 

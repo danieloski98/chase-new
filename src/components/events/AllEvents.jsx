@@ -169,14 +169,22 @@ const AllEvents = () => {
             className="flex items-center flex-col w-full cursor-pointer lg:px-7 "> 
             <div className=" w-full  border rounded-b-[32px] rounded-tl-[32px] px-6 pt-3 pb-5  " >
               <div className="relative w-full ">
-                <div className="rounded-b-[32px] w-full rounded-tl-[32px] overflow-hidden">
+
+                <div className="backdrop-blur-sm absolute z-10 inset-0 flex justify-center items-center rounded-b-[32px] rounded-tl-[32px] h-[300px]">
+                  <img
+                    src={`${CONFIG.RESOURCE_URL}${currentPicUrl}`}
+                    alt="Blurred Image"
+                    className="h-[300px]  blur-md w-full object-cover rounded-tl-[16px]"
+                  />
+                </div>
+                <div className="rounded-b-[32px] h-[300px] z-20 relative w-full rounded-tl-[32px] overflow-hidden">
                   <img
                     src={`${CONFIG.RESOURCE_URL}${currentPicUrl}`}
                     alt=""
-                    className="w-full h-[300px] object-cover "
+                    className="w-full h-[300px] object-contain "
                   />
                 </div>
-                <div className="absolute bottom-5 left-5 rounded-bl-[32px] rounded-tl-sm w-fit bg-white font-bold p-2">
+                <div className="absolute z-20  bottom-5 left-5 rounded-bl-[32px] rounded-tl-sm w-fit bg-white font-bold p-2">
                   <h1 className="text-xl max-w-[6rem] px-2">
                     {formatTimestampToDate(startDate)}
                   </h1>
@@ -194,7 +202,9 @@ const AllEvents = () => {
               </div>
               <div className="flex gap-2 text-chasescrollBrown font-medium text-sm items-center">
                 <LocationPin />
-                <p>{location.address}</p>
+                <p>{location?.locationDetails ? (location.locationDetails?.length >= 17 ? location.locationDetails.slice(0, 17)+"..." : location.locationDetails):
+                      location?.link ? (location.link?.length >= 17 ? location.link.slice(0, 17)+"..." : location.link): ""}
+                  </p>
               </div>
 
               <div className="flex justify-between items-center">

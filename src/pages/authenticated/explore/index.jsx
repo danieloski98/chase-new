@@ -73,7 +73,7 @@ const Explore = () => {
                   >
                     <CarouselEvent
                       image={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
-                      caption={event?.eventType}
+                      caption={event?.eventName}
                     />
                   </Link>
                 </SplideSlide>
