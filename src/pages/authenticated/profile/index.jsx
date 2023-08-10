@@ -244,13 +244,15 @@ const Profile_1 = () => {
                   </div>
                   <div className="absolute flex justify-between top-6 left-0 right-0 px-4 w-full">
                     <div className="text-white"></div>
-                    <div
-                      onClick={handleShowOptions}
-                      className="cursor-pointer hover:bg-white hover:bg-opacity-70"
-                    >
-                      {/* <SecondMenuIcon /> */}
-                      <IoMdSettings size="20px" fontSize='30px' color='white' />
-                    </div>
+                    {self && (
+                      <div
+                        onClick={handleShowOptions}
+                        className="cursor-pointer hover:bg-white hover:bg-opacity-70"
+                      >
+                        {/* <SecondMenuIcon /> */}
+                        <IoMdSettings size="20px" fontSize='30px' color='white' />
+                      </div>
+                    )}
                   </div>
 
                   <div className="px-4 py-4 md:py-6 absolute flex flex-col gap-4 md:flex-row justify-center md:justify-between w-full bg-black bg-opacity-50 font-bold bottom-0">
@@ -284,12 +286,14 @@ const Profile_1 = () => {
                             {loading ? "loading.." : "Connect"}
                           </button>
                         )}
-                        <Link
-                          to={`${PATH_NAMES.message}/${userId}`}
-                          className="w-40 bg-white text-blue-500 px-4 py-3 rounded-md text-center"
-                        >
-                          Chat
-                        </Link>
+                        {/* {self && ( 
+                          <Link
+                            to={`${PATH_NAMES.message}/${userId}`}
+                            className="w-40 bg-white text-blue-500 px-4 py-3 rounded-md text-center"
+                          >
+                            Chat
+                          </Link>
+                        )} */}
                       </div>
                     )}
                   </div>

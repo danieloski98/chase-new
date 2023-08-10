@@ -66,7 +66,7 @@ const ExplorePerson = React.forwardRef(
 			<div className="flex py-4 w-full items-center ">
 				<div className="h-auto w-fit rounded-b-full rounded-tl-full  overflow-hidden">
 					{person?.data?.imgMain?.value &&  
-						<img src={`https://chaseenv.chasescroll.com//resource-api/download/${person?.data?.imgMain?.value}`} alt="profiles" className="h-[57px] w-[57px] rounded-b-full rounded-tl-full" />
+						<img onClick={() => navigate(`/profile/${`${person?.userId}`}`)} role='button' src={`https://chaseenv.chasescroll.com//resource-api/download/${person?.data?.imgMain?.value}`} alt="profiles" className="h-[57px] w-[57px] rounded-b-full rounded-tl-full" />
 					}
 					{!person?.data?.imgMain?.value && (
 						<Avatar 
