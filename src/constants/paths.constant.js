@@ -46,4 +46,5 @@ export const PATH_NAMES = {
   wallet: '/settings/payments/wallet',
   eventDashboard: '/event-dashboard',
   eventevent: '/event/edit',
+  paymentVerification: '/payment/verification'
 }
