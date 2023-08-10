@@ -12,8 +12,11 @@ import { Spinner } from "@chakra-ui/react";
 import useInfinteScroller from "../../hooks/useInfinteScroller"
 
 const ProductTile = forwardRef(
-	(community, ref) => { 
+	(community, ref, refetch) => { 
 
+    const { sendRequest } = useFetch()
+    const { token, userId, searchValue } = useAuth()
+    const navigate = useNavigate();
 
   const handleJoinCommunity = async (groupID, joinID) => {
     const data = await sendRequest(
@@ -27,7 +30,8 @@ const ProductTile = forwardRef(
     )
     if (data) {
       toast.success(data.message)
-      fetchCommunities()
+      refetch()
+      // fetchCommunities()
     }
   }
 
@@ -40,7 +44,8 @@ const ProductTile = forwardRef(
     )
     if (data) {
       toast.success(data.message) 
-      fetchCommunities()
+      refetch()
+      // fetchCommunities()
     }
   }
 
@@ -207,7 +212,7 @@ const ExploreCommunities = () => {
 
   const [page, setPage] = React.useState(0)
 
-  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/group/find-groups', pageNumber:page, setPageNumber:setPage})
+  const { results, isLoading, lastChildRef, refetch } = useInfinteScroller({url:'/group/find-groups', pageNumber:page, setPageNumber:setPage})
 
 console.log(results);
 
@@ -229,11 +234,11 @@ console.log(results);
       ) : communityList?.map((community, i) => {
         if(communityList?.length === i + 1){
           return( 
-            <ProductTile {...community}  ref={lastChildRef} />
+            <ProductTile {...community} refetch={refetch} ref={lastChildRef} />
           )
         } else { 
           return( 
-            <ProductTile {...community} />
+            <ProductTile {...community}  refetch={refetch} />
           )
         }
       })}

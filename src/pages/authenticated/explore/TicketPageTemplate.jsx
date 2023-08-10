@@ -280,12 +280,14 @@ const TicketPageTemplate = ({
           </div>
           <div className="lg:px-2 flex justify-between items-center py-4 rounded-lg lg:border-b border-gray-300">
             <div className="flex gap-2 justify-center items-center">
-              <img
+              <img 
+              role="button"
+                onClick={() => navigate(`/profile/${`${userId}`}`)}
                 src={`${CONFIG.RESOURCE_URL}${eventLogo}`}
                 alt="convener logo"
                 className="w-12 h-12 object-cover rounded-b-full rounded-tl-full bg-black"
               />
-              <div className="flex flex-col">
+              <div role="button"  onClick={() => navigate(`/profile/${`${userId}`}`)} className="flex flex-col">
                 <h3>{convener}</h3>
                 <p className="text-xs font-bold">@{username}</p>
               </div>
