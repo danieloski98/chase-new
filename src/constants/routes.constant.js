@@ -47,6 +47,7 @@ import EventDashboard from "@/pages/authenticated/eventdashboard"
 import EditEvents from "@/pages/authenticated/events/EditEvents"
 // import EventDashboard from "@/pages/authenticated/eventdashboard"
 import MessageSettings from "@/pages/authenticated/message/MessageSettings"
+import PaymentVerification from "@/pages/unauthenticated/PaymentVerification"
 
 export const NAVIGATION_ROUTES = [
   {
@@ -132,6 +133,10 @@ export const OTHER_UNAUTHENTICATED_ROUTES = [
     path: PATH_NAMES.forgotPassword,
     element: ForgotPassword,
   },
+  {
+    path: PATH_NAMES.paymentVerification,
+    element: PaymentVerification,
+  }
 ]
 
 export const OTHER_AUTHENTICATED_ROUTES = [
