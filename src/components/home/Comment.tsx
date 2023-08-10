@@ -106,7 +106,7 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
               >
                 {subcomments.length} Reply
               </span>
-              { user.userId === userId && <Text color='red' size='xs' onClick={()=> deleteComments(id)} >Delete</Text> }
+              { user.userId === userId && <Text role="button" color='red' size='xs' onClick={()=> deleteComments(id)} >Delete</Text> }
               { subcomments.length > 0 && (
                   <span
                   className="text-chasescrollPurple cursor-pointer"

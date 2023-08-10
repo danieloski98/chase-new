@@ -76,7 +76,7 @@ const PaidTicketPage = () => {
           isBought={event?.isBought}
           eventName={event?.eventName}
           about={event?.eventDescription}
-          banner={event?.picUrls ? event?.picUrls[0] : ""}
+          banner={event?.picUrls ? event?.currentPicUrl : ""}
           isFree={event?.isFree}
           timeAndDate={event?.startDate}
           location={event?.location}

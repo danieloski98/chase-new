@@ -25,7 +25,7 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
         onSuccess: (data) => {
           const item: PaginatedResponse<T> = data.data as PaginatedResponse<T>
           // console.log(item);
-          if(!isRefetching){ 
+          if(isRefetching){ 
             results?.push(...item?.content);
             setResults(results);
           } else{

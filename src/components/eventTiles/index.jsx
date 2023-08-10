@@ -72,7 +72,7 @@ const EventTiles = React.forwardRef((props, ref) =>{
           <div className="rounded-b-[32px] rounded-tl-[32px]  w-full lg:w-[152px] h-[250px] lg:h-[152px] overflow-hidden">
             {event?.picUrls?.length > 0 ? (
               <img
-                src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
+                src={`${CONFIG.RESOURCE_URL}${event?.currentPicUrl}`}
                 alt="descriptive photograph"
                 className=" w-full h-full rounded-b-[32px] rounded-tl-[32px] object-cover "
               />

@@ -171,7 +171,7 @@ const AllEvents = () => {
               <div className="relative w-full ">
                 <div className="rounded-b-[32px] w-full rounded-tl-[32px] overflow-hidden">
                   <img
-                    src={`${CONFIG.RESOURCE_URL}${picUrls[0]}`}
+                    src={`${CONFIG.RESOURCE_URL}${currentPicUrl}`}
                     alt=""
                     className="w-full h-[300px] object-cover "
                   />
