@@ -60,7 +60,7 @@ const SearchEventCard = React.forwardRef(
       <li ref={ref} key={event.id} className="border-b w-full p-2 px-4 ">
         <div className="flex my-4 items-center w-full justify-between">
           <div className="flex w-fit justify-start">
-            <img onClick={() => navigate(`/events/${event.id}`)} src={"https://chaseenv.chasescroll.com/resource-api/download/"+event?.picUrls[0]} alt="profiles" className=" w-[150px] lg:w-[270px] lg:h-[150px] object-cover rounded-b-3xl rounded-tl-3xl cursor-pointer" />
+            <img onClick={() => navigate(`/events/${event.id}`)} src={"https://chaseenv.chasescroll.com/resource-api/download/"+event?.currentPicUrl} alt="profiles" className=" w-[150px] lg:w-[270px] lg:h-[150px] object-cover rounded-b-3xl rounded-tl-3xl cursor-pointer" />
           </div>
 
           <div className=' w-[60%]' >
@@ -78,7 +78,9 @@ const SearchEventCard = React.forwardRef(
 
               <div className="flex md:gap-8">
                 <span className="flex gap-2 w-full text-xs md:text-sm text-[#1732F7] font-bold">
-                  <LocationIcon_2 /> {event.location.address}
+                  <LocationIcon_2 />{event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
+                      event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      
                 </span>
                 <div className="flex gap-2">
                 
@@ -114,7 +116,7 @@ const SearchEventCard = React.forwardRef(
           <div className=' w-fit ' >
 
           <div className="flex w-[150px] lg:w-[230px] lg:h-[150px]  justify-start">
-            <img onClick={() => navigate(`/events/${event.id}`)} src={"https://chaseenv.chasescroll.com/resource-api/download/"+event?.picUrls[0]} alt="profiles" className="  w-full h-full object-cover rounded-b-3xl rounded-tl-3xl cursor-pointer" />
+            <img onClick={() => navigate(`/events/${event.id}`)} src={"https://chaseenv.chasescroll.com/resource-api/download/"+event?.currentPicUrl} alt="profiles" className="  w-full h-full object-cover rounded-b-3xl rounded-tl-3xl cursor-pointer" />
           </div>
           </div>
 
@@ -133,7 +135,9 @@ const SearchEventCard = React.forwardRef(
 
               <div className="flex md:gap-8">
                 <span className="flex gap-2 w-full text-xs md:text-sm text-[#1732F7] font-bold">
-                  <LocationIcon_2 /> {event.location.address}
+                  <LocationIcon_2 /> {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
+                      event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      
                 </span>
                 <div className="flex gap-2">
                 

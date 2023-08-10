@@ -97,18 +97,16 @@ const TrendingEvents = () => {
  
   return (
     <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
-      {isLoading && ( 
+      {(isLoading && isRefetching) && ( 
           <Loader position={true} /> 
       )}
 
       <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory ? eventCategory.replace("_", " ") : "Trending"}</p>
 
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
-        {!isLoading && (
+        {(!isLoading  && !isRefetching) && (
           <> 
-            {results.map((event, i) => {
-
-              console.log(event);
+            {results.map((event, i) => { 
               if (results.length === i + 1) {
                 return(
                   <div ref={lastChildRef} className=" w-full border rounded-b-[36px] gap-4 rounded-tl-[36px] flex lg:flex-row flex-col items-center py-[11px] px-[15px] " >
@@ -117,7 +115,7 @@ const TrendingEvents = () => {
                       <img
                         role='button'
                         onClick={() => navigate(`/events/${event.id}`)} 
-                        src={`${CONFIG.RESOURCE_URL}/${event?.picUrls[0]}`}
+                        src={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
                         alt=""
                         className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
                       />
@@ -159,7 +157,10 @@ const TrendingEvents = () => {
                         </g>
                         </g>
                       </svg>
-                      <p className=" font-medium text-[#1732F7] " >{event?.location.address?.length >= 17 ? event?.location.address.slice(0, 17)+"..." : event?.location.address}</p>
+                      <p className=" font-medium text-[#1732F7] " >
+                        {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
+                         event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      </p>
                       <button onClick={() => handleEvent(event)} className=" ml-auto " > 
                         {event.isSaved && 
                           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -199,7 +200,7 @@ const TrendingEvents = () => {
                     <img
                       role='button'
                       onClick={() => navigate(`/events/${event.id}`)} 
-                      src={`${CONFIG.RESOURCE_URL}/${event?.picUrls[0]}`}
+                      src={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
                       alt=""
                       className="rounded-b-[24px] rounded-tl-[24px]  w-full lg:w-[152px] object-cover h-[250px] lg:h-[152px]"
                     />
@@ -241,7 +242,10 @@ const TrendingEvents = () => {
                       </g>
                       </g>
                     </svg>
-                    <p className=" font-medium text-[#1732F7] " >{event?.location.address?.length >= 17 ? event?.location.address.slice(0, 17)+"..." : event?.location.address}</p>
+                    <p className=" font-medium text-[#1732F7] " >
+                      {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
+                      event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      </p>
                     <button onClick={() => handleEvent(event)} className=" ml-auto " > 
                       {event.isSaved && 
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -277,7 +281,7 @@ const TrendingEvents = () => {
           </>
         )}
       </div>
-      {!loading && (
+      {(!isLoading  && !isRefetching) && (
         <> 
           {results?.length <= 0 && (
             <p className=" text-center py-6 text-lg font-semibold " >

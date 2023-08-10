@@ -49,8 +49,6 @@ const EventTheme = ({
   const clickHandler =()=> {
     if(!formData?.eventName){
       toast.error("Enter Event Name")
-    } else if(!formData?.organizer){
-      toast.error("Enter Event Organizer")
     } else if(!formData?.eventType){
       toast.error("Enter Event Type")
     } else if(!formData?.eventDescription){

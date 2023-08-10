@@ -19,12 +19,14 @@ const SelectPaymentOptions = ({ paystackLoading, stripeLoading, closeModal, hand
 					</button>
 					<p className="text-lg font-bold">Payment Options</p>
 					<div className="flex flex-col gap-8 py-8">
-						<div onClick={() => {
-							payWithStripe()
-						}} className="p-8 rounded-lg transition hover:bg-chasescrollLightGrey border flex justify-between items-center gap-4 font-bold cursor-pointer">
-							<StripeLogo />
-							{stripeLoading && <ButtonSpinner />}
-						</div>
+						{currency !== "NGN" && (
+							<div onClick={() => {
+								payWithStripe()
+							}} className="p-8 rounded-lg transition hover:bg-chasescrollLightGrey border flex justify-between items-center gap-4 font-bold cursor-pointer">
+								<StripeLogo />
+								{stripeLoading && <ButtonSpinner />}
+							</div>
+						)}
 						{currency === "NGN" && (
 							<div onClick={() => {
 								payWithPaystack()

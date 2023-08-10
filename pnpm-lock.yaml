@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -122,6 +122,9 @@ dependencies:
   react-loader-spinner:
     specifier: ^5.3.4
     version: 5.3.4(@babel/core@7.22.9)(react-dom@18.2.0)(react@18.2.0)
+  react-paystack:
+    specifier: ^4.0.3
+    version: 4.0.3(react-dom@18.2.0)(react@18.2.0)
   react-phone-number-input:
     specifier: ^3.2.19
     version: 3.2.19(react-dom@18.2.0)(react@18.2.0)
@@ -6000,6 +6003,16 @@ packages:
       styled-tools: 1.7.2
     transitivePeerDependencies:
       - '@babel/core'
+    dev: false
+
+  /react-paystack@4.0.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-ruu94Qrvi7QHK1axrHRShUebka68G3UyGIndVFPCjs3rddBOkLiorF6GJ98FW9lq4ov5M4adh4g03F6aOuJmRA==}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-phone-number-input@3.2.19(react-dom@18.2.0)(react@18.2.0):
