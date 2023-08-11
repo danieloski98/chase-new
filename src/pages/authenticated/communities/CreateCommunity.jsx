@@ -44,8 +44,15 @@ const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 		}
 	}))
 
-	const createCommunity = async event => {
+	const createCommunity =  React.useCallback(async event => {
 		event.preventDefault();
+		if (loading) {
+			return;
+		}
+		if (communityInfo.data.name === '' || communityInfo.data.description === '') {
+			toast.error("Please fill all the fields");
+			return;
+		}
 		if (image === null) {
 			toast.error("Please select an image");
 			return;
@@ -63,25 +70,29 @@ const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 			{ Authorization: `Bearer ${token}` },
 			true
 		).then((response) => {
-			setCommunityInfo(info => ({
-				...info,
+			console.log(response);
+			const obj = {
 				data: {
-					...info.data,
+					...communityInfo.data,
 					imgSrc: response?.fileName
 				}
-			}))
+			}
+			console.log(obj);
 			sendRequest(
 				CREATE_GROUP,
 				"POST",
-				communityInfo,
+				obj,
 				{ Authorization: `Bearer ${token}` }
 			).then((data) =>  
-				toast.success(data.message), 
-				setLoading(false),
-				clickHandler()
+				{
+					toast.success('Community Created'); 
+					setLoading(false),
+					// clickHandler()
+					nav(-1)
+				}
 			)
 		})
-	}
+	}, [loading, communityInfo.data, image, sendRequest, userId, token, nav])
 
 	const handleFileInputChange = (event) => {
 		const file = event.target.files[0]

@@ -33,8 +33,10 @@ const Comments = () => {
       toast.error(JSON.stringify(error.response?.data));
     },
     onSuccess: (data) => {
+      console.log(`user data`);
+      console.log(data.data);
       setUser(data?.data);
-      console.log(data);
+      //console.log(data);
     }
   })
 
@@ -42,7 +44,7 @@ const Comments = () => {
   const { isLoading } = useQuery(['getComments', postID], () => httpService.get(`${GET_ALL_POST_COMMENTS}?postID=${postID}`), {
     onSuccess: (data) => {
       setUserComments(data?.data?.content);
-      console.log(data?.data?.content);
+      //console.log(data?.data?.content);
     }
   });
 
@@ -68,7 +70,6 @@ const Comments = () => {
   }
 
   const addCommentNew = async () => {
-    toast.warn(`An errorr`);
     addComment.mutate({ postID: postID, comment: commentInput });
   }
 
@@ -84,7 +85,7 @@ const Comments = () => {
 
   useEffect(() => {
     getUserComments()
-  }, [])
+  }, [getUserComments])
 
   return (
     <PageWrapper>
@@ -102,12 +103,12 @@ const Comments = () => {
             </div>
             <div className="flex items-center lg:items-start flex-col gap-10 py-4 px-4 lg:px-28">
               <div className="flex items-center gap-3 w-full">
-                { !isLoading && (user).data.imgMain.value && (
+                { !userProfile.isLoading && user !== null && (user).data?.imgMain.value && (
                   <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}`} />
                 )}
-                { !isLoading && !(user).data.imgMain.value && (
+                { !userProfile.isLoading && user !== null && !(user)?.data?.imgMain.value && (
                   <Avatar 
-                    name={`${(user).firstName} ${(user).lastName}`}
+                    name={`${(user)?.firstName || ''} ${(user)?.lastName || ''}`}
                   />
                 )}
                 <div className="flex items-center bg-white w-full h-fit rounded-lg border border-blue-100">

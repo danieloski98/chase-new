@@ -1,4 +1,4 @@
-import { HStack, VStack, Text, Heading, Skeleton, Input, InputGroup, InputRightElement, Spinner, Image, Flex, Box } from '@chakra-ui/react';
+import { HStack, VStack, Text, Heading, Skeleton, Input, InputGroup, InputRightElement, Spinner, Image, Flex, Box, InputLeftElement } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
 import React, { useState } from 'react'
 import { UseQueryResult, useMutation, useQuery, useQueryClient } from 'react-query';
@@ -15,7 +15,7 @@ import send from "../../../../assets/svg/send-icon.svg"
 import selector from "../../../../assets/svg/image.svg"
 import Message from '../Shared/Message';
 import Fab, { IList } from '../../../../components/general/Fab';
-import { FiFileText, FiVideo, FiImage } from 'react-icons/fi';
+import { FiFileText, FiVideo, FiImage, FiSearch } from 'react-icons/fi';
 
 
 
@@ -29,7 +29,9 @@ function MobileChatView({ query }: IProps) {
     const [chats, setChats] = React.useState<Array<Chat>>([]);
     const [activeChat, setActiveChat] = React.useState<Chat | null>(null);
     const [image, setImage] = useState('');
-    const [post, setPost] = useState('');   
+    const [post, setPost] = useState(''); 
+    const [search, setSearch] = React.useState(''); 
+  
     
     // refs
     const filePickerRef = React.useRef<HTMLInputElement>();
@@ -147,10 +149,20 @@ function MobileChatView({ query }: IProps) {
         { activeChat === null && (
             <VStack flex={1} height='100%' >
             {/* HEADER SECTION */}
-            <HStack width='100%' justifyContent='space-between' alignItems='center' paddingX='20px' height='100px' borderBottomWidth='1px' borderBottomColor='gray.200'>
-                <Heading size='md' color='brand.chasescrollButtonBlue'>Chats</Heading>
-                <Text color='brand.chasescrollButtonBlue' cursor='pointer' onClick={() => navigate('create-group')}>Create Group Chat</Text>
-            </HStack>
+            <VStack width='100%' height='auto' paddingBottom='10px' paddingX='20px' borderBottomWidth='1px' borderBottomColor='gray.200'>
+                <HStack width='100%' justifyContent='space-between' alignItems='center' height='50px' >
+                    <Heading size='md' color='brand.chasescrollButtonBlue'>Chats</Heading>
+                    <Text color='brand.chasescrollButtonBlue' cursor='pointer' onClick={() => navigate('create-group')}>Create Group Chat</Text>
+                </HStack>
+
+                <InputGroup>
+                    <InputLeftElement>
+                        <FiSearch fontSize='20px' />
+                    </InputLeftElement>
+
+                    <Input type='text' placeholder='Search by group name' value={search} onChange={(e) => setSearch(e.target.value)} />
+                </InputGroup>
+            </VStack>
 
             {/* HANDLE LOADING STATE */}
             {query.isLoading && (
@@ -164,7 +176,16 @@ function MobileChatView({ query }: IProps) {
                     </VStack>
             )}
             <VStack flex={1} height='100%' overflow='auto' width='100%' px='20px'>
-                    {!query.isLoading && chats.length > 0 && chats.map((chat, i) => (
+                    {!query.isLoading && chats.length > 0 && chats
+                    .filter((item) => {
+                        if (search === '') {
+                            return item;
+                        }
+                        if (item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+                            return item;
+                        }
+                    })
+                    .map((chat, i) => (
                         <ChatCard chat={chat} activeChat={activeChat} setSelected={(data: Chat) => setActiveChat(data)} key={i} />
                     ))}
             </VStack>

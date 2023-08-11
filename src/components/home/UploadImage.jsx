@@ -162,7 +162,10 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
     }
   }
 
-  const goBack = () => setImageSrc("")
+  const goBack = () => {
+    setImageSrc(null)
+    setVideoSrc(null);
+  }
 
   return (
     <OverlayWrapper handleClose={toggleFileUploader}>
@@ -188,7 +191,7 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
                 <div className="flex justify-between items-center rounded-t-lg bg-white pl-3 pr-5 py-3 border-x">
                   <span
                     className="p-1 cursor-pointer basis-1/4 flex justify-start"
-                    onClick={showCaption ? toggleCaption : goBack}
+                    onClick={goBack}
                   >
                     <CaretLeftIcon />
                   </span>

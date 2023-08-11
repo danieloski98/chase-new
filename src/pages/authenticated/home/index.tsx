@@ -28,13 +28,13 @@ const Home = () => {
   const [showFileUploader, setShowFileUploader] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const [menuAction, setMenuAction] = useState(null)
-  const [threadId, setThreadId] = useState(null)
-  const [postId, setPostId] = useState(null)
+  const [threadId, setThreadId] = useState<string | null>(null)
+  const [postId, setPostId] = useState<string |  null>(null)
   const [userFeedData, setUserFeedData] = useState<any[]>([])
   const [postFile, setPostFile] = useState()
   const [postInput, setPostInput] = useState("")
   const [user, setUser] = useState<IUser | null>(null);
-  const [postMakerId, setPostMakerId] = useState(null)
+  const [postMakerId, setPostMakerId] = useState<string | null>(null)
   const { userName, token, userId } = useAuth();
 
   const threadListRef = useRef(null)
@@ -60,40 +60,43 @@ const Home = () => {
     }
   });
   if (post) intObserver.current.observe(post);
- }, [isLoading, hasNextPage])
+ }, [isLoading, hasNextPage]);
 
- const content = results.sort((a: IMediaContent, b: IMediaContent) => {
-  if (a.time.millis > b.time.millis) {
-    return 0;
-  } else {
-    return 1;
-  }
- }).map((post: IMediaContent, i: number) => {
-  if (results.length === i + 1) {
-    return (
-      <Thread
-        ref={lastChildRef}
-        key={i}
-        post={post}
-        toggleMoreOptions={toggleMoreOptions}
-        toggleShare={toggleShare}
-        setThreadId={setThreadId}
-        setPostId={setPostId}
-                  />
-    )
-  } else {
-    return (
-      <Thread
-                    key={i}
-                    post={post}
-                    toggleMoreOptions={toggleMoreOptions}
-                    toggleShare={toggleShare}
-                    setThreadId={setThreadId}
-                    setPostId={setPostId}
-                  />
-    )
-  }
- })
+ const handlePoster = React.useCallback((id: string) => {
+    console.log(`this is poster id changing ${id}`);
+    setPostMakerId(id);
+  }, []);
+
+ const content = React.useCallback(() => {
+  return results.map((post: IMediaContent, i: number) => {
+    if (results.length === i + 1) {
+      return (
+        <Thread
+          ref={lastChildRef}
+          key={i}
+          post={post}
+          toggleMoreOptions={toggleMoreOptions}
+          toggleShare={toggleShare}
+          setThreadId={(id) => setThreadId(id)}
+          setPostId={ (id: string) => setPostId(id)}
+          setPostMakeId={handlePoster}
+        />
+      )
+    } else {
+      return (
+        <Thread
+          key={i}
+          post={post}
+          toggleMoreOptions={toggleMoreOptions}
+          toggleShare={toggleShare}
+          setThreadId={(id) => setThreadId(id)}
+          setPostId={ (id: string) => setPostId(id)}
+          setPostMakeId={handlePoster}
+        />
+      )
+    }
+   })
+ }, [handlePoster, lastChildRef, results])
 
 
 
@@ -116,8 +119,8 @@ const Home = () => {
     onSuccess: (data) => {
       toast.success("Post created successfully");
       setPostInput("");
-      // loadMore()
-      //queryClient.refetchQueries(['getFeedsPosts'])
+      loadMore()
+      queryClient.invalidateQueries(['getFeedsPosts'])
     }
   })
   const handleItemClick = (action, route, threadId) => {
@@ -153,7 +156,8 @@ const Home = () => {
       return;
     }
    mutate();
-  }, [mutate, postInput, postLoading])
+  }, [mutate, postInput, postLoading]);
+
  
 
   return (
@@ -168,16 +172,17 @@ const Home = () => {
               threadId={threadId}
               postID={postId}
               refresh={refresh}
+              creatorId={postMakerId}
             />
           )}
           {showFileUploader && (
             <UploadImage toggleFileUploader={toggleFileUploader} loadMore={loadMore} />
           )}
-          {isThreadMenuOpen && (
-            userFeedData?.map((post, i) => (
-              <ThreadMenu postID={postId} key={i} threadId={threadId} userId={userId} postMakerId={postMakerId} refresh={refresh} />
+          {/* {isThreadMenuOpen && (
+            results.map((post, i) => (
+              <ThreadMenu postID={postId} key={i} threadId={threadId} userId={userId} postMakerId={post.user.userId} refresh={refresh} />
             ))
-          )}
+          )} */}
           {showShareModal && <Share closeShareModal={toggleShare} />}
 
             <div className="flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full lg:max-w-lg rounded-xl lg:mx-28 mb-10 p-4 shadow-md">
@@ -198,9 +203,9 @@ const Home = () => {
                    onChange={e => setPostInput(e.target.value)}
                    borderWidth={0}
                    backgroundColor={'transparent'}
-                   height={'20px'}
+                   resize={'none'}
                    cols={1}
-                   size='sm'
+                   size='xs'
                  />
                  <button
                    className="w-14 pl-2 pr-6 flex justify-center items-center cursor-pointer border-r border-white"
@@ -227,7 +232,7 @@ const Home = () => {
       
           <div className="flex flex-col gap-2 bg-white  w-full max-w-lg rounded-xl my-9 lg:mx-28 mb-24">
 
-          { results.length > 0 && content }
+          { results.length > 0 && content() }
 
           { isLoading && (
             <div className="w-full h-24 flex items-center justify-center">

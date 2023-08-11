@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import CONFIG from '@/config';
-import { PATH_NAMES } from '@/constants/paths.constant';
+import CONFIG from '../../config';
+import { PATH_NAMES } from '../../constants/paths.constant';
 import Loader from '../Loader';
-import { Badge, Heading } from '@chakra-ui/react';
+import { Badge, Heading, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
 import { ICommunity } from 'src/models/Communitty';
+import { FiSearch } from 'react-icons/fi';
 
 interface IProps {
     communities: Array<ICommunity>;
@@ -13,6 +14,8 @@ interface IProps {
 }
 
 function MyCommunities({ communities, loading, hasError }: IProps) {
+  const [search, setSearch] = React.useState('');
+  console.log(communities[0]);
 
   if (loading) {
     return (
@@ -31,7 +34,24 @@ function MyCommunities({ communities, loading, hasError }: IProps) {
   }
   return (
     <div className="flex flex-col items-center pb-16">
-                {communities?.map(community => (
+                <div className='py-4 flex items-center justify-center gap-4 w-full'>
+                    <InputGroup width={['100%', '40%']}>
+                      <InputLeftElement>
+                        <FiSearch fontSize='20px' />
+                      </InputLeftElement>
+
+                      <Input width='100%' type='text' value={search} onChange={(e) => setSearch(e.target.value)} placeholder='Search by community name' />
+                    </InputGroup>
+                  </div>
+                {communities?.filter((item) => {
+                  if (search === '') {
+                    return item;
+                  } 
+                  if (item.data.name.toLowerCase().includes(search.toLowerCase())) {
+                    return item;
+                  }
+                })
+                .map(community => (
                   <div
                     key={community.id}
                     className="py-4 flex items-center gap-4 w-full max-w-2xl border-gray-400 border-b-[1px] "
