@@ -3,6 +3,7 @@ import { IMediaContent, IMediaPost } from '../models/MediaPost';
 import httpService from '../utils/httpService'
 import { useMutation, useQuery } from 'react-query';
 
+
 // const getPosts = async (pageParam = 0, userId: string, options = {}) => {
 //     const response = await httpService.get(`/feed/get-user-and-friends-posts?userID=${userId}&page=${pageParam}&size=20`, options);
 //     console.log(response.data);
@@ -15,14 +16,17 @@ function useInfiniteScroll({ userID, pageParam = 0}: {
 }) {
     const [results, setResults] = useState<IMediaContent[]>([]);
     const [hasNextPage, setHasNextPage] = useState(false);
+    const [newIttem, setNew] = React.useState<IMediaContent[]>([]);
 
     const { mutate } = useMutation({
       mutationFn: () => httpService.get(`/feed/get-user-and-friends-posts?userID=${userID}&page=${0}&size=20`),
       onSuccess: (data: any) => {
         const item: IMediaPost = data.data as IMediaPost;
         console.log(item.content);
-        results.unshift(item.content[0]);
-        setResults(results);
+        const arr = [...item.content, ...newIttem, ...results];
+        setNew([...item.content, ...newIttem]);
+        // results.unshift(item.content[0]);
+        setResults(arr);
       }
     })
 
@@ -33,7 +37,7 @@ function useInfiniteScroll({ userID, pageParam = 0}: {
             const item: IMediaPost = data.data as IMediaPost;
             //const sets = new Set([...results, ...data.data.content])
             //const arr = [...results, ...data.data.content];
-            results.push(...item.content);
+            results.push(...newIttem, ...item.content);
               setResults(results);
               //setResults(prev => [...data.data.content, ...prev]);
               setHasNextPage(data.data.last ? false:true);

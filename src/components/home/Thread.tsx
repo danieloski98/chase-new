@@ -45,8 +45,7 @@ const Thread = forwardRef<any, IProps>
   setPostId,
   setPostMakeId,
 }, ref) => {
-  console.log(postData);
-  const [post, setPost] = useState<any>(postData);
+  //const [post, setPost] = useState<any>(postData);
   const [isLiked, setIsLiked] = useState(postData.likeStatus === "LIKED");
   const [numOfLikes, setNumOfLikes] = useState(postData.likeCount);
   const [showMore, setShowMore] = useState(false)
@@ -54,20 +53,21 @@ const Thread = forwardRef<any, IProps>
   const { sendRequest } = useFetch()
   const queryClient = useQueryClient();
 
-  const { user, text, time, type, multipleMediaRef, mediaRef, id: postID, commentCount } = post;
+  const { user, text, time, type, multipleMediaRef, mediaRef, id: postID, commentCount } = postData;
 
-  const getPost = useQuery([`getPost-${post.id}`, post.id], () => httpService.get(`${GET_POST}/${post.id}`), {
+  const getPost = useQuery([`getPost-${postData.id}`, postData.id], () => httpService.get(`${GET_POST}/${postData.id}`), {
     onSuccess:  (data) => {
-      setPost(data.data);
+      //setPost(data.data);
     }
   });
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: () => httpService.post(`${LIKE_POST}/${post.id}`),
+    mutationFn: () => httpService.post(`${LIKE_POST}/${postData.id}`),
     onSuccess: (data) => {
       // console.log(data.data);
-      // queryClient.invalidateQueries([`getPost-${postData.id}`]);
-      setPost(data.data);
+      // queryClient.invalidateQueries(['getFeedsPosts']);
+      // queryClient.refetchQueries(['getFeedsPosts']);
+      //setPost(data.data);
       setIsLiked(data.data.likeStatus === 'LIKED');
       setNumOfLikes(data.data.likeCount);
     },  
@@ -82,14 +82,14 @@ const Thread = forwardRef<any, IProps>
 
   if (!ref) {
     return (
-      <div id={post.id} className="flex flex-col gap-4 justify-between p-5 w-full max-w-lg border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
+      <div id={postData.id} className="flex flex-col gap-4 justify-between p-5 w-full max-w-lg border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
         <div className="flex justify-between items-stretch text-black lg:w-full sm:w-full">
           <Link
             className="flex gap-2 items-center"
             to={`${PATH_NAMES.profile}/${userId}`}
           >
-            { post.user.data.imgMain.value && (
-              <ProfilePhoto image={post.user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
+            { postData.user.data.imgMain.value && (
+              <ProfilePhoto image={postData.user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
             )}
             {
               !user.data.imgMain.value && (
@@ -111,10 +111,10 @@ const Thread = forwardRef<any, IProps>
             className="cursor-pointer flex pt-4 text-chasescrollBlue"
             onClick={() => {
               toggleMoreOptions()
-              setThreadId(post.id);
-              setPostId(post.id);
+              setThreadId(postData.id);
+              setPostId(postData.id);
               setPostMakeId(user.userId)
-              console.log(`${post.id} this is the post id`)
+              console.log(`${postData.id} this is the post id`)
             }}
           >
             <HollowEllipsisIcon />

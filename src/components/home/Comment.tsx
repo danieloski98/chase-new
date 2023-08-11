@@ -160,8 +160,11 @@ function SubComment({ user, comment, commentID, likeCount, time, id }: Subcommen
 
   const { isLoading, mutate } = useMutation({
     mutationFn: () => httpService.post(`/feed/like-sub-comment/${id}`),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data.data);
       toast.success('liked');
+      setIsLiked(data.data.likeStatus === 'LIKED');
+      setNumOfLikes(data.data.likeCount);
       queryClient.invalidateQueries(['getSubcomment']);
     }
   });

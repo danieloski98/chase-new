@@ -54,7 +54,7 @@ const Community = ({ community }) => {
       </div>
       <div className="flex justify-between items-center w-full">
         <div className="flex flex-col gap-3">
-          <Link to={`${PATH_NAMES.community}/${community.id}`} className="font-medium text-lg md:text-2xl">
+          <Link to={`${PATH_NAMES.communityInfo}/${community.id}`} className="font-medium text-lg md:text-2xl">
             {community.data.name}
           </Link>
           <div className="text-sm md:text-base opacity-[50%]">

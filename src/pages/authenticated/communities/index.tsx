@@ -63,12 +63,12 @@ const Communities = () => {
         return <Requests />
       }
     }
-  }, [active, myCommunities, getMyCommunities.isLoading, getMyCommunities.isError, communities, getCommunities.isLoading, getCommunities.isError, searchText, handleRefechCommunities, requestedCommunities, getRequests.isLoading, getRequests.isError]);
+  }, [active, myCommunities, getMyCommunities.isLoading, getMyCommunities.isError, communities, getCommunities.isLoading, getCommunities.isError, searchText, handleRefechCommunities]);
 
   return (
     <PageWrapper>
       {() => (
-        <div className="w-full">
+        <div className="w-full h-full flex flex-col">
 
           {/* TAB */}
 
@@ -78,7 +78,7 @@ const Communities = () => {
             <div className={active === 3 ? ACTIVE:INACCTIVE} onClick={() => setActive(3)}>Request</div>
           </div>
 
-          <div className="w-full flex flex-col xl:px-10 px-4">
+          <div className="w-full flex-1 overflow-y-auto overflow-x-hidden flex flex-col xl:px-10 px-4">
             {/* CREATE COMUNITY BUTTON */}
             <div className="flex w-full justify-end items-center pr-10">
               <Link to={PATH_NAMES.createCommunity} className="self-end p-4">
@@ -93,6 +93,7 @@ const Communities = () => {
               {SwitchTab()}
             </div>
           </div>
+
         </div>
       )}
     </PageWrapper >

@@ -16,11 +16,13 @@ const ThreadMenu = ({
   threadId,
   postID,
   userId,
-  postMakeId,
+  creatorId,
   refresh
 }) => {
   const { sendRequest } = useFetch()
-  const { token } = useAuth()
+  const { token, userId: id } = useAuth()
+
+  console.log(`posterID ${creatorId}, myID ${id}`);
 
   // queryClient
   const queryClient = useQueryClient();
@@ -57,7 +59,7 @@ const ThreadMenu = ({
     <OverlayWrapper handleClose={toggleMoreOptions}>
       <div className="flex flex-col rounded-lg bg-white text-center w-80 shadow-lg">
         {
-          userId === postMakeId && (
+          id === creatorId && (
             <div className="py-3 cursor-pointer text-red-500" onClick={mutate}>
             { isLoading && <>Deleting...</> }
             { !isLoading &&  'Delete' }

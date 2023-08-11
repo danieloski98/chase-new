@@ -79,7 +79,7 @@ const CommunityInfo = () => {
 					<div className="flex flex-col gap-5 w-full max-w-md py-8">
 						<div className="flex flex-col gap-5 items-center w-full p-6 rounded-3xl border">
 							<div className="flex justify-between items-center text-center w-full">
-								<p className="cursor-pointer" onClick={() => navigation(`/communities/community/${id}`)}>
+								<p className="cursor-pointer" onClick={() => navigation(-1)}>
 									<CaretLeftIcon />
 								</p>
 								<p className="font-bold">Community Info</p>

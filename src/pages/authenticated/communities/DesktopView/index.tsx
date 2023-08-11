@@ -281,20 +281,24 @@ function DesktopViewChat({ query }: IProps) {
     const handlePost = useCallback(() => {
         if (Post.isLoading || imagePost.isLoading || videoPost.isLoading || filePost.isLoading) return;
 
-        if (type === 'image') {
-            imagePost.mutate();
-            return;
-        }
-        if (type === 'video') {
-            videoPost.mutate();
-            return;
-        }
-        if (type === 'file') {
-            filePost.mutate();
-            return;
+        if (type !== '') {
+            if (type === 'image') {
+                imagePost.mutate();
+                return;
+            }
+            if (type === 'video') {
+                videoPost.mutate();
+                return;
+            }
+            if (type === 'file') {
+                filePost.mutate();
+                return;
+            }
+        } else {
+            Post.mutate();
         }
 
-    }, [Post.isLoading, filePost, imagePost, type, videoPost])
+    }, [Post, filePost, imagePost, type, videoPost])
 
     if (showEventModal) {
           {/* EVENTS TO ADD MODAL */}
