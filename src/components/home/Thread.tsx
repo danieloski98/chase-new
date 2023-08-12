@@ -45,7 +45,8 @@ const Thread = forwardRef<any, IProps>
   setPostId,
   setPostMakeId,
 }, ref) => {
-  //const [post, setPost] = useState<any>(postData);
+  console.log(postData);
+  const [post, setPost] = useState<any>(postData);
   const [isLiked, setIsLiked] = useState(postData?.likeStatus === "LIKED");
   const [numOfLikes, setNumOfLikes] = useState(postData?.likeCount);
   const [showMore, setShowMore] = useState(false)
