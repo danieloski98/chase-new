@@ -6,7 +6,6 @@ import lodash from "lodash"
 
 
 
-
 // const getPosts = async (pageParam = 0, userId: string, options = {}) => {
 //     const response = await httpService.get(`/feed/get-user-and-friends-posts?userID=${userId}&page=${pageParam}&size=20`, options);
 //     console.log(response.data);
