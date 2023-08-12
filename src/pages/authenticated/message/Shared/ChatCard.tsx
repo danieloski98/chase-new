@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chat } from '../../../../models/Chat';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Badge, HStack, Heading, Text, VStack, Avatar } from '@chakra-ui/react';
+import { Badge, HStack, Heading, Text, VStack, Avatar, Box } from '@chakra-ui/react';
 import ProfilePhoto from '../../../../components/ProfilePhoto';
 import CONFIG from '../../../../config';
 import moment from 'moment';
@@ -33,7 +33,7 @@ export default function ChatCard({ chat, setSelected, smallScreen, activeChat }:
         if (chat.type === 'GROUP') {
             return `${CONFIG.RESOURCE_URL}${chat.image}`;
         }else {
-            return `${CONFIG.RESOURCE_URL}${chat.otherUser.data.imgMain?.value}`;
+            return chat.otherUser.data.imgMain?.value ? `${CONFIG.RESOURCE_URL}${chat.otherUser.data.imgMain?.value}`:`${CONFIG.RESOURCE_URL}${chat.image}`;
         }
     }, [chat]);
 
@@ -41,7 +41,7 @@ export default function ChatCard({ chat, setSelected, smallScreen, activeChat }:
         if (chat.type === 'GROUP') {
             return `${chat.name}`;
         }else {
-            return `${chat.otherUser.firstName} ${chat.otherUser.lastName}`;
+            return `${chat.otherUser.username}`;
         }
     }, [chat]);
 
@@ -53,15 +53,17 @@ export default function ChatCard({ chat, setSelected, smallScreen, activeChat }:
     px='10px'
     width='100%' height='100px' justifyContent='space-between' borderBottomWidth={0.5} borderBottomColor='lightgrey' paddingY='4' cursor='pointer'>
         <HStack paddingRight='10px'>
-            <Avatar 
+           <VStack justifyContent={'center'} alignItems='center' spacing={0} width='60px' height='60px' borderRadius='30px' borderWidth={chat.type === 'GROUP' ? 2:0} borderColor='brand.chasescrollBlue' overflow='hidden'>
+           <Avatar 
                 src={url()}
                 name={name()}
                 size='md'
-                borderColor='red'
             />
+           </VStack>
 
             <VStack alignItems='flex-start'>
-                <Heading size='sm' as='h4'>{chat.name[0].toUpperCase()}{chat.name.substring(1, chat.name.length)}</Heading>
+                { chat.type === 'GROUP' && <Heading size='sm' as='h4'>{chat.name[0].toUpperCase()}{chat.name.substring(1, chat.name.length)}</Heading> }
+                { chat.type === 'ONE_TO_ONE' && <Heading size='sm' as='h4'>@{chat.otherUser.username.toUpperCase()}</Heading>}
                 <Text>{chat?.lastMessage ? chat?.lastMessage.length > 20 ? `${chat?.lastMessage.substring(0, 20)}...` : chat?.lastMessage : ''}</Text>
             </VStack>
         </HStack>

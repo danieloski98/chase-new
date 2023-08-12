@@ -162,7 +162,7 @@ function DesktopChatView({ query }: IProps) {
                         <FiSearch fontSize='20px' />
                     </InputLeftElement>
 
-                    <Input type='text' placeholder='Search by group name' value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <Input type='text' placeholder='Search by group name or username' value={search} onChange={(e) => setSearch(e.target.value)} />
                 </InputGroup>
             </VStack>
 
@@ -182,7 +182,7 @@ function DesktopChatView({ query }: IProps) {
                         if (search === '') {
                             return item;
                         }
-                        if (item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+                        if (item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || item.otherUser?.username?.toLowerCase().includes(search.toLowerCase())) {
                             return item;
                         }
                     }).map((chat, i) => (

@@ -45,7 +45,75 @@ const Posts = () => {
   // }, []) 
   
   const [page, setPage] = React.useState(0)
-  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/feed/get-users-media-posts?userID='+userId, pageNumber:page, setPageNumber:setPage, search: true})
+  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/feed/get-users-media-posts?userID='+userId, pageNumber:page, setPageNumber:setPage,})
+
+  console.log(results?.filter((item) => item.mediaRef?.split('.')[1] === 'mp4'))
+
+  const content = results.map((post, index) => {
+    if (index === results.length -1 ) {
+      return (
+        <div ref={lastChildRef} key={index.toString()}>
+              {post.type === 'WITH_IMAGE' && post?.mediaRef &&
+                <img 
+                  key={post?.id}
+                  src={`${CONFIG.RESOURCE_URL}${post?.mediaRef }`}
+                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+                  alt="media from user post"
+                  onClick={() => {
+                    openUserPosts()
+                    setPostID(post?.id)
+                  }} 
+                />
+              }
+              {post.type === 'WITH_VIDEO_POST' && post?.mediaRef &&
+                <video 
+                  key={post?.id}
+                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+                  alt="media from user post"
+                  onClick={() => {
+                    openUserPosts()
+                    setPostID(post?.id)
+                  }} 
+                  controls
+                >
+                  <source src={`${CONFIG.RESOURCE_URL}${post?.mediaRef}`} type="video/mp4" />
+                </video>
+              }
+            </div>
+      )
+    } else {
+     return (
+      <div ref={lastChildRef} key={index.toString()}>
+      {post.type === 'WITH_IMAGE' && post?.mediaRef &&
+        <img 
+          key={post?.id}
+          src={`${CONFIG.RESOURCE_URL}${post?.mediaRef }`}
+          className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+          alt="media from user post"
+          onClick={() => {
+            openUserPosts()
+            setPostID(post?.id)
+          }} 
+        />
+      }
+      {post.type === 'WITH_VIDEO_POST' && post?.mediaRef &&
+        <video 
+          key={post?.id}
+          className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+          alt="media from user post"
+          onClick={() => {
+            openUserPosts()
+            setPostID(post?.id)
+          }} 
+          controls
+        >
+          <source src={`${CONFIG.RESOURCE_URL}${post?.mediaRef}`} type="video/mp4" />
+        </video>
+      }
+    </div>
+     )
+    }
+  })
 
 
   return (
@@ -59,48 +127,7 @@ const Posts = () => {
         />
       )}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center w-fit">
-        {results?.map((post, i) => {
-          // <Link to={`${PATH_NAMES.posts}/${userId}/${post?.id}`}>
-
-        if (results?.length === i + 1) {
-          return( 
-            <div ref={lastChildRef} >
-              {post?.mediaRef || post?.multipleMediaRef > 0 ? 
-                <img 
-                  key={post?.id}
-                  src={`${CONFIG.RESOURCE_URL}${post?.mediaRef ?? post?.multipleMediaRef[0]}`}
-                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover"
-                  alt="media from user post"
-                  onClick={() => {
-                    openUserPosts()
-                    setPostID(post?.id)
-                  }} 
-                /> :
-                <div  className="rounded-b-[32px] rounded-tl-[32px] bg-slate-400 w-48 h-48 object-cover"/>
-              }
-            </div>
-          )
-        }else { 
-          return( 
-            <div>
-              {post?.mediaRef || post?.multipleMediaRef > 0 ? 
-                <img 
-                  key={post?.id}
-                  src={`${CONFIG.RESOURCE_URL}${post?.mediaRef ?? post?.multipleMediaRef[0]}`}
-                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover"
-                  alt="media from user post"
-                  onClick={() => {
-                    openUserPosts()
-                    setPostID(post?.id)
-                  }} 
-                /> :
-                <div  className="rounded-b-[32px] rounded-tl-[32px] bg-slate-400 w-48 h-48 object-cover"/>
-              }
-            </div>
-          )
-        }
-          // </Link>
-        })}
+        {content}
       </div>
 
             

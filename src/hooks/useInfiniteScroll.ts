@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { IMediaContent, IMediaPost } from '../models/MediaPost';
 import httpService from '../utils/httpService'
 import { useMutation, useQuery } from 'react-query';
+import lodash from "lodash"
+
 
 
 // const getPosts = async (pageParam = 0, userId: string, options = {}) => {
@@ -24,9 +26,9 @@ function useInfiniteScroll({ userID, pageParam = 0}: {
         const item: IMediaPost = data.data as IMediaPost;
         console.log(item.content);
         const arr = [...item.content, ...newIttem, ...results];
-        setNew([...item.content, ...newIttem]);
+        setNew(lodash.uniq([...newIttem, ...item.content]));
         // results.unshift(item.content[0]);
-        setResults(arr);
+        setResults(lodash.uniq(arr));
       }
     })
 

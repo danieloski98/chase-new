@@ -4,14 +4,14 @@ import { ArrowRight, CaretLeftIcon } from "../../../components/Svgs"
 import { CLOSE_ENTITY } from "../../../constants"
 import { PATH_NAMES } from "../../../constants/paths.constant"
 import profilePhoto from "../../../assets/images/avatar.png"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import ProfilePhoto from "../../../components/ProfilePhoto"
 import { useAuth } from "../../../context/authContext"
 import { useFetch } from "../../../hooks/useFetch"
 import { GET_CHAT, GET_USER_CONNECTION_LIST, UPLOAD_IMAGE } from "../../../constants/endpoints.constant"
 import CONFIG from "../../../config"
 import { toast } from "react-toastify"
-import { Avatar } from '@chakra-ui/react'
+import { Avatar, Spinner } from '@chakra-ui/react'
 
 const CreateGroup = () => {
   const [showMembers, setShowMembers] = useState(false)
@@ -25,7 +25,10 @@ const CreateGroup = () => {
     name: "",
     type: "GROUP",
     users: []
-  })
+  });
+
+  const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
 
   const toggleMembers = () => setShowMembers(state => !state)
   const handleSelect = (checked, id) => {
@@ -67,6 +70,23 @@ const CreateGroup = () => {
   }
 
   const createGroupChat = () => {
+    if (loading) return;
+    if (image === null) {
+      toast.warning('You must select an image');
+      return;
+    }
+
+    if (groupInfo.name === '') {
+      toast.warning('You must enter a group name');
+      return;
+    }
+
+    if (groupInfo.users.length < 2) {
+      toast.warning('You must select at least 2 members');
+      return;
+    }
+
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", image);
 
@@ -77,21 +97,32 @@ const CreateGroup = () => {
       { Authorization: `Bearer ${token}` },
       true
     ).then((response) => {
-      setGroupInfo(info => ({
-        ...info,
+      // setGroupInfo(info => ({
+      //   ...info,
+      //   image: response?.fileName
+      // }));
+      const obj = {
+        ...groupInfo,
         image: response?.fileName
-      }))
+      }
+      console.log(obj);
       sendRequest(
         GET_CHAT,
         "POST",
-        groupInfo,
+        obj,
         { Authorization: `Bearer ${token}` }
       ).then(() => {
         toast.success("Group chat created successfully")
-        setTimeout(() => {
-          window.location.pathname = PATH_NAMES.message
-        }, 2000)
+        setLoading(false);
+        navigate(-1);
       })
+      .catch(() => {
+        toast.error("Something went wrong")
+      })
+    })
+    .catch((error) => {
+      setLoading(false);
+      toast.error(`${error?.message}`)
     })
   }
 
@@ -255,7 +286,8 @@ const CreateGroup = () => {
                   <ArrowRight />
                 </div>
                 <button onClick={createGroupChat} className="bg-chasescrollBlue p-2.5 rounded-xl text-white w-full max-w-sm">
-                  Create group Chat
+                  { !loading && 'Create group Chat' } 
+                  { loading && <Spinner colorr='white' size='sm' />}
                 </button>
               </div>
             </div>

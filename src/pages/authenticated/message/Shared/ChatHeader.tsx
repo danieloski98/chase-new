@@ -1,5 +1,5 @@
 import React from 'react';
-import { HStack, Heading, Text, VStack, Menu, MenuButton, MenuList, MenuItem, Spinner } from '@chakra-ui/react';
+import { HStack, Heading, Text, VStack, Menu, MenuButton, MenuList, MenuItem, Spinner, Avatar } from '@chakra-ui/react';
 import ProfilePhoto from '../../../../components/ProfilePhoto';
 import CONFIG from '../../../../config';
 import { ICommunity } from '../../../../models/Communitty';
@@ -20,6 +20,7 @@ interface IProps {
 }
 
 const ChatHeader = ({ chat, setActive }: IProps) => {
+    console.log(chat);
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const { userId } = useAuth();
@@ -48,24 +49,17 @@ const ChatHeader = ({ chat, setActive }: IProps) => {
 
     const url = React.useCallback(() => {
         if (chat.type === 'GROUP') {
-            if (chat.image) {
-                return `${CONFIG.RESOURCE_URL}${chat.image}`;
-            }
-            return `https://ui-avatars.com/api/?background=random&name=${chat?.name}&length=1`;
-
+            return `${CONFIG.RESOURCE_URL}${chat.image}`;
         }else {
-            if (chat.otherUser.data.imgMain.value) {
-                return `${chat.otherUser.firstName} ${chat.otherUser.lastName}`;
-            }
-            return `https://ui-avatars.com/api/?background=random&name=${chat?.name}&length=1`;
+            return chat.otherUser.data.imgMain?.value ? `${CONFIG.RESOURCE_URL}${chat.otherUser.data.imgMain?.value}`:`${CONFIG.RESOURCE_URL}${chat.image}`;
         }
     }, [chat]);
 
     const name = React.useCallback(() => {
         if (chat.type === 'GROUP') {
-            return `${chat.name[0].toUpperCase()}${chat.name.substring(1, chat.name.length)}`
+            return `${chat.name}`;
         }else {
-            return `${chat.otherUser.username[0].toUpperCase()}${chat.otherUser.username.substring(1, chat.otherUser.username.length)}`;
+            return `${chat.otherUser.username}`;
         }
     }, [chat]);
   return (
@@ -74,7 +68,12 @@ const ChatHeader = ({ chat, setActive }: IProps) => {
             <div className="block lg:hidden xl:hidden" onClick={() => setActive && setActive(null)}>
                 <FiChevronLeft fontSize='30px' color='black' />
             </div>
-            <ProfilePhoto image={url()} />
+            <Avatar 
+                src={url()}
+                name={name()}
+                size='md'
+            />
+            {/* <ProfilePhoto image={url()} /> */}
 
             <VStack alignItems='flex-start'>
                 <Text color='gray.600' size='md' cursor='pointer' onClick={handleNavigation}>{name()}</Text>
