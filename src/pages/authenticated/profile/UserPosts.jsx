@@ -87,46 +87,24 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 						onClick={toggleUserPosts}
 					> 
 						{results?.map((post, i) => { 
-							if (results?.length === i + 1) {
+							if (i === results.length - 1) {
 								return( 
 									<Thread
 										ref={lastChildRef}
-										key={post?.id}
-										postID={post?.id}
-										text={post?.text}
-										user={post?.user}
-										time={post?.time} 
-										shareCount={post?.shareCount}
-										mediaRef={post?.mediaRef}
-										multipleMediaRef={post?.multipleMediaRef}
-										likeCount={post?.likeCount}
-										commentCount={post?.commentCount}
+										post={post}
 										toggleMoreOptions={toggleMoreOptions}
 										toggleShare={toggleShare}
-										type={post?.type}
 										setThreadId={setThreadId}
-										likeStatus={post?.likeStatus}
 									/>
 								)
 							} else {
 								return( 
 									<Thread
 										ref={post?.id === postID ? itemRef : null}
-										key={post?.id}
-										postID={post?.id}
-										text={post?.text}
-										user={post?.user}
-										time={post?.time} 
-										shareCount={post?.shareCount}
-										mediaRef={post?.mediaRef}
-										multipleMediaRef={post?.multipleMediaRef}
-										likeCount={post?.likeCount}
-										commentCount={post?.commentCount}
+										post={post}
 										toggleMoreOptions={toggleMoreOptions}
 										toggleShare={toggleShare}
-										type={post?.type}
 										setThreadId={setThreadId}
-										likeStatus={post?.likeStatus}
 									/>
 								)
 							}

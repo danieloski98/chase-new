@@ -160,7 +160,7 @@ function MobileChatView({ query }: IProps) {
                         <FiSearch fontSize='20px' />
                     </InputLeftElement>
 
-                    <Input type='text' placeholder='Search by group name' value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <Input type='text' placeholder='Search by group name or username' value={search} onChange={(e) => setSearch(e.target.value)} />
                 </InputGroup>
             </VStack>
 
@@ -175,13 +175,13 @@ function MobileChatView({ query }: IProps) {
                         <Skeleton height='100px' width='100%' marginBottom='10px' />
                     </VStack>
             )}
-            <VStack flex={1} height='100%' overflow='auto' width='100%' px='20px'>
+            <VStack flex={1} height='100%' overflow='auto' width='100%' px='20px' paddingBottom='100px'>
                     {!query.isLoading && chats.length > 0 && chats
                     .filter((item) => {
                         if (search === '') {
                             return item;
                         }
-                        if (item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+                        if (item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || item.otherUser?.username?.toLowerCase().includes(search.toLowerCase())) {
                             return item;
                         }
                     })

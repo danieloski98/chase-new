@@ -98,7 +98,7 @@ export default function Message({ isLoading, messages }: IProps) {
   return (
     <div className={`flex flex-col w-full h-full gap-4 sm:px-5 py-12  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
     {messages?.content.map((message, i) => (
-        <div key={i} className={`sm:min-w-32 sm:max-w-32 md:max-w-[100px] lg:min-w-[400px] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.self
+        <div key={i} className={`sm:min-w-[80%] sm:max-w-[85%] md:max-w-[60%] lg:min-w-[50%] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.self
             ? "rounded-bl-xl self-end"
             : "rounded-br-xl self-start"
             }`}>

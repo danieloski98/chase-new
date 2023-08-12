@@ -3,6 +3,8 @@ import { useQuery } from 'react-query';
 import httpService from '../utils/httpService'
 import { PaginatedResponse } from '../models/PaginatedResponse'
 import { AxiosResponse } from 'axios';
+import { IMediaContent } from 'src/models/MediaPost';
+import lodash from "lodash"
 
 type IProps = {
     url: string;
@@ -16,6 +18,7 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
     const [hasNextPage, setHasNextPage] = React.useState(false);
     const intObserver = React.useRef<IntersectionObserver>();
 
+
     // useQuery
     const { data, isLoading, isError, error, refetch, isRefetching } = useQuery<AxiosResponse<PaginatedResponse<T>, PaginatedResponse<T>>>([`get${url}`, pageNumber ], () => httpService.get(`${url}`, {
       params : {
@@ -23,16 +26,30 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
       }
     }), {
         onSuccess: (data) => {
-          const item: PaginatedResponse<T> = data.data as PaginatedResponse<T>
+          const item: PaginatedResponse<T> = data?.data as PaginatedResponse<T>
           // console.log(item);
-          if(isRefetching){ 
-            results?.push(...item?.content);
-            setResults(results);
-          } else{
-            setResults(item?.content);
+              // results.push(...item.content);
+              // setResults(results);
+              // //setResults(prev => [...data.data.content, ...prev]);
+              // setHasNextPage(data.data.last ? false:true);
+              // window.scrollTo(0, window.innerHeight);
+          if (results.length > 0) {
+            results.push(...item.content);
+            setResults(lodash.uniq(results));
+          } else {
+            setResults(lodash.uniq(item?.content));
           }
-            setHasNextPage(item.last ? false:true);
-            window.scrollTo(0, window.innerHeight);
+          setHasNextPage(data.data.last ? false:true);
+          window.scrollTo(0, window.innerHeight);
+
+          // if(isRefetching){ 
+          //   results?.push(...item.content);
+          //   setResults(lodash.uniq(results));
+          // } else{
+          //   setResults(lodash.uniq(item?.content));
+          // }
+          //   setHasNextPage(item.last ? false:true);
+          //   window.scrollTo(0, window.innerHeight);
         }
     })
 

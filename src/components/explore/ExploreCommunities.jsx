@@ -14,6 +14,8 @@ import useInfinteScroller from "../../hooks/useInfinteScroller"
 const ProductTile = forwardRef(
 	(community, ref, refetch) => { 
 
+    console.log(community);
+
     const { sendRequest } = useFetch()
     const { token, userId, searchValue } = useAuth()
     const navigate = useNavigate();
@@ -59,8 +61,9 @@ const ProductTile = forwardRef(
           <div className="flex items-center w-fit gap-3 ">
             <div className=" border-white rounded-b-full rounded-tl-full w-[57px] relative">
               <div className=" border-2 border-white w-[57px] relative z-40 h-[57px] rounded-b-full rounded-tl-full " >
-                <img
+                <Avatar
                   src={`${CONFIG.RESOURCE_URL}${community.data.imgSrc}`}
+                  name={community.data.name}
                   alt="descriptive photograph"
                   className="rounded-b-full object-cover rounded-tl-full w-full h-full "
                   onClick={() => navigate(`/communities/community/${community.id}`)}

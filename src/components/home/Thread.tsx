@@ -46,8 +46,8 @@ const Thread = forwardRef<any, IProps>
   setPostMakeId,
 }, ref) => {
   //const [post, setPost] = useState<any>(postData);
-  const [isLiked, setIsLiked] = useState(postData.likeStatus === "LIKED");
-  const [numOfLikes, setNumOfLikes] = useState(postData.likeCount);
+  const [isLiked, setIsLiked] = useState(postData?.likeStatus === "LIKED");
+  const [numOfLikes, setNumOfLikes] = useState(postData?.likeCount);
   const [showMore, setShowMore] = useState(false)
   const { token, userId } = useAuth()
   const { sendRequest } = useFetch()

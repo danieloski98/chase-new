@@ -301,3 +301,5 @@ export const CHANGE_PASSWORD = "/chasescroll/verification/change-password"
 // Chat API
 export const GET_CHAT = "/chat/chat"
 export const GET_MESSAGES = "/chat/message"
+export const ADD_MEMBER = '/chat/addMembers'
+export const UPDATE_CHAT = '/chat/chat'
