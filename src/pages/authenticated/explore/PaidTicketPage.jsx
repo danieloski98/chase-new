@@ -67,11 +67,13 @@ const PaidTicketPage = () => {
     else if (orderCode) verifyPaystackPayment()
   }, [orderId, orderCode])
 
+console.log(event);
+
   return (
     <PageWrapper>
       {() => (
         <TicketPageTemplate
-          data={event}
+          dataInfo={event}
           eventID={event?.id}
           isBought={event?.isBought}
           eventName={event?.eventName}
@@ -92,6 +94,7 @@ const PaidTicketPage = () => {
           isOrganizer={event?.isOrganizer}
           minPrice={event?.minPrice}
           maxPrice={event?.maxPrice}
+          ticketBought={event?.ticketBought}
         />
       )}
     </PageWrapper>

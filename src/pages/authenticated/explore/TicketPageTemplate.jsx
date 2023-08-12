@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import PropTypes from "prop-types"
 import {
@@ -7,6 +7,7 @@ import {
   LocationIcon,
   AddProfileIcon,
 } from "@/components/Svgs"
+import { usePaystackPayment } from 'react-paystack';
 import Map from "@/components/map"
 import { EVENT_TYPE, POLICY } from "@/constants"
 import { PATH_NAMES } from "@/constants/paths.constant"
@@ -22,6 +23,9 @@ import { toast } from "react-toastify"
 import { useFetch } from "../../../hooks/useFetch"
 import { CREATE_TICKET, PAY_WITH_PAYSTACK, PAY_WITH_STRIPE, SEND_FRIEND_REQUEST, VERIFY_PAYSTACK_PAYMENT, VERIFY_STRIPE_PAYMENT } from "../../../constants/endpoints.constant"
 import SelectPaymentOptions from "../../../components/explore/modals/SelectPaymentOptions"
+import { AxiosError } from "axios"
+import httpService from "../../../utils/httpService"
+import { useQuery } from "react-query"
 
 const TicketPageTemplate = ({
   banner,
@@ -44,7 +48,8 @@ const TicketPageTemplate = ({
   minPrice,
   maxPrice,
   username,
-  data,
+  dataInfo,
+  ticketBought
 }) => {
   const navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -73,7 +78,17 @@ const TicketPageTemplate = ({
     setShowPaymentOptions(false)
   }
 
-  const payWithPaystack = () => {
+  const [config , setConfig] = React.useState( { 
+    email: "",
+    amount: 0,
+    reference: "",
+    publicKey: "pk_test_58a8e726bbe3cce8ade3082f4e49f46089046b5d",
+  }) 
+
+  const [configStripe , setConfigStripe] = React.useState({ }) 
+  const [clientKey , setClientKey] = React.useState("") 
+
+  const payWithPaystack = async() => { 
     sendPaystackRequest(
       CREATE_TICKET,
       "POST",
@@ -84,16 +99,16 @@ const TicketPageTemplate = ({
       },
       { Authorization: `Bearer ${token}` }
     ).then((data) => {
-      sendPaystackRequest(
-        `${PAY_WITH_PAYSTACK}?orderCode=${data?.content?.orderCode}&email=${data?.content?.email}&amount=${data?.content?.orderTotal}&currency=${currency}`,
-        "POST",
-        null,
-        { Authorization: `Bearer ${token}` }
-      ).then((response) => {
-        window.open(response?.checkout, "_blank");
-      })
-    })
-  }
+        if(data?.content?.orderTotal > 0){
+          setConfig({ 
+            email: data?.content?.email,
+            amount: (Number(data?.content?.orderTotal)*100), //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+            publicKey: 'pk_test_58a8e726bbe3cce8ade3082f4e49f46089046b5d',
+            reference: data?.content?.orderCode
+          }); 
+        } 
+    }) 
+  }  
 
   const payWithStripe = () => {
     sendStripeRequest(
@@ -105,7 +120,15 @@ const TicketPageTemplate = ({
         numberOfTickets: ticketCount
       },
       { Authorization: `Bearer ${token}` }
-    ).then((data) => { 
+    ).then((data) => {  
+      console.log(data);
+      if(data?.content?.orderTotal > 0) {
+
+        setConfigStripe({
+          reference: data?.content?.orderId,
+          amount: data?.content?.orderTotal
+        })
+      }
       if(!data?.content?.orderId){
         toast.error(data?.message) 
       } else { 
@@ -115,13 +138,23 @@ const TicketPageTemplate = ({
           null,
           { Authorization: `Bearer ${token}` }
         ).then((response) => {
-          window.open(response?.checkout, "_blank");
+          setClientKey(response?.gatewayReferenceID)
+          console.log(response?.gatewayReferenceID);
+          // window.open(response?.checkout, "_blank");
         }) 
       } 
     })
   }
 
   const isDisabled = !isFree && !selectedCategory?.ticketPrice
+
+  const { data } = useQuery(['getEventSearch'+eventID], () => httpService.get('/events/get-users-tickets', {
+    params : {
+      eventID: eventID
+    }
+  })) 
+
+  console.log(data);
 
   const clickHandler =()=> {
     setEventData(data)
@@ -155,7 +188,7 @@ const TicketPageTemplate = ({
           eventName={eventName}
           location={location?.address}
           ticketFee={
-            isFree
+            (isFree || isBought)
               ? EVENT_TYPE.free
               : selectedCategory?.ticketPrice
           }
@@ -178,7 +211,7 @@ const TicketPageTemplate = ({
           toggleModal={buyTicket}
           toggleRefundPolicy={toggleRefundPolicy}
           ticketPrice={selectedCategory?.ticketPrice}
-          categoryType={selectedCategory.ticketType}
+          categoryType={selectedCategory?.ticketType}
           ticketCount={ticketCount}
           setTicketCount={setTicketCount}
           currency={currency}
@@ -215,6 +248,9 @@ const TicketPageTemplate = ({
           paystackLoading={paystackLoading}
           stripeLoading={stripeLoading}
           currency={currency}
+          client={clientKey}
+          config={config}
+          stripeconfig={configStripe}
         />
       )}
       <div className="pl-4 lg:pl-12 pt-9 pb-24 pr-4 flex flex-col gap-2 relative">
@@ -246,7 +282,7 @@ const TicketPageTemplate = ({
               </p>
             </div>
             <div className="flex justify-between items-center">
-              {data?.isBought && (
+              {isBought && (
                 <div className="bg-green-600 text-white px-3 py-2 rounded-3xl text-sm">Attending</div>
               )}
               {attendees?.slice(0, 3).length && (
@@ -294,15 +330,15 @@ const TicketPageTemplate = ({
             </div>
             {!isOrganizer && (
               <div className="flex flex-row gap-4 justify-center items-center">
-                {data?.createdBy?.joinStatus !== "CONNECTED" && (
+                {dataInfo?.createdBy?.joinStatus !== "CONNECTED" && (
                   <button onClick={friendPerson} className="p-2">
                     <AddProfileIcon className="w-6 h-6" />
                   </button>
                 )}
-                {data?.createdBy?.joinStatus === "CONNECTED" && (
+                {dataInfo?.createdBy?.joinStatus === "CONNECTED" && (
                   <p className=" text-chasescrollBlue font-bold " >Connected</p>
                 )}
-                {data?.createdBy?.joinStatus === "FRIEND_REQUEST_SENT" && (
+                {dataInfo?.createdBy?.joinStatus === "FRIEND_REQUEST_SENT" && (
                   <p className=" text-chasescrollBlue font-bold " >Pending</p>
                 )} 
                 <button className="p-2">
@@ -362,49 +398,54 @@ const TicketPageTemplate = ({
               </div>
             </div> */}
 
+            {!isBought && (
             <div className="flex flex-col gap-2 justify-end lg:w-[430px] w-full">
               <div className="hidden lg:block text-xs text-gray-500 lg:ml-2">
                 Select ticket type
               </div>
-              {!isOrganizer ? (
-                <div className="flex items-center gap-2 lg:px-2 lg:pb-3 rounded-lg lg:border-b border-gray-300">
-                  {isFree ? (
-                    <button className="bg-chasescrollBlue text-white border border-chasescrollBlue text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-4 py-2.5">
-                      {EVENT_TYPE.free.toUpperCase()}
-                    </button>
+                <> 
+                  {!isOrganizer ? (
+                    <div className="flex items-center gap-2 lg:px-2 lg:pb-3 rounded-lg lg:border-b border-gray-300">
+                      {(isFree) ? (
+                        <button className="bg-chasescrollBlue text-white border border-chasescrollBlue text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-4 py-2.5">
+                          {EVENT_TYPE.free.toUpperCase()}
+                        </button>
+                      ) : (
+                        price?.map(category => (
+                          <button
+                            key={category.id}
+                            onClick={() => handleCategorySelection(category)}
+                            className={`border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize ${category.ticketPrice === selectedCategory?.ticketPrice
+                              ? "text-white bg-chasescrollBlue"
+                              : "text-chasescrollBlue bg-white"
+                              }`}
+                          >
+                            {category?.ticketType} {formatNumber(category?.ticketPrice, currency === "USD" ? "$" : "₦")}
+                          </button>
+                        ))
+                      )}
+                    </div>
                   ) : (
-                    price?.map(category => (
+                    <div className="flex items-center gap-2 lg:px-2 lg:pb-3 rounded-lg lg:border-b border-gray-300">
                       <button
-                        key={category.id}
-                        onClick={() => handleCategorySelection(category)}
-                        className={`border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize ${category.ticketPrice === selectedCategory?.ticketPrice
-                          ? "text-white bg-chasescrollBlue"
-                          : "text-chasescrollBlue bg-white"
-                          }`}
+                        onClick={()=> clickHandler()}
+                        className="border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize text-white bg-chasescrollBlue"
                       >
-                        {category?.ticketType} {formatNumber(category?.ticketPrice, currency === "USD" ? "$" : "₦")}
+                        My Dashboard
                       </button>
-                    ))
+                      <button
+                        onClick={()=> editHandler()}
+                        disabled={ticketBought}
+                        className={` ${ticketBought && " opacity-40 " } border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize bg-white text-chasescrollBlue`}
+                      >
+                        Edit Event
+                      </button>
+                    </div>
                   )}
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 lg:px-2 lg:pb-3 rounded-lg lg:border-b border-gray-300">
-                  <button
-                    onClick={()=> clickHandler()}
-                    className="border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize text-white bg-chasescrollBlue"
-                  >
-                    My Dashboard
-                  </button>
-                  <button
-                    onClick={()=> editHandler()}
-                    className="border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize bg-white text-chasescrollBlue"
-                  >
-                    Edit Event
-                  </button>
-                </div>
-              )}
+                </>
 
             </div>
+          )}
           </div>
 
           <div className="flex flex-row gap-2 rounded-lg lg:px-2 lg:py-3 lg:w-80 w-full items-center lg:items-end lg:border-b border-gray-300">
@@ -436,12 +477,12 @@ const TicketPageTemplate = ({
 
           <div className="flex items-center justify-center">
             <button
-              disabled={isDisabled}
-              onClick={isFree ? viewTicket : buyTicket}
-              className={`${isDisabled ? "cursor-not-allowed opacity-50" : ""
+              disabled={isBought? false :isDisabled}
+              onClick={(isFree || isBought)  ? viewTicket : buyTicket}
+              className={`${isBought ?  "" :isDisabled ? "cursor-not-allowed opacity-50" : ""
                 } bg-chasescrollBlue text-white w-96 p-3 text-sm rounded-lg`}
             >
-              {isFree ? "View" : "Buy"} Ticket
+              {(isFree || isBought) ? "View" : "Buy"} Ticket
             </button>
           </div>
         </div>
