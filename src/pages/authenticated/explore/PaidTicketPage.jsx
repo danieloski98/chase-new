@@ -7,10 +7,15 @@ import { GET_ALL_PUBLIC_EVENTS_TO_JOIN, VERIFY_PAYSTACK_PAYMENT, VERIFY_STRIPE_P
 import { useAuth } from "../../../context/authContext"
 import { useFetch } from "../../../hooks/useFetch"
 import { toast } from "react-toastify"
+import { AxiosError } from "axios"
+import httpService from "../../../utils/httpService"
+import { useQuery } from "react-query"
+import Loader from "../../../components/Loader"
 
 const PaidTicketPage = () => {
   const { id, orderId, orderCode } = useParams()
   const [event, setEvent] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
 
   const { token } = useAuth()
   const { sendRequest } = useFetch()
@@ -25,8 +30,25 @@ const PaidTicketPage = () => {
       }
     ).then((data) => {
       setEvent(data?.content[0])
+      setIsLoading(false)
     })
   }
+
+
+  // const { isLoading } = useQuery({
+  //   queryKey: ['EventInfo'+id], 
+  //   enabled: false}, () => httpService.get('/events/events', {
+  //   params: {
+  //     id: id
+  //   }
+  // }), {
+  //   onError: (error) => {
+  //     toast.error(error.response?.data);
+  //   }, 
+  //   onSuccess: (data) => {
+  //     setEvent(data.data.content[0]);
+  //   }
+  // }) 
 
   const verifyStripePayment = () => {
     try {
@@ -72,30 +94,39 @@ console.log(event);
   return (
     <PageWrapper>
       {() => (
-        <TicketPageTemplate
-          dataInfo={event}
-          eventID={event?.id}
-          isBought={event?.isBought}
-          eventName={event?.eventName}
-          about={event?.eventDescription}
-          banner={event?.picUrls ? event?.currentPicUrl : ""}
-          isFree={event?.isFree}
-          timeAndDate={event?.startDate}
-          endtimeAndDate={event?.endDate}
-          location={event?.location}
-          locationType={event?.locationType}
-          convener={event?.createdBy?.firstName+" "+event?.createdBy?.lastName}
-          username={event?.createdBy?.username}
-          userId={event?.createdBy?.userId}
-          ticketInfo={event?.productTypeData}
-          eventLogo={event?.createdBy?.data?.imgMain?.value}
-          price={event?.productTypeData}
-          currency={event?.currency}
-          isOrganizer={event?.isOrganizer}
-          minPrice={event?.minPrice}
-          maxPrice={event?.maxPrice}
-          ticketBought={event?.ticketBought}
-        />
+        <>
+          {isLoading && (
+            <Loader />
+          )}
+          {!isLoading && (
+
+            <TicketPageTemplate
+              dataInfo={event}
+              eventID={event?.id}
+              isBought={event?.isBought}
+              eventName={event?.eventName}
+              about={event?.eventDescription}
+              banner={event?.picUrls ? event?.currentPicUrl : ""}
+              isFree={event?.isFree}
+              timeAndDate={event?.startDate}
+              endtimeAndDate={event?.endDate}
+              location={event?.location}
+              locationType={event?.locationType}
+              convener={event?.createdBy?.firstName+" "+event?.createdBy?.lastName}
+              username={event?.createdBy?.username}
+              userBy={event?.createdBy?.userId}
+              ticketInfo={event?.productTypeData}
+              eventLogo={event?.createdBy?.data?.imgMain?.value}
+              price={event?.productTypeData}
+              currency={event?.currency}
+              isOrganizer={event?.isOrganizer}
+              minPrice={event?.minPrice}
+              maxPrice={event?.maxPrice}
+              getData={getEvent}
+              ticketBought={event?.ticketBought}
+            />
+          )}
+        </>
       )}
     </PageWrapper>
   )

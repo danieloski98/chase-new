@@ -17,6 +17,9 @@ const DownloadTicketModal = ({
   ticketFee,
   closeModal,
   handleClose,
+  type,
+  length,
+  currency
 }) => {
   return (
     <OverlayWrapper handleClose={handleClose}>
@@ -64,15 +67,15 @@ const DownloadTicketModal = ({
                 <p className="text-chasescrollTextGrey">
                   {ticketFee === EVENT_TYPE.free
                     ? EVENT_TYPE.free
-                    : formatNumber(ticketFee, "$")}
+                    : formatNumber(ticketFee, currency === "USD" ? "$" : "₦")}
                 </p>
               </div>
               <div className="flex flex-col gap-2">
-                <h3 className="text-chasescrollBlue font-bold">Ticket Admit</h3>
+                <h3 className="text-chasescrollBlue font-bold">Ticket Type</h3>
                 <p className="text-chasescrollTextGrey">
                   {ticketFee === EVENT_TYPE.free
                     ? EVENT_TYPE.free
-                    : formatNumber(ticketFee, "$")}
+                    : type}
                 </p>
               </div>
             </div>
@@ -89,7 +92,7 @@ const DownloadTicketModal = ({
                 </div>
                 <div className="flex flex-col gap-2">
                   <h3 className="text-chasescrollBlue font-bold">Number</h3>
-                  <p className="text-chasescrollTextGrey">1</p>
+                  <p className="text-chasescrollTextGrey">{length}</p>
                 </div>
               </div>
             </div>

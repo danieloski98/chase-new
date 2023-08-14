@@ -26,11 +26,12 @@ import SelectPaymentOptions from "../../../components/explore/modals/SelectPayme
 import { AxiosError } from "axios"
 import httpService from "../../../utils/httpService"
 import { useQuery } from "react-query"
+import Stripecomponent from "../../../components/explore/Stripecomponent/Stripecomponent";
 
 const TicketPageTemplate = ({
   banner,
   eventID,
-  userId,
+  userBy,
   eventName,
   eventLogo,
   attendees,
@@ -49,7 +50,8 @@ const TicketPageTemplate = ({
   maxPrice,
   username,
   dataInfo,
-  ticketBought
+  ticketBought,
+  getData
 }) => {
   const navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -58,9 +60,10 @@ const TicketPageTemplate = ({
   const [showRefundPolicy, setShowRefundPolicy] = useState(false)
   const [showPaymentMethods, setShowPaymentMethods] = useState(false)
   const [showPaymentOptions, setShowPaymentOptions] = useState(false)
+  const [showStripeForm, setShowStripeForm] = useState(false)
   const [ticketCount, setTicketCount] = useState(1)
 
-  const { token, setEventData } = useAuth()
+  const { token, setEventData, userId } = useAuth()
   const { sendRequest: sendPaystackRequest, isLoading: paystackLoading } = useFetch()
   const { sendRequest: sendStripeRequest, isLoading: stripeLoading } = useFetch()
 
@@ -77,6 +80,15 @@ const TicketPageTemplate = ({
     setShowPaymentMethods(false)
     setShowPaymentOptions(false)
   }
+  
+  const handlePaymentModal =()=>{ 
+    setShowPaymentOptions(false)
+    setShowStripeForm(true)
+  }
+
+  const closeModal =()=> {
+    setShowStripeForm(false)
+  }
 
   const [config , setConfig] = React.useState( { 
     email: "",
@@ -86,7 +98,30 @@ const TicketPageTemplate = ({
   }) 
 
   const [configStripe , setConfigStripe] = React.useState({ }) 
-  const [clientKey , setClientKey] = React.useState("") 
+  const [clientKey , setClientKey] = React.useState("")  
+  const [ticketinfo , setticketinfo] = React.useState("")  
+
+  const getEventTicket = () => {
+    
+    sendRequest(
+      `/events/get-users-tickets?userID=${userId}&eventID=${eventID}`,
+      "GET",
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    ).then((data) => {
+      console.log(data);
+      setticketinfo(data?.content)
+      setIsLoading(false)
+    })
+  }
+
+  React.useEffect(()=>{
+    getEventTicket()
+  }, [getData])
+
+  console.log(ticketinfo);
 
   const payWithPaystack = async() => { 
     sendPaystackRequest(
@@ -139,6 +174,7 @@ const TicketPageTemplate = ({
           { Authorization: `Bearer ${token}` }
         ).then((response) => {
           setClientKey(response?.gatewayReferenceID)
+          setShowStripeForm(true)
           console.log(response?.gatewayReferenceID);
           // window.open(response?.checkout, "_blank");
         }) 
@@ -148,13 +184,17 @@ const TicketPageTemplate = ({
 
   const isDisabled = !isFree && !selectedCategory?.ticketPrice
 
-  const { data } = useQuery(['getEventSearch'+eventID], () => httpService.get('/events/get-users-tickets', {
-    params : {
-      eventID: eventID
-    }
-  })) 
+  // const { data } = useQuery({
+  //   queryKey: ['getEventSearch'+eventID],
+  //   enabled: false
+  // }, () => httpService.get('/events/get-users-tickets', {
+  //   params : {
+  //     userID: userId,
+  //     eventID: eventID
+  //   }
+  // })) 
 
-  console.log(data);
+  // console.log(data);
 
   const clickHandler =()=> {
     setEventData(data)
@@ -171,7 +211,7 @@ const TicketPageTemplate = ({
     const data = await sendRequest(
       `${SEND_FRIEND_REQUEST}`,
       "POST",
-      { toUserID: userId },
+      { toUserID: userBy },
       { Authorization: `Bearer ${token}` }
     )
     if (data) {
@@ -183,18 +223,21 @@ const TicketPageTemplate = ({
     <>
       {proceedWithDownload && (
         <DownloadTicketModal
-          userName="Peter Obi"
+          userName={ticketinfo[0]?.createdBy?.firstName+" "+ticketinfo[0]?.createdBy?.lastName}
           banner={`${CONFIG.RESOURCE_URL}${banner}`}
+          length={ticketinfo?.length}
           eventName={eventName}
-          location={location?.address}
+          location={location?.locationDetails}
+          currency={currency}
           ticketFee={
-            (isFree || isBought)
+            (isFree)
               ? EVENT_TYPE.free
-              : selectedCategory?.ticketPrice
+              : ticketinfo[0]?.boughtPrice
           }
+          type={ticketinfo[0]?.ticketType}
           convener={convener}
           date={timeAndDate}
-          orderId="#5634785"
+          orderId={ticketinfo[0]?.id}
           closeModal={viewTicket}
           handleClose={handleClose}
         />
@@ -248,10 +291,15 @@ const TicketPageTemplate = ({
           paystackLoading={paystackLoading}
           stripeLoading={stripeLoading}
           currency={currency}
-          client={clientKey}
+          client={clientKey} 
           config={config}
+          stripeform={handlePaymentModal}
           stripeconfig={configStripe}
+          getData={getData}
         />
+      )}
+      {showStripeForm && (
+        <Stripecomponent clientKey={clientKey} config={configStripe} closeModal={closeModal} getData={getData} />
       )}
       <div className="pl-4 lg:pl-12 pt-9 pb-24 pr-4 flex flex-col gap-2 relative">
         <button
@@ -318,12 +366,12 @@ const TicketPageTemplate = ({
             <div className="flex gap-2 justify-center items-center">
               <img 
               role="button"
-                onClick={() => navigate(`/profile/${`${userId}`}`)}
+                onClick={() => navigate(`/profile/${`${userBy}`}`)}
                 src={`${CONFIG.RESOURCE_URL}${eventLogo}`}
                 alt="convener logo"
                 className="w-12 h-12 object-cover rounded-b-full rounded-tl-full bg-black"
               />
-              <div role="button"  onClick={() => navigate(`/profile/${`${userId}`}`)} className="flex flex-col">
+              <div role="button"  onClick={() => navigate(`/profile/${`${userBy}`}`)} className="flex flex-col">
                 <h3>{convener}</h3>
                 <p className="text-xs font-bold">@{username}</p>
               </div>
