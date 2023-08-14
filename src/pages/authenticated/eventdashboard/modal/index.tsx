@@ -6,7 +6,8 @@ import httpService from "../../../../utils/httpService";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import React from "react";
-import CONFIG from "../../../../config";
+import CONFIG from "../../../../config"; 
+import { formatNumber } from "../../../../utils/helpers";
 
 interface Props {
     data: any,
@@ -84,6 +85,20 @@ function EventDashboardModal(props: Props) {
 
       console.log(data);
       
+    // const getFormatedPrice =(value)=> {
+    //     if (value < 1000) {
+    //         return value.toString();
+    //     } else if (value < 1000000) {
+    //         return (value / 1000).toStringAsFixed(1) + "K";
+    //     } else if (value < 1000000000) {
+    //         return (value / 1000000).toStringAsFixed(1) + "M";
+    //     } else if (value < 1000000000000) {
+    //         return (value / 1000000000).toStringAsFixed(1) + "B";
+    //     } else if (value < 1000000000000000) {
+    //         return (value / 1000000000000).toStringAsFixed(1) + "T";
+    //     }
+    //     return "";
+    // }
       
     return (
         <div className=' w-full flex flex-col items-center py-6 ' >
@@ -113,7 +128,7 @@ function EventDashboardModal(props: Props) {
                     <div className=" mt-8 w-full " >
                         <div className=" flex gap-3 text-sm font-normal " >
                             <p>Total</p>
-                            <p>0</p>
+                            <p>{formatNumber(history?.totalActiveSales, history?.currency === "USD" ? "$" : "₦")}</p>
                         </div>
                         <div role="button" onClick={()=> setRefund(true)} className=" text-white bg-[#E90303] px-2 py-[2px] mt-1 items-center w-fit flex text-[13px] font-normal gap-1 rounded-md " >
                             <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,19 +158,19 @@ function EventDashboardModal(props: Props) {
                             <div className=" flex pt-7 items-center " >
                                 <div className=" pt-[3px] px-4 border-r border-black " >
                                     <p className=" font-normal text-xs text-center " >Created</p>
-                                    <p className=" text-[30px]  font-medium text-center " >150</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{history?.totalNumberOfTickets ? history?.totalNumberOfTickets : 0}</p>
                                 </div>
                                 <div className=" pt-[3px] px-4 border-r border-black " >
                                     <p className=" font-normal text-xs text-center " >Sold</p>
-                                    <p className=" text-[30px]  font-medium text-center " >{history?.totalActiveSales}</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{formatNumber(history?.totalActiveSales, history?.currency === "USD" ? "$" : "₦")}</p>
                                 </div>
                                 <div className=" pt-[3px] px-4 border-r border-black " >
                                     <p className=" font-normal text-xs text-center " >Cancelled</p>
-                                    <p className=" text-[30px]  font-medium text-center " >{history?.totalRefunds}</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{formatNumber(history?.totalRefunds, history?.currency === "USD" ? "$" : "₦")}</p>
                                 </div>
                                 <div className=" pt-[3px] px-4  " >
                                     <p className=" font-normal text-xs text-center " >Available</p>
-                                    <p className=" text-[30px]  font-medium text-center " >{history?.totalPendingSales}</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{history?.totalNumberOfAvailableTickets ? history?.totalNumberOfAvailableTickets : 0}</p>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +196,7 @@ function EventDashboardModal(props: Props) {
                             <Legend />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Bar dataKey="totalActiveSales" fill="#B7B00E" background={{ fill: '#eee' }} />
-                            <Bar dataKey="totalRefunds" fill="#E90303" background={{ fill: '#eee' }} />
+                            <Bar dataKey="totalRefund" fill="#E90303" background={{ fill: '#eee' }} />
                             <Bar dataKey="totalPendingSales" fill="#DB9E00" background={{ fill: '#eee' }} />
                             </BarChart>
                         </ResponsiveContainer>

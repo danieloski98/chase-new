@@ -8,9 +8,9 @@ import { useFetch } from "../../../hooks/useFetch"
 
 const MyEvents = () => {
   const [myEvents, setMyEvents] = useState([])
-  const { userName, token } = useAuth()
+  const { userName, token, userId } = useAuth()
   const { sendRequest } = useFetch()
-
+  
   const getMyEvents = async () => {
     const MyEvents = await sendRequest(GET_JOINED_EVENTS, "GET", null, {
       Authorization: `Bearer ${token}`,
