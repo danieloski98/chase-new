@@ -16,32 +16,47 @@ function RefundModal(props: Props) {
         setShow
     } = props 
 
-    const [eventUser, setEventUser] = React.useState({} as any)
+    const [eventUser, setEventUser] = React.useState([] as any)
+    const [loading, setLoading] = React.useState("")
+    const [loadingAll, setLoadingAll] = React.useState(false)
 
-
-    const { isLoading } = useQuery(['geteventuserbyticket'], () => httpService.get('/events/get-event-members/'+data?.id), {
+    const { isLoading, refetch } = useQuery(['geteventuserbyticket'], () => httpService.get('/events/get-event-members/'+data?.id), {
         onError: (error: AxiosError<any, any>) => {
           toast.error(error.response?.data);
         }, 
-        onSuccess: (data) => {
-            console.log(data);
-            
+        onSuccess: (data) => { 
             setEventUser(data.data.content);
         }
     })    
 
     const clickHandler = async()=> {
-        const response = await httpService.post("/payments/refundEvent")
 
-        console.log(response);
+        setLoadingAll(true)
+        const response = await httpService.get("/payments/refundEvent", {
+            params : {
+                eventID: data?.id
+            }
+        })
+
+        toast.success(response?.data?.result);
+        setLoadingAll(false)
+        refetch()
         
     }
 
     const clickHandlerById = async(item: any)=> {
-        const response = await httpService.post("/payments/refundEvent")
+        setLoading(item)
+        const response = await httpService.get("/payments/refundEvent", {
+            params : {
+                eventID: data?.id,
+                userID: item
+            }
+        })
 
-        console.log(response);
-        
+        // console.log(response?.data?.result);
+        toast.success(response?.data?.result);
+        setLoading("")
+        refetch()
     }
 
     return (
@@ -82,29 +97,43 @@ function RefundModal(props: Props) {
                         }
                     </div>
                 ))}
-                <button className=' text-[#5D70F9] font-medium  absolute right-2 top-2' >Continue</button>
+                <button onClick={()=> clickHandler()} className=' text-red-600 font-medium  absolute right-2 top-2' >
+                    {loadingAll ? "Loading...": "refund all"}
+                </button>
             </div>
-            <div className=' w-full mt-6 flex flex-col gap-4 ' > 
+            <div className=' w-full pt-14 flex flex-col gap-4 ' > 
                 {!isLoading && (
                     <> 
                         {eventUser?.map((item: any, index: number)=> {
+                            
                             return(
                                 <div key={index} className=' W-full flex justify-between ' >
                                     <div className=' flex gap-3 ' > 
                                         <div className=' w-[57px] h-[57px] rounded-b-[36px] rounded-tl-[36px] bg-slate-500 '  >
-                
+                                            {item?.user?.data?.imgMain?.value &&
+                                                <img 
+                                                    src={`${CONFIG.RESOURCE_URL}${item?.data?.imgMain?.value}`}
+                                                    className="w-[57px] h-[57px] rounded-b-[36px] rounded-tl-[36px]"
+                                                    alt=""
+                                                /> 
+                                            }
                                         </div>
                                         <div className='' >
                                             <p className=' text-xl font-semibold ' >{item?.user?.firstName+" "+item?.user?.lastName}</p>
                                             <p className=' text-xs font-medium text-[#2E2B2B] ' >{item?.user?.username}</p>
                                         </div>
                                     </div>
-                                    <button className=' px-4 h-[40px] text-white rounded-lg bg-red-600 ml-auto ' >
-                                        Refund
+                                    <button onClick={()=> clickHandlerById(item?.user?.userId)} className=' px-4 h-[40px] text-white rounded-lg bg-red-600 ml-auto ' >
+                                        {loading === item?.id ? "Loading...": "Refund"}
                                     </button>
                                 </div>
                             )
                         })}
+                        {eventUser?.length < 1 && ( 
+                            <div className=' w-full flex py-5 justify-center font-semibold ' >
+                                No Records Found
+                            </div>
+                        )}
                     </>
                 )}
             </div>
