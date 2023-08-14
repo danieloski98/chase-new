@@ -10,7 +10,7 @@ import SecondaryEvents from "./SecondaryEvents"
 import SecondaryCommunity from "./SecondaryCommunity"
 import SecondaryNavbar from "./SecondaryNavbar"
 import { PATH_NAMES } from "../../../constants/paths.constant"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { SecondMenuIcon } from "../../../components/Svgs"
 import { useFetch } from "../../../hooks/useFetch"
 import { GET_FRIEND_REQUESTS, GET_JOINED_EVENTS, GET_JOINED_GROUPS, GET_USER_CONNECTION_LIST, GET_USER_MEDIA_POSTS, GET_USER_PRIVATE_PROFILE, REMOVE_FRIEND, SEND_FRIEND_REQUEST } from "../../../constants/endpoints.constant"
@@ -34,6 +34,7 @@ const Profile_1 = () => {
   const [activeComponent, setActiveComponent] = useState("component1")
 
   const { userId } = useParams()
+  const navigate = useNavigate()
 
 
   const { sendRequest } = useFetch()
@@ -202,10 +203,9 @@ const Profile_1 = () => {
 
 
   const handleShowOptions = () => {
-    setShowOptions(state => !state)
+    navigate('/settings');
   } 
 
-  console.log(posts);
 
   return (
     <PageWrapper>
@@ -218,25 +218,20 @@ const Profile_1 = () => {
           )}
           {!isLoading && ( 
             <div>
-              <section className="flex flex-col mb-5 pb-6 w-full text-chasescrollBlue border-b-2 border-b-gray-200 h-fit">
+              <section className="flex flex-col mb-5 pb-6 w-full text-chasescrollBlue border-b-2 border-b-gray-200 h-auto">
                 <div className="grid place-items-center relative">
                   <div className="h-96 w-full relative">
-                    <div className="absolute w-full h-full bg-[#00000045] inset-0" />
+                    <div className="absolute w-full h-96 bg-[#00000045] inset-0" />
                     <img
                       src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
                       alt="user cover background"
                       className="w-full h-full object-cover"
                     />
-                    <div className="backdrop-blur-md absolute inset-0 flex justify-start items-end pb-40 md:pb-32 px-4">
-                      {/* <img
-                        src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-                        alt="user profile photo"
-                        className="border-2 border-white w-40 h-40 rounded-b-full rounded-tl-full shadow-md object-cover"
-                      /> */}
+                    <div className="backdrop-blur-md absolute inset-0 flex justify-start items-end pb-32 md:pb-32 px-4">
                       <Avatar 
                           src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
                           alt="user profile photo"
-                          className="border-2 border-white w-40 h-40 rounded-b-full rounded-tl-full shadow-md object-cover"
+                          className="border-2 border-white w-40 h-40 rounded-b-full rounded-tl-full shadow-md object-cover mb-10"
                           name={`${profile?.firstName} ${profile?.lastName}`}
                           size='2xl'
                       />
@@ -255,11 +250,13 @@ const Profile_1 = () => {
                     )}
                   </div>
 
-                  <div className="px-4 py-4 md:py-6 absolute flex flex-col gap-4 md:flex-row justify-center md:justify-between w-full bg-black bg-opacity-50 font-bold bottom-0">
+                  <div className="px-4 py-4 md:py-6 absolute flex flex-col gap-4  md:flex-row justify-center md:justify-between w-full h-auto bg-black bg-opacity-50 font-bold bottom-[0px]">
                     <div className="text-white self-start flex flex-col">
                       <h2 className="capitalize">{profile?.firstName} {profile?.lastName}</h2>
                       <small>@{profile?.username}</small>
                       <small>{profile?.email}</small>
+                      <small>About Me - {profile?.data.about.value ?? 'NONE'}</small>
+                      <small>WebSite - {profile?.data.webAddress.value ?? 'NONE'}</small>
                     </div>
                     {!self && (
                       <div className="flex items-center gap-4 justify-center text-sm md:text-base">
