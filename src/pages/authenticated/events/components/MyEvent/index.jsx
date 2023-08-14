@@ -19,7 +19,7 @@ function MyEventTab() {
 
     const navigate = useNavigate()
     // '/events/events'+"?createdBy="+userId
-    const { results, isLoading, lastChildRef, refetch } = useInfinteScroller({url: '/events/events'+"?createdBy="+userId, pageNumber:page, setPageNumber:setPage}) 
+    const { results, isLoading, lastChildRef, refetch } = useInfinteScroller({url: "/events/joined-events/"+userId, pageNumber:page, setPageNumber:setPage}) 
     
     // const { userId, token, eventCategory } = useAuth()
     const { sendRequest } = useFetch()

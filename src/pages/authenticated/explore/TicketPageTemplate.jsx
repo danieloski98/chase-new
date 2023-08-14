@@ -197,12 +197,12 @@ const TicketPageTemplate = ({
   // console.log(data);
 
   const clickHandler =()=> {
-    setEventData(data)
+    setEventData(dataInfo)
     navigate("/event-dashboard")
   } 
 
   const editHandler =()=> {
-    setEventData(data)
+    setEventData(dataInfo)
     navigate("/event/create")
   } 
   const { sendRequest } = useFetch()
