@@ -26,6 +26,13 @@ const TicketPaymentModal = ({
 
   const disabled = ticketCount < 2
 
+  let price = ticketPrice *ticketCount
+  let service = price * 0.025
+
+  let usdtotal =  ((((ticketPrice * ticketCount) * 1.025) + 0.39)/(1-0.059)) 
+  let nairatotal = ((((ticketPrice * ticketCount) * 1.025) + 100)/(1-0.039))
+
+
   return (
     <OverlayWrapper handleClose={handleClose}>
       <div className="p-4 w-full h-full flex items-center justify-center">
@@ -74,16 +81,20 @@ const TicketPaymentModal = ({
               </p>
               <div className="flex justify-between">
                 <p>Ticket Price</p>
-                <p>{formatNumber(ticketPrice, currency === "USD" ? "$" : "₦")}</p>
+                <p>{formatNumber(price, currency === "USD" ? "$" : "₦")}</p>
               </div>
               <div className="flex justify-between">
                 <p>Service Fee</p>
-                <p>{formatNumber(serviceFee, currency === "USD" ? "$" : "₦")}</p>
+                <p>{formatNumber(service, currency === "USD" ? "$" : "₦")}</p>
+              </div>
+              <div className="flex justify-between">
+                <p>Processing Fee</p>
+                <p>{formatNumber((currency === "USD" ? usdtotal - price -service :  nairatotal - price -service), currency === "USD" ? "$" : "₦")}</p>
               </div>
               <div className="flex justify-between">
                 <p>Total</p>
                 <p>
-                  {formatNumber((ticketPrice + serviceFee) * ticketCount, currency === "USD" ? "$" : "₦")}
+                  {formatNumber((currency === "USD" ? usdtotal: nairatotal), currency === "USD" ? "$" : "₦")}
                 </p>
               </div>
             </div>

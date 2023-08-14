@@ -54,8 +54,10 @@ const Wallet = () => {
 			"GET",
 			null,
 			{ Authorization: `Bearer ${token}` }
-		).then(data => setWalletBalance(data))
+		).then(data => {
+			setWalletBalance(data)})
 	}
+	console.log(walletBalance)
 
 	const topUpWallet = () => {
 		sendRequest(
@@ -156,6 +158,7 @@ const Wallet = () => {
 										{!showBalance ? <ClosedEyeIcon /> : <OpenEyeIcon />}
 									</button>
 								</div>
+								{showEscrow ? (
 								<h1 className="text-white font-bold text-2xl text-center flex items-center justify-center">
 									{isLoading
 										? <ButtonSpinner />
@@ -164,6 +167,16 @@ const Wallet = () => {
 											: `${currency} * * * *`
 									}
 								</h1>
+								): (
+									<h1 className="text-white font-bold text-2xl text-center flex items-center justify-center">
+										{isLoading
+											? <ButtonSpinner />
+											: showBalance
+												? formatNumber(walletBalance?.escrowBalances?.balance, currency === USD ? "$" : "₦")
+												: `${currency} * * * *`
+										}
+									</h1>
+								)}
 							</div>
 						</div>
 						<div className="flex text-center gap-4 rounded-md bg-white p-1 w-full max-w-sm self-center border border-chasescrollButtonBlue">

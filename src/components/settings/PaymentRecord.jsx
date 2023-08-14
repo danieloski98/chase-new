@@ -16,6 +16,8 @@ const PaymentRecord = ({
 	const { payForTicket, fundWallet, cashout } = TRANSACTION_PURPOSE
 	const { started, paid, cancelled, error } = TRANSACTION_STATUS
 	const { USD, NGN } = CURRENCY
+
+	console.log(timestamp.toString().replaceAll(",", ""));
 	return (
 		<div className='w-full flex gap-2.5 items-start'>
 			{purpose === payForTicket ? (
@@ -41,7 +43,7 @@ const PaymentRecord = ({
 							purpose === payForTicket
 							? "+ "
 							: purpose === cashout && "- "}
-						{formatNumber(payableAmount ?? value, currency === USD ? "$" : "₦")}
+						{formatNumber(payableAmount/100 ?? value/100, currency === USD ? "$" : "₦")}
 					</span>
 				</div>
 				<div className="flex justify-between items-center text-xs">

@@ -104,9 +104,9 @@ const DownloadTicketModal = ({
             />
           </div>
         </div>
-        <button className="shadow-lg w-full max-w-sm text-sm text-white text-center px-4 py-3 bg-chasescrollBlue rounded-b-md">
+        {/* <button className="shadow-lg w-full max-w-sm text-sm text-white text-center px-4 py-3 bg-chasescrollBlue rounded-b-md">
           Download Ticket
-        </button>
+        </button> */}
       </div>
     </OverlayWrapper>
   )

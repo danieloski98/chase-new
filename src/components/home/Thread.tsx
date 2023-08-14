@@ -45,7 +45,8 @@ const Thread = forwardRef<any, IProps>
   setPostId,
   setPostMakeId,
 }, ref) => {
-  //const [post, setPost] = useState<any>(postData);
+  console.log(postData);
+  const [post, setPost] = useState<any>(postData);
   const [isLiked, setIsLiked] = useState(postData?.likeStatus === "LIKED");
   const [numOfLikes, setNumOfLikes] = useState(postData?.likeCount);
   const [showMore, setShowMore] = useState(false)
@@ -92,7 +93,7 @@ const Thread = forwardRef<any, IProps>
               <ProfilePhoto image={postData.user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
             )}
             {
-              !user.data.imgMain.value && (
+              !user?.data?.imgMain?.value && (
                 <Avatar 
                   name={`${user?.firstName} ${user?.lastName}`}
                   size='md'
@@ -100,7 +101,7 @@ const Thread = forwardRef<any, IProps>
               )
             }
             <div className="flex flex-col capitalize">
-              <small>{user.firstName} {user.lastName}</small>
+              <small>{user?.firstName} {user?.lastName}</small>
               <div className="flex flex-col">
                 <small>{user?.data?.city?.value ?? COMPANY_NAME}, {user?.data?.country?.value}</small>
                 <small className="text-[10px] opacity-60">{formatTimeAgo(time?.millis)}</small>
@@ -219,9 +220,9 @@ const Thread = forwardRef<any, IProps>
           className="flex gap-2 items-center"
           to={`${PATH_NAMES.profile}/${userId}`}
         >
-          <ProfilePhoto image={user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
+          <ProfilePhoto image={user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
           <div className="flex flex-col capitalize">
-            <small>{user.firstName} {user.lastName}</small>
+            <small>{user?.firstName} {user?.lastName}</small>
             <div className="flex flex-col">
               <small>{user?.data?.city?.value ?? COMPANY_NAME}, {user?.data?.country?.value}</small>
               <small className="text-[10px] opacity-60">{formatTimeAgo(time?.millis)}</small>

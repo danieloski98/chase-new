@@ -38,6 +38,12 @@ dependencies:
   '@splidejs/react-splide':
     specifier: ^0.7.12
     version: 0.7.12
+  '@stripe/react-stripe-js':
+    specifier: ^2.1.2
+    version: 2.1.2(@stripe/stripe-js@2.0.0)(react-dom@18.2.0)(react@18.2.0)
+  '@stripe/stripe-js':
+    specifier: ^2.0.0
+    version: 2.0.0
   antd:
     specifier: ^5.6.1
     version: 5.6.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0)(react@18.2.0)
@@ -3037,6 +3043,23 @@ packages:
 
   /@splidejs/splide@4.1.4:
     resolution: {integrity: sha512-5I30evTJcAJQXt6vJ26g2xEkG+l1nXcpEw4xpKh0/FWQ8ozmAeTbtniVtVmz2sH1Es3vgfC4SS8B2X4o5JMptA==}
+    dev: false
+
+  /@stripe/react-stripe-js@2.1.2(@stripe/stripe-js@2.0.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-2JcKRvOdMD698uGrY0cINLHb6XHnY24L+wlWlw2+TbI2aXlQZ9t8Mc+KssFES+EuNgISbrp7fJR3w/13epfiOw==}
+    peerDependencies:
+      '@stripe/stripe-js': ^1.44.1 || ^2.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@stripe/stripe-js': 2.0.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@stripe/stripe-js@2.0.0:
+    resolution: {integrity: sha512-SxZnf192En0uAfgbigUIj7oJYaXgGc5AI1aos59YXvO8DPeLI0AtT4oMg/Wuk17wbpquEv73+akyCe7xdEjGlA==}
     dev: false
 
   /@types/d3-array@3.0.5:

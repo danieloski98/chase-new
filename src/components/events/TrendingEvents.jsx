@@ -97,7 +97,7 @@ const TrendingEvents = () => {
  
   return (
     <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
-      {(isLoading && isRefetching) && ( 
+      {(isLoading || isRefetching) && ( 
           <Loader position={true} /> 
       )}
 
