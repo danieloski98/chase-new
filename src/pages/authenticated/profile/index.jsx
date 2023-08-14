@@ -255,8 +255,8 @@ const Profile_1 = () => {
                       <h2 className="capitalize">{profile?.firstName} {profile?.lastName}</h2>
                       <small>@{profile?.username}</small>
                       <small>{profile?.email}</small>
-                      <small>About Me - {profile?.data.about.value ?? 'NONE'}</small>
-                      <small>WebSite - {profile?.data.webAddress.value ?? 'NONE'}</small>
+                      <small>Bio - {profile?.data.about?.value || 'NONE'}</small>
+                      <small>Website - {profile?.data.webAddress?.value || 'NONE'}</small>
                     </div>
                     {!self && (
                       <div className="flex items-center gap-4 justify-center text-sm md:text-base">
