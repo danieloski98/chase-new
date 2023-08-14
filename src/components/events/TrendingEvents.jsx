@@ -95,13 +95,16 @@ const TrendingEvents = () => {
 
   const { results, isLoading, lastChildRef, refetch, isRefetching } = useInfinteScroller({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, pageNumber:page, setPageNumber:setPage})
  
+
+  console.log(results);
+
   return (
     <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
       {(isLoading || isRefetching) && ( 
           <Loader position={true} /> 
       )}
 
-      <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory ? eventCategory.replace("_", " ") : "Trending"}</p>
+      <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory ? eventCategory.replaceAll("_", " ") : "Trending"}</p>
 
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
         {(!isLoading  && !isRefetching) && (
