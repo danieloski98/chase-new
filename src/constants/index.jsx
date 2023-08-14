@@ -1013,7 +1013,7 @@ export const SECONDARY_NAV = [
 export const Options = [
   { label: "Setting", key: nanoid(), route: PATH_NAMES.settings },
   { label: "Edit Profile", key: nanoid(), route: "/edit-profile" },
-  { label: "Edit Currency", key: nanoid(), route: "/edit-currency" },
+  // { label: "Edit Currency", key: nanoid(), route: "/edit-currency" },
 ]
 
 export const Images = [
@@ -1139,6 +1139,12 @@ export const CommunityList = [
 ]
 
 export const SettingsPageList = [
+  {
+    id: nanoid(),
+    type: "Edit Profile",
+    route: "/edit-profile",
+    icon: eventCalenderIcon,
+  },
   {
     id: nanoid(),
     type: "Payment",

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useRef, useState } from "react"
 import { toast } from "react-toastify";
 import davido from "@/assets/images/davido.png"
 import { Link } from "react-router-dom"
@@ -7,24 +7,32 @@ import PageWrapper from "@/components/PageWrapper"
 import { previousPage } from "@/constants/index"
 import { useFetch } from "../../../hooks/useFetch"
 import { useAuth } from "../../../context/authContext"
-import { UPDATE_PROFILE } from "../../../constants/endpoints.constant"
+import { UPDATE_PROFILE, UPLOAD_IMAGE } from "../../../constants/endpoints.constant"
 import ButtonSpinner from "../../../components/ButtonSpinners";
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import httpService from "@/utils/httpService";
 import { Avatar } from '@chakra-ui/react'
+import CONFIG from "@/config";
 
 function EditProfile() {
   const { token, userId } = useAuth()
+
   const [userProfile, setUserProfile] = useState({
     firstName: "",
     lastName: "",
     username: "",
     website: "",
     about: "",
-  })
+    image: '',
+    publicProfile: false,
+  });
+  const [loading, setLoading] = React.useState(false);
+
+  const ref = useRef<HTMLInputElement>();
+  const queryClient = useQueryClient();
 
   const { isLoading: profileLoading } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`),{
-    onError: (error) => {
+    onError: (error: any) => {
       toast.error(error.response?.data);
     },
     onSuccess: (data) => {
@@ -33,11 +41,38 @@ function EditProfile() {
         firstName: data.data.firstName,
         lastName: data.data.lastName,
         username: data.data.username,
-        website: data.data.website,
-        about: data.data.about
+        website: data.data.data.webAddress?.value || '',
+        about: data.data.data.about?.value || '',
+        image: data.data.data.imgMain?.value || '',
+        publicProfile: data.data.publicProfile,
       })
     }
-  })
+  });
+
+  const uploadProfileImage = useMutation({
+    mutationFn: (data: string) => httpService.put(`/user/update-main-profile-image?profileImageRef=${data}`),
+    onError: (error: any) => {
+      console.log(error);
+    },
+    onSuccess: (data: any) => {
+      console.log(data.data);
+      toast.success("Profile image updated");
+      queryClient.invalidateQueries(['getUserDetails']);
+    }
+  });
+
+  const { isLoading: imageUploading, mutate} = useMutation({
+    mutationFn: (data: FormData) => httpService.post(`${UPLOAD_IMAGE}/${userId}`, data),
+    onError: (error: any) => {
+      console.log(error);
+    },
+    onSuccess: (data: any) => {
+      console.log(data.data);
+      uploadProfileImage.mutate(data.data.fileName);
+    }
+  });
+
+
   
   const [expanded, setExpanded] = useState(true)
   const [component, setComponent] = useState(false)
@@ -63,8 +98,10 @@ function EditProfile() {
       lastName,
       username,
       website,
-      about
+      about,publicProfile
     } = userProfile
+    setLoading(true);
+    console.log(userProfile);
     const data = await sendRequest(
       UPDATE_PROFILE,
       "PUT",
@@ -74,24 +111,41 @@ function EditProfile() {
         username,
         data: {
           webAddress: {
-            // objectPublic: true,
+            objectPublic: publicProfile,
             value: website
           },
           about: {
-            // objectPublic: true,
+            objectPublic: publicProfile,
             value: about
           }
         }
       },
       { Authorization: `Bearer ${token}` }
     )
-    if (data) toast.success('Profile updated successfully!');
+    if (data) { 
+      toast.success('Profile updated successfully!');
+      queryClient.invalidateQueries(['getUserDetails']);
+    } else {
+      toast.error('Something went wrong!');
+    }
+    setLoading(false);
   }
+
+  const handleFilePicker = useCallback((file: FileList) => {
+    console.log(file);
+    const formData = new FormData();
+    formData.append('file', file[0]);
+    mutate(formData);
+  }, [mutate])
 
   return (
     <PageWrapper>
       {() => (
+        
         <div className=" mb-[100px] w-full items-center justify-center flex flex-col p-4 bg-white">
+
+          <input ref={ref as any} type="file" accept='image/*' hidden onChange={(e) => handleFilePicker(e.target.files as FileList)} />
+
           <div className="flex items-center w-full mb-4 p-2 ">
             <span
               className="pr-6 text-gray-500 cursor-pointer"
@@ -103,18 +157,21 @@ function EditProfile() {
             <p className="text-chasescrollTextGrey text-lg">Edit Profile</p>
           </div>
           <form onSubmit={updateUserProfile} className="w-full sm:w-1/2 overflow-auto">
-            <div className="flex justify-center items-center mb-4">
+            <div className="flex flex-col justify-center items-center mb-4">
               {/* <img
                 src={davido}
                 alt="Profile Image"
                 className="w-1/4 h-25 rounded-b-[32px] rounded-tl-[32px]"
               /> */}
               <Avatar 
+                src={`${CONFIG.RESOURCE_URL}${userProfile.image}`}
                 name={`${userProfile.firstName} ${userProfile.lastName}`}
                 size='2xl'
-                alt="Profile Image"
-                className="w-1/4 h-25 rounded-b-[32px] rounded-tl-[32px]"
+                className="w-1/4 h-25 rounded-b-[32px] rounded-tl-[32px] cursor-pointer"
+                onClick={() => ref.current?.click()}
               />
+              { imageUploading || uploadProfileImage.isLoading && <p>image uploading....</p>}
+              { uploadProfileImage.isLoading && <p>image uploading....</p>}
             </div>
             <div className="mb-4">
               <label
@@ -220,7 +277,7 @@ function EditProfile() {
                 type="submit"
                 className="w-full bg-white border border-blue-500 text-blue-500 py-2 px-4 rounded-lg"
               >
-                {isLoading ? <ButtonSpinner /> : "Save Changes"}
+                {loading ? <ButtonSpinner /> : "Save Changes"}
               </button>
             </div>
           </form>
