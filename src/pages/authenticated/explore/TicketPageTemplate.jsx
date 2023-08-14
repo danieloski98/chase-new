@@ -234,6 +234,7 @@ const TicketPageTemplate = ({
               ? EVENT_TYPE.free
               : ticketinfo[0]?.boughtPrice
           }
+          profile={`${CONFIG.RESOURCE_URL}${ticketinfo[0]?.createdBy?.data?.imgMain?.value}`}
           type={ticketinfo[0]?.ticketType}
           convener={convener}
           date={timeAndDate}
