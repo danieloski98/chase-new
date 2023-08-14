@@ -19,7 +19,8 @@ const DownloadTicketModal = ({
   handleClose,
   type,
   length,
-  currency
+  currency,
+  profile
 }) => {
   return (
     <OverlayWrapper handleClose={handleClose}>
@@ -80,7 +81,7 @@ const DownloadTicketModal = ({
               </div>
             </div>
             <div className="p-4 basis-1/2 w-full flex flex-col gap-4 text-xs justify-between">
-              <img src={profileAvatar} alt="" className="w-24" />
+              <img src={profile} alt="" className="w-24 h-24 rounded-full object-cover" />
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <h3 className="text-chasescrollBlue font-bold">Name</h3>

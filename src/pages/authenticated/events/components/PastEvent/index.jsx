@@ -29,9 +29,9 @@ function PastEventsTab() {
                                 >
                                     <div className="flex flex-col md:flex-row gap-10 w-full items-center mb-2">
                                     <div className="w-44 h-40 object-cover rounded-b-[32px] rounded-tl-[32px]">
-                                        {event?.picUrls?.length > 0 ? (
+                                        {event?.currentPicUrl ? (
                                         <img
-                                            src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
+                                            src={`${CONFIG.RESOURCE_URL}${event?.currentPicUrl}`}
                                             alt="descriptive photograph"
                                             className=" w-full h-full rounded-b-[32px] rounded-tl-[32px] object-cover "
                                         />
@@ -87,9 +87,9 @@ function PastEventsTab() {
                                 key={event?.id} >
                                 <div className="flex flex-col md:flex-row gap-10 w-full items-center mb-2">
                                 <div className="w-44 h-40 object-cover rounded-b-[32px] rounded-tl-[32px]">
-                                    {event?.picUrls?.length > 0 ? (
+                                    {event?.currentPicUrl ? (
                                     <img
-                                        src={`${CONFIG.RESOURCE_URL}${event?.picUrls[0]}`}
+                                        src={`${CONFIG.RESOURCE_URL}${event?.currentPicUrl}`}
                                         alt="descriptive photograph"
                                         className=" w-full h-full rounded-b-[32px] rounded-tl-[32px] object-cover "
                                     />
