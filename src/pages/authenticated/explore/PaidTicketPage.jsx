@@ -106,7 +106,7 @@ console.log(event);
               isBought={event?.isBought}
               eventName={event?.eventName}
               about={event?.eventDescription}
-              banner={event?.picUrls ? event?.currentPicUrl : ""}
+              banner={event?.currentPicUrl ? event?.currentPicUrl : ""}
               isFree={event?.isFree}
               timeAndDate={event?.startDate}
               endtimeAndDate={event?.endDate}
