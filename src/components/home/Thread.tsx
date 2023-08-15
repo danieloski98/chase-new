@@ -89,8 +89,8 @@ const Thread = forwardRef<any, IProps>
             className="flex gap-2 items-center"
             to={`${PATH_NAMES.profile}/${userId}`}
           >
-            { postData.user.data.imgMain.value && (
-              <ProfilePhoto image={postData.user.data.imgMain.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
+            { postData.user.data.imgMain?.value && (
+              <ProfilePhoto image={postData.user.data.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
             )}
             {
               !user?.data?.imgMain?.value && (
