@@ -15,7 +15,7 @@ import Share from "./Share"
 import { toast } from "react-toastify"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import httpService from "../../../utils/httpService"
-import { Spinner, Textarea } from '@chakra-ui/react'
+import { HStack, Spinner, Textarea, VStack } from '@chakra-ui/react'
 import { Avatar } from '@chakra-ui/react'
 import {IUser} from '../../../models/User'
 import { AxiosError } from "axios"
@@ -163,7 +163,7 @@ const Home = () => {
   return (
     <PageWrapper toggleFileUploader={toggleFileUploader}>
       {() => (
-          <div id="container" className="w-full h-full overflow-x-hidden pt-5 sm:px-5 lg:px-0">
+          <div id="container" className="w-full h-full flex flex-col overflow-x-hidden pt-5 sm:px-5 lg:px-0 ">
           {showMoreOptions && (
             <ThreadMenu
               handleItemClick={handleItemClick}
@@ -185,38 +185,39 @@ const Home = () => {
           )} */}
           {showShareModal && <Share closeShareModal={toggleShare} />}
 
-            <div className="flex flex-col gap-2 bg-white text-chasescrollBlue bg-opacity-25 w-full lg:max-w-lg rounded-xl lg:mx-28 mb-10 p-4 shadow-md">
-               <div className="flex items-center bg-chasescrollPalePurple bg-opacity-30 rounded-xl pl-4">
-                 <div className="w-8 h-7 rounded-b-full rounded-tr-full border-chasescrollBlue flex items-center justify-center">
-                   
-                   <Avatar 
-                    src={user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}${user?.data?.imgMain?.value}`: ''}
-                    name={`${user?.firstName} ${user?.lastName}` || 'UU' }
-                    className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
-                    onClick={() => navigate(`/profile/${userId}`)}
-                    size='sm'
-                   />
-                 </div>
-                 <Textarea
-                   placeholder={`Add your thought ${userName}`}
-                   value={postInput}
-                   onChange={e => setPostInput(e.target.value)}
-                   borderWidth={0}
-                   backgroundColor={'transparent'}
-                   resize={'none'}
-                   cols={1}
-                   size='xs'
-                 />
-                 <button
-                   className="w-14 pl-2 pr-6 flex justify-center items-center cursor-pointer border-r border-white"
-                   onClick={createPost}
-                 >
-                  {postLoading ? (
-                    <Spinner color="brand.chasescrollButtonBlue" />
-                  ) :  <SendIcon />}
-                 </button>
-               </div>
-               <div
+          <HStack width='100%' height='200px' paddingLeft={['10px', '70px']} >
+            <VStack width={['100%', '40%']} height='80%' paddingY='20px' bg='whitesmoke' borderRadius={20} paddingX='20px' alignItems='flex-start' shadow='md' >
+              <HStack flex='1'  width='100%'>
+                <Avatar 
+                      src={user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}${user?.data?.imgMain?.value}`: ''}
+                      name={`${user?.firstName} ${user?.lastName}` || 'UU' }
+                      className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
+                      onClick={() => navigate(`/profile/${userId}`)}
+                      size='sm'
+                    />
+
+                    <Textarea
+                    placeholder={`Add your thought ${userName}`}
+                    value={postInput}
+                    onChange={e => setPostInput(e.target.value)}
+                    borderWidth={0}
+                    backgroundColor={'transparent'}
+                    resize={'none'}
+                    cols={1}
+                    size='xs'
+                  />
+
+                    <button
+                    className="w-14 pl-2 pr-6 flex justify-center items-center cursor-pointer border-r border-white"
+                    onClick={createPost}
+                  >
+                    {postLoading ? (
+                      <Spinner color="brand.chasescrollButtonBlue" />
+                    ) :  <SendIcon />}
+                  </button>
+              </HStack>
+
+              <div
                  onClick={toggleFileUploader}
                  value={postFile}
                 //  onChange={e => setPostFile(e.target.value)}
@@ -227,20 +228,22 @@ const Home = () => {
                  </span>
                  Add Photos/Video to your post
                </div>
-             </div>
-      
-      
-          <div className="flex flex-col gap-2 bg-white  w-full max-w-lg rounded-xl my-9 lg:mx-28 mb-24">
+            </VStack>
+          </HStack>
 
-          { results.length > 0 && content() }
+          <VStack width='100%' flex={1} overflow='auto' paddingLeft={['10px', '10px']} alignItems='flex-start'>
+            <VStack width={['100%', '40%']}>
+              { results.length > 0 && content() }
 
-          { isLoading && (
-            <div className="w-full h-24 flex items-center justify-center">
-              <p>Loading feeds...</p>
-              <Spinner color="brand.cchasescrollButtonBlue" size='md' />
-            </div>
-          )}
-          </div>
+              { isLoading && (
+                <div className="w-full h-24 flex items-center justify-center">
+                  <p>Loading feeds...</p>
+                  <Spinner color="brand.cchasescrollButtonBlue" size='md' />
+                </div>
+              )}
+            </VStack>
+          </VStack>
+      
       
         </div>
       )}
