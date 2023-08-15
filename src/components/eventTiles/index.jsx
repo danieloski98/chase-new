@@ -122,7 +122,7 @@ const EventTiles = React.forwardRef((props, ref) =>{
             </svg>
             <p className=" font-medium text-[#1732F7] " >
             {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
-                      event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      event?.location?.link ? (event?.location.address?.length >= 17 ? event?.location.address.slice(0, 17)+"..." : event?.location.address): ""}
               </p>
             <button onClick={() => handleEvent(event)} className=" w-8 ml-auto " > 
               {event.isSaved && 

@@ -504,10 +504,17 @@ const TicketPageTemplate = ({
                 Event location
               </div>
               <div className="">
-                <h3 className="text-chasescrollDarkBlue font-bold">
-                  {location?.locationDetails ? (location.locationDetails?.length >= 17 ? location.locationDetails : location.locationDetails):
-                    location?.link ? (location.link?.length >= 17 ? location.link : location.link): ""}
-                </h3>
+                {!location?.link && (
+                  <h3 className="text-chasescrollDarkBlue font-bold">
+                    {location?.locationDetails ? (location.locationDetails?.length >= 17 ? location.locationDetails : location.locationDetails):
+                      location?.link ? (location.link?.length >= 17 ? location.link : location.link): ""}
+                  </h3>
+                )} 
+                {location?.link && (
+                  <a target="_blank" href={location.link} className="text-chasescrollDarkBlue font-bold">
+                    Click To Join
+                  </a>
+                )}
                 <p className="text-xs font-bold">{locationType}</p>
               </div>
             </div>

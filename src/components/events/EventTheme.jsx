@@ -279,8 +279,7 @@ const EventTheme = ({
         {/* <button onClick={handleBack}>Back</button> */}
         <button
           type="submit"
-          className={`hover:text-xl ${!formData?.eventName ||
-            !formData?.organizer ||
+          className={`hover:text-xl ${!formData?.eventName || 
             !formData?.eventType ||
             !formData?.eventDescription ||
             !formData?.joinSetting ||

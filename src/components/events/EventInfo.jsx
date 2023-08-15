@@ -103,7 +103,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
           </div>
           {/* End of Event Date */}
 
-          {!toBeAnnounced && (
+          {!formData?.location?.toBeAnnounced && (
             <div className="mt-2">
               <h1 className="text-base font-bold">Location Type</h1>
               <div className="">
@@ -175,7 +175,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
                       ...data,
                       location: {
                         ...data.location,
-                        locationDetails: value
+                        link: value
                       }
                     }))}
                     value={formData?.location?.link}
@@ -190,8 +190,14 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
               type="checkbox"
               className="form-checkbox mt-2 mr-2 h-4 w-4 text-blue-600"
               value={toBeAnnounced}
-              checked={toBeAnnounced}
-              onChange={() => setToBeAnnounced(state => !state)}
+              checked={formData?.location?.toBeAnnounced}
+              onChange={({ target: { checked } }) => setFormData(data => ({
+                ...data,
+                location: {
+                  ...data.location,
+                  toBeAnnounced: checked
+                }
+              }))}
             />
           </div>
 

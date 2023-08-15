@@ -159,11 +159,11 @@ const TrendingEvents = () => {
                         <path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M11.0856 14.7754C12.8179 12.5663 15 9.35694 15 7.20652C15 3.64068 12.3137 0.75 9 0.75C5.68629 0.75 3 3.64068 3 7.20652C3 9.35694 5.18209 12.5663 6.91441 14.7754C7.81818 15.9279 8.27007 16.5041 9 16.5041C9.72993 16.5041 10.1818 15.9279 11.0856 14.7754ZM9 9.75C7.75736 9.75 6.75 8.74264 6.75 7.5C6.75 6.25736 7.75736 5.25 9 5.25C10.2426 5.25 11.25 6.25736 11.25 7.5C11.25 8.74264 10.2426 9.75 9 9.75Z" fill="#1732F7"/>
                         </g>
                         </g>
-                      </svg>
+                      </svg> 
                       <p className=" font-medium text-[#1732F7] " >
                         {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
-                         event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
-                      </p>
+                        event?.location?.link ? (event?.location.address?.length >= 17 ? event?.location.address.slice(0, 17)+"..." : event?.location.address): ""}
+                      </p> 
                       <button onClick={() => handleEvent(event)} className=" ml-auto " > 
                         {event.isSaved && 
                           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -247,7 +247,7 @@ const TrendingEvents = () => {
                     </svg>
                     <p className=" font-medium text-[#1732F7] " >
                       {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
-                      event?.location?.link ? (event?.location.link?.length >= 17 ? event?.location.link.slice(0, 17)+"..." : event?.location.link): ""}
+                      event?.location?.link ? (event?.location.address?.length >= 17 ? event?.location.address.slice(0, 17)+"..." : event?.location.address): ""}
                       </p>
                     <button onClick={() => handleEvent(event)} className=" ml-auto " > 
                       {event.isSaved && 

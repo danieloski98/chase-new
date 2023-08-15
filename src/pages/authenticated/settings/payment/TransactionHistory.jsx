@@ -26,6 +26,8 @@ const TransactionHistory = () => {
 		getTransactions()
 	}, [])
 
+	console.log(transactions);
+
 	return (
 		<PageWrapper>
 			{() => (
@@ -35,12 +37,15 @@ const TransactionHistory = () => {
 						<h1 className="text-xl font-medium">Transaction History</h1>
 					</Link>
 					<div className="flex flex-col gap-7 lg:px-10 max-w-md w-full">
-						{transactions?.map(transaction => (
-							<PaymentRecord
-								key={transaction?.transactionID}
-								{...transaction}
-							/>
-						))}
+						{transactions?.map(transaction => {
+							console.log(transaction);
+							return(
+								<PaymentRecord
+									key={transaction?.transactionID}
+									{...transaction}
+								/>
+							)
+						})}
 					</div>
 				</div>
 			)}
