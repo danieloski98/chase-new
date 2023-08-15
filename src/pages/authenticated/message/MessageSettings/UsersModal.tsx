@@ -100,7 +100,7 @@ function UsersModal({ isOpen, onClose, members }: IProps) {
                             [...connections.filter((item) => selected.includes(item.userId))].map((item) => (
                                 <HStack key={item.userId} marginLeft='20px' minWidth='210' height='50px' borderRadius='25px' backgroundColor='whitesmoke' padding='20px'>
                                     <Avatar 
-                                        src={`${CONFIG.RESOURCE_URL}${item.data.imgMain.value}`}
+                                        src={`${CONFIG.RESOURCE_URL}${item?.data?.imgMain?.value}`}
                                         name={`${item.firstName} ${item.lastName}`}
                                         size='sm'
                                     />
@@ -121,7 +121,7 @@ function UsersModal({ isOpen, onClose, members }: IProps) {
                         <HStack key={index.toString()} width='100%' paddingRight='20px' marginY='10px' justifyContent='space-between'>
                             <HStack>
                                 <Avatar 
-                                    src={`${CONFIG.RESOURCE_URL}${item.data.imgMain.value}`}
+                                    src={`${CONFIG.RESOURCE_URL}${item?.data?.imgMain?.value}`}
                                     name={`${item.firstName} ${item.lastName}`}
                                     size='md'
                                 />
