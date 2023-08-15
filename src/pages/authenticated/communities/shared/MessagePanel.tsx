@@ -101,7 +101,7 @@ const MessageChip = ({message, userId}: {
             <Text size='xs' color='gray.400' textAlign={message?.user.userId === userId ? 'right' : 'left'}>{formatTimeAgo(message.timeInMilliseconds)}</Text>
         </div>
         <Avatar 
-            src={`${CONFIG.RESOURCE_URL}/${message?.user?.data.imgMain.value}`}
+            src={`${CONFIG.RESOURCE_URL}/${message?.user?.data?.imgMain?.value}`}
             name={`${message.user.username}`}
             size={['xs', 'sm']}
         />
@@ -110,7 +110,7 @@ const MessageChip = ({message, userId}: {
         <HStack width='100%' flexDirection={message.user.userId === userId ? 'row' : 'row-reverse'} justifyContent='space-between' alignItems='center' alignSelf={message?.user.userId === userId ? 'flex-end':'flex-start'} marginTop='10px' >
             <InputGroup>
                 <InputLeftElement>
-                    <Avatar size='sm' src={`${CONFIG.RESOURCE_URL}${message?.user?.data.imgMain.value}`} name={`${message.user.firstName} ${message.user.lastName}`} />
+                    <Avatar size='sm' src={`${CONFIG.RESOURCE_URL}${message?.user?.data?.imgMain?.value}`} name={`${message.user.firstName} ${message.user.lastName}`} />
                 </InputLeftElement>
                 <Input value={comment} onChange={(e) => setComment(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && commentPost.mutate()}} placeholder='Add a comment' width='250px' height={'40px'} bg='white' borderTopLeftRadius='20px' borderBottomLeftRadius='20px' borderTopRightRadius='20px' />
             </InputGroup>
