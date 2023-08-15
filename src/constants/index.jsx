@@ -1321,6 +1321,7 @@ export const TRANSACTION_STATUS = {
   paid: 'PAID',
   cancelled: 'CANCELLED',
   error: 'ERROR',
+  refunded: 'REFUNDED',
 }
 
 export const CURRENCY = {

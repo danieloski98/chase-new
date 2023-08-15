@@ -49,7 +49,8 @@ const CreateEvents = () => {
       address: "",
       locationDetails: "",
       latlng: "",
-      placeIds: ""
+      placeIds: "",
+      toBeAnnounced: false
     },
     productTypeData: [
       // first is always standard

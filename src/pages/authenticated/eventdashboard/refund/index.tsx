@@ -4,6 +4,7 @@ import httpService from '../../../../utils/httpService';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
+import { useAuth } from '../../../../context/authContext';
 
 interface Props {
     data: any,
@@ -19,6 +20,7 @@ function RefundModal(props: Props) {
     const [eventUser, setEventUser] = React.useState([] as any)
     const [loading, setLoading] = React.useState("")
     const [loadingAll, setLoadingAll] = React.useState(false)
+    const { userId } = useAuth()
 
     const { isLoading, refetch } = useQuery(['geteventuserbyticket'], () => httpService.get('/events/get-event-members/'+data?.id), {
         onError: (error: AxiosError<any, any>) => {
@@ -104,7 +106,7 @@ function RefundModal(props: Props) {
             <div className=' w-full pt-14 flex flex-col gap-4 ' > 
                 {!isLoading && (
                     <> 
-                        {eventUser?.map((item: any, index: number)=> {
+                        {eventUser.filter((item: any)=> item?.user?.userId !== userId)?.map((item: any, index: number)=> {
                             
                             return(
                                 <div key={index} className=' W-full flex justify-between ' >
@@ -124,12 +126,12 @@ function RefundModal(props: Props) {
                                         </div>
                                     </div>
                                     <button onClick={()=> clickHandlerById(item?.user?.userId)} className=' px-4 h-[40px] text-white rounded-lg bg-red-600 ml-auto ' >
-                                        {loading === item?.id ? "Loading...": "Refund"}
+                                        {loading === item?.user?.userId ? "Loading...": "Refund"}
                                     </button>
                                 </div>
                             )
                         })}
-                        {eventUser?.length < 1 && ( 
+                        {eventUser.filter((item: any)=> item?.user?.userId !== userId)?.length < 1 && ( 
                             <div className=' w-full flex py-5 justify-center font-semibold ' >
                                 No Records Found
                             </div>

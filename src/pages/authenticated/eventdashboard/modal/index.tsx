@@ -7,7 +7,7 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import React from "react";
 import CONFIG from "../../../../config"; 
-import { formatNumber } from "../../../../utils/helpers";
+import { formatNumber, formatNumberWithK } from "../../../../utils/helpers";
 
 interface Props {
     data: any,
@@ -158,46 +158,49 @@ function EventDashboardModal(props: Props) {
                             <div className=" flex pt-7 items-center " >
                                 <div className=" pt-[3px] px-4 border-r border-black " >
                                     <p className=" font-normal text-xs text-center " >Created</p>
-                                    <p className=" text-[30px]  font-medium text-center " >{history?.totalNumberOfTickets ? history?.totalNumberOfTickets : 0}</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{formatNumberWithK(history?.totalNumberOfTickets)}</p>
                                 </div>
                                 <div className=" pt-[3px] px-4 border-r border-black " >
                                     <p className=" font-normal text-xs text-center " >Sold</p>
-                                    <p className=" text-[30px]  font-medium text-center " >{formatNumber(history?.totalActiveSales, history?.currency === "USD" ? "$" : "₦")}</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{history?.currency === "USD" ? "$" : "₦"+formatNumberWithK(history?.totalActiveSales)}</p>
                                 </div>
                                 <div className=" pt-[3px] px-4 border-r border-black " >
                                     <p className=" font-normal text-xs text-center " >Cancelled</p>
-                                    <p className=" text-[30px]  font-medium text-center " >{formatNumber(history?.totalRefunds, history?.currency === "USD" ? "$" : "₦")}</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{history?.currency === "USD" ? "$" : "₦"+formatNumberWithK(history?.totalRefunds)}</p>
                                 </div>
                                 <div className=" pt-[3px] px-4  " >
                                     <p className=" font-normal text-xs text-center " >Available</p>
-                                    <p className=" text-[30px]  font-medium text-center " >{history?.totalNumberOfAvailableTickets ? history?.totalNumberOfAvailableTickets : 0}</p>
+                                    <p className=" text-[30px]  font-medium text-center " >{formatNumberWithK(history?.totalNumberOfAvailableTickets)}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className=" w-full border-b border-[#D0D4EB] mt-8 py-7 px-4 " >
 
-                        <ResponsiveContainer width={500} height={500}>
+                        <ResponsiveContainer width="100%" height={500}>
                             <BarChart
-                            width={400}
-                            height={300}
-                            data={history.tickets}
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}
-                            barSize={20}
+                                width={500}
+                                height={300} 
+                                margin={{
+                                    top: 20,
+                                    right: 30,
+                                    left: 20,
+                                    bottom: 5,
+                                }}
+                                data={history.tickets} 
                             >
-                            <XAxis dataKey="ticketType" scale="point" padding={{ left: 10, right: 10 }} />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <Bar dataKey="totalActiveSales" fill="#B7B00E" background={{ fill: '#eee' }} />
-                            <Bar dataKey="totalRefund" fill="#E90303" background={{ fill: '#eee' }} />
-                            <Bar dataKey="totalPendingSales" fill="#DB9E00" background={{ fill: '#eee' }} />
+                                <XAxis dataKey="ticketType" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <CartesianGrid strokeDasharray="3 3" />
+
+                                    <Bar dataKey="totalActiveSales" stackId="a" fill="#B7B00E" />
+                                    <Bar dataKey="totalRefund" stackId="a" fill="#E90303" />
+                                    <Bar dataKey="totalPendingSales" fill="#ffc658" />
+                                {/* <Bar dataKey="totalActiveSales" fill="#B7B00E" background={{ fill: '#eee' }} />
+                                <Bar dataKey="totalRefund" fill="#E90303" background={{ fill: '#eee' }} />
+                                <Bar dataKey="totalPendingSales" fill="#DB9E00" background={{ fill: '#eee' }} /> */}
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
