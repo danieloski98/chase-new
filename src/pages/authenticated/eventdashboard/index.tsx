@@ -33,9 +33,7 @@ function EventDashboard(props: Props) {
         onError: (error: AxiosError<any, any>) => {
             toast.error(error.response?.data);
         }, 
-        onSuccess: (data) => {
-            console.log(data);
-            
+        onSuccess: (data) => { 
             setHistory(data.data.content);
         }
     }) 

@@ -78,8 +78,7 @@ function MyEventTab() {
                                 <div className=" w-full h-full rounded-b-[32px] flex justify-center items-center rounded-tl-[32px] bg-slate-400" >
                                     <p className=" text-2xl capitalize " >{event?.eventName?.slice(0,2)}</p>
                                 </div>
-                                )
-                                }
+                                )}
                             </div>
                             <div className="flex flex-col gap-2">
                                 <h2 role='button' onClick={()=> navigate(`${PATH_NAMES.event}/${event.id}`)} className="text-lg font-medium text-center md:text-left">

@@ -34,7 +34,7 @@ const MessageChip = ({message, userId}: {
     })
 
     const commentPost = useMutation({
-        mutationFn: () => httpService.post(`/kkm`, { postID: message.id, comment }),
+        mutationFn: () => httpService.post(`/kkm`, { postID: message?.id, comment }),
         onSuccess: (data) => {
             toast.success('comment saved');
             queryClient.invalidateQueries(['getMessages'])
@@ -52,8 +52,8 @@ const MessageChip = ({message, userId}: {
                 >
                     {message?.mediaType !== null ? (
                         <div>
-                            <Text textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
-                            { message.mediaType === 'VIDEO' &&  message.media.split('.')[1] ==='mp4' && (
+                            <Text textAlign={message?.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message?.createdBy?.username }</Text>
+                            { message?.mediaType === 'VIDEO' &&  message?.media.split('.')[1] ==='mp4' && (
                                 <div className="flex flex-col gap-2">
                                     <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${message?.media}`}/>
                                     {message?.message ? message?.message : ''}
@@ -75,14 +75,14 @@ const MessageChip = ({message, userId}: {
                         </div>
                     ) : (
                         <VStack alignItems={'flex-end'} width='100%'>
-                            <Text width='100%' textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
+                            <Text width='100%' textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message?.createdBy?.username }</Text>
                             <Text width='100%'>{message?.message}</Text>
                         </VStack>
                     )}
-                    <Text size='xs' color={message.self ? 'white':'black'} textAlign={message?.self ? 'right' : 'left'}>{formatTimeAgo(message.createdDate)}</Text>
+                    <Text size='xs' color={message?.self ? 'white':'black'} textAlign={message?.self ? 'right' : 'left'}>{formatTimeAgo(message?.createdDate)}</Text>
                 </div>
                 <Avatar 
-                    src={`${CONFIG.RESOURCE_URL}/${message?.createdBy.data.imgMain.value}`}
+                    src={`${CONFIG.RESOURCE_URL}/${message?.createdBy?.data?.imgMain?.value}`}
                     name={`${message?.createdBy?.username}`}
                     size={['xs', 'sm']}
                 />
@@ -97,13 +97,13 @@ export default function Message({ isLoading, messages }: IProps) {
     const id: string | null = userId as string | null
   return (
     <div className={`flex flex-col w-full h-full gap-4 sm:px-5 py-12  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
-    {messages?.content.map((message, i) => (
-        <div key={i} className={`sm:min-w-[80%] sm:max-w-[85%] md:max-w-[60%] lg:min-w-[50%] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.self
-            ? "rounded-bl-xl self-end"
-            : "rounded-br-xl self-start"
-            }`}>
-            <MessageChip message={message} userId={id as string} />
-        </div>
+        {messages?.content.map((message, i) => (
+            <div key={i} className={`sm:min-w-[80%] sm:max-w-[85%] md:max-w-[60%] lg:min-w-[50%] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.self
+                ? "rounded-bl-xl self-end"
+                : "rounded-br-xl self-start"
+                }`}>
+                <MessageChip message={message} userId={id as string} />
+            </div>
         ))}
 </div>
   )
