@@ -82,7 +82,7 @@ const MessageChip = ({message, userId}: {
                     <Text size='xs' color={message.self ? 'white':'black'} textAlign={message?.self ? 'right' : 'left'}>{formatTimeAgo(message.createdDate)}</Text>
                 </div>
                 <Avatar 
-                    src={`${CONFIG.RESOURCE_URL}/${message?.createdBy.data.imgMain.value}`}
+                    src={`${CONFIG.RESOURCE_URL}/${message?.createdBy?.data?.imgMain?.value}`}
                     name={`${message?.createdBy?.username}`}
                     size={['xs', 'sm']}
                 />
