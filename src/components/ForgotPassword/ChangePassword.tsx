@@ -1,11 +1,11 @@
-import { Heading, Text, VStack, Input, Button } from '@chakra-ui/react'
+import { Heading, Text, VStack, Input, InputGroup, InputLeftElement, Button, InputRightElement } from '@chakra-ui/react'
 import React from 'react'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 import { CHANGE_PASSWORD, SEND_EMAIL_TO_USER } from '../../constants/endpoints.constant'
-import { VERIFICATION_PAGE } from '../../pages/unauthenticated/onboarding/ForgotPassword'
 import httpService from '../../utils/httpService'
 import { useNavigate } from 'react-router-dom'
+import { FiEye, FiEyeOff } from 'react-icons/fi'
 
 interface IProps {
   token: string
@@ -14,8 +14,11 @@ interface IProps {
 function ChangePassword({ token }: IProps) {
     const [password, setPassword] = React.useState('');
     const [confirm, setConfirm] = React.useState('');
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [showConfirm, setShowConfirm] = React.useState(false);
+
     const navigate = useNavigate();
-  const { isLoading, mutate } = useMutation({
+    const { isLoading, mutate } = useMutation({
     mutationFn: (data: any) => httpService.put(CHANGE_PASSWORD, data),
     onError: (error:any) => {
       toast.error('An error occurred');
@@ -40,12 +43,27 @@ function ChangePassword({ token }: IProps) {
     })
   }, [confirm, token, mutate, password]);
   return (
-    <VStack width={['100%', '50%']} height={'200px'} >
+    <VStack width={['100%', '50%']} height={'auto'} >
       <Heading size='md'>Reset Password</Heading>
       <Text textAlign='center'>Set a strong password</Text>
-      <Input placeholder='Enter Password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} width='100%' height='50px' backgroundColor='whitesmoke' borderRadius='10px' />
-      <Input placeholder='Confirm password' type='password' value={confirm} onChange={(e) => setConfirm(e.target.value)} width='100%' height='50px' backgroundColor='whitesmoke' borderRadius='10px' />
-      <Button isLoading={isLoading} onClick={handleSubmit} backgroundColor='brand.chasescrollBlue'  color='white' width='100%' height='45px'>Submit</Button>
+
+      <InputGroup>
+        <InputRightElement>
+         { showPassword && <FiEyeOff fontSize='25px' onClick={() => setShowPassword(!showPassword)} /> }
+         { !showPassword &&  <FiEye fontSize='25px' onClick={() => setShowPassword(!showPassword)} /> }
+        </InputRightElement>
+        <Input placeholder='Enter Password' type={showPassword ? 'text':'password'} value={password} onChange={(e) => setPassword(e.target.value)} width='100%' height='50px' backgroundColor='whitesmoke' borderRadius='10px' />
+      </InputGroup>
+
+      <InputGroup>
+        <InputRightElement>
+         { showConfirm && <FiEyeOff fontSize='25px' onClick={() => setShowConfirm(!showConfirm)} /> }
+         { !showConfirm &&  <FiEye fontSize='25px' onClick={() => setShowConfirm(!showConfirm)} /> }
+        </InputRightElement>
+        <Input placeholder='Confirm password' type={showConfirm ? 'text':'password'} value={confirm} onChange={(e) => setConfirm(e.target.value)} width='100%' height='50px' backgroundColor='whitesmoke' borderRadius='10px' />
+      </InputGroup>
+
+      <Button isLoading={isLoading} onClick={handleSubmit} backgroundColor='brand.chasescrollBlue'  color='white' width='100%' height='55px'>Submit</Button>
     </VStack>
   )
 }
