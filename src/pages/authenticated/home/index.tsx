@@ -190,7 +190,7 @@ const Home = () => {
                  <div className="w-8 h-7 rounded-b-full rounded-tr-full border-chasescrollBlue flex items-center justify-center">
                    
                    <Avatar 
-                    src={user?.data.imgMain.value ? `${CONFIG.RESOURCE_URL}${user?.data?.imgMain?.value}`: ''}
+                    src={user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}${user?.data?.imgMain?.value}`: ''}
                     name={`${user?.firstName} ${user?.lastName}` || 'UU' }
                     className="w-8 h-7 object-cover rounded-b-full rounded-tr-full border border-chasescrollBlue cursor-pointer"
                     onClick={() => navigate(`/profile/${userId}`)}
