@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import PropTypes from "prop-types"
 import ProfilePhoto from "../ProfilePhoto"
 import avatar from "@/assets/images/avatar.png"
@@ -76,6 +76,16 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
 
 }
 
+const onKeyDown = useCallback((e) => {
+  if (e.key === 'Enter') {
+    if (value === `@${user.username} ` || subLoading) {
+      return;
+    } else {
+      mutate();
+    }
+  }
+}, [value, user.username, subLoading, mutate]);
+
   return (
     <div>
         <div className="flex gap-3 w-full">
@@ -124,11 +134,7 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
 
           { show && (
             <div className="flex mt-4">
-              <Input value={value} onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  mutate();
-                }
-              }} width='200px' height='40px' borderRadius='10px' bg='white' />
+              <Input value={value} onChange={(e) => setValue(e.target.value)} onKeyDown={onKeyDown} width='200px' height='40px' borderRadius='10px' bg='white' fontSize={'12px'} />
               { isLoading && <Spinner /> }
             </div>
           )}

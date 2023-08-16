@@ -184,6 +184,14 @@ function MobileChatView({ query }: IProps) {
                         if (item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || item.otherUser?.username?.toLowerCase().includes(search.toLowerCase())) {
                             return item;
                         }
+                    }).sort((a, b) => {
+                        if (a.lastMessageUpdate < b.lastMessageUpdate) {
+                            return 1
+                        }
+                        if (a.lastMessageUpdate > b.lastMessageUpdate) {
+                            return -1
+                        }
+                        return 0;
                     })
                     .map((chat, i) => (
                         <ChatCard chat={chat} activeChat={activeChat} setSelected={(data: Chat) => setActiveChat(data)} key={i} />
