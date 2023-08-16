@@ -133,14 +133,14 @@ const CommunityInfo = () => {
 									</div>
 
 									<div className="flex items-center gap-4">
-										{ isCreator && !deleteLoading (
-											<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
+										{ isCreator && !deleteLoading && (
+											<div  onClick={() => mutate()} className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
 												<FiTrash fontSize='25px' color={COLORS.chasescrollRed} />
 												Delete
 											</div>
 										)}
-										{ isCreator && deleteLoading (
-											<div onClick={() => mutate()} className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
+										{ isCreator && deleteLoading && (
+											<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
 												<Spinner />
 											</div>
 										)}
@@ -158,11 +158,13 @@ const CommunityInfo = () => {
 								<input type="text" className="p-2 w-full outline-none rounded-r-lg text-sm" placeholder='Search' />
 							</div>
 							{communityMembers?.sort((a , b) => {
-								if (a.user.firstName > b.user.firstName) {
+								if (a.user.firstName.toLowerCase() < b.user.firstName.toLowerCase()) {
 									return -1
-								} else {
+								} 
+								if (a.user.firstName.toLowerCase() > b.user.firstName.toLowerCase()) {
 									return 1
-								}
+								} 
+								return 0;
 							}).map((profile, index) => (
 								<div
 									className={`flex justify-between items-center w-full py-3 ${index !== communityMembers.length - 1 ? 'border-b' : ''}`}
