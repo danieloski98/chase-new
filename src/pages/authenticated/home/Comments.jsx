@@ -70,6 +70,7 @@ const Comments = () => {
   }
 
   const addCommentNew = async () => {
+    if (commentInput === "") return;
     addComment.mutate({ postID: postID, comment: commentInput });
   }
 

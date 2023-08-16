@@ -76,8 +76,14 @@ function UsersModal({ isOpen, onClose, members }: IProps) {
         }
         mutate(obj)
     }, [id, mutate, selected])
+
+    const close = React.useCallback(() => {
+        setSelected([]);
+        setSearchQuery('');
+        onClose();
+    }, [onClose])
   return (
-    <Modal isOpen={isOpen} onClose={() => onClose()} isCentered closeOnEsc size='xl'>
+    <Modal isOpen={isOpen} onClose={close} isCentered closeOnEsc size='xl'>
         <ModalOverlay />
         <ModalContent>
             <ModalCloseButton />

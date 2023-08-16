@@ -19,7 +19,7 @@ function ChangePassword({ token }: IProps) {
 
     const navigate = useNavigate();
     const { isLoading, mutate } = useMutation({
-    mutationFn: (data: any) => httpService.put(CHANGE_PASSWORD, data),
+    mutationFn: (data: any) => httpService.put('/chasescroll/verification/change-password', data),
     onError: (error:any) => {
       toast.error('An error occurred');
     },

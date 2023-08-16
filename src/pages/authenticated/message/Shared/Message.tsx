@@ -52,11 +52,15 @@ const MessageChip = ({message, userId}: {
                 >
                     {message?.mediaType !== null ? (
                         <div>
-                            <Text textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
+                            {
+                                !message.self && (
+                                    <Text width='100%' textAlign={'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
+                                )
+                            }
                             { message.mediaType === 'VIDEO' &&  message.media.split('.')[1] ==='mp4' && (
                                 <div className="flex flex-col gap-2">
                                     <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${message?.media}`}/>
-                                    {message?.message ? message?.message : ''}
+                                    <Text textAlign={'left'} marginBottom={'10px'}>{message?.message ? message?.message : ''}</Text>
                                 </div>
                             )}
                             {
@@ -65,21 +69,25 @@ const MessageChip = ({message, userId}: {
                                         <img
                                             src={`${CONFIG.RESOURCE_URL}${message?.media}`}
                                             alt="media"
-                                            className="cursor-pointer sm:max-w-[100%] lg:max-w-[300px]"
+                                            className="cursor-pointer sm:max-w-[100%] lg:max-w-[300px] rounded-[10px]"
                                             // onClick={() => toggleMediaVisibility(`${CONFIG.RESOURCE_URL}${message?.mediaRef}`)}
                                         />
-                                    <Text textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>{message?.message ? message?.message : ''}</Text>
+                                    <Text textAlign={'left'} marginBottom={'10px'}>{message?.message ? message?.message : ''}</Text>
                                     </div>
                                 )
                             }
                         </div>
                     ) : (
                         <VStack alignItems={'flex-end'} width='100%'>
-                            <Text width='100%' textAlign={message.self ? 'right' : 'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
-                            <Text width='100%'>{message?.message}</Text>
+                            {
+                                !message.self && (
+                                    <Text width='100%' textAlign={'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
+                                )
+                            }
+                            <Text width='100%' fontSize={'14px'} textAlign={'left'}>{message?.message}</Text>
                         </VStack>
                     )}
-                    <Text size='xs' color={message.self ? 'white':'black'} textAlign={message?.self ? 'right' : 'left'}>{formatTimeAgo(message.createdDate)}</Text>
+                    <Text size='xs' fontSize={'12px'} mt='15px' color={'gray.400'} textAlign={'right'}>{formatTimeAgo(message.createdDate)}</Text>
                 </div>
                 <Avatar 
                     src={`${CONFIG.RESOURCE_URL}/${message?.createdBy?.data?.imgMain?.value}`}

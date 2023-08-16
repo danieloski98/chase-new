@@ -296,7 +296,7 @@ email-verification
 
 export const SEND_EMAIL_TO_USER = "/chasescroll/verification/send-email"
 export const VERIFY_TOKEN = "/chasescroll/verification/verify-token"
-export const CHANGE_PASSWORD = "/chasescroll/verification/change-password"
+export const CHANGE_PASSWORD = "/chasescroll/verification/reset-password"
 
 // Chat API
 export const GET_CHAT = "/chat/chat"

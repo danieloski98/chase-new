@@ -44,20 +44,22 @@ const MessageChip = ({message, userId}: {
     })
     return (
         <Fragment key={message?.id}>
-            <HStack alignItems='flex-start' flexDirection={message?.user.userId === userId ? 'row':'row-reverse'}>
+            <HStack alignItems='flex-start' flexDirection={message?.user.userId === userId ? 'row':'row-reverse'} >
             <div
             className={`rounded-t-xl p-3 text-sm w-full ${message?.user?.userId === userId
-                ? "bg-white text-gray-800 rounded-bl-xl"
+                ? "bg-chasescrollBlue text-white rounded-bl-xl"
                 : "bg-white text-gray-800 rounded-br-xl"
                 } `}
             >
             {message?.mediaRef !== null ? (
                 <div>
-                    <Text textAlign={message.user.userId === userId ? 'right' : 'left'} marginBottom={'10px'}>~{ message?.user?.username }</Text>
+                     { message.user.userId !== userId && (
+                        <Text textAlign={'left'} width='100%' marginBottom={'10px'}>~{ message?.user?.username }</Text>
+                    )}
                     { message.type === 'WITH_IMAGE' &&  message.mediaRef.split('.')[1] ==='mp4' && (
                          <div className="flex flex-col gap-2">
                             <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${message?.mediaRef}`}/>
-                            {message?.text ? message?.text : ''}
+                            <Text textAlign={'left'} fontSize={'16px'}>{message?.text ? message?.text : ''}</Text>
                         </div>
                     )}
                     {
@@ -66,10 +68,10 @@ const MessageChip = ({message, userId}: {
                                 <img
                                     src={`${CONFIG.RESOURCE_URL}${message?.mediaRef}`}
                                     alt="media"
-                                    className="cursor-pointer sm:max-w-[100%] lg:max-w-[300px]"
+                                    className='rounded-lg'
                                     // onClick={() => toggleMediaVisibility(`${CONFIG.RESOURCE_URL}${message?.mediaRef}`)}
                                 />
-                            {message?.text ? message?.text : ''}
+                            <Text textAlign={'left'} fontSize={'16px'}>{message?.text ? message?.text : ''}</Text>
                             </div>
                          )
                     }
@@ -87,18 +89,20 @@ const MessageChip = ({message, userId}: {
                                        </HStack>
                                     )}
                                 </div>
-                            {message?.text ? message?.text : ''}
+                            <Text textAlign={'left' } fontSize={'16px'}>{message?.text ? message?.text : ''}</Text>
                             </div>
                         )
                     }
                 </div>
             ) : (
                 <VStack alignItems={message.user.userId === userId ? 'right' : 'left'}>
-                    <Text textAlign={message.user.userId === userId ? 'right' : 'left'} marginBottom={'10px'}>~{ message?.user?.username }</Text>
-                    <Text>{message?.text}</Text>
+                    {message.user.userId !== userId && (
+                        <Text textAlign={'left'} width='100%' marginBottom={'10px'}>~{ message?.user?.username }</Text>
+                    )}
+                    <Text fontSize={'14px'} textAlign={'left'}>{message?.text}</Text>
                 </VStack>
             )}
-            <Text size='xs' color='gray.400' textAlign={message?.user.userId === userId ? 'right' : 'left'}>{formatTimeAgo(message.timeInMilliseconds)}</Text>
+            <Text size='xs' fontSize={'12px'} color={message.user.userId === userId ? 'gray.100':'gray.500'} mt='15px' textAlign={'right'}>{formatTimeAgo(message.timeInMilliseconds)}</Text>
         </div>
         <Avatar 
             src={`${CONFIG.RESOURCE_URL}/${message?.user?.data?.imgMain?.value}`}
