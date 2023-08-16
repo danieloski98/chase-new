@@ -17,7 +17,9 @@ import { CustomSelect } from "@/components/Form/CustomSelect";
 import SubmitButton from "@/components/Form/SubmitButton";
 import { IUser } from "src/models/User";
 import { AxiosError, AxiosResponse } from "axios";
-import { Button } from "@chakra-ui/react";
+import { Button, Select } from "@chakra-ui/react";
+import { useFormContext } from "react-hook-form";
+import DatePicker from "../../../components/Form/DatePicker";
 
 const GENDERS = [
   { value: "male", label: "Male" },
@@ -27,38 +29,7 @@ const GENDERS = [
 
 function PersonalInfoForm() {
   const [user, setUser] = React.useState<IUser | null>(null);
-
-  const { token, userId } = useAuth();
-
-  // form
-  const { renderForm } = useForm({
-    defaultValues: {
-      email: '',
-      phone: "",
-      gender: user?.data.gender.value || "",
-      dob: user?.dob || "",
-    },
-    validationSchema: personinforSchema,
-    submit: (data) => {
-      const obj = {
-        email: data.email,
-        data: {
-          mobilePhone: {
-            objectPublic: true,
-            value: data.phone,
-          },
-          gender: {
-            value: data.gender,
-          },
-          webAddress: {
-            objectPublic: true,
-            value: data.email,
-          },
-        },
-      };
-      mutate(obj);
-    },
-  });
+  const { token, userId } = useAuth(); 
 
   const { isLoading: updateLoading, mutate } = useMutation({
     mutationFn: (data: any) => httpService.put('/user/update-profile', data),
@@ -69,6 +40,7 @@ function PersonalInfoForm() {
       console.log(data?.data);
     }
   });
+  const dateRef: any = React.useRef(null);
 
   const { isLoading: profileLoading } = useQuery(
     ["getUserDetails", userId],
@@ -78,10 +50,50 @@ function PersonalInfoForm() {
         toast.error(error.response?.data);
       },
       onSuccess: (data) => {
-        setUser(data.data);
+        setUser(data.data); 
       },
     }
   );
+
+  // React.useState(()=> {
+  //   if(data?.data?.dob){
+  //     let curr = new Date(data?.data?.dob);
+
+  //     curr.setDate(curr.getDate() + 3);
+  //     let date = curr?.toISOString()?.substring(0,10);
+  //     console.log(date);
+  //   }
+  // },[data])
+  
+  // form
+  const { renderForm } = useForm({
+    defaultValues: {
+      email: user?.email,
+      phone: user?.data?.mobilePhone?.value || "",
+      gender: user?.data?.gender?.value || "",
+      dob: user?.dob || "",  
+    },
+    validationSchema: personinforSchema,
+    submit: (data) => {
+      console.log(data);
+      
+      const obj = {
+        // email: user?.email,
+        data: {
+          mobilePhone: {
+            objectPublic: true,
+            value: data.phone || user?.data?.mobilePhone?.value ,
+          },
+          gender: {
+            objectPublic: true,
+            value: data.gender || user?.data?.gender?.value,
+          },
+        },
+        dob: data?.dob
+      };
+      mutate(obj);
+    },
+  });
 
   // const handleSubmit = async event => {
   //   event.preventDefault()
@@ -125,18 +137,20 @@ function PersonalInfoForm() {
             <p className="text-gray-700 text-lg">Personal Information</p>
           </div>
 
-          <div className="w-full0 sm:w-1/2 overflow-auto">
-            <CustomInput name="email" placeholder="Email" type="email" />
+          <div className="w-full sm:w-1/2 overflow-auto">
+            <CustomInput name="email" disable={true} placeholder={user?.email ? user?.email : "Email"} type="email" />
             <div className="h-5" />
-            <CustomInput name="phone" placeholder="Phone Number" type="text" />
-            <div className="h-5" />
+            <CustomInput name="phone" placeholder={user?.data?.mobilePhone?.value ? user?.data?.mobilePhone?.value : "Phone Number"} type="text" />
+            <div className="h-5" /> 
             <CustomSelect
               name="gender"
               option={["Male", "Female", "Other"]}
-              placeholder="Gender"
+              placeholder={user?.data?.gender?.value ? user?.data?.gender?.value : "Gender"} 
             />
-            <div className="h-5" />
-            <CustomInput name="dob" placeholder="Date of Birth" type="date" />
+            <div className="h-5" /> 
+            {/* <CustomInput name="dob" 
+              placeholder={user?.dob ? user?.dob : "Date of Birth"} type="date" /> */}
+            <DatePicker user={user} /> 
             <div className="h-5" />
             <Button
               type="submit"
