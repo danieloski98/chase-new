@@ -111,11 +111,11 @@ function EditProfile() {
         username,
         data: {
           webAddress: {
-            objectPublic: publicProfile,
+            objectPublic: website ? true: publicProfile,
             value: website
           },
           about: {
-            objectPublic: publicProfile,
+            objectPublic: about ? true: publicProfile,
             value: about
           }
         }

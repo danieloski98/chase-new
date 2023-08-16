@@ -6,6 +6,7 @@ export type IUser = {
     publicProfile: boolean;
     userId: string;
     username: string;
+    email: string;
     data: {
         about: {
             value: string;

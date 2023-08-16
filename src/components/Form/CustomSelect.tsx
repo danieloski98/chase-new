@@ -9,10 +9,11 @@ interface IProps {
     type: 'text' | 'phone' | 'email' | 'date' | 'password'
     placeholder: string;
     option: string[];
+    data?: string;
 }
 
 
-export const CustomSelect = ({ isPassword = false, name, type, placeholder, option = [] }: IProps) => {
+export const CustomSelect = ({ isPassword = false, name, type, placeholder, option = [], data }: IProps) => {
     const { register, formState: { errors } } = useFormContext();
     const [showPassword, setShowPassword] = React.useState(false);
 
@@ -24,6 +25,7 @@ export const CustomSelect = ({ isPassword = false, name, type, placeholder, opti
                     {...register(name)}
                     className="w-full rounded-lg border border-gray-400 outline-chasescrollBlue px-3 py-2 text-chasescrollTextGrey"
                     placeholder={placeholder}
+                    value={data}
                 >
                     {option.map((item, index) => (
                         <option value={item} key={index}>{item}</option>

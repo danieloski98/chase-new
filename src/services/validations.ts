@@ -25,7 +25,7 @@ const signInValidation = z.object({
 })
 
 const personinforSchema = z.object({
-    email: z.string().nonempty().email(),
+    // email: z.string().nonempty().email(),
     phone: z.string().nonempty().min(11),
     gender: z.string().nonempty(),
     dob: z.string().nonempty(),
