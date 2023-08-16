@@ -103,10 +103,10 @@ const Comments = () => {
             </div>
             <div className="flex items-center lg:items-start flex-col gap-10 py-4 px-4 lg:px-28">
               <div className="flex items-center gap-3 w-full">
-                { !userProfile.isLoading && user !== null && (user).data?.imgMain.value && (
+                { !userProfile.isLoading && user !== null && (user).data?.imgMain?.value && (
                   <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}`} />
                 )}
-                { !userProfile.isLoading && user !== null && !(user)?.data?.imgMain.value && (
+                { !userProfile.isLoading && user !== null && !(user)?.data?.imgMain?.value && (
                   <Avatar 
                     name={`${(user)?.firstName || ''} ${(user)?.lastName || ''}`}
                   />

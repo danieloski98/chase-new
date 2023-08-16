@@ -10,15 +10,17 @@ import { PATH_NAMES } from '../../../constants/paths.constant'
 import { FiEdit, FiTrash } from 'react-icons/fi'
 import EditCommunity from '@/components/communities/EditModal'
 import httpService from '@/utils/httpService'
-import { useQuery } from 'react-query'
-import { HStack } from '@chakra-ui/react'
+import { useMutation, useQuery } from 'react-query'
+import { HStack, Spinner } from '@chakra-ui/react'
 import { COLORS } from '../../../utils/colors'
+import { toast } from 'react-toastify'
 
 const CommunityInfo = () => {
 	const [community, setCommunity] = useState(null)
 	const [communityMembers, setCommunityMembers] = useState()
 	const [communityPosts, setCommunityPosts] = useState()
 	const [showModal, setShowModal] = React.useState(false);
+	const [isCreator, setIsCreator] = React.useState(false);
 	const { id } = useParams()
 	const navigation = useNavigate()
 	const { sendRequest } = useFetch()
@@ -27,9 +29,27 @@ const CommunityInfo = () => {
 	const { isLoading } = useQuery(['GetCom'], () => httpService.get(`${GET_GROUP}?groupID=${id}`), {
 		onSuccess: (data) => {
 			console.log(data.data.content);
+			const creator = data.data.content[0].creator;
+			console.log(`this is the creator ${creator.userId === userId}`)
+			if (creator.userId === userId) {
+				setIsCreator(true);
+
+			}
 			setCommunity(data.data.content[0])
 		}
 	});
+
+	const { isLoading: deleteLoading, mutate } = useMutation({
+		mutationFn: () => httpService.delete(`/group/group/${id}`),
+		onSuccess: () => {
+			toast.success("Group deleted");
+			navigation(-1);
+		},
+		onError: (error) => {
+			toast.error('Something went wrong');
+			console.log(error);
+		}
+	})
 
 	// const fetchCommunity = async () => {
 	// 	const data = await sendRequest(
@@ -48,7 +68,10 @@ const CommunityInfo = () => {
 			null,
 			{ Authorization: `Bearer ${token}` }
 		)
-		if (data) setCommunityMembers(data?.content)
+		if (data) {
+			console.log(data);
+			setCommunityMembers(data?.content);
+		}
 	}
 
 	const fetchCommunityPosts = async () => {
@@ -84,7 +107,7 @@ const CommunityInfo = () => {
 								</p>
 								<p className="font-bold">Community Info</p>
 								<p className="">
-									<FiEdit fontSize={20} className="cursor-pointer" onClick={() => setShowModal(true)} />
+									{ isCreator && <FiEdit fontSize={20} className="cursor-pointer" onClick={() => setShowModal(true)} /> }
 								</p>
 							</div>
 							<div className="flex flex-col gap-4 w-full items-center">
@@ -110,10 +133,17 @@ const CommunityInfo = () => {
 									</div>
 
 									<div className="flex items-center gap-4">
-										<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
-											<FiTrash fontSize='25px' color={COLORS.chasescrollRed} />
-											Delete
-										</div>
+										{ isCreator && !deleteLoading (
+											<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
+												<FiTrash fontSize='25px' color={COLORS.chasescrollRed} />
+												Delete
+											</div>
+										)}
+										{ isCreator && deleteLoading (
+											<div onClick={() => mutate()} className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-red-400 text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
+												<Spinner />
+											</div>
+										)}
 									</div>
 								</HStack>
 
@@ -127,7 +157,13 @@ const CommunityInfo = () => {
 								<SearchIcon />
 								<input type="text" className="p-2 w-full outline-none rounded-r-lg text-sm" placeholder='Search' />
 							</div>
-							{communityMembers?.map((profile, index) => (
+							{communityMembers?.sort((a , b) => {
+								if (a.user.firstName > b.user.firstName) {
+									return -1
+								} else {
+									return 1
+								}
+							}).map((profile, index) => (
 								<div
 									className={`flex justify-between items-center w-full py-3 ${index !== communityMembers.length - 1 ? 'border-b' : ''}`}
 									key={profile?.id}

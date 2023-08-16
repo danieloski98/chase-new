@@ -13,7 +13,7 @@ export enum VERIFICATION_PAGE {
 }
 
 function ForgotPassword() {
-    const [page, setPage] = React.useState(VERIFICATION_PAGE.CHANGE_PASSWORD);
+    const [page, setPage] = React.useState(VERIFICATION_PAGE.VERIFY_EMAIL);
     const [email, setEmail] = React.useState('');
     const [token, setToken] = React.useState('');
 

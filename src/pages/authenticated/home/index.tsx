@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import CONFIG from "../../../config"
@@ -30,14 +31,10 @@ const Home = () => {
   const [menuAction, setMenuAction] = useState(null)
   const [threadId, setThreadId] = useState<string | null>(null)
   const [postId, setPostId] = useState<string |  null>(null)
-  const [userFeedData, setUserFeedData] = useState<any[]>([])
-  const [postFile, setPostFile] = useState()
   const [postInput, setPostInput] = useState("")
   const [user, setUser] = useState<IUser | null>(null);
   const [postMakerId, setPostMakerId] = useState<string | null>(null)
-  const { userName, token, userId } = useAuth();
-
-  const threadListRef = useRef(null)
+  const { userName, userId } = useAuth();
 
   const navigate = useNavigate()
   const queryClient = useQueryClient();
@@ -48,7 +45,7 @@ const Home = () => {
 
   // pagination details
   const [pageParam, setPageParam] = useState(0);
- const { isError, isLoading, results, hasNextPage, error, mutate: loadMore, refresh  } = useInfiniteScroll({ pageParam, userID: userId as any })
+ const {  isLoading, results, hasNextPage, mutate: loadMore, refresh  } = useInfiniteScroll({ pageParam, userID: userId as any })
  const intObserver = useRef<IntersectionObserver>();
 
  const lastChildRef = useCallback((post) => {
@@ -100,7 +97,7 @@ const Home = () => {
 
 
 
-  const userProfile = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
+  useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`), {
     onError: (error: AxiosError<any, any>) => {
       toast.error(JSON.stringify(error.response?.data));
     },
@@ -116,7 +113,7 @@ const Home = () => {
     onError: (error: AxiosError<any, any>) => {
       toast.error(JSON.stringify(error.response?.data));
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Post created successfully");
       setPostInput("");
       loadMore()
@@ -131,21 +128,6 @@ const Home = () => {
     console.log({ menuAction, threadId })
   }
 
-
-  const handleEnterKeyPress = React.useCallback((e) => {
-    if (postLoading) {
-      return;
-    }
-    if (e.key === 'Enter') {
-      e.preventDefault();
-
-      if (postInput === '') {
-        alert('You cannot post empty');
-        return;
-      }
-      mutate();
-    }
-  }, [mutate, postInput, postLoading]);
 
   const createPost = React.useCallback(() => {
     if (postLoading) {
@@ -185,7 +167,7 @@ const Home = () => {
           )} */}
           {showShareModal && <Share closeShareModal={toggleShare} />}
 
-          <HStack width='100%' height='200px' paddingLeft={['10px', '70px']} >
+          <HStack width='100%' height='200px' paddingLeft={['0px', '70px']} >
             <VStack width={['100%', '40%']} height='80%' paddingY='20px' bg='whitesmoke' borderRadius={20} paddingX='20px' alignItems='flex-start' shadow='md' >
               <HStack flex='1'  width='100%'>
                 <Avatar 
@@ -219,7 +201,6 @@ const Home = () => {
 
               <div
                  onClick={toggleFileUploader}
-                 value={postFile}
                 //  onChange={e => setPostFile(e.target.value)}
                  className="flex gap-2 items-center text-chasescrollTextGrey cursor-pointer w-fit text-sm"
                >
@@ -231,9 +212,12 @@ const Home = () => {
             </VStack>
           </HStack>
 
-          <VStack width='100%' flex={1} overflow='auto' paddingLeft={['10px', '10px']} alignItems='flex-start'>
-            <VStack width={['100%', '40%']}>
-              { results.length > 0 && content() }
+          <VStack width='100%' flex={1} overflow='auto' paddingLeft={['0px', '70px']} paddingBottom='150px' alignItems='flex-start'>
+            <VStack width={['100%', '40%']} alignItems='flex-start'>
+
+              <VStack width={['100%', '100%']} >
+                { results.length > 0 && content() }
+              </VStack>
 
               { isLoading && (
                 <div className="w-full h-24 flex items-center justify-center">
