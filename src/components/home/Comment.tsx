@@ -172,8 +172,8 @@ function SubComment({ user, comment, commentID, likeCount, time, id }: Subcommen
   return (
     <div className="mt-4">
     <div className="flex gap-3 w-full">
-    {user.data.imgMain.value && <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user.data.imgMain.value}`} />}
-    { !user.data.imgMain.value && <Avatar name={`${user.firstName} ${user.lastName}`} />}
+    {user?.data?.imgMain?.value && <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}`} />}
+    { !user?.data?.imgMain?.value && <Avatar name={`${user.firstName} ${user.lastName}`} />}
     <div className="flex flex-col w-full">
       <Text>{user.firstName} {user.lastName}</Text>
       <HStack>
