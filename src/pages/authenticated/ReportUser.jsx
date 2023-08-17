@@ -45,7 +45,7 @@ const ReportUser = () => {
   const handleExtraInformationChange = ({ target: { value } }) => {
     setExtraInformation(value)
   }
-  const closeShareModal = () => navigate("/home")
+  const closeShareModal = () => navigate(-1)
 
   useEffect(() => {
     setCount(extraInformation.length)
@@ -79,9 +79,9 @@ const ReportUser = () => {
               <div className="basis-2/4 py-3 flex justify-center font-bold">
                 Submit a Report
               </div>
-              <div className="basis-1/4 py-3 flex items-center justify-end font-bold text-xs text-chasescrollBlue">
+              {/* <div className="basis-1/4 py-3 flex items-center justify-end font-bold text-xs text-chasescrollBlue">
                 <span className="cursor-pointer">Select All</span>
-              </div>
+              </div> */}
             </div>
           </div>
 

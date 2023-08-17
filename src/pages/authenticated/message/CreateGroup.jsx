@@ -20,6 +20,7 @@ const CreateGroup = () => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [selectedMembers, setSelectedMembers] = useState([])
   const [users, setUsers] = useState(selectedMembers?.map(member => member?.userId))
+  const [search, setSearch] = React.useState('');
   const [groupInfo, setGroupInfo] = useState({
     image: "",
     name: "",
@@ -166,6 +167,8 @@ const CreateGroup = () => {
                     )}
                   </div>
                   <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     type="text"
                     className="border rounded-lg "
                     placeholder="Search"
@@ -188,7 +191,15 @@ const CreateGroup = () => {
                       </div>
                     ))}
                   </div>
-                  {members?.map(profile => (
+                  {members?.filter((member) => {
+                    if (search === '') {
+                      return member;
+                    }
+                    if (member.firstName.toLowerCase().includes(search.toLowerCase()) || member.lastName.toLowerCase().includes(search.toLowerCase())) {
+                      return member;
+                    }
+                  })
+                  .map(profile => (
                     <div
                       className="flex justify-between items-center gap-2"
                       key={profile?.userId}

@@ -22,7 +22,7 @@ import { formatTimeAgo } from "../../utils/helpers"
 import { COMPANY_NAME } from "../../constants"
 import VideoPlayer from "../VideoPlayer"
 import PhotoGallery from "../PhotoGallery"
-import { Avatar, Spinner } from '@chakra-ui/react'
+import { Avatar, Spinner, VStack } from '@chakra-ui/react'
 import { IMediaContent } from "../../models/MediaPost"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import httpService from "../../utils/httpService"
@@ -45,20 +45,21 @@ const Thread = forwardRef<any, IProps>
   setPostId,
   setPostMakeId,
 }, ref) => {
-  console.log(postData);
-  const [post, setPost] = useState<any>(postData);
-  const [isLiked, setIsLiked] = useState(postData?.likeStatus === "LIKED");
-  const [numOfLikes, setNumOfLikes] = useState(postData?.likeCount);
+  const [post, setPost] = useState<any>(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [numOfLikes, setNumOfLikes] = useState(0);
   const [showMore, setShowMore] = useState(false)
   const { token, userId } = useAuth()
   const { sendRequest } = useFetch()
   const queryClient = useQueryClient();
 
-  const { user, text, time, type, multipleMediaRef, mediaRef, id: postID, commentCount } = postData;
+  //const { user, text, time, type, multipleMediaRef, mediaRef, id: postID, commentCount } = post;
 
   const getPost = useQuery([`getPost-${postData.id}`, postData.id], () => httpService.get(`${GET_POST}/${postData.id}`), {
     onSuccess:  (data) => {
-      //setPost(data.data);
+      setPost(data.data);
+      setIsLiked(data.data.likeStatus === 'LIKED');
+      setNumOfLikes(data.data.likeCount);
     }
   });
 
@@ -89,22 +90,22 @@ const Thread = forwardRef<any, IProps>
             className="flex gap-2 items-center"
             to={`${PATH_NAMES.profile}/${userId}`}
           >
-            { postData.user.data.imgMain?.value && (
-              <ProfilePhoto image={postData.user.data.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
+            { post?.user?.data?.imgMain?.value && (
+              <ProfilePhoto image={post?.user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${post?.user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${post?.user?.firstName}&length=1`} />
             )}
             {
-              !user?.data?.imgMain?.value && (
+              !post?.user?.data?.imgMain?.value && (
                 <Avatar 
-                  name={`${user?.firstName} ${user?.lastName}`}
+                  name={`${post?.user?.firstName} ${post?.user?.lastName}`}
                   size='md'
                 />
               )
             }
             <div className="flex flex-col capitalize">
-              <small>{user?.firstName} {user?.lastName}</small>
+              <small>{post?.user?.firstName} {post?.user?.lastName}</small>
               <div className="flex flex-col">
-                <small>{user?.data?.city?.value ?? COMPANY_NAME}, {user?.data?.country?.value}</small>
-                <small className="text-[10px] opacity-60">{formatTimeAgo(time?.millis)}</small>
+                <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
+                <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
               </div>
             </div>
           </Link>
@@ -112,10 +113,9 @@ const Thread = forwardRef<any, IProps>
             className="cursor-pointer flex pt-4 text-chasescrollBlue"
             onClick={() => {
               toggleMoreOptions()
-              setThreadId(postData.id);
-              setPostId(postData.id);
-              setPostMakeId(user.userId)
-              console.log(`${postData.id} this is the post id`)
+              setThreadId(post?.id);
+              setPostId(post?.id);
+              setPostMakeId(post?.user?.userId)
             }}
           >
             <HollowEllipsisIcon />
@@ -124,42 +124,42 @@ const Thread = forwardRef<any, IProps>
         <div
           className='text-md font-normal'
         >
-          { text && text.length < 100 && (
-            <span>{text}</span>
+          { post?.text && post?.text?.length < 100 && (
+            <span>{post?.text}</span>
           )}
-          {text && showMore && (
-            <span>{ text } <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show Less</span></span>
+          {post?.text && showMore && (
+            <span>{ post?.text } <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show Less</span></span>
           )}
-          {text && !showMore && text.length > 100 && (
-            <span>{text.substring(0, 100)}... <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show More</span></span>
+          {post?.text && !showMore && post?.text.length > 100 && (
+            <span>{post?.text.substring(0, 100)}... <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show More</span></span>
           )}
         </div>
         <div className="flex flex-col gap-3"> 
-          {type === "WITH_IMAGE" && multipleMediaRef?.length > 1 && (
+          {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length > 1 && (
             <div onDoubleClick={() => toggleLike()}>
-              <PhotoGallery images={multipleMediaRef} />
+              <PhotoGallery images={post?.multipleMediaRef} />
             </div>
           )}
-          {!multipleMediaRef && (
+          {!post?.multipleMediaRef && (
             <>
-              {type === "WITH_IMAGE" && (
+              {post?.type === "WITH_IMAGE" && (
                 <div onDoubleClick={() => toggleLike()}>
-                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
                 </div>
               )}
             </>
           )}
-          {multipleMediaRef && (
+          {post?.multipleMediaRef && (
             <>
-              {type === "WITH_IMAGE" && multipleMediaRef?.length <= 1 && (
+              {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length <= 1 && (
                 <div onDoubleClick={() => toggleLike()}>
-                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
                 </div>
               )}
             </>
           )} 
-          {type === "WITH_VIDEO_POST" && (
-            <VideoPlayer videoUrl={mediaRef.startsWith('https') ? mediaRef: `${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+          {post?.type === "WITH_VIDEO_POST" && (
+            <VideoPlayer videoUrl={post?.mediaRef.startsWith('https') ? post?.mediaRef: `${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
           )}
           <div className="flex justify-between ">
             <div className="basis-1/3 flex items-center justify-center">
@@ -187,12 +187,12 @@ const Thread = forwardRef<any, IProps>
             </div>
             <div className="basis-1/3 flex items-center justify-center">
               <Link
-                to={`${PATH_NAMES.comments}/${postID}`}
+                to={`${PATH_NAMES.comments}/${post?.id}`}
                 className="text-xs"
               >
                 <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
                   <CommentsIcon />
-                    {formatNumberWithK(commentCount)} comments
+                    {formatNumberWithK(post?.commentCount)} comments
                 </div>
               </Link>
             </div>
@@ -213,19 +213,27 @@ const Thread = forwardRef<any, IProps>
     )
   }
 
+  if (getPost.isLoading) {
+    return (
+      <VStack className="flex flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
+        <p>Loading...</p>
+      </VStack>
+    )
+  }
+
   return (
-    <div ref={ref} id={postID} className="flex flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
+    <div ref={ref} id={post?.id} className="flex flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
       <div className="flex justify-between items-stretch text-black lg:w-5/6 sm:w-full">
         <Link
           className="flex gap-2 items-center"
           to={`${PATH_NAMES.profile}/${userId}`}
         >
-          <ProfilePhoto image={user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${user?.firstName}&length=1`} />
+          <ProfilePhoto image={post?.user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${post?.user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${post?.user?.firstName}&length=1`} />
           <div className="flex flex-col capitalize">
-            <small>{user?.firstName} {user?.lastName}</small>
+            <small>{post?.user?.firstName} {post?.user?.lastName}</small>
             <div className="flex flex-col">
-              <small>{user?.data?.city?.value ?? COMPANY_NAME}, {user?.data?.country?.value}</small>
-              <small className="text-[10px] opacity-60">{formatTimeAgo(time?.millis)}</small>
+              <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
+              <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
             </div>
           </div>
         </Link>
@@ -233,7 +241,7 @@ const Thread = forwardRef<any, IProps>
           className="cursor-pointer flex pt-4 text-chasescrollBlue"
           onClick={() => {
             toggleMoreOptions()
-            setThreadId(postID)
+            setThreadId(post?.id)
           }}
         >
           <HollowEllipsisIcon />
@@ -242,34 +250,34 @@ const Thread = forwardRef<any, IProps>
       <div
         className='text-md font-normal'
       >
-        {text}
+        {post?.text}
       </div>
       <div className="flex flex-col gap-3">
-        {type === "WITH_IMAGE" && multipleMediaRef?.length > 1 && (
+        {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length > 1 && (
           <div onDoubleClick={() => toggleLike()}>
-            <PhotoGallery images={multipleMediaRef} />
+            <PhotoGallery images={post?.multipleMediaRef} />
           </div>
         )}
-        {!multipleMediaRef && (
+        {!post?.multipleMediaRef && (
           <>
-            {type === "WITH_IMAGE" && (
+            {post?.type === "WITH_IMAGE" && (
               <div onDoubleClick={() => toggleLike()}>
-                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
               </div>
             )}
           </>
         )}
-        {multipleMediaRef && (
+        {post?.multipleMediaRef && (
           <>
-            {type === "WITH_IMAGE" && multipleMediaRef?.length <= 1 && (
+            {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length <= 1 && (
               <div onDoubleClick={() => toggleLike()}>
-                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
               </div>
             )}
           </>
         )}
-        {type === "WITH_VIDEO_POST" && (
-          <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${mediaRef}`} />
+        {post?.type === "WITH_VIDEO_POST" && (
+          <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
         )}
         <div className="flex justify-between">
           <div className="basis-1/3 flex items-center justify-center">
@@ -299,10 +307,10 @@ const Thread = forwardRef<any, IProps>
             <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
               <CommentsIcon />
               <Link
-                to={`${PATH_NAMES.comments}/${postID}`}
+                to={`${PATH_NAMES.comments}/${post?.id}`}
                 className="text-xs"
               >
-                {formatNumberWithK(commentCount)} comments
+                {formatNumberWithK(post?.commentCount)} comments
               </Link>
             </div>
           </div>

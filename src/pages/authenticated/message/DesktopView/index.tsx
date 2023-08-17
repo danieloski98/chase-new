@@ -9,13 +9,16 @@ import ChatCard from '../Shared/ChatCard';
 import ChatHeader from '../Shared/ChatHeader';
 import CONFIG from '../../../../config';
 import httpService from '../../../../utils/httpService';
-import { CREATE_POST, UPLOAD_IMAGE } from '../../../../constants/endpoints.constant';
+import { CREATE_POST, UPLOAD_IMAGE, UPLOAD_VIDEO } from '../../../../constants/endpoints.constant';
 import { toast } from 'react-toastify';
 import send from "../../../../assets/svg/send-icon.svg"
 import selector from "../../../../assets/svg/image.svg"
 import Message from '../Shared/Message';
 import { FiFileText, FiVideo, FiImage, FiSearch } from 'react-icons/fi';
 import Fab, { IList } from '../../../../components/general/Fab';
+import PreviewContainer from '../../communities/shared/PreviewContainer';
+import PreviewFile from '../../communities/shared/PreviewFile';
+import PreviewVideo from '../../communities/shared/PreviewVideo';
 
 
 
@@ -31,6 +34,10 @@ function DesktopChatView({ query }: IProps) {
     const [image, setImage] = useState('');
     const [post, setPost] = useState('');  
     const [search, setSearch] = React.useState(''); 
+    const [video, setVideo] = useState('');
+    const [file, setFile] =  useState('');
+    const [type, setType] = useState('');  
+
     
     // refs
     const filePickerRef = React.useRef<HTMLInputElement>();
@@ -40,16 +47,16 @@ function DesktopChatView({ query }: IProps) {
     // others
     const queryClient = useQueryClient();
     const ITems: IList[] = [
-        // {
-        //     title: 'Upload Document',
-        //     action: () => openPicker(),
-        //     icon: <FiFileText fontSize='30px' color='white' />
-        // },
-        // {
-        //     title: 'Upload Video',
-        //     action: () => openPicker(),
-        //     icon: <FiVideo fontSize='30px' color='white' />
-        // },
+        {
+            title: 'Upload Document',
+            action: () => openPicker(),
+            icon: <FiFileText fontSize='30px' color='white' />
+        },
+        {
+            title: 'Upload Video',
+            action: () => openPicker(),
+            icon: <FiVideo fontSize='30px' color='white' />
+        },
         {
             title: 'Upload Image',
             action: () => openPicker(),
@@ -73,6 +80,54 @@ function DesktopChatView({ query }: IProps) {
     });
 
     // MUTATIONS
+
+    const videoPost = useMutation({
+        mutationFn: () => httpService.post(`/chat/message`, {
+            message: post,
+            media: video,
+            mediaType: 'VIDEO',
+            multipleMedia: [
+              video,
+            ],
+            chatId: activeChat?.id,
+        }),
+        onError: (error) => {
+            toast.error(`An error occured`);
+        },
+        onSuccess: (data) => {
+            console.log(data.data)
+            toast.success("Message created");
+            queryClient.invalidateQueries(['getMessages']);
+            setVideo('');
+            setPost('');
+            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
+        }
+    });
+
+    const filePost = useMutation({
+        mutationFn: () => httpService.post(`/chat/message`, {
+            message: post,
+            media: file,
+            mediaType: 'DOCUMENT',
+            multipleMedia: [
+              file
+            ],
+            chatId: activeChat?.id,
+        }),
+        onError: (error) => {
+            toast.error(`An error occured`);
+        },
+        onSuccess: (data) => {
+            console.log(data.data)
+            toast.success("Message created");
+            queryClient.invalidateQueries(['getMessages']);
+            setVideo('');
+            setPost('');
+            setFile('');
+            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
+        }
+    });
+
     const Post = useMutation({
         mutationFn: (data: any) => httpService.post(`/chat/message`, data),
         onError: (error) => {
@@ -96,6 +151,28 @@ function DesktopChatView({ query }: IProps) {
         }
     });
 
+    const uploadVideo = useMutation({
+        mutationFn: (data: FormData) => httpService.post(`${UPLOAD_VIDEO}/${activeChat?.id}`, data),
+        onSuccess: (data) => {
+            console.log(data.data);
+            toast.success("Video uploaded");
+            setVideo(data.data.fileName);
+            setImage('');
+        }
+    });
+
+    const uploadFile = useMutation({
+        mutationFn: (data: FormData) => httpService.post(`${UPLOAD_VIDEO}/${activeChat?.id}`, data),
+        onSuccess: (data) => {
+            console.log(data.data);
+            toast.success("File uploaded");
+            setFile(data.data.fileName);
+            setImage('');
+            setVideo('')
+        }
+    });
+
+
     // EFFECTS
     React.useEffect(() => {
         if (query.isLoading) return;
@@ -113,40 +190,72 @@ function DesktopChatView({ query }: IProps) {
     }, []);
 
     const handleFilePicked = React.useCallback((file: FileList) => {
-        if (!file[0].type.startsWith('image')) {
-            toast.warning('You can only upload images');
+        if (file[0].type.startsWith('image')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadImage.mutate(formData);
+            setType('image');
+            return;
         }
-        fileReader.current.readAsDataURL(file[0]);
+        if (file[0].type.startsWith('video')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadVideo.mutate(formData);
+            setType('video');
+            return;
+        }
+        if (file[0].type.startsWith('application')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadFile.mutate(formData);
+            setType('file');
+            return;
+        }
 
-        // upload the image
-        const formData = new FormData();
-        formData.append('file', file[0]);
-        uploadImage.mutate(formData);
-    }, [uploadImage]);
+        // if (!file[0].type.startsWith('image')) {
+        //     toast.warning('You can only upload images');
+        // }
+        // fileReader.current.readAsDataURL(file[0]);
+
+        // // upload the image
+        // const formData = new FormData();
+        // formData.append('file', file[0]);
+        // uploadImage.mutate(formData);
+    }, [uploadFile, uploadImage, uploadVideo]);
 
     const handlePost = React.useCallback(() => {
         if (Post.isLoading) return;
         if (image === '' && post === '') return;
-        const data = image !== '' ? {
-            "message": post,
-            "media": image,
-            "chatID": activeChat?.id,
-            "mulitpleMedia": [
-              image
-            ],
-            "mediaType": "PICTURE"
-          } : {
-            "message": post,
-            "chatID": activeChat?.id,
 
-          }
-        Post.mutate(data);
-    }, [Post, activeChat, image, post]);
+        if (type === 'image') {
+            const data = image !== '' ? {
+                "message": post,
+                "media": image,
+                "chatID": activeChat?.id,
+                "mulitpleMedia": [
+                  image
+                ],
+                "mediaType": "PICTURE"
+              } : {
+                "message": post,
+                "chatID": activeChat?.id,
+    
+              }
+            Post.mutate(data);
+        }
+        if (type === 'video') {
+            videoPost.mutate();
+        }
+        if (type === 'file') {
+            filePost.mutate()
+        }
+       
+    }, [Post, activeChat?.id, filePost, image, post, type, videoPost]);
   return (
     <HStack display={['none', 'flex']} width='100%' height='100%' gap={0}>
 
         {/* HIDDEN FILE PICKER */}
-        <input className='hidden' type='file' accept='image/*' ref={filePickerRef as any} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
+        <input className='hidden' type='file' accept='image/*, video/*, application/pdf' ref={filePickerRef as any} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
 
         {/* SIDEBAR PANEL */}
         <VStack flex={0.3} height='100%' >
@@ -229,14 +338,38 @@ function DesktopChatView({ query }: IProps) {
                         <Image src={selector} width='30px' height='30px' onClick={openPicker} />
                     </span> */}
                     <Fab items={ITems} />
-                    {
+                    {/* {
                         uploadImage.isLoading && (
                             <Spinner colorScheme='blue' size='md' />
                         )
                     }
                     { !uploadImage.isLoading && image !== '' && (
                         <Image src={`${CONFIG.RESOURCE_URL}/${image}`} width='60px' height='60px' borderRadius='10px' />
-                    )}
+                    )} */}
+                    {
+                                uploadImage.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                            {
+                                uploadVideo.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                             {
+                                uploadFile.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                            { !uploadImage.isLoading && image !== '' && (
+                                <PreviewContainer src={`${CONFIG.RESOURCE_URL}/${image}`} deleteImg={() => setImage('')} />
+                            )}
+                            { !uploadVideo.isLoading && video !== '' && (
+                                <PreviewVideo src={`${CONFIG.RESOURCE_URL}/${video}`} deleteImg={() => setVideo('')} />
+                            )}
+                            { !uploadFile.isLoading && file !== '' && (
+                                <PreviewFile src={file} deleteImg={() => setFile('')} />
+                            )}
                     <InputGroup>
                         <InputRightElement marginRight='10px' marginTop='6px'>
                             { !Post.isLoading  && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }

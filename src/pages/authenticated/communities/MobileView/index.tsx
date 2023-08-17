@@ -300,7 +300,7 @@ function MobileViewChat({ query }: IProps) {
         <HStack width='100%' height='100%' gap={0}>
 
             {/* HIDDEN FILE PICKER */}
-            <input className='hidden' type='file' accept='image/*' ref={filePickerRef} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
+            <input className='hidden' type='file' accept='image/*, video/*, application/pdf' ref={filePickerRef as any} onChange={(e) => handleFilePicked(e.target.files as FileList)} />
           
             {/* SIDE PANEL */}
             {activeCommunity === null && (
