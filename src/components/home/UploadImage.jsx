@@ -187,7 +187,7 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
         ) : (
           <>
             {imageSrc || videoSrc ? (
-              <div className="w-full max-w-[334px]  max-h-[600px] overflow-hidden rounded-lg flex flex-col shadow-xl border-t border-opacity-30">
+              <div className="w-full overflow-hidden rounded-lg flex flex-col shadow-xl border-t border-opacity-30">
                 <div className="flex justify-between items-center rounded-t-lg bg-white pl-3 pr-5 py-3 border-x">
                   <span
                     className="p-1 cursor-pointer basis-1/4 flex justify-start"
@@ -222,13 +222,13 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
                     <img
                       src={imageSrc}
                       alt="Selected file"
-                      className={`w-full ${showCaption ? "h-auto" : "h-full"
+                      className={`w-full max-w-[400px] max-h-[400px] ${showCaption ? "h-auto" : "h-full"
                         } object-cover ${!showCaption && "rounded-b-lg"}`}
                     />
                   </div>
                 )}
                 {videoSrc && (
-                  <video controls src={videoSrc} className="w-full h-auto"></video>
+                  <video controls src={videoSrc} className="w-full max-w-[400px] max-h-[400px] h-auto"></video>
                 )}
 
                 {showCaption && (
