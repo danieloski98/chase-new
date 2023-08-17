@@ -242,10 +242,11 @@ const Profile_1 = () => {
                     {self && (
                       <div
                         onClick={handleShowOptions}
-                        className="cursor-pointer hover:bg-white hover:bg-opacity-70"
+                        className="cursor-pointer hover:bg-white hover:bg-opacity-70 flex items-center"
                       >
                         {/* <SecondMenuIcon /> */}
-                        <IoMdSettings size="20px" fontSize='30px' color='white' />
+                        <p>Settings</p>
+                        <IoMdSettings size="30px" fontSize='30px' color='white' />
                       </div>
                     )}
                   </div>
