@@ -214,7 +214,7 @@ const Thread = forwardRef<any, IProps>
   }
 
   return (
-    <div ref={ref} id={postID} className="flex flex-col gap-4 justify-between p-5 w-full max-w-lg border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
+    <div ref={ref} id={postID} className="flex flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
       <div className="flex justify-between items-stretch text-black lg:w-5/6 sm:w-full">
         <Link
           className="flex gap-2 items-center"

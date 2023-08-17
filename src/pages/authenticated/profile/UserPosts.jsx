@@ -12,6 +12,7 @@ import { CaretLeftIcon } from '../../../components/Svgs'
 import { PATH_NAMES } from '../../../constants/paths.constant'
 import OverlayWrapper from '../../../components/OverlayWrapper'
 import useInfinteScroller from './../../../hooks/useInfinteScroller'
+import { Spinner, VStack } from '@chakra-ui/react'
 
 const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 	const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
@@ -81,11 +82,12 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 				{showShareModal && <Share closeShareModal={toggleShare} />}
 				{!isLoading && ( 
 					<div
-						className="flex items-center flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto"
+						className="flex items-center justify-center flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto"
 						ref={threadListRef}
 						id='overlay'
 						onClick={toggleUserPosts}
 					> 
+						<VStack spacing={4} className='w-[40%] h-full'>
 						{results?.map((post, i) => { 
 							if (i === results.length - 1) {
 								return( 
@@ -109,6 +111,7 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 								)
 							}
 						})}
+						</VStack>
 					</div>
 				)}
 			</>
