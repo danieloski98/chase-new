@@ -87,7 +87,7 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 						id='overlay'
 						onClick={toggleUserPosts}
 					> 
-						<VStack spacing={4} className='w-[40%] h-full'>
+						<VStack spacing={4} className='w-[500px] h-full'>
 						{results?.map((post, i) => { 
 							if (i === results.length - 1) {
 								return( 

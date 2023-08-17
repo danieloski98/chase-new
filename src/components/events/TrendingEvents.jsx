@@ -40,7 +40,7 @@ const TrendingEvents = () => {
     })
   }
 
-  const saveEvent = eventID => {
+  const saveEvent = eventID => { 
     sendRequest(
       SAVE_EVENT, "POST", {
       eventID: eventID ,
@@ -54,8 +54,7 @@ const TrendingEvents = () => {
       } else {
         toast.error(response?.message)
       }
-    })
-    refetch()
+    }) 
   }
 
   const unsaveEvent = eventID => {
@@ -73,17 +72,17 @@ const TrendingEvents = () => {
       } else {
         toast.error(response?.message)
       }
-    })
-    refetch()
+    }) 
     setSearch(false)
   }
 
-  const handleEvent= item => {
+  const handleEvent= item => { 
     if(item?.isSaved){
       unsaveEvent(item?.id)
     } else {
       saveEvent(item?.id)
     }
+    refetch()
   }
 
   useEffect(() => {
@@ -96,18 +95,16 @@ const TrendingEvents = () => {
   const { results, isLoading, lastChildRef, refetch, isRefetching } = useInfinteScroller({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, pageNumber:page, setPageNumber:setPage})
  
 
-  console.log(results);
-
   return (
     <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
-      {(isLoading || isRefetching) && ( 
+      {(isLoading && !isRefetching) && ( 
           <Loader position={true} /> 
       )}
 
       <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory ? eventCategory.replaceAll("_", " ") : "Trending"}</p>
 
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
-        {(!isLoading  && !isRefetching) && (
+        {(!isLoading) && (
           <> 
             {results.map((event, i) => { 
               if (results.length === i + 1) {

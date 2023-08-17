@@ -33,9 +33,13 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
               // //setResults(prev => [...data.data.content, ...prev]);
               // setHasNextPage(data.data.last ? false:true);
               // window.scrollTo(0, window.innerHeight);
-          if (results.length > 0) {
+          if(results.length > 0) { 
+            if(isRefetching){ 
+              setResults(item?.content)
+              return
+            }
             results.push(...item.content);
-            setResults(lodash.uniq(results));
+            setResults(lodash.uniqBy(results, "id"));
           } else {
             setResults(lodash.uniq(item?.content));
           }
