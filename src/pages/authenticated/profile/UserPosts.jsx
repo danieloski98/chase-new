@@ -87,11 +87,12 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 						id='overlay'
 						onClick={toggleUserPosts}
 					> 
-						<VStack spacing={4} className='w-[40%] h-full'>
+						<VStack spacing={4} className='w-[30%] h-full'>
 						{results?.map((post, i) => { 
 							if (i === results.length - 1) {
 								return( 
 									<Thread
+										key={i}
 										ref={lastChildRef}
 										post={post}
 										toggleMoreOptions={toggleMoreOptions}
@@ -102,6 +103,7 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 							} else {
 								return( 
 									<Thread
+										key={i}
 										ref={post?.id === postID ? itemRef : null}
 										post={post}
 										toggleMoreOptions={toggleMoreOptions}
