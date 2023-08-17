@@ -78,8 +78,12 @@ const Onboarding = () => {
                 </p>
               </div>
               <div className="flex gap-5 justify-center flex-wrap">
-                <img src={playStore} alt="" />
-                <img src={appleStore} alt="" />
+                <a href="https://play.google.com/store/apps/details?id=com.chasescroll_android_app&hl=en&gl=US" target="_blank" >
+                  <img src={playStore} alt="" />
+                </a>
+                <a href="https://apps.apple.com/us/app/chasescroll/id1619999225" target="_blank" >
+                  <img src={appleStore} alt="" />
+                </a>
               </div>
             </div>
             <div className="flex flex-col gap-4 w-full items-center p-4">

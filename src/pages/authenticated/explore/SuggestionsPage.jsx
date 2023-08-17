@@ -51,7 +51,7 @@ const SuggestionsPage = () => {
           {!isLoading &&(
             <> 
               <div className="flex gap-4 p-4 flex-wrap items-center justify-center overflow-auto w-full">
-                {results?.map(suggestion => { 
+                {results?.map((suggestion, i) => { 
                   if (results?.length === i + 1) {
                     return( 
                       <div ref={lastChildRef} key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">

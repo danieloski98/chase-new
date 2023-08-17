@@ -168,7 +168,7 @@ const Home = () => {
           {showShareModal && <Share closeShareModal={toggleShare} />}
 
           <HStack width='100%' height='200px' paddingLeft={['0px', '70px']} >
-            <VStack width={['100%', '40%']} height='80%' paddingY='20px' bg='whitesmoke' borderRadius={20} paddingX='20px' alignItems='flex-start' shadow='md' >
+            <VStack width={['100%', '400px']} height='80%' paddingY='20px' bg='whitesmoke' borderRadius={20} paddingX='20px' alignItems='flex-start' shadow='md' >
               <HStack flex='1'  width='100%'>
                 <Avatar 
                       src={user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}${user?.data?.imgMain?.value}`: ''}
@@ -213,7 +213,7 @@ const Home = () => {
           </HStack>
 
           <VStack width='100%' flex={1} overflow='auto' paddingLeft={['0px', '70px']} paddingBottom='150px' alignItems='flex-start'>
-            <VStack width={['100%', '40%']} alignItems='flex-start'>
+            <VStack width={['100%', '400px']} alignItems='flex-start'>
 
               <VStack width={['100%', '100%']} >
                 { newIttem.length > 0 && newIttem.map((post, i) => (

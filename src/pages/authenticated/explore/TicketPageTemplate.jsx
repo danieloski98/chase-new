@@ -406,7 +406,7 @@ const TicketPageTemplate = ({
                   Event Start date and time
                 </div>
                 <div className="">
-                  <h3 className="text-chasescrollDarkBlue font-bold">
+                  <h3 className="text-chasescrollDarkBlue lg:text-base text-sm font-bold">
                     {formatDate(timeAndDate)}
                   </h3>
                   <p className="text-xs font-bold">
@@ -422,7 +422,7 @@ const TicketPageTemplate = ({
                   Event End date and time
                 </div>
                 <div className="">
-                  <h3 className="text-chasescrollDarkBlue font-bold">
+                  <h3 className="text-chasescrollDarkBlue lg:text-base text-sm font-bold">
                     {formatDate(endtimeAndDate)}
                   </h3>
                   <p className="text-xs font-bold">

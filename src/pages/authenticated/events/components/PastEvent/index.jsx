@@ -73,9 +73,11 @@ function PastEventsTab() {
                                             {event?.status}
                                         </button>
                                         </div>
-                                        <div className=" text-blue-500 hover:text-blue-600 font-bold py-2 px-4 rounded cursor-pointer">
-                                        View Ticket
-                                        </div>
+                                        {!event?.isOrganizer && (
+                                            <div className=" text-red-500 hover:text-red-600 font-bold py-2 px-4 rounded cursor-pointer">
+                                            View Ticket
+                                            </div>
+                                        )}
                                     </div>
                                     </div>
                                 </div>
@@ -131,9 +133,11 @@ function PastEventsTab() {
                                         {event?.status}
                                     </button>
                                     </div>
-                                    <div className=" text-blue-500 hover:text-blue-600 font-bold py-2 px-4 rounded cursor-pointer">
-                                    View Ticket
-                                    </div>
+                                    {!event?.isOrganizer && (
+                                        <div className=" text-red-500 hover:text-red-600 font-bold py-2 px-4 rounded cursor-pointer">
+                                        View Ticket
+                                        </div>
+                                    )}
                                 </div>
                                 </div>
                             </div>

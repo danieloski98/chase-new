@@ -22,7 +22,7 @@ const SecondaryEvents = ({ events }) => {
     <div className="mb-[100px] mx-auto flex flex-col gap-4">
       {results?.map(
         (event, i) => {
-          if (results.length === i + 1) {
+          if (results?.length === i + 1) {
             return (
               <div
                 className="flex flex-col items-center justify-center p-4 bg-white shadow-md border rounded-b-[32px] rounded-tl-[32px] w-full max-w-2xl mx-auto"
@@ -32,7 +32,7 @@ const SecondaryEvents = ({ events }) => {
                 <div className="flex flex-col md:flex-row gap-6 w-full items-center">
                   <div className="rounded-b-[32px] rounded-tl-[32px] h-40 w-40 overflow-hidden">
                     <img
-                      src={`${CONFIG.RESOURCE_URL}${event.picUrls[0]}`}
+                      src={`${CONFIG.RESOURCE_URL}${event.currentPicUrl}`}
                       alt="descriptive photograph"
                       className=" w-full h-full cursor-pointer object-cover"
                       onClick={() => navigate(`/event/${event.id}`)}
@@ -78,7 +78,7 @@ const SecondaryEvents = ({ events }) => {
                 <div className="flex flex-col md:flex-row gap-6 w-full items-center">
                   <div className="rounded-b-[32px] rounded-tl-[32px] h-40 w-40 overflow-hidden">
                     <img
-                      src={`${CONFIG.RESOURCE_URL}${event.picUrls[0]}`}
+                      src={`${CONFIG.RESOURCE_URL}${event.currentPicUrl}`}
                       alt="descriptive photograph"
                       className=" w-full h-full cursor-pointer object-cover"
                       onClick={() => navigate(`/event/${event.id}`)}

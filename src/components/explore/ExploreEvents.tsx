@@ -179,7 +179,9 @@ const ExploreEvents = () => {
   // react query
   const { } = useQuery(['getEventSearch'+searchValue], () => httpService.get('/events/events', {
     params: {
-      eventName: searchValue
+      eventName: searchValue,
+      // address: searchValue,
+      // locationDetails: searchValue
     }
   }), {
     onError: (error: AxiosError<any, any>) => {
@@ -191,7 +193,7 @@ const ExploreEvents = () => {
   }) 
 
   const [page, setPage] = React.useState(0)
-  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/events/events', pageNumber:page, setPageNumber:setPage})
+  const { results, isLoading, lastChildRef, isRefetching } = useInfinteScroller({url:'/events/events', pageNumber:page, setPageNumber:setPage})
 
   React.useEffect(()=> {
     if(!searchValue){
@@ -216,7 +218,7 @@ const ExploreEvents = () => {
        })}
      </ul>
     {/* //  )} */}
-     {isLoading && (
+     {(isLoading && isRefetching) && (
        <div className="w-full h-32 flex justify-center items-center">
          <Spinner size='md' color='brand.chasescrollButtonBlue' />
        </div>
