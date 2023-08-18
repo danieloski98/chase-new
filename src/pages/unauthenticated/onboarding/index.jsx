@@ -121,29 +121,20 @@ const Onboarding = () => {
             <div className="flex gap-4 justify-center items-center text-sm text-center text-chasescrollTextGrey">
               {ONBOARDING_FOOTER.map((item, index) =>
                 item.path === "/" ? (
-                  <Link
+                  <a
                     key={index}
-                    to={item.path}
+                    href={item.path}
                     className="text-chasescrollBlue"
                   >
                     {item.label}
-                  </Link>
-                ) : item.label === "Terms and conditions" ? (
-                  <span
-                    key={index}
-                    className="cursor-pointer hover:text-chasescrollBlue"
-                    onClick={toggleTermsVisibility}
-                  >
-                    {item.label}
-                  </span>
+                  </a>
                 ) : (
-                  <Link
-                    key={index}
-                    to={item.path}
+                  <a key={index}
+                    href={item.path}
                     className="hover:text-chasescrollBlue"
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 )
               )}
             </div>
