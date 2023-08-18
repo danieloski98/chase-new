@@ -56,8 +56,7 @@ const Wallet = () => {
 			{ Authorization: `Bearer ${token}` }
 		).then(data => {
 			setWalletBalance(data)})
-	}
-	console.log(walletBalance)
+	} 
 
 	const topUpWallet = () => {
 		sendRequest(
@@ -83,11 +82,14 @@ const Wallet = () => {
 
 	const getWalletTransactions = () => {
 		sendRequest(
-			`${GET_TRANSACTIONS}?transactionGateway=WALLET`,
+			`${GET_TRANSACTIONS}`,
 			"GET",
 			null,
 			{ Authorization: `Bearer ${token}` }
-		).then((response) => setTransactions(response?.content))
+		).then((response) =>{
+
+		console.log(response);
+		 setTransactions(response?.content)})
 	}
 
 	const toggleView = () => setShowEscrow(state => !state)
@@ -224,13 +226,16 @@ const Wallet = () => {
 							</div>
 						)}
 						{view === "history" && (
-							<div className="self-center flex flex-col gap-4 w-full max-w-sm">
-								{transactions?.map(transaction => (
-									<PaymentRecord
-										key={transaction?.transactionID}
-										{...transaction}
-									/>
-								))}
+							<div className="flex flex-col pt-7 gap-4 w-full ">
+								{transactions?.map(transaction => {
+									console.log(transaction);
+									return(
+										<PaymentRecord
+											key={transaction?.transactionID}
+											{...transaction}
+										/>
+									)
+								})}
 							</div>
 						)}
 						{view === "cash" && (
