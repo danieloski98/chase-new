@@ -96,32 +96,32 @@ export const ONLINE_PLATFORM_OPTIONS = [
 
 export const ONBOARDING_FOOTER = [
   {
-    label: "Sign up",
-    path: "/sign-up",
-  },
-  {
     label: "Sign in",
     path: "/",
   },
   {
+    label: "Sign up",
+    path: "/sign-up",
+  },
+  {
+    label: "Home",
+    path: "https://chasescroll.com/",
+  },
+  {
     label: "About us",
-    path: "/about-us",
+    path: "https://chasescroll.com/about",
   },
   {
-    label: "Events",
-    path: "/events",
-  },
-  {
-    label: "Community",
-    path: "/community",
+    label: "Policy",
+    path: "https://chasescroll.com/privacy-poilcy",
   },
   {
     label: "Terms and conditions",
-    path: "",
+    path: "https://chasescroll.com/terms",
   },
   {
-    label: "Help",
-    path: "",
+    label: "Contact us",
+    path: "https://chasescroll.com/contact",
   },
 ]
 

@@ -120,7 +120,7 @@ const Onboarding = () => {
             <div className="w-full border"></div>
             <div className="flex gap-4 justify-center items-center text-sm text-center text-chasescrollTextGrey">
               {ONBOARDING_FOOTER.map((item, index) =>
-                item.path === PATH_NAMES.signUp ? (
+                item.path === "/" ? (
                   <Link
                     key={index}
                     to={item.path}
@@ -131,7 +131,7 @@ const Onboarding = () => {
                 ) : item.label === "Terms and conditions" ? (
                   <span
                     key={index}
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:text-chasescrollBlue"
                     onClick={toggleTermsVisibility}
                   >
                     {item.label}
@@ -140,7 +140,7 @@ const Onboarding = () => {
                   <Link
                     key={index}
                     to={item.path}
-                    className=""
+                    className="hover:text-chasescrollBlue"
                   >
                     {item.label}
                   </Link>
