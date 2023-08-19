@@ -79,7 +79,7 @@ const MessageChip = ({message, userId}: {
                         message.type === 'WITH_FILE' && (
                             <div className="flex flex-col gap-2">
                                 <div className="w-32 h-32 flex items-center justify-center">
-                                    {message.mediaRef !== '' || message.mediaRef.length < 1 && message.mediaRef.split('.')[1].toUpperCase()}
+                                    {message.mediaRef !== '' || message.mediaRef.length < 1 && message.mediaRef?.split('.')[1]?.toUpperCase()}
                                     { (
                                        <HStack width='100%'>
                                          <a href={`${CONFIG.RESOURCE_URL}${message?.mediaRef}`} download={message.mediaRef}>
@@ -114,7 +114,7 @@ const MessageChip = ({message, userId}: {
         <HStack width='100%' flexDirection={message.user.userId === userId ? 'row' : 'row-reverse'} justifyContent='space-between' alignItems='center' alignSelf={message?.user.userId === userId ? 'flex-end':'flex-start'} marginTop='10px' >
             <InputGroup>
                 <InputLeftElement>
-                    <Avatar size='sm' src={`${CONFIG.RESOURCE_URL}${message?.user?.data?.imgMain?.value}`} name={`${message.user.firstName} ${message.user.lastName}`} />
+                    <Avatar size='sm' src={`${CONFIG.RESOURCE_URL}${message?.user?.data?.imgMain?.value}`} name={`${message?.user?.firstName} ${message?.user?.lastName}`} />
                 </InputLeftElement>
                 <Input value={comment} onChange={(e) => setComment(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && commentPost.mutate()}} placeholder='Add a comment' width='250px' height={'40px'} bg='white' borderTopLeftRadius='20px' borderBottomLeftRadius='20px' borderTopRightRadius='20px' />
             </InputGroup>

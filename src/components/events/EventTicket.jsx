@@ -72,7 +72,27 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
     } else if(!formData?.productTypeData[0].maxTicketBuy){
       toast.error("Enter Event Maximum Ticket Purchase")
     } else {
-      handleSubmit()
+      if(formData?.productTypeData[0].ticketType !== "Free"){
+        if(formData.currency === "NGN"){
+          formData.productTypeData?.map((item)=> {
+            if(item.ticketPrice < 1000) {
+              toast.error("Ticket Price must be Above 1000 naira")
+            } else {  
+              handleSubmit()
+            }
+          })
+        } else { 
+          formData.productTypeData?.map((item)=> {
+            if(item.ticketPrice < 10) {
+              toast.error("Ticket Price must be Above 10 dollar")
+            } else { 
+              handleSubmit() 
+            }
+          })
+        }
+      } else { 
+        handleSubmit()
+      }
     } 
   } 
 
