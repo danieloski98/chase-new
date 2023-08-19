@@ -39,7 +39,7 @@ const SignUp = () => {
     },
     onSuccess: (data) => {
       console.log(data.data);
-      toast.success('Account created');
+      toast.success('Account created, a code has been sent to your email');
       navigate(PATH_NAMES.verify);
     }
   });
@@ -51,6 +51,7 @@ const SignUp = () => {
     },
     onSuccess: (data) => {
       console.log(data.data);
+
       sendMail.mutate({
         userEmail: values.email,
         emailType: 1,

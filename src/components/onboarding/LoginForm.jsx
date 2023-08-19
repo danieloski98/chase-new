@@ -21,7 +21,7 @@ const LoginForm = () => {
   const { isLoading, mutate } = useMutation({
     mutationFn: (data) => httpService.post(SIGN_IN, data),
     onError: (error) => {
-      toast.error('An Error occurred');
+      toast.error('Invalid credentials, please check and try again');
       console.log(error);
     },
     onSuccess: (data) => {
