@@ -33,8 +33,9 @@ httpService.interceptors.request.use(async(config) => {
 httpService.interceptors.response.use((data) => {
     return data;
 }, async(error: AxiosError<any, unknown>) => {
+    return Promise.reject(error);
     if (!error.response) {
-        return Promise.reject(error.message);
+        return Promise.reject(error);
     } else {
         if (error.response?.data instanceof Array) {
             return Promise.reject(JSON.stringify(error.response?.data));
