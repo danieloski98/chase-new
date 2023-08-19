@@ -31,6 +31,7 @@ const TicketPaymentModal = ({
 
   let usdtotal =  ((((ticketPrice * ticketCount) * 1.025) + 0.39)/(1-0.059)) 
   let nairatotal = ((((ticketPrice * ticketCount) * 1.025) + 100)/(1-0.039))
+  let nairatotalnew = ((((ticketPrice * ticketCount) * 1.025))/(1-0.039))
 
 
   return (
@@ -94,7 +95,7 @@ const TicketPaymentModal = ({
               <div className="flex justify-between">
                 <p>Total</p>
                 <p>
-                  {formatNumber((currency === "USD" ? usdtotal: nairatotal), currency === "USD" ? "$" : "₦")}
+                  {formatNumber((currency === "USD" ? usdtotal: (nairatotal < 2500 ? nairatotalnew :nairatotal )), currency === "USD" ? "$" : "₦")}
                 </p>
               </div>
             </div>
