@@ -47,33 +47,37 @@ export default function ChatCard({ chat, setSelected, smallScreen, activeChat }:
 
   return (
     <HStack 
-    onClick={handleSetActive}
-    bg={ !smallScreen &&chat.id === activeChat?.id ? '#D0D4EB':'white'}
-    borderRadius={chat.id === activeChat?.id ? '20px':'0px'}
-    px='10px'
-    width='100%' height='100px' justifyContent='space-between' borderBottomWidth={0.5} borderBottomColor='lightgrey' paddingY='4' cursor='pointer'>
-        <HStack paddingRight='10px' width='100%'>
-           <VStack justifyContent={'center'} alignItems='center' spacing={0} width='50px' height='50px' borderRadius='25px' borderWidth={chat.type === 'GROUP' ? 2:0} borderColor='brand.chasescrollBlue' overflow='hidden'>
-           <Avatar 
-                src={url()}
-                name={name()}
-                size='md'
-            />
-           </VStack>
+        onClick={handleSetActive}
+        bg={ !smallScreen &&chat.id === activeChat?.id ? '#D0D4EB':'white'}
+        borderRadius={chat.id === activeChat?.id ? '20px':'0px'}
+        width='100%' height='100px' justifyContent='space-between' borderBottomWidth={0.5} borderBottomColor='lightgrey' paddingY='4' cursor='pointer'>
 
-            <VStack alignItems='flex-start' width='100%'>
-                <HStack justifyContent='space-between' width='100%'>
+        <HStack width='100%'  paddingRight='10px' justifyContent='space-between'>
+
+           <HStack>
+                <VStack justifyContent={'center'} alignItems='center' spacing={0} width='50px' height='50px' borderRadius='25px' borderWidth={chat.type === 'GROUP' ? 2:0} borderColor='brand.chasescrollBlue' overflow='hidden'>
+                    <Avatar 
+                            src={url()}
+                            name={name()}
+                            size='md'
+                        />
+                </VStack>
+                <VStack>
                     { chat.type === 'GROUP' && <Heading size='sm' as='h4'>{chat.name[0].toUpperCase()}{chat.name.substring(1, chat.name.length)}</Heading> }
+                    <Text>{chat?.lastMessage ? chat?.lastMessage.length > 20 ? `${chat?.lastMessage.substring(0, 20)}...` : chat?.lastMessage : ''}</Text>
+                </VStack>
+           </HStack>
+
+            <VStack flex={0.5}  alignItems='flex-end' >
+                <HStack justifyContent='flex-end' width='100%'>
                     { chat.type === 'ONE_TO_ONE' && <Heading size='sm' as='h4'>@{chat.otherUser.username.toUpperCase()}</Heading>}
                     <Text fontSize={'12px'} color='gray.500'>{moment(chat.lastMessageUpdate).fromNow()}</Text>
                 </HStack>
-                <Text>{chat?.lastMessage ? chat?.lastMessage.length > 20 ? `${chat?.lastMessage.substring(0, 20)}...` : chat?.lastMessage : ''}</Text>
             </VStack>
+
         </HStack>
 
-        <VStack>
-            {/* <Text>{moment(chat)}</Text> */}
-        </VStack>
+        
     </HStack>
   );
 }

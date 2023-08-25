@@ -27,6 +27,9 @@ import { IMediaContent } from "../../models/MediaPost"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import httpService from "../../utils/httpService"
 import { toast } from "react-toastify"
+import OverlayWrapper from "../OverlayWrapper"
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
 
 interface IProps {
   setThreadId: (id: string) => void;
@@ -85,6 +88,8 @@ const Thread = forwardRef<any, IProps>
   if (!ref) {
     return (
       <div id={postData.id} className="flex bg-white flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit  ">
+       
+
         <div className="flex justify-between items-stretch text-black lg:w-full sm:w-full">
           <Link
             className="flex gap-2 items-center"
@@ -192,7 +197,7 @@ const Thread = forwardRef<any, IProps>
               >
                 <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
                   <CommentsIcon />
-                    {formatNumberWithK(post?.commentCount)} comments
+                  {formatNumberWithK(post?.commentCount)} comments
                 </div>
               </Link>
             </div>
@@ -277,7 +282,9 @@ const Thread = forwardRef<any, IProps>
           </>
         )}
         {post?.type === "WITH_VIDEO_POST" && (
-          <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
+          <span>
+            <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
+          </span>
         )}
         <div className="flex justify-between">
           <div className="basis-1/3 flex items-center justify-center">
@@ -305,11 +312,12 @@ const Thread = forwardRef<any, IProps>
           </div>
           <div className="basis-1/3 flex items-center justify-center">
             <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
-              <CommentsIcon />
+              
               <Link
                 to={`${PATH_NAMES.comments}/${post?.id}`}
                 className="text-xs"
               >
+                <CommentsIcon />
                 {formatNumberWithK(post?.commentCount)} comments
               </Link>
             </div>
