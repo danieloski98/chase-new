@@ -34,7 +34,7 @@ const ReportUser = () => {
       navigate(-1);
     },
     onError: (error) => {
-      toast.error('An error occured while sending report');
+      toast.error('An error occured while sending report' + error.message);
       console.log(error);
     }
   });
@@ -52,6 +52,9 @@ const ReportUser = () => {
   }, [extraInformation]);
 
   const handleSubmit = () => {
+    if (title === '' || extraInformation === '') {
+      toast.error('Please fill all fields');
+    }
     const obj = {
       title,
       description: extraInformation,
