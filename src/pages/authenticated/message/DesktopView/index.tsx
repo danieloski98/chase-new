@@ -249,6 +249,13 @@ function DesktopChatView({ query }: IProps) {
         if (type === 'file') {
             filePost.mutate()
         }
+
+        if (type === '' ) {
+            Post.mutate({
+                "message": post,
+                "chatID": activeChat?.id,
+            })
+        }
        
     }, [Post, activeChat?.id, filePost, image, post, type, videoPost]);
   return (

@@ -158,10 +158,10 @@ const CommunityInfo = () => {
 								<input type="text" className="p-2 w-full outline-none rounded-r-lg text-sm" placeholder='Search' />
 							</div>
 							{communityMembers?.sort((a , b) => {
-								if (a.user.firstName.toLowerCase() < b.user.firstName.toLowerCase()) {
+								if (a.user?.firstName.toLowerCase() < b.user?.firstName.toLowerCase()) {
 									return -1
 								} 
-								if (a.user.firstName.toLowerCase() > b.user.firstName.toLowerCase()) {
+								if (a.user?.firstName.toLowerCase() > b.user?.firstName.toLowerCase()) {
 									return 1
 								} 
 								return 0;

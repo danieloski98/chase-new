@@ -32,6 +32,7 @@ const ThreadMenu = ({
     onSuccess: () => {
       console.log(`this is the postID ${postID}`);
       toast.success(`Post deleted`);
+      toggleMoreOptions(false)
       refresh(postID);
     }
   })

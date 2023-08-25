@@ -77,7 +77,7 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
           setSubmitted(state => !state);
           loadMore()
           //queryClient.invalidateQueries(["getFeedsPosts"]);
-          toast.success("Post with image created successfully!");
+          toast.success("Post with video created successfully!");
           setLoading(false);
         }).catch((error) => {
           setLoading(false);

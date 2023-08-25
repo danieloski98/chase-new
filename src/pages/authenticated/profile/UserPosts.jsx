@@ -82,12 +82,12 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 				{showShareModal && <Share closeShareModal={toggleShare} />}
 				{!isLoading && ( 
 					<div
-						className="flex items-center justify-center flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto"
+						className="flex items-center justify-center flex-col gap-10 py-9 px-4 lg:px-28 pb-24 h-full w-full overflow-auto "
 						ref={threadListRef}
 						id='overlay'
 						onClick={toggleUserPosts}
 					> 
-						<VStack spacing={4} className='w-[500px] h-full'>
+						<VStack spacing={4} paddingX={['10px', '0px']} className=' sm:w-full lg:w-[500px] h-full'>
 						{results?.map((post, i) => { 
 							if (i === results.length - 1) {
 								return( 
