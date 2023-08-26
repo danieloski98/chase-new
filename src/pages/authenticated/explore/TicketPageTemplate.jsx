@@ -101,6 +101,25 @@ const TicketPageTemplate = ({
   const [clientKey , setClientKey] = React.useState("")  
   const [ticketinfo , setticketinfo] = React.useState("")  
 
+  const [userInfo , setUserInfo] = React.useState({})  
+
+
+
+  const fetchProfileInfo = async () => {
+    const data = await sendRequest(
+      "/user/publicprofile/"+userId,
+      "GET",
+      null,
+      { Authorization: `Bearer ${token}` }
+    ) 
+    if(data){ 
+
+      setUserInfo(data) 
+    }
+  }
+console.log(userInfo);
+  
+
   const getEventTicket = () => {
     
     sendRequest(
@@ -119,9 +138,8 @@ const TicketPageTemplate = ({
 
   React.useEffect(()=>{
     getEventTicket()
-  }, [getData])
-
-  console.log(ticketinfo);
+    fetchProfileInfo()
+  }, [getData]) 
 
   const payWithPaystack = async() => { 
     sendPaystackRequest(
@@ -155,8 +173,7 @@ const TicketPageTemplate = ({
         numberOfTickets: ticketCount
       },
       { Authorization: `Bearer ${token}` }
-    ).then((data) => {  
-      console.log(data);
+    ).then((data) => {   
       if(data?.content?.orderTotal > 0) {
 
         setConfigStripe({
@@ -174,27 +191,14 @@ const TicketPageTemplate = ({
           { Authorization: `Bearer ${token}` }
         ).then((response) => {
           setClientKey(response?.gatewayReferenceID)
-          setShowStripeForm(true)
-          console.log(response?.gatewayReferenceID);
+          setShowStripeForm(true) 
           // window.open(response?.checkout, "_blank");
         }) 
       } 
     })
   }
 
-  const isDisabled = !isFree && !selectedCategory?.ticketPrice
-
-  // const { data } = useQuery({
-  //   queryKey: ['getEventSearch'+eventID],
-  //   enabled: false
-  // }, () => httpService.get('/events/get-users-tickets', {
-  //   params : {
-  //     userID: userId,
-  //     eventID: eventID
-  //   }
-  // })) 
-
-  // console.log(data);
+  const isDisabled = !isFree && !selectedCategory?.ticketPrice 
 
   const clickHandler =()=> {
     setEventData(dataInfo)
@@ -223,9 +227,9 @@ const TicketPageTemplate = ({
     <>
       {proceedWithDownload && (
         <DownloadTicketModal
-          userName={ticketinfo[0]?.createdBy?.firstName+" "+ticketinfo[0]?.createdBy?.lastName}
+          userName={ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.firstName+" "+ticketinfo[0]?.createdBy?.lastName : userInfo?.firstName+" "+userInfo?.lastName}
           banner={`${CONFIG.RESOURCE_URL}${banner}`}
-          length={ticketinfo?.length}
+          length={ticketinfo?.length > 0 ? ticketinfo?.length :1}
           eventName={eventName}
           location={location?.locationDetails}
           currency={currency}
@@ -234,7 +238,7 @@ const TicketPageTemplate = ({
               ? EVENT_TYPE.free
               : ticketinfo[0]?.boughtPrice
           }
-          profile={`${CONFIG.RESOURCE_URL}${ticketinfo[0]?.createdBy?.data?.imgMain?.value}`}
+          profile={`${CONFIG.RESOURCE_URL}${ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.data?.imgMain?.value : userInfo?.data?.imgMain?.value}`}
           type={ticketinfo[0]?.ticketType}
           convener={convener}
           date={timeAndDate}
