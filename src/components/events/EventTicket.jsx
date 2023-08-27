@@ -449,6 +449,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
         <button
           className="w-full py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
           onClick={clickHandler}
+          disabled={loading}
         >
           {loading? "loading" : "Submit"}
         </button>

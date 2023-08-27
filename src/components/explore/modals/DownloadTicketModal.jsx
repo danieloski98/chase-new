@@ -24,7 +24,7 @@ const DownloadTicketModal = ({
 }) => {
   return (
     <OverlayWrapper handleClose={handleClose}>
-      <div className="p-4 w-full h-full flex flex-col items-center justify-center gap-1">
+      <div className="p-4 w-full  h-[100vh] overflow-y-auto pt-[150px] pb-[100px] flex flex-col items-center justify-center gap-1">
         <div className="w-full max-w-sm bg-white rounded-t-md flex flex-col gap-2 p-6 shadow-lg relative border border-gray-100">
           <div className="flex text-center text-lg relative">
             <button

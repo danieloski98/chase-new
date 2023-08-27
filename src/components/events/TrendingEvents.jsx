@@ -18,7 +18,7 @@ import { PATH_NAMES } from "../../constants/paths.constant"
 import { Link, useNavigate } from "react-router-dom"
 import Loader from "../Loader"
 import useInfinteScroller from "../../hooks/useInfinteScroller"
-
+ 
 const TrendingEvents = () => {
   const [allEvents, setAllEvents] = useState([])
   const [loading, setLoading] = useState(false)
@@ -87,13 +87,12 @@ const TrendingEvents = () => {
 
   useEffect(() => {
     refetch()
-  }, [eventCategory])
-
+  }, [eventCategory])  
 
   const [page, setPage] = useState(0) 
 
   const { results, isLoading, lastChildRef, refetch, isRefetching } = useInfinteScroller({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, pageNumber:page, setPageNumber:setPage})
- 
+  
 
   return (
     <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
@@ -102,7 +101,7 @@ const TrendingEvents = () => {
       )}
 
       <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory ? eventCategory.replaceAll("_", " ") : "Trending"}</p>
-
+ 
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
         {(!isLoading) && (
           <> 
@@ -280,16 +279,18 @@ const TrendingEvents = () => {
             })}
           </>
         )}
-      </div>
+      </div> 
+      
       {(!isLoading  && !isRefetching) && (
         <> 
-          {results?.length <= 0 && (
+          {results?.length <= 0  && (
             <p className=" text-center py-6 text-lg font-semibold " >
               No Records Found
             </p>
           )}
         </>
-      )}
+      )} 
+
     </div>
   )
 }

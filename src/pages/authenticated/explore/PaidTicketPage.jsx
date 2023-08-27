@@ -32,24 +32,9 @@ const PaidTicketPage = () => {
       setEvent(data?.content[0])
       setIsLoading(false)
     })
-  }
+  } 
 
-
-  // const { isLoading } = useQuery({
-  //   queryKey: ['EventInfo'+id], 
-  //   enabled: false}, () => httpService.get('/events/events', {
-  //   params: {
-  //     id: id
-  //   }
-  // }), {
-  //   onError: (error) => {
-  //     toast.error(error.response?.data);
-  //   }, 
-  //   onSuccess: (data) => {
-  //     setEvent(data.data.content[0]);
-  //   }
-  // }) 
-
+  
   const verifyStripePayment = () => {
     try {
       sendStripeRequest(
