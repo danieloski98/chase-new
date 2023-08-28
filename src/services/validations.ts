@@ -31,8 +31,14 @@ const personinforSchema = z.object({
     dob: z.string().nonempty(),
 });
 
+const reportSchema = z.object({
+    title: z.string().nonempty(),
+    description: z.string().nonempty(),
+});
+
 export {
     signUpValidation,
     signInValidation,
     personinforSchema,
+    reportSchema,
 }

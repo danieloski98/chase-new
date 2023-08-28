@@ -27,6 +27,7 @@ export const useForm = ({submit, defaultValues, validationSchema}: IProps) => {
         renderForm,
         values: methods.getValues(),
         formState: methods.formState,
+        watch: methods.watch
 
     }
 }

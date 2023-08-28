@@ -93,7 +93,7 @@ const Thread = forwardRef<any, IProps>
         <div className="flex justify-between items-stretch text-black lg:w-full sm:w-full">
           <Link
             className="flex gap-2 items-center"
-            to={`${PATH_NAMES.profile}/${userId}`}
+            to={`${PATH_NAMES.profile}/${postData?.user?.userId}`}
           >
             { post?.user?.data?.imgMain?.value && (
               <ProfilePhoto image={post?.user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${post?.user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${post?.user?.firstName}&length=1`} />
@@ -231,7 +231,7 @@ const Thread = forwardRef<any, IProps>
       <div className="flex justify-between items-stretch text-black lg:w-5/6 sm:w-full">
         <Link
           className="flex gap-2 items-center"
-          to={`${PATH_NAMES.profile}/${userId}`}
+          to={`${PATH_NAMES.profile}/${postData?.user?.userId}`}
         >
           <ProfilePhoto image={post?.user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${post?.user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${post?.user?.firstName}&length=1`} />
           <div className="flex flex-col capitalize">
