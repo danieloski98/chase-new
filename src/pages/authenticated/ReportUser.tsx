@@ -1,14 +1,16 @@
-import OverlayWrapper from "@/components/OverlayWrapper"
-import { THREAD_DATA } from "@/constants"
-import ProfilePhoto from "@/components/ProfilePhoto"
-import Home from "@/pages/authenticated/home"
+import OverlayWrapper from "../../components/OverlayWrapper"
+import Home from "../../pages/authenticated/home"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { REPORT_TYPE, CLOSE_ENTITY } from "@/constants"
+import { CLOSE_ENTITY } from "../../constants"
 import { useMutation } from "react-query"
 import httpService from "../../utils/httpService"
 import { toast } from "react-toastify"
-import { Spinner } from '@chakra-ui/react'
+import { Spinner, Button } from '@chakra-ui/react'
+import { useForm } from "../../hooks/useForm"
+import { reportSchema } from "../../services/validations"
+import { CustomInput } from "../../components/Form/CustomInput"
+import { CustomTextArea } from "../../components/Form/CustomTextarea"
 
 const reports = [
   'REPORT_BUG', 
@@ -25,25 +27,47 @@ const ReportUser = () => {
   const navigate = useNavigate()
   const { id } = useParams();
 
+  const { renderForm, values, watch } = useForm({
+    defaultValues: {
+      title: '',
+      description: '',
+    },
+    submit: (data: any) => {
+      if (reportType === '') {
+        toast.warning('You have to select a report type');
+        return;
+      }
+
+      if (values.description.length > 300) {
+        toast.warning('Description must be less than 300 characters');
+        return;
+      }
+      const obj = {
+        title: data.title,
+        description: data.description,
+        reportType,
+        typeID: id
+      }
+      mutate(obj);
+    },
+    validationSchema: reportSchema
+  });
+
   // mutation
   const { isLoading, mutate } = useMutation({
-    mutationFn: (data) => httpService.post(`/report/report`, data),
+    mutationFn: (data: any) => httpService.post(`/report/report`, data),
     onSuccess: (data) => {
       console.log(data);
       toast.success('Report posted');
       navigate(-1);
     },
-    onError: (error) => {
-      toast.error('An error occured while sending report' + error.message);
-      console.log(error);
+    onError: (error: any) => {
+      toast.error('An error occured while sending report, please try again');
     }
   });
 
   const handleReportTypeChange = ({ target: { value } }) => {
     setReportType(value)
-  }
-  const handleExtraInformationChange = ({ target: { value } }) => {
-    setExtraInformation(value)
   }
   const closeShareModal = () => navigate(-1)
 
@@ -51,24 +75,11 @@ const ReportUser = () => {
     setCount(extraInformation.length)
   }, [extraInformation]);
 
-  const handleSubmit = () => {
-    if (title === '' || extraInformation === '') {
-      toast.error('Please fill all fields');
-    }
-    const obj = {
-      title,
-      description: extraInformation,
-      reportType,
-      typeID: id
-    }
-    mutate(obj);
-  }
-
-  return (
+  return renderForm(
     <>
       <Home />
       <OverlayWrapper handleClose={closeShareModal}>
-        <div className="relative flex flex-col items-center mx-4 gap-3 px-6 border border-opacity-10 bg-white shadow-lg pt-8 pb-6 w-full max-w-xl rounded-lg h-96">
+        <div className="relative flex flex-col items-center mx-4 gap-3 px-6 border border-opacity-10 bg-white shadow-lg pt-8 pb-6 w-full max-w-xl rounded-lg h-auto">
           <div className="bg-white absolute rounded-t-lg flex flex-col gap-2 px-6 py-2 top-0 left-0 w-full">
             <div className=" w-full flex items-stretch">
               <div className="basis-1/4 py-1.5 flex justify-start items-center">
@@ -82,9 +93,6 @@ const ReportUser = () => {
               <div className="basis-2/4 py-3 flex justify-center font-bold">
                 Submit a Report
               </div>
-              {/* <div className="basis-1/4 py-3 flex items-center justify-end font-bold text-xs text-chasescrollBlue">
-                <span className="cursor-pointer">Select All</span>
-              </div> */}
             </div>
           </div>
 
@@ -96,22 +104,15 @@ const ReportUser = () => {
             >
               <option value="">-- Report Type --</option>
               {reports.map(type => (
-                <option value={type}>{type}</option>
+                <option key={type} value={type}>{type}</option>
               ))}
             </select>
-            <input placeholder='Report title' value={title} onChange={(e) => setTitle(e.target.value)} className="outline-none w-full border border-chasescrollPurple border-opacity-30 rounded-md px-4 py-2 text-sm" />
-            <textarea
-              value={extraInformation}
-              maxLength={300}
-              onChange={handleExtraInformationChange}
-              placeholder="Please provide some details"
-              className="outline-none w-full h-full border border-chasescrollPurple border-opacity-30 rounded-md px-4 py-2 text-sm"
-            />
-            <div className="flex w-full justify-end text-chasescrollBlue text-sm">{`${count}/300`}</div>
-            <button onClick={handleSubmit} className="bg-chasescrollBlue font-bold py-2.5 rounded-lg w-full text-white">
-              { !isLoading && 'Submit Report' }
-              { isLoading && <Spinner /> }
-            </button>
+            <CustomInput name='title' type="text" isPassword={false} placeholder='Report title' />
+            <CustomTextArea name="description" placeholder="Please provide some details" />
+            
+            <div className="flex w-full justify-end text-chasescrollBlue text-sm">{`${watch('description').length}/300`}</div>
+            <Button type="submit" backgroundColor="brand.chasescrollButtonBlue" color='white' isLoading={isLoading}>Submit report</Button>
+            
           </div>
         </div>
       </OverlayWrapper>

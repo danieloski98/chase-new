@@ -57,22 +57,12 @@ const Comments = () => {
     }
   });
 
-  const getUserComments = async () => {
-    const response = await sendRequest(
-      `${GET_ALL_POST_COMMENTS}?postID=${postID}`,
-      "GET",
-      null,
-      {
-        Authorization: `Bearer ${token}`,
-      }
-    )
-    if (response) setUserComments(response?.content)
-  }
+  
 
-  const addCommentNew = async () => {
-    if (commentInput === "") return;
+  const addCommentNew = React.useCallback(async () => {
+    if (commentInput === "" || addComment.isLoading) return;
     addComment.mutate({ postID: postID, comment: commentInput });
-  }
+  }, [commentInput, addComment, postID]);
 
   const replyPerson = (username) => {
     setCommentInput(value => {
@@ -85,8 +75,19 @@ const Comments = () => {
   }
 
   useEffect(() => {
+    const getUserComments = async () => {
+      const response = await sendRequest(
+        `${GET_ALL_POST_COMMENTS}?postID=${postID}`,
+        "GET",
+        null,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      )
+      if (response) setUserComments(response?.content)
+    }
     getUserComments()
-  }, [getUserComments])
+  }, [postID, sendRequest, token])
 
   return (
     <PageWrapper>
@@ -121,6 +122,7 @@ const Comments = () => {
                     onChange={e => setCommentInput(e.target.value)}
                     onKeyDown={e => {
                       if (e.key === "Enter") {
+                        if (addComment.isLoading || commentInput === "") return;
                         addCommentNew()
                       }
                     }}
@@ -134,9 +136,12 @@ const Comments = () => {
                   </button>
                 </div>
               </div>
-              {userComments.length > 0 && userComments?.map((comment, i) => (
-                <Comment key={i} {...comment} replyPerson={replyPerson} />
-              ))}
+              
+              <div className="w-full sm:px-0 lg:px-0">
+                {userComments.length > 0 && userComments?.map((comment, i) => (
+                  <Comment key={i} {...comment} replyPerson={replyPerson} />
+                ))}
+              </div>
 
               {userComments.length < 1 && (
                 <div className="w-full">

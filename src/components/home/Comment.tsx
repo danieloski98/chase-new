@@ -78,16 +78,16 @@ const Comment = ({ comment, time, likeCount, id, user, replyPerson }: IComment &
 
 const onKeyDown = useCallback((e) => {
   if (e.key === 'Enter') {
-    if (value === `@${user.username} ` || subLoading) {
+    if (value === `@${user.username} ` || isLoading) {
       return;
     } else {
       mutate();
     }
   }
-}, [value, user.username, subLoading, mutate]);
+}, [value, user.username, isLoading, mutate]);
 
   return (
-    <div>
+    <div className="sm:px-1 lg:px-0">
         <div className="flex gap-3 w-full">
         {user?.data?.imgMain?.value && <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${user?.data?.imgMain?.value}`} />}
         { !user?.data?.imgMain?.value && <Avatar name={`${user.firstName} ${user.lastName}`} />}
@@ -101,7 +101,7 @@ const onKeyDown = useCallback((e) => {
             <div className="w-[305px] text-sm">
               {comment}
             </div>
-            <div className="cursor-pointer" onClick={() => toggleLike(id)}>
+            <div className="cursor-pointer ml-2" onClick={() => toggleLike(id)}>
               {isLiked ? <FilledHeartIcon /> : <EmptyHeartIcon />}
             </div>
           </HStack>
