@@ -2,15 +2,14 @@ import React from 'react'
 import { useQuery } from 'react-query';
 import httpService from '../utils/httpService'
 import { PaginatedResponse } from '../models/PaginatedResponse'
-import { AxiosResponse } from 'axios';
-import { IMediaContent } from 'src/models/MediaPost';
+import { AxiosResponse } from 'axios'; 
 import lodash from "lodash"
 
 type IProps = {
     url: string;
     pageNumber: number;
     setPageNumber:  (value: React.SetStateAction<number>) => void;
-    search?: boolean
+    search?: string
 }
 
 function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProps) {
@@ -33,23 +32,17 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
               // //setResults(prev => [...data.data.content, ...prev]);
               // setHasNextPage(data.data.last ? false:true);
               // window.scrollTo(0, window.innerHeight);
-          if(results.length > 0) {  
-            results.push(...item.content);
+          if(isRefetching) {  
+            results.push(...item.content); 
+            // setResults(lodash.uniqBy(results, search ? search : "id"));
+            // setResults(lodash.uniq(item?.content));
             setResults(lodash.uniq(results));
           } else {
+            // setResults(lodash.uniqBy(item?.content, "id"));
             setResults(lodash.uniq(item?.content));
           }
           setHasNextPage(data.data.last ? false:true);
-          window.scrollTo(0, window.innerHeight);
-
-          // if(isRefetching){ 
-          //   results?.push(...item.content);
-          //   setResults(lodash.uniq(results));
-          // } else{
-          //   setResults(lodash.uniq(item?.content));
-          // }
-          //   setHasNextPage(item.last ? false:true);
-          //   window.scrollTo(0, window.innerHeight);
+          window.scrollTo(0, window.innerHeight); 
         }
     })
 
