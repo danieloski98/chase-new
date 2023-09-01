@@ -12,7 +12,7 @@ import { Spinner } from "@chakra-ui/react";
 import useInfinteScroller from "../../hooks/useInfinteScroller"
 
 const ProductTile = forwardRef(
-	(community, ref, refetch) => { 
+	(community, ref) => { 
 
     console.log(community);
 

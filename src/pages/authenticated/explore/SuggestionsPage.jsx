@@ -10,9 +10,10 @@ import { useAuth } from "../../../context/authContext"
 import { useFetch } from "../../../hooks/useFetch"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
 import { Spinner } from "@chakra-ui/react"
+import InfiniteScrollerComponent from "../../../hooks/infiniteScrollerComponent"
 
 const SuggestionsPage = () => {
-  const [suggestions, setSuggestions] = useState([])
+  const [suggestionsdata, setSuggestions] = useState([])
   const [check, setCheck] = useState(false)
   const { token } = useAuth()
   const { sendRequest } = useFetch()
@@ -28,12 +29,14 @@ const SuggestionsPage = () => {
   }
 
   const [page, setPage] = React.useState(0)
-  const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/user/suggest-connections', pageNumber:page, setPageNumber:setPage})
+  const { results, isLoading, ref, refetch, isRefetching } = InfiniteScrollerComponent({url:'/user/suggest-connections', limit:20, filter: "userId"})
 
   useEffect(() => {
     getSuggestions()
   }, [check])
   // console.log(suggestions);
+
+  console.log(isLoading);
 
   return (
     <PageWrapper>
@@ -54,22 +57,22 @@ const SuggestionsPage = () => {
                 {results?.map((suggestion, i) => { 
                   if (results?.length === i + 1) {
                     return( 
-                      <div ref={lastChildRef} key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
+                      <div  ref={ref}   key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
                         <Suggestion
+                          ref={ref} 
                           data={suggestion}
                           key={suggestion.id}
                           userId={suggestion?.userId}
                           firstName={suggestion?.firstName}
                           lastName={suggestion?.lastName}
                           publicProfile={suggestion?.publicProfile}
-                          username={suggestion?.username}
-                          setCheck={setCheck}
-                        />
+                          username={suggestion?.username}  
+                        /> 
                       </div>
                     )
                   } else {
                     return( 
-                      <div ref={lastChildRef} key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
+                      <div key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
                         <Suggestion
                           data={suggestion}
                           key={suggestion.id}
@@ -77,8 +80,7 @@ const SuggestionsPage = () => {
                           firstName={suggestion?.firstName}
                           lastName={suggestion?.lastName}
                           publicProfile={suggestion?.publicProfile}
-                          username={suggestion?.username}
-                          setCheck={setCheck}
+                          username={suggestion?.username}  
                         />
                       </div>
                     )
@@ -86,15 +88,15 @@ const SuggestionsPage = () => {
                 })}
               </div>
 
-              {results.length < 1 && ( 
+              {results?.length < 1 && ( 
                 <div className=' w-full py-2 flex justify-center font-bold text-2xl ' >
                   No Records Found
                 </div>
               )}
             </>
           )} 
-          {isLoading && (
-            <div className="w-full h-32 flex justify-center items-center">
+          {(isLoading || isRefetching) && (
+            <div className="w-full h-32 pb-8 flex justify-center items-center">
               <Spinner size='md' color='brand.chasescrollButtonBlue' />
             </div>
           )}

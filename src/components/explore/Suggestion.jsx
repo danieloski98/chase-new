@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react"
+import React, { forwardRef, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { Popover, Transition } from "@headlessui/react"
 // import img from "@/assets/images/suggestprofile.png"
@@ -22,11 +22,11 @@ const Suggestion = forwardRef
   publicProfile = false,
   userId,
   img,
-  check,
-  setCheck
+  check, 
 }, ref) => {
   const [isConnected, setIsConnected] = useState(false)
   const [Loading, setLoading] = useState("0")
+  const [isFriend, setisFriend] = useState(data?.joinStatus)
   const { token } = useAuth()
   const { sendRequest } = useFetch()
 
@@ -39,7 +39,9 @@ const Suggestion = forwardRef
       { toUserID: userId },
       { Authorization: `Bearer ${token}` }
     )
-    if (response) setIsConnected(state => !state)
+    if (response){  
+      setisFriend("CONNECTED") 
+       setIsConnected(state => !state)}
   }
 
   const blockSuggestion = async () => {
@@ -65,7 +67,7 @@ const Suggestion = forwardRef
     )
     if (data) {
       toast.success(data.message); 
-      setCheck((prev)=> !prev)
+      setisFriend("CONNECTFriend") 
       setLoading("0")
     }
   }
@@ -80,10 +82,12 @@ const Suggestion = forwardRef
     )
     if (data) {
       toast.success(data.message); 
-      setCheck((prev)=> !prev)
+      setisFriend("pending") 
       setLoading("0")
     }
-  } 
+  }  
+
+  console.log(isFriend);
 
   return (
     <div ref={ref} className="flex flex-col gap-3 bg-chasescrollWhite rounded-b-3xl rounded-tl-3xl border border-chasescrollLightGrey shadow-lg px-3 pt-3 pb-6 w-40">
@@ -151,35 +155,35 @@ const Suggestion = forwardRef
         <h3 className="text-chasescrollGrey text-xs">
           {mutuals} Mutual Connection{mutuals === 1 ? "" : "s"}
         </h3>
-        {data?.joinStatus === "FRIEND_REQUEST_SENT" ?
+        {(isFriend === "FRIEND_REQUEST_SENT" ||  isFriend === "pending" )?
           <button
             onClick={unfriendPerson}
-            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${data?.joinStatus === "FRIEND_REQUEST_SENT"
+            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${isFriend === "FRIEND_REQUEST_SENT"
               ? "text-white bg-[#F04F4F]"
               : "bg-chasescrollBlue text-white"
               }`}
           >
-            {Loading === userId ? "Loading..":data?.joinStatus === "FRIEND_REQUEST_SENT" ? "Pending" : isConnected ? "Connected" : "Connect"}
+            {Loading === userId ? "Loading..":isFriend === "FRIEND_REQUEST_SENT" ? "Pending" : isConnected ? "Connected" : "Connect"}
           </button>
-           :data.joinStatus === "CONNECTED" ? (
+           :(isFriend === "CONNECTED" || isFriend === "CONNECTFriend" )? (
             <button
             onClick={unfriendPerson}
-            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${data?.joinStatus === "FRIEND_REQUEST_SENT"
-              ? "text-white bg-[#F04F4F]"
-              : "bg-chasescrollBlue text-white"
+            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${isFriend === "FRIEND_REQUEST_SENT"
+              ? "text-white bg-[#F04F4F]":
+              isFriend === "CONNECTFriend" ? "text-white bg-[#F04F4F]" : "bg-chasescrollBlue text-white"
               }`}
           >
-              {Loading === userId ? "Loading": "Disconnected"} 	
+              {Loading === userId ? "Loading": isFriend === "CONNECTFriend" ? "Pending": "Disconnected"} 	
             </button>
           ):
           <button
             onClick={friendPerson}
-            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${data?.joinStatus === "FRIEND_REQUEST_SENT"
+            className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${isFriend === "FRIEND_REQUEST_SENT"
               ? "text-white bg-[#F04F4F]"
               : "bg-chasescrollBlue text-white"
               }`}
           >
-            {Loading === userId? "Loading..":data?.joinStatus === "FRIEND_REQUEST_SENT" ? "Pending" : isConnected ? "Connected" : "Connect"}
+            {Loading === userId? "Loading..": "Connect"}
           </button>
         }
       </div>
