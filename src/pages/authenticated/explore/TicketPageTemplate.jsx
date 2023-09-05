@@ -53,9 +53,7 @@ const TicketPageTemplate = ({
   ticketBought,
   getData
 }) => {
-  const navigate = useNavigate()
-
-  console.log(dataInfo);
+  const navigate = useNavigate() 
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [proceedWithDownload, setProceedWithDownload] = useState(false)
   const [proceedWithPurchase, setProceedWithPurchase] = useState(false)
