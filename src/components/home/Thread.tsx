@@ -52,7 +52,7 @@ const Thread = forwardRef<any, IProps>
   const [isLiked, setIsLiked] = useState(false);
   const [numOfLikes, setNumOfLikes] = useState(0);
   const [showMore, setShowMore] = useState(false)
-  const { token, userId } = useAuth()
+  //const { token, userId } = useAuth()
   const { sendRequest } = useFetch()
   const queryClient = useQueryClient();
 
@@ -227,68 +227,88 @@ const Thread = forwardRef<any, IProps>
   }
 
   return (
-    <div ref={ref} id={post?.id} className="flex flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit bg-white ">
-      <div className="flex justify-between items-stretch text-black lg:w-5/6 sm:w-full">
-        <Link
-          className="flex gap-2 items-center"
-          to={`${PATH_NAMES.profile}/${postData?.user?.userId}`}
-        >
-          <ProfilePhoto image={post?.user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${post?.user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${post?.user?.firstName}&length=1`} />
-          <div className="flex flex-col capitalize">
-            <small>{post?.user?.firstName} {post?.user?.lastName}</small>
-            <div className="flex flex-col">
-              <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
-              <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
+    <div ref={ref} id={postData.id} className="flex bg-white flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit  ">
+       
+
+        <div className="flex justify-between items-stretch text-black lg:w-full sm:w-full">
+          <Link
+            className="flex gap-2 items-center"
+            to={`${PATH_NAMES.profile}/${postData?.user?.userId}`}
+          >
+            { post?.user?.data?.imgMain?.value && (
+              <ProfilePhoto image={post?.user?.data?.imgMain?.value ? `${CONFIG.RESOURCE_URL}/${post?.user?.data?.imgMain?.value}` : `https://ui-avatars.com/api/?background=random&name=${post?.user?.firstName}&length=1`} />
+            )}
+            {
+              !post?.user?.data?.imgMain?.value && (
+                <Avatar 
+                  name={`${post?.user?.firstName} ${post?.user?.lastName}`}
+                  size='md'
+                />
+              )
+            }
+            <div className="flex flex-col capitalize">
+              <small>{post?.user?.firstName} {post?.user?.lastName}</small>
+              <div className="flex flex-col">
+                <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
+                <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
+              </div>
             </div>
-          </div>
-        </Link>
-        <span
-          className="cursor-pointer flex pt-4 text-chasescrollBlue"
-          onClick={() => {
-            toggleMoreOptions()
-            setThreadId(post?.id)
-          }}
-        >
-          <HollowEllipsisIcon />
-        </span>
-      </div>
-      <div
-        className='text-md font-normal'
-      >
-        {post?.text}
-      </div>
-      <div className="flex flex-col gap-3">
-        {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length > 1 && (
-          <div onDoubleClick={() => toggleLike()}>
-            <PhotoGallery images={post?.multipleMediaRef} />
-          </div>
-        )}
-        {!post?.multipleMediaRef && (
-          <>
-            {post?.type === "WITH_IMAGE" && (
-              <div onDoubleClick={() => toggleLike()}>
-                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
-              </div>
-            )}
-          </>
-        )}
-        {post?.multipleMediaRef && (
-          <>
-            {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length <= 1 && (
-              <div onDoubleClick={() => toggleLike()}>
-                <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
-              </div>
-            )}
-          </>
-        )}
-        {post?.type === "WITH_VIDEO_POST" && (
-          <span>
-            <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
+          </Link>
+          <span
+            className="cursor-pointer flex pt-4 text-chasescrollBlue"
+            onClick={() => {
+              toggleMoreOptions()
+              setThreadId(post?.id);
+              setPostId(post?.id);
+              setPostMakeId(post?.user?.userId)
+            }}
+          >
+            <HollowEllipsisIcon />
           </span>
-        )}
-        <div className="flex justify-between">
-          <div className="basis-1/3 flex items-center justify-center">
-          {
+        </div>
+        <div
+          className='text-md font-normal'
+        >
+          { post?.text && post?.text?.length < 100 && (
+            <span>{post?.text}</span>
+          )}
+          {post?.text && showMore && (
+            <span>{ post?.text } <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show Less</span></span>
+          )}
+          {post?.text && !showMore && post?.text.length > 100 && (
+            <span>{post?.text.substring(0, 100)}... <span onClick={() => setShowMore(!showMore)} className="text-chasescrollBlue cursor-pointer">Show More</span></span>
+          )}
+        </div>
+        <div className="flex flex-col gap-3"> 
+          {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length > 1 && (
+            <div onDoubleClick={() => toggleLike()}>
+              <PhotoGallery images={post?.multipleMediaRef} />
+            </div>
+          )}
+          {!post?.multipleMediaRef && (
+            <>
+              {post?.type === "WITH_IMAGE" && (
+                <div onDoubleClick={() => toggleLike()}>
+                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
+                </div>
+              )}
+            </>
+          )}
+          {post?.multipleMediaRef && (
+            <>
+              {post?.type === "WITH_IMAGE" && post?.multipleMediaRef?.length <= 1 && (
+                <div onDoubleClick={() => toggleLike()}>
+                  <BlurredImage imageUrl={`${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
+                </div>
+              )}
+            </>
+          )} 
+          {post?.type === "WITH_VIDEO_POST" && (
+            <VideoPlayer videoUrl={post?.mediaRef.startsWith('https') ? post?.mediaRef: `${CONFIG.RESOURCE_URL}/${post?.mediaRef}`} />
+          )}
+          <div className="flex justify-between ">
+            <div className="basis-1/3 flex items-center justify-center">
+            {
             !isLoading && (
               <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
               <div
@@ -309,33 +329,32 @@ const Thread = forwardRef<any, IProps>
               <Spinner />
             )
           }
-          </div>
-          <div className="basis-1/3 flex items-center justify-center">
-            <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
-              
+            </div>
+            <div className="basis-1/3 flex items-center justify-center">
               <Link
                 to={`${PATH_NAMES.comments}/${post?.id}`}
                 className="text-xs"
               >
-                <CommentsIcon />
-                {formatNumberWithK(post?.commentCount)} comments
+                <div className="flex flex-col items-center justify-center text-chasescrollTextGrey">
+                  <CommentsIcon />
+                  {formatNumberWithK(post?.commentCount)} comments
+                </div>
               </Link>
             </div>
+            {/* <div className="basis-1/3 flex items-center justify-center">
+              <div
+                className="flex flex-col items-center justify-center text-chasescrollTextGrey"
+                onClick={toggleShare}
+              >
+                <UploadIcon />
+                <span className="cursor-pointer text-xs text-chasescrollTextGrey">
+                  {formatNumberWithK(shareCount)} shares
+                </span>
+              </div>
+            </div> */}
           </div>
-          {/* <div className="basis-1/3 flex items-center justify-center">
-            <div
-              className="flex flex-col items-center justify-center text-chasescrollTextGrey"
-              onClick={toggleShare}
-            >
-              <UploadIcon />
-              <span className="cursor-pointer text-xs text-chasescrollTextGrey">
-                {formatNumberWithK(shareCount)} shares
-              </span>
-            </div>
-          </div> */}
         </div>
       </div>
-    </div>
   )
 })
 
