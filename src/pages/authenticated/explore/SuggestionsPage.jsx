@@ -11,6 +11,7 @@ import { useFetch } from "../../../hooks/useFetch"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
 import { Spinner } from "@chakra-ui/react"
 import InfiniteScrollerComponent from "../../../hooks/infiniteScrollerComponent"
+import UserTile from "../../../components/exploreComponents/sharedComponent/userTiles"
 
 const SuggestionsPage = () => {
   const [suggestionsdata, setSuggestions] = useState([])
@@ -33,16 +34,13 @@ const SuggestionsPage = () => {
 
   useEffect(() => {
     getSuggestions()
-  }, [check])
-  // console.log(suggestions);
-
-  console.log(isLoading);
+  }, [check])  
 
   return (
     <PageWrapper>
       {() => (
         <div className="bg-chasescrollBgBlue pb-20">
-          <header className="relative flex items-center justify-between bg-[#D0D4EB]">
+          <header className=" flex items-center sticky top-0 z-[100] justify-between bg-[#D0D4EB]">
             <Link
               to={PATH_NAMES.explore}
               className="absolute top-2 left-0 text-left justify-center items-center p-4"
@@ -58,7 +56,7 @@ const SuggestionsPage = () => {
                   if (results?.length === i + 1) {
                     return( 
                       <div  ref={ref}   key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
-                        <Suggestion
+                        <UserTile
                           ref={ref} 
                           data={suggestion}
                           key={suggestion.id}
@@ -73,7 +71,7 @@ const SuggestionsPage = () => {
                   } else {
                     return( 
                       <div key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
-                        <Suggestion
+                        <UserTile
                           data={suggestion}
                           key={suggestion.id}
                           userId={suggestion?.userId}

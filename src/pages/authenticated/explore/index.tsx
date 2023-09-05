@@ -1,27 +1,19 @@
-import { Link } from "react-router-dom"
-import { Splide, SplideSlide } from "@splidejs/react-splide"
-import { PATH_NAMES } from "@/constants/paths.constant"
-import PageWrapper from "@/components/PageWrapper"
-import { useAuth } from "../../../context/authContext"
+import { Link } from "react-router-dom" 
+import { PATH_NAMES } from "../../../constants/paths.constant"
+import PageWrapper from "../../../components/PageWrapper"
+import { useAuth } from "../../../context/authContext.jsx"
 import { useEffect, useState } from "react"
-import { useFetch } from "../../../hooks/useFetch"
+import { useFetch } from "../../../hooks/useFetch.js"
 import {
   GET_SUGGESTED_FRIENDS,
   GET_TOP_EVENTS,
-} from "../../../constants/endpoints.constant"
-import CarouselEvent from "../../../components/explore/CarouselEvent"
-import Suggestion from "../../../components/explore/Suggestion"
-import CONFIG from "../../../config"
+} from "../../../constants/endpoints.constant.js" 
+import Carousel from "../../../components/exploreComponents/carousel/index.jsx"
+import Suggestion from "../../../components/explore/Suggestion.jsx"
+import CONFIG from "../../../config/index.js"
+import UserTile from "../../../components/exploreComponents/sharedComponent/userTiles/index.js"
 
-const Explore = () => {
-  const splideOptions = {
-    type: "loop",
-    arrows: false,
-    focus: "center",
-    autoplay: true,
-    padding: "5rem",
-    delay:"5000"
-  }
+const Explore = () => { 
 
   const [topEvents, setTopEvents] = useState([])
   const [checkData, setcheckData] = useState(false)
@@ -56,29 +48,12 @@ const Explore = () => {
       {() => (
         <div className="py-9 flex flex-col gap-4">
           <header className="flex flex-col gap-4 px-4">
-            <h1 className="text-3xl font-bold text-blue-900">Hello {userName}</h1>
+            <h1 className="text-3xl font-bold text-chasescrollDarkBlue">Hello {userName}</h1>
             <p className="text-chasescrollBlue font-bold">Top Events</p>
           </header>
 
           <section className="w-full mx-auto text-chasescrollBlue">
-            <Splide aria-label="My Favorite Images" options={splideOptions}>
-              {topEvents?.map(event => (
-                <SplideSlide
-                  key={event?.id}
-                  className="flex items-center w-full cursor-pointer"
-                >
-                  <Link
-                    to={`/events/${event?.id}`}
-                    className="flex items-center w-full cursor-pointer"
-                  >
-                    <CarouselEvent
-                      image={`${CONFIG.RESOURCE_URL}/${event?.currentPicUrl}`}
-                      caption={event?.eventName}
-                    />
-                  </Link>
-                </SplideSlide>
-              ))}
-            </Splide>
+            <Carousel /> 
           </section>
 
           <section className="px-4 pb-8">
@@ -92,9 +67,9 @@ const Explore = () => {
               </Link>
             </div>
             <div className="flex gap-4 overflow-auto py-4">
-              {suggestions?.slice(0, 6)?.map(suggestion => (
+              {suggestions?.slice(0, 6)?.map((suggestion: any) => (
                 <div key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
-                  <Suggestion
+                  <UserTile
                     key={suggestion.id}
                     userId={suggestion?.userId}
                     data={suggestion}

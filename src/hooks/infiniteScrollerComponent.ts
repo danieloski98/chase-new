@@ -32,11 +32,9 @@ function InfiniteScrollerComponent(props: Props) {
           toast.error(error.response?.data);
         }, 
         
-        onSuccess: (data: any) => {  
-            console.log(data);
+        onSuccess: (data: any) => {   
             if(isRefetching){
-                results.push(...data?.data?.content);  
-
+                results.push(...data?.data?.content);   
                 setResults(lodash.uniqBy(results, filter ? filter : "id")); 
             } else {
 
@@ -56,8 +54,7 @@ function InfiniteScrollerComponent(props: Props) {
         intObserver.current = new IntersectionObserver((posts) => {
           if (posts[0].isIntersecting && hasNextPage && !isRefetching) {
             setSize(prev => prev + limit); 
-            refetch()
-            console.log(size); 
+            refetch() 
           }
         });
         if (post) intObserver.current.observe(post);
