@@ -53,7 +53,7 @@ const TicketPageTemplate = ({
   ticketBought,
   getData
 }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate() 
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [proceedWithDownload, setProceedWithDownload] = useState(false)
   const [proceedWithPurchase, setProceedWithPurchase] = useState(false)
@@ -101,9 +101,7 @@ const TicketPageTemplate = ({
   const [clientKey , setClientKey] = React.useState("")  
   const [ticketinfo , setticketinfo] = React.useState("")  
 
-  const [userInfo , setUserInfo] = React.useState({})  
-
-
+  const [userInfo , setUserInfo] = React.useState({})   
 
   const fetchProfileInfo = async () => {
     const data = await sendRequest(
@@ -116,10 +114,7 @@ const TicketPageTemplate = ({
 
       setUserInfo(data) 
     }
-  }
-console.log(userInfo);
-  
-
+  } 
   const getEventTicket = () => {
     
     sendRequest(
@@ -129,8 +124,7 @@ console.log(userInfo);
       {
         Authorization: `Bearer ${token}`,
       }
-    ).then((data) => {
-      console.log(data);
+    ).then((data) => { 
       setticketinfo(data?.content)
       setIsLoading(false)
     })
@@ -221,12 +215,14 @@ console.log(userInfo);
     if (data) {
       toast.success(data.message);  
     }
-  } 
+  }  
 
   return (
     <>
       {proceedWithDownload && (
         <DownloadTicketModal
+          firstName={ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.firstName : userInfo?.firstName}
+          lastName={ticketinfo?.length > 0 ?  ticketinfo[0]?.createdBy?.lastName : userInfo?.lastName}
           userName={ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.firstName+" "+ticketinfo[0]?.createdBy?.lastName : userInfo?.firstName+" "+userInfo?.lastName}
           banner={`${CONFIG.RESOURCE_URL}${banner}`}
           length={ticketinfo?.length > 0 ? ticketinfo?.length :1}
@@ -238,7 +234,7 @@ console.log(userInfo);
               ? EVENT_TYPE.free
               : ticketinfo[0]?.boughtPrice
           }
-          profile={`${CONFIG.RESOURCE_URL}${ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.data?.imgMain?.value : userInfo?.data?.imgMain?.value}`}
+          profile={`${ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.data?.imgMain?.value : userInfo?.data?.imgMain?.value}`}
           type={ticketinfo[0]?.ticketType}
           convener={convener}
           date={timeAndDate}
@@ -369,13 +365,21 @@ console.log(userInfo);
           </div>
           <div className="lg:px-2 flex justify-between items-center py-4 rounded-lg lg:border-b border-gray-300">
             <div className="flex gap-2 justify-center items-center">
-              <img 
+              {/* <img 
               role="button"
                 onClick={() => navigate(`/profile/${`${userBy}`}`)}
                 src={`${CONFIG.RESOURCE_URL}${eventLogo}`}
                 alt="convener logo"
                 className="w-12 h-12 object-cover rounded-b-full rounded-tl-full bg-black"
-              />
+              /> */}
+                {eventLogo&& (
+                  <img src={CONFIG.RESOURCE_URL+eventLogo} alt="" className="w-16 h-16 rounded-b-[64px] rounded-tl-[64px] object-cover" /> 
+                )}
+                {!eventLogo && (
+                  <div className=" w-16 h-16 bg-chasescrollGray rounded-b-[64px] rounded-tl-[64px] flex justify-center items-center font-bold text-[26px] " >
+                      {dataInfo?.createdBy?.firstName?.charAt(0).toUpperCase()}{dataInfo?.createdBy?.lastName?.charAt(0).toUpperCase()}
+                  </div>
+                )}
               <div role="button"  onClick={() => navigate(`/profile/${`${userBy}`}`)} className="flex flex-col">
                 <h3>{convener}</h3>
                 <p className="text-xs font-bold">@{username}</p>

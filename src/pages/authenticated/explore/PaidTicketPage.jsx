@@ -72,9 +72,7 @@ const PaidTicketPage = () => {
   useEffect(() => {
     if (orderId) verifyStripePayment()
     else if (orderCode) verifyPaystackPayment()
-  }, [orderId, orderCode])
-
-console.log(event);
+  }, [orderId, orderCode]) 
 
   return (
     <PageWrapper>

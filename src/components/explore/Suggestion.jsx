@@ -41,7 +41,7 @@ const Suggestion = forwardRef
     )
     if (response){  
       setisFriend("CONNECTED") 
-       setIsConnected(state => !state)}
+      setIsConnected(state => !state)}
   }
 
   const blockSuggestion = async () => {
@@ -53,8 +53,7 @@ const Suggestion = forwardRef
         id: userId,
       },
       { Authorization: `Bearer ${token}` }
-    )
-    // if (response) console.log(response)
+    ) 
   }
 
   const friendPerson = async () => {
@@ -85,9 +84,7 @@ const Suggestion = forwardRef
       setisFriend("pending") 
       setLoading("0")
     }
-  }  
-
-  console.log(isFriend);
+  }   
 
   return (
     <div ref={ref} className="flex flex-col gap-3 bg-chasescrollWhite rounded-b-3xl rounded-tl-3xl border border-chasescrollLightGrey shadow-lg px-3 pt-3 pb-6 w-40">
@@ -126,18 +123,7 @@ const Suggestion = forwardRef
       </Popover>
 
       <div className="flex flex-col lg:gap-2 gap-1 items-center">
-        <div className="rounded-b-full rounded-tl-full w-20 h-20 border border-chasescrollBlue">
-          {/* {check ?  
-            <img 
-              onClick={() => navigate(`/profile/${userId}`)}
-              src={img} 
-              alt="" 
-              className="rounded-b-full object-cover rounded-tl-full w-full h-full cursor-pointer" />
-              :
-            <div onClick={() => navigate(`/profile/${userId}`)} className="rounded-b-full rounded-tl-full w-full h-full cursor-pointer bg-yellow-400 ">
-
-            </
-          } */}
+        <div className="rounded-b-full rounded-tl-full w-20 h-20 border border-chasescrollBlue"> 
           {data?.data?.imgMain?.value &&  
 						<img src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-full rounded-tl-full" />
 					}
@@ -155,7 +141,7 @@ const Suggestion = forwardRef
         <h3 className="text-chasescrollGrey text-xs">
           {mutuals} Mutual Connection{mutuals === 1 ? "" : "s"}
         </h3>
-        {(isFriend === "FRIEND_REQUEST_SENT" ||  isFriend === "pending" )?
+        {(isFriend === "FRIEND_REQUEST_SENT") ?
           <button
             onClick={unfriendPerson}
             className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all ${isFriend === "FRIEND_REQUEST_SENT"

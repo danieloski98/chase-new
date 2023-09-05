@@ -1,6 +1,6 @@
 import React from 'react'   
 import { useNavigate } from 'react-router-dom'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 import { AxiosError, AxiosResponse } from "axios";
 import httpService from '../../utils/httpService';
 import { toast } from "react-toastify";
@@ -15,13 +15,12 @@ const ExplorePerson = React.forwardRef(
 	(props: Iprops, ref: any) => { 
 
 	const {
-		person,
-		refetch
+		person 
 	} = props
-
-	const queryClient = useQueryClient() 
+ 
 	const navigate = useNavigate()
 	const [loading, setLoading] = React.useState("0")
+	const [isFriend, setisFriend] = React.useState(person?.joinStatus)
 
 
 	const unfriend = useMutation({
@@ -30,10 +29,9 @@ const ExplorePerson = React.forwardRef(
 		  toast.error(error.response?.data?.message);
 		},
 		onSuccess: (data: AxiosResponse<any>) => {
-		  toast.success(data.data?.message)
-		  queryClient.invalidateQueries(['getconnect'])
+		  toast.success(data.data?.message) 
 		  setLoading("0")
-		  refetch()
+		  setisFriend("pending") 
 		}
 	});
 
@@ -43,11 +41,9 @@ const ExplorePerson = React.forwardRef(
 		  toast.error(error.response?.data?.message);
 		},
 		onSuccess: (data: AxiosResponse<any>) => {
-		  toast.success(data.data?.message)
-		  queryClient.invalidateQueries(['getconnect'])
+		  toast.success(data.data?.message) 
 		  setLoading("0")
-		  refetch()
-		//   Re
+		  setisFriend("CONNECTFriend") 
 		}
 	}); 
 
@@ -86,21 +82,28 @@ const ExplorePerson = React.forwardRef(
 				</div>
 			</div>
 			<div className="flex justify-end pl-4 h-1/2">
-				{person.joinStatus === "FRIEND_REQUEST_SENT" ? (
+				{isFriend === "FRIEND_REQUEST_SENT" ? (
 					<button
 						className="text-[#F04F4F] text-xs md:text-sm hover:text-red-600 shadow-lg bg-white font-semibold py-1 md:py-2 w-40 rounded"
 						onClick={handleRemove}
 					>
 						{loading === person?.userId ? "Loading": "Pending"} 	
 					</button>
-				) :person.joinStatus === "CONNECTED" ? (
+				) :isFriend === "CONNECTED" ? (
 					<button
 						className="text-[#F04F4F] text-xs md:text-sm hover:text-red-600 shadow-lg bg-white font-semibold py-1 md:py-2 w-40 rounded"
 						onClick={handleRemove}
 					>
 						{loading === person?.userId ? "Loading": "Disconnected"} 	
 					</button>
-				) : (
+				) :isFriend === "CONNECTFriend" ? (
+					<button
+						className="text-[#F04F4F] text-xs md:text-sm hover:text-red-600 shadow-lg bg-white font-semibold py-1 md:py-2 w-40 rounded"
+						onClick={handleRemove}
+					>
+						{loading === person?.userId ? "Loading": "Pending"} 	
+					</button>
+				)  : (
 					<button
 						className="text-[#1732F7] text-xs md:text-sm hover:text-blue-500 shadow-lg bg-[#E2E5F3] font-semibold py-1 md:py-2 w-40 rounded"
 						onClick={handleadd}
