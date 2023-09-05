@@ -12,14 +12,13 @@ import { useMutation } from "react-query"
 import httpService from "../../../../utils/httpService"
 
 interface Props {
-    mutuals: number,
+    mutuals?: number,
     data:any,
     firstName: any,
     lastName: any,
     publicProfile: boolean,
     userId: any,
-    img: any,
-    check: any
+    img: any 
 }
 
 const UserTile = forwardRef<any, Props>

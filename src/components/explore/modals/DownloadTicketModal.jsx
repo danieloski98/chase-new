@@ -24,9 +24,7 @@ const DownloadTicketModal = ({
   length,
   currency,
   profile
-}) => {
-
-  console.log(profile);
+}) => { 
 
   return (
     <OverlayWrapper handleClose={handleClose}>

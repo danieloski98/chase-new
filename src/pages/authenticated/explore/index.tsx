@@ -5,43 +5,28 @@ import { useAuth } from "../../../context/authContext.jsx"
 import { useEffect, useState } from "react"
 import { useFetch } from "../../../hooks/useFetch.js"
 import {
-  GET_SUGGESTED_FRIENDS,
-  GET_TOP_EVENTS,
+  GET_SUGGESTED_FRIENDS, 
 } from "../../../constants/endpoints.constant.js" 
-import Carousel from "../../../components/exploreComponents/carousel/index.jsx"
-import Suggestion from "../../../components/explore/Suggestion.jsx"
+import Carousel from "../../../components/exploreComponents/carousel/index.jsx" 
 import CONFIG from "../../../config/index.js"
 import UserTile from "../../../components/exploreComponents/sharedComponent/userTiles/index.js"
 
 const Explore = () => { 
-
-  const [topEvents, setTopEvents] = useState([])
-  const [checkData, setcheckData] = useState(false)
+ 
   const [suggestions, setSuggestions] = useState([])
   const { userName, token } = useAuth()
-  const { sendRequest } = useFetch()
-
-  const getTopEvents = async () => {
-    const topEvents = await sendRequest(GET_TOP_EVENTS, "GET", null, {
-      Authorization: `Bearer ${token}`,
-    })
-    if (topEvents) setTopEvents(topEvents?.content)
-  }
+  const { sendRequest } = useFetch() 
 
   const getSuggestions = async () => {
     const suggestions = await sendRequest(GET_SUGGESTED_FRIENDS, "GET", null, {
       Authorization: `Bearer ${token}`,
     })
     if (suggestions) setSuggestions(suggestions?.content)
-  }
-
-  useEffect(() => {
-    getTopEvents() 
-  }, []) 
+  } 
 
   useEffect(() => { 
     getSuggestions()
-  }, [checkData])
+  }, [])
 
   return (
     <PageWrapper>
@@ -76,9 +61,7 @@ const Explore = () => {
                     firstName={suggestion?.firstName}
                     lastName={suggestion?.lastName}
                     publicProfile={suggestion?.publicProfile}
-                    img={`${CONFIG.RESOURCE_URL}${suggestion?.data?.imgMain?.value}`}
-                    check={suggestion?.data?.imgMain?.value}
-                    setCheck={getSuggestions}
+                    img={`${CONFIG.RESOURCE_URL}${suggestion?.data?.imgMain?.value}`}  
                   />
                 </div>
               ))}
