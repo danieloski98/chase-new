@@ -18,8 +18,7 @@ function CarouselTab(props) {
         onError: (error) => {
             toast.error(error.response?.data);
         }, 
-        onSuccess: (data) => {
-            console.log(data);
+        onSuccess: (data) => { 
             setData(data.data.content);
         }
     }) 
@@ -66,7 +65,7 @@ function CarouselTab(props) {
                             </>
                         )
                     })
-                } autoplay={true} interval={8000}/>
+                } autoplay={true} interval={5000}/>
             )} 
         </div>
     )
