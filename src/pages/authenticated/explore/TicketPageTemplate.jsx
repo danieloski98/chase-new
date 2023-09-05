@@ -101,9 +101,7 @@ const TicketPageTemplate = ({
   const [clientKey , setClientKey] = React.useState("")  
   const [ticketinfo , setticketinfo] = React.useState("")  
 
-  const [userInfo , setUserInfo] = React.useState({})  
-
-
+  const [userInfo , setUserInfo] = React.useState({})   
 
   const fetchProfileInfo = async () => {
     const data = await sendRequest(
@@ -116,10 +114,7 @@ const TicketPageTemplate = ({
 
       setUserInfo(data) 
     }
-  }
-console.log(userInfo);
-  
-
+  } 
   const getEventTicket = () => {
     
     sendRequest(
@@ -129,8 +124,7 @@ console.log(userInfo);
       {
         Authorization: `Bearer ${token}`,
       }
-    ).then((data) => {
-      console.log(data);
+    ).then((data) => { 
       setticketinfo(data?.content)
       setIsLoading(false)
     })
@@ -223,10 +217,14 @@ console.log(userInfo);
     }
   } 
 
+  console.log(userInfo);
+
   return (
     <>
       {proceedWithDownload && (
         <DownloadTicketModal
+          firstName={ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.firstName : userInfo?.firstName}
+          lastName={ticketinfo?.length > 0 ?  ticketinfo[0]?.createdBy?.lastName : userInfo?.lastName}
           userName={ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.firstName+" "+ticketinfo[0]?.createdBy?.lastName : userInfo?.firstName+" "+userInfo?.lastName}
           banner={`${CONFIG.RESOURCE_URL}${banner}`}
           length={ticketinfo?.length > 0 ? ticketinfo?.length :1}
@@ -238,7 +236,7 @@ console.log(userInfo);
               ? EVENT_TYPE.free
               : ticketinfo[0]?.boughtPrice
           }
-          profile={`${CONFIG.RESOURCE_URL}${ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.data?.imgMain?.value : userInfo?.data?.imgMain?.value}`}
+          profile={`${ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.data?.imgMain?.value : userInfo?.data?.imgMain?.value}`}
           type={ticketinfo[0]?.ticketType}
           convener={convener}
           date={timeAndDate}

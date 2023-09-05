@@ -5,6 +5,7 @@ import OverlayWrapper from "../../OverlayWrapper"
 import { CaretLeftIcon } from "../../Svgs"
 import profileAvatar from "@/assets/svg/bitmoji-profile-avatar.svg"
 import { formatDate, formatNumber, formatTime } from "../../../utils/helpers"
+import CONFIG from "../../../config"
 
 const DownloadTicketModal = ({
   userName,
@@ -15,6 +16,8 @@ const DownloadTicketModal = ({
   date,
   time,
   ticketFee,
+  firstName,
+  lastName,
   closeModal,
   handleClose,
   type,
@@ -22,6 +25,9 @@ const DownloadTicketModal = ({
   currency,
   profile
 }) => {
+
+  console.log(profile);
+
   return (
     <OverlayWrapper handleClose={handleClose}>
       <div className="p-4 w-full  h-[100vh] overflow-y-auto pt-[150px] pb-[100px] flex flex-col items-center justify-center gap-1">
@@ -81,7 +87,14 @@ const DownloadTicketModal = ({
               </div>
             </div>
             <div className="p-4 basis-1/2 w-full flex flex-col gap-4 text-xs justify-between">
-              <img src={profile} alt="" className="w-24 h-24 rounded-full object-cover" />
+              {profile !== "null" && (
+                <img src={CONFIG.RESOURCE_URL+profile} alt="" className="w-24 h-24 rounded-full object-cover" /> 
+              )}
+              {profile === "null" && (
+                <div className=" w-24 h-24 bg-chasescrollGray rounded-b-[64px] rounded-tl-[64px] flex justify-center items-center font-bold text-[30px] " >
+                    {firstName?.charAt(0).toUpperCase()}{lastName?.charAt(0).toUpperCase()}
+                </div>
+              )}
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <h3 className="text-chasescrollBlue font-bold">Name</h3>
