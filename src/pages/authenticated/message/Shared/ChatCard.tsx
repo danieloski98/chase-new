@@ -62,17 +62,18 @@ export default function ChatCard({ chat, setSelected, smallScreen, activeChat }:
                             size='md'
                         />
                 </VStack>
-                <VStack>
-                    { chat.type === 'GROUP' && <Heading size='sm' as='h4'>{chat.name[0].toUpperCase()}{chat.name.substring(1, chat.name.length)}</Heading> }
+                <VStack alignItems={'flex-start'}>
+                    { chat.type === 'ONE_TO_ONE' && <Heading size='sm' as='h4'>@{chat.otherUser.username.toUpperCase()}</Heading>}
+                    { chat.type === 'GROUP' && <Heading size='sm' as='h4'>{chat.name[0].toUpperCase()}{chat.name.substring(1, chat.name.length).length > 10 ? `${chat.name.substring(1, 10)}...`: chat.name.substring(1, chat.name.length)}</Heading> }
                     <Text>{chat?.lastMessage ? chat?.lastMessage.length > 20 ? `${chat?.lastMessage.substring(0, 20)}...` : chat?.lastMessage : ''}</Text>
                 </VStack>
            </HStack>
 
             <VStack flex={0.5}  alignItems='flex-end' >
-                <HStack justifyContent='flex-end' width='100%'>
-                    { chat.type === 'ONE_TO_ONE' && <Heading size='sm' as='h4'>@{chat.otherUser.username.toUpperCase()}</Heading>}
-                    <Text fontSize={'12px'} color='gray.500'>{moment(chat.lastMessageUpdate).fromNow()}</Text>
-                </HStack>
+            <Text fontSize={'12px'} color='gray.500'>{moment(chat.lastMessageUpdate).fromNow()}</Text>
+
+                {/* <HStack justifyContent='flex-end' width='100%'>
+                </HStack> */}
             </VStack>
 
         </HStack>
