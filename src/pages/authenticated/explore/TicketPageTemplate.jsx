@@ -54,6 +54,8 @@ const TicketPageTemplate = ({
   getData
 }) => {
   const navigate = useNavigate()
+
+  console.log(dataInfo);
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [proceedWithDownload, setProceedWithDownload] = useState(false)
   const [proceedWithPurchase, setProceedWithPurchase] = useState(false)
@@ -215,9 +217,7 @@ const TicketPageTemplate = ({
     if (data) {
       toast.success(data.message);  
     }
-  } 
-
-  console.log(userInfo);
+  }  
 
   return (
     <>
@@ -367,13 +367,21 @@ const TicketPageTemplate = ({
           </div>
           <div className="lg:px-2 flex justify-between items-center py-4 rounded-lg lg:border-b border-gray-300">
             <div className="flex gap-2 justify-center items-center">
-              <img 
+              {/* <img 
               role="button"
                 onClick={() => navigate(`/profile/${`${userBy}`}`)}
                 src={`${CONFIG.RESOURCE_URL}${eventLogo}`}
                 alt="convener logo"
                 className="w-12 h-12 object-cover rounded-b-full rounded-tl-full bg-black"
-              />
+              /> */}
+                {eventLogo&& (
+                  <img src={CONFIG.RESOURCE_URL+eventLogo} alt="" className="w-16 h-16 rounded-b-[64px] rounded-tl-[64px] object-cover" /> 
+                )}
+                {!eventLogo && (
+                  <div className=" w-16 h-16 bg-chasescrollGray rounded-b-[64px] rounded-tl-[64px] flex justify-center items-center font-bold text-[26px] " >
+                      {dataInfo?.createdBy?.firstName?.charAt(0).toUpperCase()}{dataInfo?.createdBy?.lastName?.charAt(0).toUpperCase()}
+                  </div>
+                )}
               <div role="button"  onClick={() => navigate(`/profile/${`${userBy}`}`)} className="flex flex-col">
                 <h3>{convener}</h3>
                 <p className="text-xs font-bold">@{username}</p>
