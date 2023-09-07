@@ -30,7 +30,7 @@ const SuggestionsPage = () => {
   }
 
   const [page, setPage] = React.useState(0)
-  const { results, isLoading, ref, refetch, isRefetching } = InfiniteScrollerComponent({url:'/user/suggest-connections', limit:20, filter: "userId"})
+  const { results, isLoading, ref, refetch, isRefetching } = InfiniteScrollerComponent({url:'/user/suggest-connections', limit:20, filter: "userId", newdata: false})
 
   useEffect(() => {
     getSuggestions()

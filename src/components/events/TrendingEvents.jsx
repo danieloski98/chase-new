@@ -251,18 +251,18 @@ const TrendingEvents = () => {
 
   // const { results, isLoading, lastChildRef, refetch, isRefetching } = useInfinteScroller({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, pageNumber:page, setPageNumber:setPage})
   
-  const { results, isLoading, ref, refetch, isRefetching } = InfiniteScrollerComponent({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, limit:10, filter: "id"})
+  const { results, isLoading, ref, refetch, isRefetching } = InfiniteScrollerComponent({url:`/events/events${eventCategory?"?eventType="+eventCategory : ""}`, limit:10, filter: "id", newdata: eventCategory})
 
   return (
     <div className=" w-full relative lg:w-fit lg:mx-auto px-6 ">
-      {(isLoading && !isRefetching) && ( 
+      {(isLoading && isRefetching) && ( 
           <Loader position={true} /> 
       )}
 
       <p className={` ${eventCategory ? "text-center text-xl font-bold" : "font-semibold text-xl"}  mt-6 mb-4 `} >{eventCategory ? eventCategory.replaceAll("_", " ") : "Trending"}</p>
  
       <div className=" lg:mx-auto w-full lg:w-fit grid grid-cols-1 lg:grid-cols-2 gap-6 ">
-        {(!isLoading) && (
+        {(!isLoading && !isRefetching) && (
           <> 
             {results.map((event, i) => { 
               if (results.length === i + 1) {

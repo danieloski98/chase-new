@@ -165,16 +165,16 @@ const Wallet = () => {
 									{isLoading
 										? <ButtonSpinner />
 										: showBalance
-											? formatNumber(walletBalance?.walletBalances?.balance, currency === USD ? "$" : "₦")
+											? formatNumber((walletBalance?.walletBalances?.balance/100), currency === USD ? "$" : "₦")
 											: `${currency} * * * *`
 									}
 								</h1>
 								): (
-									<h1 className="text-white font-bold text-2xl text-center flex items-center justify-center">
+									<h1 className="text-[#F29339] font-bold text-2xl text-center flex items-center justify-center">
 										{isLoading
 											? <ButtonSpinner />
 											: showBalance
-												? formatNumber(walletBalance?.escrowBalances?.balance, currency === USD ? "$" : "₦")
+												? formatNumber((walletBalance?.escrowBalances?.balance/100), currency === USD ? "$" : "₦")
 												: `${currency} * * * *`
 										}
 									</h1>
