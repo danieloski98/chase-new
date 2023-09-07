@@ -16,8 +16,7 @@ function InfiniteScrollerComponent(props: Props) {
     const {
         url,
         filter,
-        limit,
-        newdata
+        limit 
     } = props
 
     const [size, setSize] = React.useState(limit)
@@ -35,14 +34,18 @@ function InfiniteScrollerComponent(props: Props) {
         }, 
         
         onSuccess: (data: any) => {   
+
+          if(isRefetching){
             if(size === limit){
               setResults(lodash.uniqBy(data?.data?.content, filter ? filter : "id")); 
-              return
-            } else if(size !== limit){
-              console.log(data);
+              // return
+            } else if(size !== limit){ 
                 results.push(...data?.data?.content);   
                 setResults(lodash.uniqBy(results, filter ? filter : "id")); 
             } 
+          } else {
+            setResults(lodash.uniqBy(data?.data?.content, filter ? filter : "id")); 
+          }
             setHasNextPage(data.data.last ? false:true);
             window.scrollTo(0, window.innerHeight); 
         //   setData(data.data.content);

@@ -42,10 +42,7 @@ const EventInfo = ({ formData, handleChange, setFormData, handleContinue }) => {
       toast.error("Enter Event Ending Date")
     } else if(!formData?.location?.locationDetails && !formData?.location?.link){
       toast.error("Enter Event Location") 
-    } else if(!formData?.location?.address){
-      toast.error("Enter Event Address")
-      console.log(formData?.location?.locationDetails);
-    } else {
+    }  else {
       handleContinue()
     } 
   }
