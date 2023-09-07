@@ -8,17 +8,19 @@ import lodash from 'lodash';
 interface Props {
     url: string,
     filter: string,
-    limit: number
+    limit: number,
+    newdata?: any,
 }
 
 function InfiniteScrollerComponent(props: Props) {
     const {
         url,
         filter,
-        limit
+        limit,
+        newdata
     } = props
 
-    const [size, setSize] = React.useState(10)
+    const [size, setSize] = React.useState(limit)
     const [hasNextPage, setHasNextPage] = React.useState(false);
     const [results, setResults] = React.useState([] as any) 
     const intObserver = React.useRef<IntersectionObserver>();
@@ -33,13 +35,14 @@ function InfiniteScrollerComponent(props: Props) {
         }, 
         
         onSuccess: (data: any) => {   
-            if(isRefetching){
+            if(size === limit){
+              setResults(lodash.uniqBy(data?.data?.content, filter ? filter : "id")); 
+              return
+            } else if(size !== limit){
+              console.log(data);
                 results.push(...data?.data?.content);   
                 setResults(lodash.uniqBy(results, filter ? filter : "id")); 
-            } else {
-
-                setResults(lodash.uniqBy(data?.data?.content, filter ? filter : "id")); 
-            }
+            } 
             setHasNextPage(data.data.last ? false:true);
             window.scrollTo(0, window.innerHeight); 
         //   setData(data.data.content);
