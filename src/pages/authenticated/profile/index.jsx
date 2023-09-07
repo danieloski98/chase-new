@@ -17,8 +17,10 @@ import { GET_FRIEND_REQUESTS, GET_JOINED_EVENTS, GET_JOINED_GROUPS, GET_USER_CON
 import { useAuth } from "../../../context/authContext"
 import { toast } from "react-toastify"
 import { IoMdSettings } from 'react-icons/io'
-import { Avatar } from '@chakra-ui/react'
+import { Avatar, Spinner } from '@chakra-ui/react'
 import Loader from "../../../components/Loader"
+import { useMutation } from "react-query"
+import httpService from "@/utils/httpService"
 
 const Profile_1 = () => {
   const [showOptions, setShowOptions] = useState(false)
@@ -43,6 +45,27 @@ const Profile_1 = () => {
   // console.log(userId);
 
   const self = userId === currentUserId
+
+  // mutation
+  const { isLoading: createChatLoading, mutate } = useMutation({
+    mutationFn: () => httpService.post('/chat/chat', {
+      image: `${profile?.data?.imgMain?.value}`,
+      name: profile?.username,
+      type: 'ONE_TO_ONE',
+      typeID: userId,
+      users: [
+        userId,
+      ]
+    }),
+    onSuccess: (data) => {
+      console.log(data);
+      navigate(`/message?messageId=${data.data.id}`);
+    },
+    onError: (errror) => {
+      console.log(errror);
+      toast.error('An error occured whilw trying to initiate chat');
+    }
+  })
 
   const fetchProfileInfo = async () => {
     const data = await sendRequest(
@@ -262,6 +285,15 @@ const Profile_1 = () => {
                     {!self && (
                       <div className="flex items-center gap-4 justify-center text-sm md:text-base">
                         {/* {profile?.joinStatus === "FRIEND_REQUEST_SENT" } */}
+                        {!self && profile?.joinStatus === "CONNECTED" && ( 
+                          <div
+                            onClick={mutate}
+                            className="w-40 bg-white text-blue-500 px-4 py-3 rounded-md text-center"
+                          >
+                            { createChatLoading && <Spinner colorScheme="blue" /> } 
+                            { !createChatLoading && 'Chat' }
+                          </div>
+                        )}
                         {profile?.joinStatus === "FRIEND_REQUEST_SENT" ? (
                           <button
                             className="w-40 font-semibold bg-[#F04F4F] text-white px-3 md:px-4 py-3 rounded-md"
@@ -284,14 +316,7 @@ const Profile_1 = () => {
                             {loading ? "loading.." : "Connect"}
                           </button>
                         )}
-                        {/* {self && ( 
-                          <Link
-                            to={`${PATH_NAMES.message}/${userId}`}
-                            className="w-40 bg-white text-blue-500 px-4 py-3 rounded-md text-center"
-                          >
-                            Chat
-                          </Link>
-                        )} */}
+                        
                       </div>
                     )}
                   </div>

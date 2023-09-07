@@ -9,13 +9,18 @@ import ChatCard from '../Shared/ChatCard';
 import ChatHeader from '../Shared/ChatHeader';
 import CONFIG from '../../../../config';
 import httpService from '../../../../utils/httpService';
-import { CREATE_POST, UPLOAD_IMAGE } from '../../../../constants/endpoints.constant';
+import { CREATE_POST, UPLOAD_IMAGE, UPLOAD_VIDEO } from '../../../../constants/endpoints.constant';
 import { toast } from 'react-toastify';
 import send from "../../../../assets/svg/send-icon.svg"
 import selector from "../../../../assets/svg/image.svg"
 import Message from '../Shared/Message';
 import Fab, { IList } from '../../../../components/general/Fab';
 import { FiFileText, FiVideo, FiImage, FiSearch } from 'react-icons/fi';
+import { useSearchParams } from 'react-router-dom'
+import PreviewContainer from '../../communities/shared/PreviewContainer';
+import PreviewVideo from '../../communities/shared/PreviewVideo';
+import PreviewFile from '../../communities/shared/PreviewFile';
+
 
 
 
@@ -31,6 +36,14 @@ function MobileChatView({ query }: IProps) {
     const [image, setImage] = useState('');
     const [post, setPost] = useState(''); 
     const [search, setSearch] = React.useState(''); 
+    const [video, setVideo] = useState('');
+    const [file, setFile] =  useState('');
+    const [type, setType] = useState(''); 
+
+    const [queryParams] = useSearchParams();
+    const messageId = queryParams.get('messageId');
+
+    console.log(`this is the messageid ${messageId}`)
   
     
     // refs
@@ -41,16 +54,16 @@ function MobileChatView({ query }: IProps) {
     // others
     const queryClient = useQueryClient();
     const ITems: IList[] = [
-        // {
-        //     title: 'Upload Document',
-        //     action: () => openPicker(),
-        //     icon: <FiFileText fontSize='30px' color='white' />
-        // },
-        // {
-        //     title: 'Upload Video',
-        //     action: () => openPicker(),
-        //     icon: <FiVideo fontSize='30px' color='white' />
-        // },
+        {
+            title: 'Upload Document',
+            action: () => openPicker(),
+            icon: <FiFileText fontSize='30px' color='white' />
+        },
+        {
+            title: 'Upload Video',
+            action: () => openPicker(),
+            icon: <FiVideo fontSize='30px' color='white' />
+        },
         {
             title: 'Upload Image',
             action: () => openPicker(),
@@ -73,7 +86,80 @@ function MobileChatView({ query }: IProps) {
         }
     });
 
+    const getActiveChat = useQuery(['getActiveChat', messageId], () => httpService.get(`/chat/chat`, {
+        params: {
+            chatID: messageId,
+            page: 0,
+        }
+    }), {
+        enabled: messageId !== null && query.isLoading !== true,
+        onSuccess: (data) => {
+            if (messageId === null) {
+                return;
+            } else {
+                console.log(data.data);
+                const included = chats.filter((item) => item.id === (data?.data?.content[0] as Chat).id)
+                if (included.length > 0) {
+                    const newList = chats.filter((item) => item.id !== (data?.data?.content[0] as Chat).id);
+                    const arr = [...included, ...newList];
+                    setChats(arr);
+                } else {
+                    const ch = [data?.data?.content[0], ...chats]
+                    setChats(ch);
+                }
+                setActiveChat(data?.data?.content[0]);
+            }
+        }
+    });
+
     // MUTATIONS
+    const videoPost = useMutation({
+        mutationFn: () => httpService.post(`/chat/message`, {
+            message: post,
+            media: video,
+            mediaType: 'VIDEO',
+            multipleMedia: [
+              video,
+            ],
+            chatID: activeChat?.id,
+        }),
+        onError: (error) => {
+            toast.error(`An error occured`);
+        },
+        onSuccess: (data) => {
+            console.log(data.data)
+            toast.success("Message created");
+            queryClient.invalidateQueries(['getMessages']);
+            setVideo('');
+            setPost('');
+            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
+        }
+    });
+
+    const filePost = useMutation({
+        mutationFn: () => httpService.post(`/chat/message`, {
+            message: post,
+            media: file,
+            mediaType: 'DOCUMENT',
+            multipleMedia: [
+              file
+            ],
+            chatID: activeChat?.id,
+        }),
+        onError: (error) => {
+            toast.error(`An error occured`);
+        },
+        onSuccess: (data) => {
+            console.log(data.data)
+            toast.success("Message created");
+            queryClient.invalidateQueries(['getMessages']);
+            setVideo('');
+            setPost('');
+            setFile('');
+            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
+        }
+    });
+
     const Post = useMutation({
         mutationFn: (data: any) => httpService.post(`/chat/message`, data),
         onError: (error) => {
@@ -97,6 +183,27 @@ function MobileChatView({ query }: IProps) {
         }
     });
 
+    const uploadVideo = useMutation({
+        mutationFn: (data: FormData) => httpService.post(`${UPLOAD_VIDEO}/${activeChat?.id}`, data),
+        onSuccess: (data) => {
+            console.log(data.data);
+            toast.success("Video uploaded");
+            setVideo(data.data.fileName);
+            setImage('');
+        }
+    });
+
+    const uploadFile = useMutation({
+        mutationFn: (data: FormData) => httpService.post(`${UPLOAD_VIDEO}/${activeChat?.id}`, data),
+        onSuccess: (data) => {
+            console.log(data.data);
+            toast.success("File uploaded");
+            setFile(data.data.fileName);
+            setImage('');
+            setVideo('')
+        }
+    });
+
     // EFFECTS
     React.useEffect(() => {
         if (query.isLoading) return;
@@ -114,31 +221,65 @@ function MobileChatView({ query }: IProps) {
     }, []);
 
     const handleFilePicked = React.useCallback((file: FileList) => {
-        fileReader.current.readAsDataURL(file[0]);
-
-        // upload the image
-        const formData = new FormData();
-        formData.append('file', file[0]);
-        uploadImage.mutate(formData);
-    }, [uploadImage]);
+        if (file[0].type.startsWith('image')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadImage.mutate(formData);
+            setType('image');
+            return;
+        }
+        if (file[0].type.startsWith('video')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadVideo.mutate(formData);
+            setType('video');
+            return;
+        }
+        if (file[0].type.startsWith('application')) {
+            const formData = new FormData();
+            formData.append('file', file[0]);
+            uploadFile.mutate(formData);
+            setType('file');
+            return;
+        }
+    }, [uploadFile, uploadImage, uploadVideo]);
 
     const handlePost = React.useCallback(() => {
         if (Post.isLoading) return;
-        const data = image !== '' ? {
-            "message": post,
-            "media": image,
-            "chatID": activeChat?.id,
-            "mulitpleMedia": [
-              image
-            ],
-            "mediaType": "PICTURE"
-          } : {
-            "message": post,
-            "chatID": activeChat?.id,
+        if (image === '' && post === '' && video === '' && file === '') return;
 
-          }
-        Post.mutate(data);
-    }, [Post, activeChat, image, post]);
+        if (type === 'image') {
+            const data = image !== '' ? {
+                "message": post,
+                "media": image,
+                "chatID": activeChat?.id,
+                "mulitpleMedia": [
+                  image
+                ],
+                "mediaType": "PICTURE"
+              } : {
+                "message": post,
+                "chatID": activeChat?.id,
+    
+              }
+            Post.mutate(data);
+        }
+        if (type === 'video') {
+            videoPost.mutate();
+        }
+        if (type === 'file') {
+            filePost.mutate()
+        }
+
+        if (type === '' ) {
+            Post.mutate({
+                "message": post,
+                "chatID": activeChat?.id,
+            })
+        }
+       
+    }, [Post, activeChat?.id, file, filePost, image, post, type, video, videoPost]);
+
   return (
     <HStack display={['block', 'none']} width='100%' height='100%' gap={0}>
 
@@ -225,14 +366,30 @@ function MobileChatView({ query }: IProps) {
                          {/* <span className='cursor-pointer mt-3'>
                              <Image src={selector} width='30px' height='30px' onClick={openPicker} />
                          </span> */}
-                         {
-                             uploadImage.isLoading && (
-                                 <Spinner colorScheme='blue' size='md' />
-                             )
-                         }
-                         { !uploadImage.isLoading && image !== '' && (
-                             <Image src={`${CONFIG.RESOURCE_URL}/${image}`} width='60px' height='60px' borderRadius='10px' />
-                         )}
+                          {
+                                uploadImage.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                            {
+                                uploadVideo.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                             {
+                                uploadFile.isLoading && (
+                                    <Spinner colorScheme='blue' size='md' marginTop='12px' />
+                                )
+                            }
+                            { !uploadImage.isLoading && image !== '' && (
+                                <PreviewContainer src={`${CONFIG.RESOURCE_URL}/${image}`} deleteImg={() => setImage('')} />
+                            )}
+                            { !uploadVideo.isLoading && video !== '' && (
+                                <PreviewVideo src={`${CONFIG.RESOURCE_URL}/${video}`} deleteImg={() => setVideo('')} />
+                            )}
+                            { !uploadFile.isLoading && file !== '' && (
+                                <PreviewFile src={file} deleteImg={() => setFile('')} />
+                            )}
                          <InputGroup>
                              <InputRightElement marginRight='10px' marginTop='6px'>
                                  { !Post.isLoading  && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }
