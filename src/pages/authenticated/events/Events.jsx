@@ -50,7 +50,7 @@ const Events = () => {
   const { userName, token, userId, setEventCategory } = useAuth()
   const { sendRequest } = useFetch()
 
-  const getMyEvents = async () => {
+  const getMyEvents = React.useCallback(async () => {
     const myEvents = await sendRequest(
       `${GET_JOINED_EVENTS}${userId}`,
       "GET",
@@ -63,9 +63,9 @@ const Events = () => {
     if (myEvents && myEvents.content) {
       setMyEvents(myEvents.content)
     }
-  }
+  }, [sendRequest, token, userId])
 
-  const getEventsCategory = () => {
+  const getEventsCategory = React.useCallback(() => {
     sendRequest(
       GET_EVENTS_TYPES,
       "GET",
@@ -75,9 +75,9 @@ const Events = () => {
       setCategory(data)
       // setFilter(data[0])
     })
-  }
+  }, [sendRequest, token])
 
-  const getPastEvents = async () => {
+  const getPastEvents = React.useCallback(async () => {
     sendRequest(
       GET_PAST_EVENTS,
       "GET",
@@ -92,9 +92,9 @@ const Events = () => {
     //   console.log(pastEvents);
     //   setPastEvents(pastEvents.content)
     // }
-  } 
+  }, [sendRequest, token])
 
-  const getSavedEvents = async () => {
+  const getSavedEvents = React.useCallback(async () => {
     setLoading(true)
     const savedEvents = await sendRequest(
       `${GET_SAVED_EVENTS}?typeID=${userId}`,
@@ -106,7 +106,7 @@ const Events = () => {
       setSavedEvents(savedEvents.content)
     } 
     setLoading(false)
-  }
+  }, [sendRequest, token, userId])
 
   const unSaveEvent = eventID => {
     sendRequest(
@@ -141,11 +141,11 @@ const Events = () => {
     getPastEvents()
     getSavedEvents()
     getEventsCategory()
-  }, [view])
+  }, [getEventsCategory, getMyEvents, getPastEvents, getSavedEvents, view])
 
   useEffect(()=> {
     setEventCategory(filter)
-  }, [filter])
+  }, [filter, setEventCategory])
 
   const splideOptions = {
     type: "loop",
@@ -169,7 +169,7 @@ const Events = () => {
         setNewUrl("/events/get-past-events")
       }
       refetch()
-  }, [view]) 
+  }, [refetch, userId, view]) 
 
   return (
     <PageWrapper>
