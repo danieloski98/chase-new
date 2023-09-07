@@ -8,7 +8,7 @@ import TermsAndConditions from "@/components/onboarding/TermsAndConditions"
 import { PATH_NAMES } from "@/constants/paths.constant"
 import LoginForm from "@/components/onboarding/LoginForm"
 import { GoogleIcon } from "../../../components/Svgs"
-import { toast } from "react-toastify"
+import { toast, useToast } from "react-toastify"
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { auth, googleAuthProvider } from "../../../config/firebase"
 import { useMutation } from "react-query"
@@ -55,6 +55,10 @@ const Onboarding = () => {
     }
   }, [])
 
+  const handleToast = () => {
+    toast.info('Coming soon');
+  }
+
   return (
     <>
       {showTerms ? (
@@ -78,10 +82,10 @@ const Onboarding = () => {
                 </p>
               </div>
               <div className="flex gap-5 justify-center flex-wrap">
-                <a href="https://play.google.com/store/apps/details?id=com.chasescroll_android_app&hl=en&gl=US" target="_blank" >
+                <a onClick={handleToast} target="_blank" >
                   <img src={playStore} alt="" />
                 </a>
-                <a href="https://apps.apple.com/us/app/chasescroll/id1619999225" target="_blank" >
+                <a onClick={handleToast} target="_blank" >
                   <img src={appleStore} alt="" />
                 </a>
               </div>

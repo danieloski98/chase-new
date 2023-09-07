@@ -19,6 +19,7 @@ import Fab, { IList } from '../../../../components/general/Fab';
 import PreviewContainer from '../../communities/shared/PreviewContainer';
 import PreviewFile from '../../communities/shared/PreviewFile';
 import PreviewVideo from '../../communities/shared/PreviewVideo';
+import { useSearchParams } from 'react-router-dom'
 
 
 
@@ -37,6 +38,10 @@ function DesktopChatView({ query }: IProps) {
     const [video, setVideo] = useState('');
     const [file, setFile] =  useState('');
     const [type, setType] = useState('');  
+
+    const [queryParams] = useSearchParams();
+    const messageId = queryParams.get('messageId');
+
 
     
     // refs
@@ -79,6 +84,32 @@ function DesktopChatView({ query }: IProps) {
         }
     });
 
+    const getActiveChat = useQuery(['getActiveChat', messageId], () => httpService.get(`/chat/chat`, {
+        params: {
+            chatID: messageId,
+            page: 0,
+        }
+    }), {
+        enabled: messageId !== null && query.isLoading !== true,
+        onSuccess: (data) => {
+            if (messageId === null) {
+                return;
+            } else {
+                console.log(data.data);
+                const included = chats.filter((item) => item.id === (data?.data?.content[0] as Chat).id)
+                if (included.length > 0) {
+                    const newList = chats.filter((item) => item.id !== (data?.data?.content[0] as Chat).id);
+                    const arr = [...included, ...newList];
+                    setChats(arr);
+                } else {
+                    const ch = [data?.data?.content[0], ...chats]
+                    setChats(ch);
+                }
+                setActiveChat(data?.data?.content[0]);
+            }
+        }
+    });
+
     // MUTATIONS
 
     const videoPost = useMutation({
@@ -89,7 +120,7 @@ function DesktopChatView({ query }: IProps) {
             multipleMedia: [
               video,
             ],
-            chatId: activeChat?.id,
+            chatID: activeChat?.id,
         }),
         onError: (error) => {
             toast.error(`An error occured`);
@@ -112,7 +143,7 @@ function DesktopChatView({ query }: IProps) {
             multipleMedia: [
               file
             ],
-            chatId: activeChat?.id,
+            chatID: activeChat?.id,
         }),
         onError: (error) => {
             toast.error(`An error occured`);
@@ -182,7 +213,7 @@ function DesktopChatView({ query }: IProps) {
             // communities.unshift(...query.data?.data.content as Array<ICommunity>);
             // setCommunities(communities);
         }
-    }, [chats, query.data?.data.content, query.isLoading]);
+    }, [chats, query.data?.data.content, query.isLoading, messageId]);
 
     // FUNCTIONS
     const openPicker = React.useCallback(() => {
@@ -225,7 +256,7 @@ function DesktopChatView({ query }: IProps) {
 
     const handlePost = React.useCallback(() => {
         if (Post.isLoading) return;
-        if (image === '' && post === '') return;
+        if (image === '' && post === '' && video === '' && file === '') return;
 
         if (type === 'image') {
             const data = image !== '' ? {
@@ -257,7 +288,8 @@ function DesktopChatView({ query }: IProps) {
             })
         }
        
-    }, [Post, activeChat?.id, filePost, image, post, type, videoPost]);
+    }, [Post, activeChat?.id, file, filePost, image, post, type, video, videoPost]);
+
   return (
     <HStack display={['none', 'flex']} width='100%' height='100%' gap={0}>
 
@@ -353,7 +385,7 @@ function DesktopChatView({ query }: IProps) {
                     { !uploadImage.isLoading && image !== '' && (
                         <Image src={`${CONFIG.RESOURCE_URL}/${image}`} width='60px' height='60px' borderRadius='10px' />
                     )} */}
-                    {
+                            {
                                 uploadImage.isLoading && (
                                     <Spinner colorScheme='blue' size='md' marginTop='12px' />
                                 )
