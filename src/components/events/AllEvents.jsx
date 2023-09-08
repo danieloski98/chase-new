@@ -187,10 +187,7 @@ const AllEvents = () => {
                 <div className="absolute z-20  bottom-5 left-5 rounded-bl-[32px] rounded-tl-sm w-fit bg-white font-bold p-2">
                   <h1 className="text-xl max-w-[6rem] px-2">
                     {formatTimestampToDate(startDate)}
-                  </h1>
-                  {/* <h2 className="text-center text-xl">
-                    {formatTimestampToDate(endDate)}
-                  </h2> */}
+                  </h1> 
                 </div>
               </div>
 
