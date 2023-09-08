@@ -34,6 +34,8 @@ import MyEventTab from "./components/MyEvent"
 import PastEventsTab from "./components/PastEvent"
 import SavedEventTab from "./components/SavedEvent"
 import EventCarousel from "../../../components/exploreComponents/eventCarousel"
+import { useQuery } from "react-query"
+import httpService from "@/utils/httpService"
 
 const Events = () => {
   const [category, setCategory] = useState([])
@@ -51,63 +53,43 @@ const Events = () => {
   const { userName, token, userId, setEventCategory } = useAuth()
   const { sendRequest } = useFetch()
 
-  const getMyEvents = React.useCallback(async () => {
-    const myEvents = await sendRequest(
-      `${GET_JOINED_EVENTS}${userId}`,
-      "GET",
-      null,
-      {
-        Authorization: `Bearer ${token}`,
-      }
-    )
-
-    if (myEvents && myEvents.content) {
-      setMyEvents(myEvents.content)
+  // queries
+  const categoriesLoading = useQuery(['getEventTypes'], () => httpService.get(GET_EVENTS_TYPES), {
+    onSuccess: (data) => {
+      setCategory(data?.data)
+    },
+    onError: (error) => {
+      console.log(error);
     }
-  }, [sendRequest, token, userId])
+  });
 
-  const getEventsCategory = React.useCallback(() => {
-    sendRequest(
-      GET_EVENTS_TYPES,
-      "GET",
-      null,
-      { Authorization: `Bearer ${token}` }
-    ).then((data) => {
-      setCategory(data)
-      // setFilter(data[0])
-    })
-  }, [sendRequest, token])
+  const myEventsQuery = useQuery(['getMyEventTypes'], () => httpService.get(`${GET_JOINED_EVENTS}${userId}`), {
+    onSuccess: (data) => {
+      setMyEvents(data?.data?.content)
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
 
-  const getPastEvents = React.useCallback(async () => {
-    sendRequest(
-      GET_PAST_EVENTS,
-      "GET",
-      null,
-      { Authorization: `Bearer ${token}` }
-      ).then((data) => { 
-        setPastEvents(data?.content)
-        // setFilter(data[0])
-      })
-      // console.log(pastEvents);
-    // if (pastEvents.content) {
-    //   console.log(pastEvents);
-    //   setPastEvents(pastEvents.content)
-    // }
-  }, [sendRequest, token])
+  const pastEventsQuery = useQuery(['getPastEvents'], () => httpService.get(GET_PAST_EVENTS), {
+    onSuccess: (data) => {
+      setPastEvents(data?.data?.content);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
 
-  const getSavedEvents = React.useCallback(async () => {
-    setLoading(true)
-    const savedEvents = await sendRequest(
-      `${GET_SAVED_EVENTS}?typeID=${userId}`,
-      "GET",
-      null,
-      { Authorization: `Bearer ${token}` }
-    )
-    if (savedEvents && savedEvents.content) {
-      setSavedEvents(savedEvents.content)
-    } 
-    setLoading(false)
-  }, [sendRequest, token, userId])
+  const savedEventsQuery = useQuery(['getSavedEvent', userId], () => httpService.get(`${GET_SAVED_EVENTS}?typeID=${userId}`), {
+    onSuccess: (data) => {
+      setSavedEvents(data?.data?.content);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
+
 
   const unSaveEvent = eventID => {
     sendRequest(
@@ -125,7 +107,8 @@ const Events = () => {
       } else {
         toast.error(response?.message)
       }
-      getSavedEvents()
+      savedEventsQuery.refetch()
+      //getSavedEvents()
     })
   }
 
@@ -133,8 +116,10 @@ const Events = () => {
   const handleViewChange = ({ target: { value } }) => {
     setView(value)
     refetch()
-    getPastEvents()
-    getSavedEvents()
+    pastEventsQuery.refetch()
+    savedEventsQuery.refetch()
+    // getPastEvents()
+    // getSavedEvents()
   }
   
   // useEffect(() => {
@@ -198,11 +183,15 @@ const Events = () => {
                 <div className="flex justify-between">
                   <h3 className="text-base font-medium mt-4 mb-6 pl-8">Event Category</h3> 
                 </div>
-                <Category
-                  category={category}
-                  filter={filter}
-                  setFilter={setFilter}
-                />
+                { !categoriesLoading.isLoading && (
+                  <>
+                    <Category
+                    category={category}
+                    filter={filter}
+                    setFilter={setFilter}
+                  />
+                  </>
+                )}
               </div>
               {!filter && ( 
                 <div className=" w-full mt-12 lg:block hidden " > 
