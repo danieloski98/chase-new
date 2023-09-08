@@ -31,7 +31,7 @@ function CarouselTab(props) {
             )}
             {(!isLoading && !isRefetching )&& ( 
                 <CustomCarousel slides={
-                    dataInfo?.map((item)=> {
+                    dataInfo?.map((item, index)=> {
                         return(  
                             <> 
                                 <div role='button' onClick={() => navigate(`/events/${item.id}`)}  className="flex h-56 lg:h-80 flex-col pb-0 w-full relative rounded-[32px]"> 
