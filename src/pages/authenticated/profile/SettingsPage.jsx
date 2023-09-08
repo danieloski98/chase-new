@@ -40,8 +40,37 @@ const SettingsPage = () => {
         <p className="text-gray-700 text-xl">Settings</p>
       </div>
       <div className="mb-[80px] px-4">
-        {SettingsPageList.map(({ type, id, route, icon }) => (
-          <Link to={route} key={id}>
+        {SettingsPageList.map(({ type, id, route, icon }) => {
+          if (route?.startsWith('https://')) {
+            return (
+              <a href={route} key={id}>
+            <div
+              className={`flex justify-between ${type !== "Delete Account"
+                ? " hover:bg-blue-100"
+                : "hover:bg-red-100"
+                }  hover:bg-opacity-30 items-center`}
+              onClick={() => handleSettingClick({ type, id })}
+            >
+              <div className="flex items-center">
+                {type !== "Support & Help" ? (
+                  <img src={icon} alt="icon" className="w-4 h-4" />
+                ) : null}
+                <p
+                  className={`pl-2 my-4 text-lg  ${type !== "Delete Account" ? "" : "text-red-500"
+                    } cursor-pointer ${type === "Support & Help" ? "text-chasescrollBlue text-sm font-semibold" : "text-gray-500"}`}
+                >
+                  {type}
+                </p>
+              </div>
+              {type !== "Support & Help" && <span className="pr-4 sm:pr-6 text-gray-500 cursor-pointer">
+                <ChevronRight />
+              </span>}
+            </div>
+          </a>
+            )
+          } else {
+            return (
+              <Link to={route} key={id}>
             <div
               className={`flex justify-between ${type !== "Delete Account"
                 ? " hover:bg-blue-100"
@@ -65,7 +94,9 @@ const SettingsPage = () => {
               </span>}
             </div>
           </Link>
-        ))}
+            )
+          }
+        })}
       </div>
       {display && <ConfirmDelete handleModalState={handleStateFromModal} />}
       {showPrivacy && (

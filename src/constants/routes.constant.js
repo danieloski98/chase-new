@@ -48,6 +48,7 @@ import EditEvents from "@/pages/authenticated/events/EditEvents"
 // import EventDashboard from "@/pages/authenticated/eventdashboard"
 import MessageSettings from "@/pages/authenticated/message/MessageSettings"
 import PaymentVerification from "@/pages/unauthenticated/PaymentVerification"
+import PrivacyPolicy from "@/pages/authenticated/profile/PrivacyPolicy"
 
 export const NAVIGATION_ROUTES = [
   {
@@ -259,6 +260,10 @@ export const OTHER_AUTHENTICATED_ROUTES = [
   {
     path: PATH_NAMES.termsAndConditions,
     element: TermsAndConditions,
+  },
+  {
+    path: PATH_NAMES.privacy,
+    element: PrivacyPolicy,
   },
   {
     path: PATH_NAMES.SearchExplore,

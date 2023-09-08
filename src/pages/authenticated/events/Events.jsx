@@ -137,12 +137,12 @@ const Events = () => {
     getSavedEvents()
   }
   
-  useEffect(() => {
-    getMyEvents()
-    getPastEvents()
-    getSavedEvents()
-    getEventsCategory()
-  }, [getEventsCategory, getMyEvents, getPastEvents, getSavedEvents, view])
+  // useEffect(() => {
+  //   getMyEvents()
+  //   getPastEvents()
+  //   getSavedEvents()
+  //   getEventsCategory()
+  // }, [getEventsCategory, getMyEvents, getPastEvents, getSavedEvents, view])
 
   useEffect(()=> {
     setEventCategory(filter)

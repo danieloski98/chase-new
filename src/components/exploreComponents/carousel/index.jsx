@@ -6,10 +6,11 @@ import CONFIG from '../../../config';
 import Loader from '../../../components/Loader';
 import { CustomCarousel } from '../../../components/customCarousel';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
+
 
 
 function CarouselTab(props) {
-    const {} = props   
         
     const [dataInfo, setData] = React.useState([])
     const navigate = useNavigate()
