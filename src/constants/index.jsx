@@ -1184,7 +1184,7 @@ export const SettingsPageList = [
   {
     id: nanoid(),
     type: "Privacy Policy",
-    route: PATH_NAMES?.termsAndConditions,
+    route: PATH_NAMES?.privacy,
     icon: termsAndPrivacy,
   },
   {
@@ -1202,7 +1202,7 @@ export const SettingsPageList = [
   {
     id: nanoid(),
     type: "Blocked Users",
-    route: PATH_NAMES.blockUsers,
+    route: PATH_NAMES.settings,
     icon: blockedUserIcon,
   },
   {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './styles/styles.scss';
 import IsEqual from "react-fast-compare";
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from "react-icons/md"
+import { COLORS } from '@/utils/colors';
 const isEqual = IsEqual
 
 export class CustomCarousel extends React.Component {
@@ -216,12 +217,12 @@ export class CustomCarousel extends React.Component {
                                     <div className={slider.class} key={index}>
                                         <div className={this.sliderClass("left")+" relative"} onClick={this.slideLeft.bind(this)}>
                                             <div>
-                                                <MdKeyboardArrowLeft size={30} />
+                                                <MdKeyboardArrowLeft size={40} color={COLORS.chasescrollBlue}/>
                                             </div>
                                         </div>
                                         <div className={this.sliderClass("right")} onClick={this.slideRight.bind(this)}>
                                             <div >
-                                                <MdKeyboardArrowRight size={30} />
+                                                <MdKeyboardArrowRight size={40} color={COLORS.chasescrollBlue} />
                                             </div>
                                         </div>
 

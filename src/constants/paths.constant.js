@@ -36,6 +36,7 @@ export const PATH_NAMES = {
   personalInfo: "/personal-information",
   suggestionPage: "/suggestion-page",
   termsAndConditions: "/terms-and-conditions",
+  privacy: '/privacy-policy',
   reportBug: "/report-bug",
   attendees: "/event/attendees",
   setPrivacy: "/settings/account-settings",
