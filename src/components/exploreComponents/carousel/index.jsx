@@ -5,14 +5,14 @@ import httpService from '../../../utils/httpService';
 import CONFIG from '../../../config';
 import Loader from '../../../components/Loader';
 import { CustomCarousel } from '../../../components/customCarousel';
+import { useNavigate } from 'react-router-dom';
 
 
 function CarouselTab(props) {
-    const {} = props  
-
-
-
-  const [dataInfo, setData] = React.useState([])
+    const {} = props   
+        
+    const [dataInfo, setData] = React.useState([])
+    const navigate = useNavigate()
 
   // react query
     const { isLoading, isRefetching } = useQuery(['get-top-events'], () => httpService.get('/events/get-top-events'), {
@@ -34,7 +34,7 @@ function CarouselTab(props) {
                     dataInfo?.map((item)=> {
                         return(  
                             <> 
-                                <div className="flex h-56 lg:h-80 flex-col pb-0 w-full relative rounded-[32px]"> 
+                                <div role='button' onClick={() => navigate(`/events/${item.id}`)}  className="flex h-56 lg:h-80 flex-col pb-0 w-full relative rounded-[32px]"> 
                                     <div className="backdrop-blur-sm absolute inset-0 px-3 hidden lg:flex justify-center items-center rounded-tl-[32px] h-80">
                                         <img
                                             src={`${CONFIG.RESOURCE_URL}/${item?.currentPicUrl}`}

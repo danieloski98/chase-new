@@ -33,6 +33,7 @@ import { Spinner } from "@chakra-ui/react";
 import MyEventTab from "./components/MyEvent"
 import PastEventsTab from "./components/PastEvent"
 import SavedEventTab from "./components/SavedEvent"
+import EventCarousel from "../../../components/exploreComponents/eventCarousel"
 
 const Events = () => {
   const [category, setCategory] = useState([])
@@ -204,8 +205,8 @@ const Events = () => {
                 />
               </div>
               {!filter && ( 
-                <div className=" w-full lg:block hidden " > 
-                  <AllEvents /> 
+                <div className=" w-full mt-12 lg:block hidden " > 
+                  <EventCarousel />
                 </div>
               )}
               <TrendingEvents />
