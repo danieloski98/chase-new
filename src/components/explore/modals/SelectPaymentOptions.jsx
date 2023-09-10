@@ -43,6 +43,8 @@ const SelectPaymentOptions = ({ paystackLoading, stripeLoading, closeModal, hand
 		setOrderCode(reference?.reference)
 	}; 
   
+
+	
 	// you can call this function anything
 	const onClose = () => {
 	  // implementation for  whatever you want to do when the Paystack dialog closed.

@@ -117,6 +117,8 @@ const DownloadTicketModal = ({
               height={80}
               fontSize={12}
             />
+            <p className=" text-center text-sm " >© Chasescroll Llc</p>
+            <p className=" text-center text-xs " >Redefining Experiences for Effortless Event Managementc</p>
           </div>
         </div>
         {/* <button className="shadow-lg w-full max-w-sm text-sm text-white text-center px-4 py-3 bg-chasescrollBlue rounded-b-md">

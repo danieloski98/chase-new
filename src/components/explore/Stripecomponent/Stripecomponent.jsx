@@ -12,29 +12,18 @@ const Stripecomponent = (props) => {
     const {
         config,
         clientKey,
-        closeModal,
-        handleClose,
-        getData
+        closeModal, 
+        getData,
+        fund
     } = props
 
     const [clientSecret, setClientSecret] = React.useState("");
-    const [configData, setconfigData] = React.useState("");
-	// const options = {
-	// 	mode: 'payment',
-	// 	amount: Number(config?.amount) * 100,
-	// 	currency: 'usd',
-	// 	// Fully customizable with appearance API.
-	// 	appearance: {
-	// 	/*...*/
-	// 	},
-	// };
+    const [configData, setconfigData] = React.useState(""); 
 
     React.useEffect(()=> {
         setClientSecret(clientKey)
         setconfigData(config)
-    }, [])
-
-    console.log(clientKey);
+    }, []) 
 
     return ( 
 		<OverlayWrapper handleClose={closeModal}> 
@@ -47,12 +36,12 @@ const Stripecomponent = (props) => {
                         {CLOSE_ENTITY}
                     </button>  
 					<p className="text-lg font-bold">Payment Form</p>
-                    {clientSecret.length !== 0 && (
+                    {clientSecret?.length !== 0 && (
                         <div className="flex flex-col gap-8 py-8">  
                             <>
                                 {clientSecret && stripePromise && (
                                     <Elements stripe={stripePromise} options={{clientSecret}} >
-                                        <CheckoutForm config={configData} closeModal={closeModal} getData={getData} />
+                                        <CheckoutForm config={configData} closeModal={closeModal} fund={fund} getData={getData} />
                                     </Elements>    
                                 )}
                             </>

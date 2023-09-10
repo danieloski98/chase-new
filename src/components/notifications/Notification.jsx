@@ -36,7 +36,7 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 
 	useEffect(() => {
 		setIsRead(notification.status === "READ")
-	}, [notification]) 
+	}, [notification])  
 
 	return (
 		<button ref={ref} disabled={isRead} onClick={() => toggleRead(notification)} className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
@@ -45,7 +45,7 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 				<Avatar  
 					onClick={setShow}
 					src={`${CONFIG.RESOURCE_URL}/${notification?.createdBy?.data?.imgMain?.value}`}
-					name={notification.title}
+					name={notification?.createdBy?.firstName+" "+notification?.createdBy?.lastName}
 				/>
 				<div className="flex flex-col">
 					<p className="font-bold text-left text-chasescrollDarkBlue text-lg">

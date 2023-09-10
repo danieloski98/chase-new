@@ -13,7 +13,8 @@ export default function InjectedCheckoutForm(props) {
     const {
         config,
         closeModal,
-        getData
+        getData,
+        fund
     } = props 
 
     const navigate = useNavigate()
@@ -44,6 +45,23 @@ export default function InjectedCheckoutForm(props) {
                 closeModal()
             },
         });
+
+
+        const stripeFund = useMutation({
+          mutationFn: (data) => httpService.get(`/payments/api/wallet/verifyFundWalletWeb?transactionID=${data}`),
+          onSuccess: (data) => {
+              toast.success('Payment verified');
+              // queryClient.invalidateQueries(['EventInfo'+id])  
+              getData()
+              setLoading(false)
+              closeModal()
+          },
+          onError: (error) => {
+              toast.error(error);
+              setLoading(false)
+              closeModal()
+          },
+      });
 	
       
         const handleSubmit = async () => {
@@ -69,8 +87,13 @@ export default function InjectedCheckoutForm(props) {
             // console.log(paymentIntent);
 
             if(paymentIntent?.status === "succeeded"){ 
+              if(fund){ 
+                setLoading(true)
+                stripeFund.mutate(config?.reference);
+              }else { 
                 setLoading(true)
                 stripeMutation.mutate(config?.reference);
+              }
             }
       
         //   if (error.type === "card_error" || error.type === "validation_error") {

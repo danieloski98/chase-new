@@ -7,6 +7,15 @@ export const TicketPurchase = () => (
   </svg>
 )
 
+export const OtherPurchase = () => (
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="44" height="44" rx="22" fill="#9E2323" />
+    <path d="M28.91 24.6927C28.91 25.9827 29.97 27.0327 31.26 27.0327C31.26 30.7827 30.32 31.7227 26.57 31.7227H17.19C13.44 31.7227 12.5 30.7827 12.5 27.0327V26.5727C13.79 26.5727 14.85 25.5127 14.85 24.2227C14.85 22.9327 13.79 21.8727 12.5 21.8727V21.4127C12.51 17.6627 13.44 16.7227 17.19 16.7227H26.56C30.31 16.7227 31.25 17.6627 31.25 21.4127V22.3527C29.96 22.3527 28.91 23.3927 28.91 24.6927Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M26.2111 16.7225H17.1211L20.0511 13.7925C22.4411 11.4025 23.6411 11.4025 26.0311 13.7925L26.6311 14.3925C26.0011 15.0225 25.8511 15.9525 26.2111 16.7225Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M19.8789 16.7227L19.8789 31.7227" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5" />
+  </svg>
+)
+
 export const CreditWallet = () => (
   <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="44" height="44" rx="22" fill="#0FA71E" />
