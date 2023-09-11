@@ -165,7 +165,7 @@ const PageWrapper = ({ children, toggleFileUploader }) => {
               <PowerIcon />
             </span>
             <span>Logout</span>
-          </button>
+          </button> 
         </div>
         <div className="overflow-auto w-full flex flex-col h-full">
           {children(notifications, getNotifications, notificationsFilter, filterNotifications)}

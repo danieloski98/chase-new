@@ -241,7 +241,7 @@ const Profile_1 = () => {
           )}
           {!isLoading && ( 
             <div>
-              <section className="flex flex-col mb-5 pb-6 w-full text-chasescrollBlue border-b-2 border-b-gray-200 h-auto">
+              <section className="flex relative flex-col mb-5 pb-6 w-full text-chasescrollBlue border-b-2 border-b-gray-200 h-auto">
                 <div className="grid place-items-center relative">
                   <div className="h-96 w-full relative">
                     <div className="absolute w-full h-96 bg-[#00000045] inset-0" />
@@ -330,7 +330,7 @@ const Profile_1 = () => {
                   communityCount={communities?.totalElements}
                 />
               </section>
-              <div className="px-2 py-10 ">
+              <div className="px-2 py-10  ">
                 {switchComponent()}
               </div>
             </div>

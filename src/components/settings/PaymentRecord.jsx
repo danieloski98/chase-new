@@ -1,5 +1,5 @@
 import React from 'react'
-import { CreditWallet, DebitWallet, TicketPurchase } from '../Svgs'
+import { CreditWallet, DebitWallet, OtherPurchase, TicketPurchase } from '../Svgs'
 import { formatNumber, formatTime, formatDate } from '@/utils/helpers'
 import { CURRENCY, TRANSACTION_PURPOSE, TRANSACTION_STATUS } from '@/constants'
 import moment from 'moment'
@@ -25,8 +25,10 @@ const PaymentRecord = ({
 				<TicketPurchase />
 			) : purpose === fundWallet ? (
 				<CreditWallet />
-			) : purpose === cashout && (
+			) : purpose === cashout ? (
 				<DebitWallet />
+			):(
+				<OtherPurchase />
 			)}
 			<div className="flex flex-col gap-1 w-full">
 				<div className="flex justify-between items-center text-base text-gray-600">

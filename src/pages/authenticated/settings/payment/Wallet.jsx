@@ -14,17 +14,22 @@ import { CURRENCY } from '@/constants'
 import { formatNumber } from '@/utils/helpers'
 import ButtonSpinner from '@/components/ButtonSpinners'
 import PaymentRecord from '@/components/settings/PaymentRecord'
+import PaymentType from './PaymentType'
+import Stripecomponent from '@/components/explore/Stripecomponent/Stripecomponent'
+import CashOutBtn from './CashOutBtn'
 
 const Wallet = () => {
 	const { USD, NGN } = CURRENCY
 
 	const [profile, setProfile] = useState({})
 	const [transactions, setTransactions] = useState([])
-	const [currency, setCurrency] = useState(NGN)
+	const [currency, setCurrency] = useState(USD)
 	const [showEscrow, setShowEscrow] = useState(false)
 	const [showBalance, setShowBalance] = useState(false)
+	const [loading, setLoading] = useState(false)
 	const [amount, setAmount] = useState()
 	const [view, setView] = useState("fund")
+	const [showStripeForm, setShowStripeForm] = useState(false)
 	const [walletBalance, setWalletBalance] = useState({
 		walletBalances: {
 			currency,
@@ -37,7 +42,19 @@ const Wallet = () => {
 	})
 
 	const { token } = useAuth()
-	const { sendRequest, isLoading } = useFetch()
+	const { sendRequest: sendPaystackRequest, isLoading } = useFetch()
+	const { sendRequest } = useFetch()
+	const [configStripe , setConfigStripe] = React.useState({ }) 
+	const [clientKey , setClientKey] = React.useState("")  
+
+	const [userInfo , setUserInfo] = React.useState({})  
+
+	const [config , setConfig] = React.useState( { 
+	  email: "",
+	  amount: 0,
+	  reference: "",
+	  publicKey: "pk_test_58a8e726bbe3cce8ade3082f4e49f46089046b5d",
+	}) 
 
 	const getProfile = () => {
 		sendRequest(
@@ -90,8 +107,46 @@ const Wallet = () => {
 
 		console.log(response);
 		 setTransactions(response?.content)})
+	} 
+	 
+	const closeModal =()=> {
+		setShowStripeForm(false)
 	}
 
+	const payWithPaystack = async() => { 
+		setLoading(true)
+
+		sendPaystackRequest(
+		  "/payments/api/wallet/fundWalletWeb",
+		  "POST",
+		  {
+			"currency": currency,
+			"amount": amount
+		  },
+		  { Authorization: `Bearer ${token}` }
+		).then((data) => {
+			console.log(data);
+
+			if(data?.totalAmount > 0){
+				if(currency === "USD"){ 
+					setConfigStripe({
+						reference: data?.transactionID,
+						amount: data?.totalAmount
+					}) 
+					setClientKey(data?.clientSecret)
+					setShowStripeForm(true) 
+				} else {
+				setConfig({ 
+					email: profile?.email,
+					amount: (Number(data?.totalAmount)), //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+					publicKey: 'pk_test_58a8e726bbe3cce8ade3082f4e49f46089046b5d',
+					reference: data?.transactionID
+				}); 
+				} 
+			}
+		}) 
+		setLoading(false)
+	}   
 	const toggleView = () => setShowEscrow(state => !state)
 	const toggleCurrency = () => setCurrency(state => state === NGN ? USD : NGN)
 	const toggleBalanceVisibility = () => setShowBalance(state => !state)
@@ -222,7 +277,7 @@ const Wallet = () => {
 									className="text-center p-3 text-chasescrollTextGrey text-2xl outline-none bg-transparent w-full"
 									placeholder={`${currency === USD ? '$' : '₦'} 100`}
 								/>
-								<button disabled={amount ? false : true} onClick={topUpWallet} className={` ${amount ? " ": "  bg-opacity-25 "} bg-chasescrollDarkBlue text-white text-base rounded-lg p-2.5`}>Fund</button>
+								<button disabled={!loading ? false :amount ? false  : true} onClick={payWithPaystack} className={` ${amount ? " ": "  bg-opacity-25 "} bg-chasescrollDarkBlue text-white text-base rounded-lg p-2.5`}>{loading ? "Loading..": "Fund"}</button>
 							</div>
 						)}
 						{view === "history" && (
@@ -248,12 +303,17 @@ const Wallet = () => {
 									className="text-center p-3 text-chasescrollTextGrey text-2xl outline-none bg-transparent w-full"
 									placeholder={`${currency === USD ? '$' : '₦'} 100`}
 								/>
-								<button disabled={amount ? false : true} onClick={withdrawFromWallet} className={` ${amount ? " ": "  bg-opacity-25 "} bg-chasescrollDarkBlue text-white text-base rounded-lg p-2.5`}>
-									Withdraw
-								</button>
+								<CashOutBtn amount={amount} currency={currency} getData={getWalletBalance} />
 							</div>
 						)}
 					</div>
+						<PaymentType config={config}  getData={getWalletBalance} setConfig={setConfig} />
+
+						{showStripeForm && (
+							<Stripecomponent fund={true} clientKey={clientKey} config={configStripe} closeModal={closeModal} getData={getWalletBalance}  />
+						)}
+					{/* {config?.reference && (
+					)} */}
 				</div>
 			)}
 		</PageWrapper>

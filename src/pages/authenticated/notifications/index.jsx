@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom"
 import Requests from "../../../components/communities/Requests"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
 import { Spinner } from "@chakra-ui/react"
+import InfiniteScrollerComponent from "../../../hooks/infiniteScrollerComponent"
 
 const Notifications = () => {
 
@@ -36,12 +37,12 @@ const Notifications = () => {
   } 
   
   const [page, setPage] = React.useState(0)
-  const { results, isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/notifications/notification', pageNumber:page, setPageNumber:setPage})
+  const { results, isLoading, ref, refetch, data, isRefetching } = InfiniteScrollerComponent({url:'/notifications/notification', limit: 10, filter: "id"})
 
   return (
     <PageWrapper>
       {(notifications, getNotifications, notificationsFilter, filterNotifications) => (
-        <div className="flex flex-col relative justify-center gap-4 w-full h-full px-4 py-8 overflow-auto">
+        <div className="flex flex-col relative justify-center gap-4 w-full px-4 py-8 overflow-x-hidden overflow-y-auto">
           {!show && (
             <div className="flex flex-col gap-4 w-full h-full max-w-2xl self-center">
               <select
@@ -68,7 +69,7 @@ const Notifications = () => {
                   return(
                     <Notification
                       key={index}
-                      ref={lastChildRef}
+                      ref={ref}
                       notification={notification}
                       getNotifications={getNotifications}
                       setShow={clickHandler} 
@@ -87,11 +88,11 @@ const Notifications = () => {
                     )
                   }
               })}
-            </div>
-          )}
-          {isLoading && (
-            <div className="w-full h-32 flex justify-center items-center">
-              <Spinner size='md' color='brand.chasescrollButtonBlue' />
+              {(isLoading || isRefetching) && (
+                <div className="w-full h-20 flex justify-center items-center">
+                  <Spinner size='md' color='brand.chasescrollButtonBlue' />
+                </div>
+              )}
             </div>
           )}
           {show && (
