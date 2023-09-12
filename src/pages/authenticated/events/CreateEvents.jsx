@@ -31,7 +31,7 @@ const CreateEvents = () => {
     eventDescription: "",
     joinSetting: "public",
     locationType: "",
-    currency: "NGN",
+    currency: "USD",
     currentPicUrl: "",
     eventFunnelGroupID: "",
     mediaType: "",

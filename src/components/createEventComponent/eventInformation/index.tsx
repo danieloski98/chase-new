@@ -43,7 +43,9 @@ function CreateEventInformation(props: Props) {
       } else if(!formData?.location?.toBeAnnounced){
         if(!formData?.location?.locationDetails && !formData?.location?.link){
           toast.error("Enter Event Location") 
-        }  
+        }  else {
+            handleContinue()
+        }
       } else {
         handleContinue()
       } 
@@ -74,7 +76,7 @@ function CreateEventInformation(props: Props) {
     return (
         <div className=' w-full flex flex-col items-center pt-10 px-6 ' > 
             <div className=' lg:max-w-[600px] w-full flex flex-col items-center justify-center gap-4 py-6 ' >
-                <div className=' w-full flex lg:flex-row flex-col ' > 
+                <div className=' w-full flex lg:flex-row gap-4 flex-col ' > 
                     <div className="w-full flex flex-col gap-2 py-2"> 
                         <p className="text-sm"> 
                             Start <span className="text-[#F04F4F]">*</span>

@@ -217,6 +217,8 @@ const TicketPageTemplate = ({
     }
   }  
 
+  console.log(dataInfo?.productTypeData);
+
   return (
     <>
       {proceedWithDownload && (
@@ -253,6 +255,8 @@ const TicketPageTemplate = ({
           location={location?.address}
           about={about}
           toggleModal={buyTicket}
+          minticket={selectedCategory?.minTicketBuy}
+          maxticket={selectedCategory?.maxTicketBuy}
           toggleRefundPolicy={toggleRefundPolicy}
           ticketPrice={selectedCategory?.ticketPrice}
           categoryType={selectedCategory?.ticketType}
