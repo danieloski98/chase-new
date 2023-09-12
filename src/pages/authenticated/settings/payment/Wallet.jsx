@@ -24,7 +24,7 @@ const Wallet = () => {
 	const [profile, setProfile] = useState({})
 	const [transactions, setTransactions] = useState([])
 	const [currency, setCurrency] = useState(USD)
-	const [showEscrow, setShowEscrow] = useState(false)
+	const [showEscrow, setShowEscrow] = useState(true)
 	const [showBalance, setShowBalance] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [amount, setAmount] = useState()
@@ -216,24 +216,25 @@ const Wallet = () => {
 									</button>
 								</div>
 								{showEscrow ? (
-								<h1 className="text-white font-bold text-2xl text-center flex items-center justify-center">
-									{isLoading
-										? <ButtonSpinner />
-										: showBalance
-											? formatNumber((walletBalance?.walletBalances?.balance/100), currency === USD ? "$" : "₦")
-											: `${currency} * * * *`
-									}
-								</h1>
-								): (
-									<h1 className="text-[#F29339] font-bold text-2xl text-center flex items-center justify-center">
+									<h1 className="text-white font-bold text-2xl text-center flex items-center justify-center">
 										{isLoading
 											? <ButtonSpinner />
 											: showBalance
-												? formatNumber((walletBalance?.escrowBalances?.balance/100), currency === USD ? "$" : "₦")
+												? formatNumber((walletBalance?.walletBalances?.balance/100), currency === USD ? "$" : "₦")
 												: `${currency} * * * *`
 										}
 									</h1>
-								)}
+									): (
+										<h1 className="text-[#F29339] font-bold text-2xl text-center flex items-center justify-center">
+											{isLoading
+												? <ButtonSpinner />
+												: showBalance
+													? formatNumber((walletBalance?.escrowBalances?.balance/100), currency === USD ? "$" : "₦")
+													: `${currency} * * * *`
+											}
+										</h1>
+									)
+								}
 							</div>
 						</div>
 						<div className="flex text-center gap-4 rounded-md bg-white p-1 w-full max-w-sm self-center border border-chasescrollButtonBlue">
@@ -248,10 +249,10 @@ const Wallet = () => {
 									<span className="text-chasescrollDarkBlue text-[10px] text-center">Buy Ticket</span>
 								</div>
 							</Link>
-							<div className={`flex flex-col items-center gap-2 basis-1/4 p-2 cursor-pointer rounded-md ${view === "cash" ? "bg-chasescrollDarkBlue border-white text-white" : "border-chasescrollDarkBlue text-chasescrollDarkBlue bg-white"}`}>
-								<div onClick={() => setView("cash")} className={`w-12 h-10 flex justify-center items-center rounded-full border ${view === "cash" ? "border-white" : "border-chasescrollDarkBlue"}`}>
+							<div className={`flex flex-col items-center gap-2 basis-1/4 p-2 ${!showEscrow ?  "opacity-25 cursor-not-allowed" : "cursor-pointer "}  rounded-md ${view === "cash" ? "bg-chasescrollDarkBlue border-white text-white" : "border-chasescrollDarkBlue text-chasescrollDarkBlue bg-white"}`}>
+								<button disabled={!showEscrow ? true : false} onClick={() => setView("cash")} className={`w-12 h-10 flex justify-center ${!showEscrow ?  "opacity-25 cursor-not-allowed" : "cursor-pointer "} items-center rounded-full border ${view === "cash" ? "border-white" : "border-chasescrollDarkBlue"}`}>
 									<CashoutIcon />
-								</div>
+								</button>
 								<span className={`text-chasescrollDarkBlue text-[10px] text-center ${view === "cash" ? "text-white" : "text-chasescrollDarkBlue"}`}>Cash Out</span>
 							</div>
 							<div className={`flex flex-col items-center gap-2 basis-1/4 p-2 cursor-pointer rounded-md ${view === "fund" ? "bg-chasescrollDarkBlue border-white text-white" : "border-chasescrollDarkBlue text-chasescrollDarkBlue bg-white"}`}>

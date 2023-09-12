@@ -22,15 +22,15 @@ const CreateEventsHeader = ({ activeStep, setActiveStep, formData }) => {
   }
 
   const getValidationTheme =()=> {
-    if(!formData?.eventName){
-      return true
-    } else if(!formData?.eventType){
-      return true
-    } else if(!formData?.eventDescription){
-      return true
-    } else {
+    // if(!formData?.eventName){
+    //   return true
+    // } else if(!formData?.eventType){
+    //   return true
+    // } else if(!formData?.eventDescription){
+    //   return true
+    // } else {
       return false   
-    }
+    // }
   }
 
   return (

@@ -1,14 +1,19 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { SettingsPageList } from "@/constants"
 import { ChevronLeft, ChevronRight } from "@/components/Svgs"
 import { previousPage } from "@/constants/index"
 import ConfirmDelete from "@/pages/authenticated/profile/modals/ConfirmDelete"
 import PrivacyPage from "@/pages/authenticated/profile/modals/PrivacyPage"
+import { useAuth } from "@/context/authContext"
 
 const SettingsPage = () => {
   const [display, setDisplay] = useState(false)
+
+  const { userId } = useAuth()
   const [showPrivacy, setShowPrivacy] = useState(false)
+
+  const navigate = useNavigate()
 
   const handleSettingClick = elem => {
     if (elem.type === "Delete Account") {
@@ -33,7 +38,7 @@ const SettingsPage = () => {
       <div className="flex items-center mb-4 py-4 px-4">
         <span
           className="pr-6 text-gray-500 cursor-pointer"
-          onClick={() => previousPage()}
+          onClick={() => navigate("/profile/"+userId)}
         >
           {ChevronLeft()}
         </span>
