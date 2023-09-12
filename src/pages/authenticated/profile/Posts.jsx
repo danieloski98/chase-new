@@ -8,7 +8,8 @@ import { useFetch } from "../../../hooks/useFetch"
 import { GET_USER_MEDIA_POSTS } from "../../../constants/endpoints.constant"
 import { useAuth } from "../../../context/authContext"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, HStack, Box } from "@chakra-ui/react";
+import { FiPlayCircle } from 'react-icons/fi'
 
 const Posts = () => {
   const [showUserPosts, setShowUserPosts] = useState(false)
@@ -50,14 +51,14 @@ const Posts = () => {
   console.log(results?.filter((item) => item.mediaRef?.split('.')[1] === 'mp4'))
 
   const content = results.map((post, index) => {
-    if (index === results.length -1 ) {
+    if (index === results.length - 1 ) {
       return (
-        <div ref={lastChildRef} key={index.toString()}>
+        <Box ref={lastChildRef} key={index.toString()} position={'relative'} zIndex={5}>
               {post.type === 'WITH_IMAGE' && post?.mediaRef &&
                 <img 
-                  key={post?.id}
+                  key={index.toString()}
                   src={`${CONFIG.RESOURCE_URL}${post?.mediaRef }`}
-                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+                  className="rounded-b-[32px] rounded-tl-[32px] w-[170px] h-[170px] object-cover cursor-pointer"
                   alt="media from user post"
                   onClick={() => {
                     openUserPosts()
@@ -67,28 +68,41 @@ const Posts = () => {
               }
               {post.type === 'WITH_VIDEO_POST' && post?.mediaRef &&
                 <video 
-                  key={post?.id}
-                  className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+                  key={index.toString()}
+                  className="rounded-b-[32px] rounded-tl-[32px] w-[170px] h-[170px] object-cover cursor-pointer z-0"
                   alt="media from user post"
                   onClick={() => {
                     openUserPosts()
                     setPostID(post?.id)
                   }} 
                   controls
+                  autoPlay={false}
                 >
-                  <source src={`${CONFIG.RESOURCE_URL}${post?.mediaRef}`} type="video/mp4" />
+                  <source src={`${CONFIG.RESOURCE_URL}${post?.mediaRef}`} type="video/mp4"  />
                 </video>
               }
-            </div>
+             {
+              post.type === 'WITH_VIDEO_POST' && (
+                <HStack 
+                onClick={() => {
+                  openUserPosts()
+                  setPostID(post?.id)
+                }} 
+                position={'absolute'} zIndex={10} fontSize={40} top={'62px'} left={'62px'} cursor={'pointer'} >
+                  <FiPlayCircle color='white' fontSize={50}  />
+              </HStack>
+              )
+             }
+            </Box>
       )
     } else {
      return (
-      <div ref={lastChildRef} key={index.toString()}>
+      <Box  key={index.toString()} position={'relative'} zIndex={5}>
       {post.type === 'WITH_IMAGE' && post?.mediaRef &&
         <img 
-          key={post?.id}
+          key={index.toString()}
           src={`${CONFIG.RESOURCE_URL}${post?.mediaRef }`}
-          className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+          className="rounded-b-[32px] rounded-tl-[32px] w-[170px] h-[170px] object-cover cursor-pointer"
           alt="media from user post"
           onClick={() => {
             openUserPosts()
@@ -98,19 +112,30 @@ const Posts = () => {
       }
       {post.type === 'WITH_VIDEO_POST' && post?.mediaRef &&
         <video 
-          key={post?.id}
-          className="rounded-b-[32px] rounded-tl-[32px] w-48 h-48 object-cover cursor-pointer"
+          key={index.toString()}
+          className="rounded-b-[32px] rounded-tl-[32px] w-[170px] h-[170px] object-cover cursor-pointer z-0"
           alt="media from user post"
           onClick={() => {
             openUserPosts()
             setPostID(post?.id)
           }} 
-          controls
+          controls={false}
+          autoPlay={false}
         >
           <source src={`${CONFIG.RESOURCE_URL}${post?.mediaRef}`} type="video/mp4" />
         </video>
       }
-    </div>
+      { post.type === 'WITH_VIDEO_POST' && (
+         <HStack 
+         onClick={() => {
+          openUserPosts()
+          setPostID(post?.id)
+        }} 
+         position={'absolute'} zIndex={10} fontSize={40} top={'62px'} left={'62px'} cursor={'pointer'} >
+            <FiPlayCircle color='white' fontSize={50}  />
+        </HStack>
+      )}
+    </Box>
      )
     }
   })
