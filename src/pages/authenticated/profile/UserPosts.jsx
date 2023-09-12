@@ -12,7 +12,7 @@ import { CaretLeftIcon } from '../../../components/Svgs'
 import { PATH_NAMES } from '../../../constants/paths.constant'
 import OverlayWrapper from '../../../components/OverlayWrapper'
 import useInfinteScroller from './../../../hooks/useInfinteScroller'
-import { Spinner, VStack } from '@chakra-ui/react'
+import { Spinner, VStack,Box } from '@chakra-ui/react'
 
 const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 	const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
@@ -41,27 +41,30 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 	const { results, isLoading, lastChildRef } = useInfinteScroller({url:'/feed/get-users-media-posts?userID='+userID, pageNumber:page, setPageNumber:setPage, search: true})
   
 
-	const getUserFeedData = async () => {
-		const userFeedData = await sendRequest(`${GET_USER_POSTS}?userID=${userID}`, "GET", null, {
-			Authorization: `Bearer ${token}`,
-		})
-		if (userFeedData) {
-			setUserFeedData(userFeedData?.content)
-			const item = userFeedData?.content?.find(item => item.id === postID)
-			if (item) {
-				itemRef?.current?.scrollIntoView({ behavior: 'smooth' });
-			}
+	
+
+	useEffect(() => {
+		if (itemRef.current && results.length > 0 && !isLoading) {
+			itemRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
-	}
-
-	useEffect(() => {
-		itemRef?.current?.scrollIntoView({ behavior: 'smooth' });
-	}, [userFeedData]);
+	}, [isLoading, itemRef, results.length]);
 
 
-	useEffect(() => {
-		getUserFeedData()
-	}, []) 
+	// useEffect(() => {
+	// 	const getUserFeedData = async () => {
+	// 		const userFeedData = await sendRequest(`${GET_USER_POSTS}?userID=${userID}`, "GET", null, {
+	// 			Authorization: `Bearer ${token}`,
+	// 		})
+	// 		if (userFeedData) {
+	// 			setUserFeedData(userFeedData?.content)
+	// 			const item = userFeedData?.content?.find(item => item.id === postID)
+	// 			if (item) {
+	// 				itemRef?.current?.scrollIntoView({ behavior: 'smooth' });
+	// 			}
+	// 		}
+	// 	}
+	// 	getUserFeedData();
+	// }, [postID, sendRequest, token, userID]) 
 
 	return (
 		<OverlayWrapper handleClose={toggleUserPosts}>
@@ -91,14 +94,16 @@ const UserPosts = ({ toggleUserPosts, userID, postID }) => {
 						{results?.map((post, i) => { 
 							if (i === results.length - 1) {
 								return( 
-									<Thread
-										key={i}
-										ref={lastChildRef}
-										post={post}
-										toggleMoreOptions={toggleMoreOptions}
-										toggleShare={toggleShare}
-										setThreadId={setThreadId}
-									/>
+									<Box ref={post?.id === postID ? itemRef:null}>
+										<Thread
+											key={i}
+											ref={lastChildRef}
+											post={post}
+											toggleMoreOptions={toggleMoreOptions}
+											toggleShare={toggleShare}
+											setThreadId={setThreadId}
+										/>
+									</Box>
 								)
 							} else {
 								return( 

@@ -32,15 +32,17 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
               // //setResults(prev => [...data.data.content, ...prev]);
               // setHasNextPage(data.data.last ? false:true);
               // window.scrollTo(0, window.innerHeight);
-          if(isRefetching) {  
-            results.push(...item.content); 
-            // setResults(lodash.uniqBy(results, search ? search : "id"));
-            // setResults(lodash.uniq(item?.content));
-            setResults(lodash.uniq(results));
-          } else {
-            // setResults(lodash.uniqBy(item?.content, "id"));
-            setResults(lodash.uniq(item?.content));
-          }
+              const arr = [...results, ...item.content];
+              setResults(arr);
+          // if(isRefetching) {  
+          //   results.push(...item.content); 
+          //   // setResults(lodash.uniqBy(results, search ? search : "id"));
+          //   // setResults(lodash.uniq(item?.content));
+          //   setResults(lodash.uniq(results));
+          // } else {
+          //   // setResults(lodash.uniqBy(item?.content, "id"));
+          //   setResults(lodash.uniq(item?.content));
+          // }
           setHasNextPage(data.data.last ? false:true);
           window.scrollTo(0, window.innerHeight); 
         }
