@@ -13,6 +13,7 @@ import {
   UPLOAD_IMAGE,
 } from "../../../constants/endpoints.constant"
 import { toast } from "react-toastify"
+import CreateEventTheme from "../../../components/createEventComponent/eventTheme"
 
 const CreateEvents = () => {
   const [activeStep, setActiveStep] = useState(0)
@@ -250,7 +251,7 @@ const CreateEvents = () => {
       <div className="w-full">
         {activeStep === 0 && (
           <div>
-            <EventTheme
+            <CreateEventTheme
               formData={formData}
               handleChange={handleChangeOther}
               handleChangeRadio={handleChangeRadio}
