@@ -50,17 +50,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
     }))
   }
 
-  const [ticketArray, setArray] = React.useState([""])
-  // uctTypeData: [
-  //   // first is always standard
-  //   {
-  //     totalNumberOfTickets: 0,
-  //     ticketPrice: 0,
-  //     ticketType: "", 
-  //     minTicketBuy: 0,
-  //     maxTicketBuy: 0
-  //   },
-  // ]
+  const [ticketArray, setArray] = React.useState([""]) 
 
   const clickHandler =()=> {
     if(!formData?.productTypeData[0].totalNumberOfTickets){
@@ -97,7 +87,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
   } 
 
   return (
-    <div className="py-6 flex flex-col justify-center items-center relative mx-auto w-full max-w-2xl">
+    <div className="py-6 flex flex-col justify-center items-center relative mx-auto w-full px-6 max-w-2xl">
       {showTooltip && (
         <OverlayWrapper handleClose={toggleTooltip}>
           <div className="flex w-fit h-fit p-4">
@@ -180,98 +170,7 @@ const EventTicket = ({ formData, setFormData, handleChange, handleSubmit, loadin
             />
             Free
           </label>
-        </div>
-
-        {/* <div className="mt-4">
-          <h1>Ticket Category</h1>
-          <div className="flex gap-2 mt-4 ">
-            <button className="">
-              <label
-                className={`text-[#667085] border rounded-lg px-6 md:px-16 py-2 hover:text-chasescrollBlue hover:bg-chasescrollBlue hover:bg-opacity-[5%] ${formData.isRegular
-                  ? "bg-chasescrollBlue bg-opacity-[5%] text-chasescrollBlue"
-                  : ""
-                  }`}
-              >
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-3 w-3 mr-2 text-blue-600 text-sm md:text-base"
-                  checked={formData.isRegular}
-                  name="isRegular"
-                  onChange={e => handleChange("isRegular", e.target.checked)}
-                />
-                Regular
-              </label>
-            </button>
-            <button className="">
-              <label
-                className={`text-[#667085] border rounded-lg px-6 md:px-16 py-2 hover:text-chasescrollBlue hover:bg-chasescrollBlue hover:bg-opacity-[5%] ${formData.isGold
-                  ? "bg-chasescrollBlue bg-opacity-[5%] text-chasescrollBlue"
-                  : ""
-                  }`}
-              >
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-3 w-3 mr-2 text-blue-600 text-sm md:text-base"
-                  checked={formData.isGold}
-                  name="isGold"
-                  onChange={e => handleChange("isGold", e.target.checked)}
-                />
-                Gold
-              </label>
-            </button>
-            <button className="">
-              <label
-                className={`text-[#667085] border rounded-lg px-6 md:px-16 py-2 hover:text-chasescrollBlue hover:bg-chasescrollBlue hover:bg-opacity-[5%] ${formData.isExclusive
-                  ? "bg-chasescrollBlue bg-opacity-[5%] text-chasescrollBlue"
-                  : ""
-                  }`}
-              >
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-3 w-3 mr-2 text-blue-600 text-sm md:text-base"
-                  checked={formData.isExclusive}
-                  name="isExclusive"
-                  onChange={e =>
-                    handleChange("isExclusive", e.target.checked)
-                  }
-                />
-                VIP
-              </label>
-            </button>
-          </div>
-        </div> */}
-
-        {/* <div className="my-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Enter Price
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              className="block text-xs md:text-sm w-1/3 px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              placeholder="Enter amount"
-              value={formData.regularPrice}
-              name="regularPrice"
-              onChange={e => handleChange("regularPrice", e.target.value)}
-            />
-            <input
-              type="text"
-              className="block text-xs md:text-sm w-1/3 px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              placeholder="Enter amount"
-              value={formData.goldPrice}
-              name="goldPrice"
-              onChange={e => handleChange("goldPrice", e.target.value)}
-            />
-            <input
-              type="text"
-              className="block text-xs md:text-sm w-1/3 px-3 py-2 border rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              placeholder="Enter amount"
-              value={formData.vipPrice}
-              name="vipPrice"
-              onChange={e => handleChange("vipPrice", e.target.value)}
-            />
-          </div>
-        </div> */} 
+        </div> 
         {formData.productTypeData?.map((item, index)=> {
           return(
             <div className=" w-full " key={index} > 

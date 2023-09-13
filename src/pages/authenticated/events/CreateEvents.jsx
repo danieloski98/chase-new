@@ -13,6 +13,9 @@ import {
   UPLOAD_IMAGE,
 } from "../../../constants/endpoints.constant"
 import { toast } from "react-toastify"
+import CreateEventTheme from "../../../components/createEventComponent/eventTheme"
+import CreateEventInformation from "../../../components/createEventComponent/eventInformation"
+import CreateEventTicket from "../../../components/createEventComponent/eventTicket"
 
 const CreateEvents = () => {
   const [activeStep, setActiveStep] = useState(0)
@@ -28,7 +31,7 @@ const CreateEvents = () => {
     eventDescription: "",
     joinSetting: "public",
     locationType: "",
-    currency: "NGN",
+    currency: "USD",
     currentPicUrl: "",
     eventFunnelGroupID: "",
     mediaType: "",
@@ -39,7 +42,7 @@ const CreateEvents = () => {
     attendeesVisibility: true,
     minPrice: "",
     maxPrice: "",
-    startTime: "",
+    startTime: new Date(),
     endTime: "",
     startDate: "",
     endDate: "",
@@ -250,21 +253,18 @@ const CreateEvents = () => {
       <div className="w-full">
         {activeStep === 0 && (
           <div>
-            <EventTheme
+            <CreateEventTheme
               formData={formData}
               handleChange={handleChangeOther}
               handleChangeRadio={handleChangeRadio}
               handleFileChange={handleFileChange}
-              handleContinue={handleContinue}
-              setImage={setImage}
-              selectedImage={selectedImage}
-              setSelectedImage={setSelectedImage}
+              handleContinue={handleContinue} 
             />
           </div>
         )}
         {activeStep === 1 && (
           <div>
-            <EventInfo
+            <CreateEventInformation
               handleChange={handleChangeOther}
               formData={formData}
               handleContinue={handleContinue}
@@ -275,7 +275,7 @@ const CreateEvents = () => {
         )}
         {activeStep === 2 && (
           <div>
-            <EventTicket
+            <CreateEventTicket
               loading={loading}
               HandleDeleteAllTicket={HandleDeleteAllTicket}
               handleChange={handleChange}

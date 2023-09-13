@@ -45,13 +45,10 @@ const SignUp = () => {
   });
   const { isLoading, mutate } = useMutation({
     mutationFn: (data) => httpService.post(SIGN_UP, data),
-    onError: (error) => {
-      console.log(error);
+    onError: (error) => { 
       toast.error(error.response.data);
     },
-    onSuccess: (data) => {
-      console.log(data.data);
-
+    onSuccess: (data) => { 
       sendMail.mutate({
         userEmail: values.email,
         emailType: 1,
@@ -191,7 +188,7 @@ const SignUp = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-5">
-                <Button disabled={!formState.isValid || !termsAccepted || phone === '' } type="submit" isLoading={isLoading} bg='brand.chasescrollButtonBlue' height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign in</Button>
+                <Button disabled={!formState.isValid || !termsAccepted || phone === '' } type="submit" isLoading={isLoading} bg='brand.chasescrollButtonBlue' height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign up</Button>
               </div>
           </div>
         </div>

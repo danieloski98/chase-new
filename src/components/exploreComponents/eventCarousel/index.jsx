@@ -86,7 +86,7 @@ function EventCarousel() {
                 <CustomCarousel slides={
                     data?.data?.content.map((item, index)=> { 
                         return(  
-                            <div key={index.toString()}>   
+                            <div className=' w-full ' key={index.toString()}>   
                                 <div key={index} role='button' onClick={() => navigate(`/events/${item.id}`)}  className="flex lg:h-auto flex-col pb-0 w-full relative "> 
                                     <div className="backdrop-blur-sm absolute inset-0 px-3 hidden lg:flex justify-center items-center rounded-tl-[32px] h-80">
                                         <img
@@ -121,7 +121,7 @@ function EventCarousel() {
                                                 item?.location?.link ? (item?.location.link?.length >= 17 ? item?.location.link.slice(0, 17)+"..." : item?.location.link): ""}
                                             </p>
                                         </div>
-                                        <div className="flex justify-between mt-1 items-center">
+                                        <div className="flex justify-between mt-1  items-center">
                                             {item?.interestedUsers.slice(0, 3).length && (
                                                 <div className="flex items-center justify-end">
                                                     <div

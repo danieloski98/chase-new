@@ -94,12 +94,12 @@ const SecondaryEvents = ({ events }) => {
               src={`${CONFIG.RESOURCE_URL}${item.currentPicUrl}`}
               alt="descriptive photograph"
               className=" w-full h-full cursor-pointer object-cover"
-              onClick={() => navigate(`/event/${item.id}`)}
+              onClick={() => navigate(`/events/${item.id}`)}
             />
           </div>
           <div className="flex flex-col gap-2">
             <h2 
-            onClick={() => navigate(`/event/${item.id}`)}
+            onClick={() => navigate(`/events/${item.id}`)}
             className="text-lg font-medium text-center md:text-left cursor-pointer">
               {item?.eventName}
             </h2>

@@ -1,12 +1,15 @@
 import PropTypes from "prop-types"
-import { useState } from "react"
+import React, { useState } from "react"
 import { CLOSE_ENTITY } from "@/constants"
 import { formatNumber } from "@/utils/helpers"
 import OverlayWrapper from "@/components/OverlayWrapper"
 import { AddIcon, SubtractIcon } from "@/components/Svgs"
+import { toast } from "react-toastify"
 
 const TicketPaymentModal = ({
   eventName,
+  minticket,
+  maxticket,
   banner,
   location,
   ticketPrice = 0,
@@ -19,7 +22,13 @@ const TicketPaymentModal = ({
   currency,
   handleClose,
 }) => {
-  const increaseTicketCount = () => setTicketCount(count => count + 1)
+  const increaseTicketCount = () =>{ 
+    if(maxticket === ticketCount){
+      toast.error("Limit of Ticket is "+ticketCount)
+    } else { 
+      setTicketCount(count => count + 1)
+    }
+  }
   const decreaseTicketCount = () => {
     setTicketCount(count => (count < 2 ? count : count - 1))
   }
@@ -32,6 +41,10 @@ const TicketPaymentModal = ({
   let usdtotal =  ((((ticketPrice * ticketCount) * 1.025) + 0.39)/(1-0.059)) 
   let nairatotal = ((((ticketPrice * ticketCount) * 1.025) + 100)/(1-0.039))
   let nairatotalnew = ((((ticketPrice * ticketCount) * 1.025))/(1-0.039))
+
+  React.useEffect(()=> { 
+    setTicketCount(minticket) 
+  }, [])
 
 
   return (
