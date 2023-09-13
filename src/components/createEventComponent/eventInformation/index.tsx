@@ -84,6 +84,7 @@ function CreateEventInformation(props: Props) {
                         <div className=' flex items-center gap-1 border rounded-lg p-1 px-3 ' >  
                             <CalendarIcon />
                             <DatePicker
+                                minDate={new Date()}
                                 selected={formData?.startDate? new Date(formData?.startDate):new Date()}
                                 onChange={handleStartDateSelect}
                                 showTimeSelect 
@@ -98,6 +99,7 @@ function CreateEventInformation(props: Props) {
                         <div className=' flex items-center gap-1 border rounded-lg p-1 px-3 ' >  
                             <CalendarIcon />
                             <DatePicker
+                                minDate={new Date(formData?.startDate)}
                                 selected={formData?.endDate? new Date(formData?.endDate): new Date()}
                                 onChange={handleEndDateSelect}
                                 showTimeSelect 

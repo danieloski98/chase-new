@@ -475,13 +475,24 @@ const TicketPageTemplate = ({
                         price?.map(category => (
                           <button
                             key={category.id}
+                            disabled={category?.totalNumberOfTickets === category?.ticketsSold ? true : false }
                             onClick={() => handleCategorySelection(category)}
-                            className={`border border-chasescrollBlue text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize ${category.ticketPrice === selectedCategory?.ticketPrice
+                            className={`border border-chasescrollBlue disabled:opacity-25 disabled:cursor-not-allowed text-xs lg:text-sm flex items-center justify-center gap-2 rounded-lg shadow-md w-full px-2 lg:px-4 py-2 lg:py-2.5 transition-all capitalize ${category.ticketPrice === selectedCategory?.ticketPrice
                               ? "text-white bg-chasescrollBlue"
                               : "text-chasescrollBlue bg-white"
                               }`}
                           >
-                            {category?.ticketType} {formatNumber(category?.ticketPrice, currency === "USD" ? "$" : "₦")}
+                            {category?.totalNumberOfTickets === category?.ticketsSold ?
+                                <>
+                                {category?.ticketType+" "}
+                                Sold Out
+                                </>
+                                :
+                                <>
+                                
+                                  {category?.ticketType} {formatNumber(category?.ticketPrice, currency === "USD" ? "$" : "₦")}
+                                </>
+                            }
                           </button>
                         ))
                       )}
