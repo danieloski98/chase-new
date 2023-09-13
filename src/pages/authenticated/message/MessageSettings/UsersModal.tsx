@@ -31,6 +31,12 @@ function UsersModal({ isOpen, onClose, members }: IProps) {
     const search = useDebounce(searchQuery, 500);
     const [connections, setConnection] = React.useState<IUser[]>([]);
 
+    React.useEffect(() => {
+        return () => {
+            setSelected([]);
+        }
+    }, [])
+
 
     const getConnections = useQuery(['getConnections', userId, search], () => httpService.get(`${GET_USER_CONNECTION_LIST}/${userId}`, {
         params: {

@@ -78,7 +78,8 @@ const MessageSettings = () => {
     const { isLoading: deleteLoading, mutate } = useMutation({
         mutationFn: () => httpService.delete(`/chat/chat?chatID=${chat?.id}`),
         onSuccess: (data) => {
-            queryClient.invalidateQueries(['getGroupInfo'])
+            queryClient.invalidateQueries(['getGroupInfo']);
+            queryClient.invalidateQueries(['getChats']);
             navigate(-1);
         },
         onError: (error: any) => {
@@ -90,7 +91,8 @@ const MessageSettings = () => {
     const { isLoading: lchatLoading, mutate: leaveChat } = useMutation({
         mutationFn: () => httpService.delete(`/chat/leave-chat?chatID=${chat?.id}`),
         onSuccess: (data) => {
-            queryClient.invalidateQueries(['getGroupInfo'])
+            queryClient.invalidateQueries(['getGroupInfo']);
+            queryClient.invalidateQueries(['getChats']);
             navigate(-1);
         },
         onError: (error: any) => {

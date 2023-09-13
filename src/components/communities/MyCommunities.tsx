@@ -60,11 +60,15 @@ function MyCommunities({ communities, loading, hasError }: IProps) {
                    <div className="w-full flex">
 
                    <div className="border-chasescrollBlue border-l-4 rounded-b-full rounded-tl-full">
-                      <img
-                        src={community.data.imgSrc ? `${CONFIG.RESOURCE_URL}/${community.data.imgSrc}` : `https://ui-avatars.com/api/?background=random&name=${community.data.name}&length=1`}
-                        alt={community.data.name}
-                        className="flex-grow w-[60px] max-w-[px] h-[60px] object-cover border-l-4 border-white rounded-b-full rounded-tl-full"
-                      />
+                      <Link 
+                        to={`${PATH_NAMES.community}/${community.id}`}
+                      >
+                        <img
+                          src={community.data.imgSrc ? `${CONFIG.RESOURCE_URL}/${community.data.imgSrc}` : `https://ui-avatars.com/api/?background=random&name=${community.data.name}&length=1`}
+                          alt={community.data.name}
+                          className="flex-grow w-[60px] max-w-[px] h-[60px] object-cover border-l-4 border-white rounded-b-full rounded-tl-full"
+                        />
+                      </Link>
                     </div>
                     <div className="flex justify-between items-center w-full ml-3">
 

@@ -39,6 +39,8 @@ const Notifications = () => {
   const [page, setPage] = React.useState(0)
   const { results, isLoading, ref, refetch, data, isRefetching } = InfiniteScrollerComponent({url:'/notifications/notification', limit: 10, filter: "id"})
 
+  console.log(results);
+
   return (
     <PageWrapper>
       {(notifications, getNotifications, notificationsFilter, filterNotifications) => (
@@ -98,7 +100,7 @@ const Notifications = () => {
           {show && (
             <div className="flex flex-col relative gap-4 w-full h-full max-w-2xl self-center">
               <div className=' w-full px-6 flex absolute top-0 justify-end ' >
-                <button onClick={()=> setShow(false)} > 
+                {/* <button onClick={()=> setShow(false)} > 
                   <svg
                     width="12"
                     height="12"
@@ -111,7 +113,7 @@ const Notifications = () => {
                     fill="black"
                     />
                   </svg>
-                </button>
+                </button> */}
               </div>
               {(type === "Friend Request Accepted") && ( 
                 <MyNetwork active={"Requests"} />
@@ -128,9 +130,9 @@ const Notifications = () => {
               {(type === "Group Join Request") && ( 
                 <Requests />
               )}
-              {type === "New message" && ( 
+              {/* {type === "New message" && ( 
                 navigate("/message") 
-              )} 
+              )}  */}
             </div>
           )}
         </div>

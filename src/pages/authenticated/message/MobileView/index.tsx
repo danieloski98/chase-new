@@ -44,6 +44,13 @@ function MobileChatView({ query }: IProps) {
     const messageId = queryParams.get('messageId');
 
     console.log(`this is the messageid ${messageId}`)
+
+    React.useEffect(() => {
+        setImage('');
+        setPost('');
+        setVideo('')
+        setFile('');
+    }, [activeChat])
   
     
     // refs
@@ -78,9 +85,11 @@ function MobileChatView({ query }: IProps) {
             page: 0,
         }
     }), {
+        refetchInterval: 1000,
         enabled: activeChat !== null,
         onSuccess: (data) => {
             console.log(data.data.content);
+            document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
             // const response: PaginatedResponse<IMediaContent> = data.data;
             // setMessages(response.content);
         }
@@ -132,7 +141,6 @@ function MobileChatView({ query }: IProps) {
             queryClient.invalidateQueries(['getMessages']);
             setVideo('');
             setPost('');
-            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
 
@@ -156,7 +164,6 @@ function MobileChatView({ query }: IProps) {
             setVideo('');
             setPost('');
             setFile('');
-            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
 
@@ -170,7 +177,6 @@ function MobileChatView({ query }: IProps) {
             queryClient.invalidateQueries(['getMessages']);
             setImage('');
             setPost('');
-            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
 
