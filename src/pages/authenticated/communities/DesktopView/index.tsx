@@ -294,11 +294,13 @@ function DesktopViewChat({ query }: IProps) {
                 filePost.mutate();
                 return;
             }
-        } else {
+        } else if (post !== '') {
             Post.mutate();
+        } else {
+            return;
         }
 
-    }, [Post, filePost, imagePost, type, videoPost])
+    }, [Post, filePost, imagePost, post, type, videoPost])
 
     if (showEventModal) {
           {/* EVENTS TO ADD MODAL */}

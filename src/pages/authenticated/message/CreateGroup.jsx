@@ -12,8 +12,10 @@ import { GET_CHAT, GET_USER_CONNECTION_LIST, UPLOAD_IMAGE } from "../../../const
 import CONFIG from "../../../config"
 import { toast } from "react-toastify"
 import { Avatar, Spinner } from '@chakra-ui/react'
+import { useQueryClient } from "react-query"
 
 const CreateGroup = () => {
+  const queryClient = useQueryClient();
   const [showMembers, setShowMembers] = useState(false)
   const [members, setMembers] = useState([])
   const [image, setImage] = useState(null)
@@ -113,7 +115,8 @@ const CreateGroup = () => {
         obj,
         { Authorization: `Bearer ${token}` }
       ).then(() => {
-        toast.success("Group chat created successfully")
+        toast.success("Group chat created successfully");
+        queryClient.invalidateQueries(['getChats']);
         setLoading(false);
         navigate(-1);
       })

@@ -273,18 +273,28 @@ function MobileViewChat({ query }: IProps) {
     }, [uploadImage, uploadVideo, uploadFile]);
 
     const handlePost = useCallback(() => {
-        if (Post.isLoading || imagePost.isLoading) return;
-        if (post === '') {
-            toast.warn("Please enter a post");
-            return;
-        }
-        if (image === '') {
-            // make normal post
+        if (Post.isLoading || imagePost.isLoading || videoPost.isLoading || filePost.isLoading) return;
+
+        if (type !== '') {
+            if (type === 'image') {
+                imagePost.mutate();
+                return;
+            }
+            if (type === 'video') {
+                videoPost.mutate();
+                return;
+            }
+            if (type === 'file') {
+                filePost.mutate();
+                return;
+            }
+        } else if (post !== '') {
             Post.mutate();
         } else {
-            imagePost.mutate();
+            return;
         }
-    }, [Post, image, imagePost, post])
+
+    }, [Post, filePost, imagePost, post, type, videoPost])
 
     if (showEventModal) {
           {/* EVENTS TO ADD MODAL */}

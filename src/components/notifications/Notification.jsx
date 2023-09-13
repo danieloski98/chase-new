@@ -18,6 +18,7 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 	const navigate = useNavigate()
 
 	const toggleRead = async (item) => { 
+		console.log(item);
 		const notification = await sendRequest(
 			`${READ_NOTIFICATIONS}?read=${!isRead}&notificationIDs=${item?.id}`,
 			'PUT',
@@ -28,8 +29,12 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 			setIsRead(state => !state)	
 			console.log(item?.title);
 			setType(item?.title)
-			setShow()  
+			//setShow()  
 			getNotifications() 	
+		}
+
+		if (item.type === 'CHAT') {
+			navigate(`/message?messageId=${item.typeID}`);
 		}
 
 	}
@@ -49,7 +54,7 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 				/>
 				<div className="flex flex-col">
 					<p className="font-bold text-left text-chasescrollDarkBlue text-lg">
-						{notification.title}
+						{notification.title} { notification.type === "CHAT" && <span>from {notification.createdBy.username}</span>}
 					</p>
 					<p className="text-chasescrollTextGrey text-left text-xs">
 						{notification.message}

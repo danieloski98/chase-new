@@ -77,7 +77,7 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
           setSubmitted(state => !state);
           loadMore()
           //queryClient.invalidateQueries(["getFeedsPosts"]);
-          toast.success("Post with video created successfully!");
+          toast.success("video posted successfully.!");
           setLoading(false);
         }).catch((error) => {
           setLoading(false);
@@ -85,6 +85,7 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
       }).catch((errorr) => {
         setLoading(false);
       })
+      return
     } else if (mediaType.startsWith('image/')) {
       sendRequest(
         `${UPLOAD_IMAGE}${userId}`,
@@ -114,7 +115,7 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
           { Authorization: `Bearer ${token}` },
         ).then(() => {
           setSubmitted(state => !state);
-          toast.success("Post with image created successfully!");
+          toast.success("image posted successfully");
           loadMore()
           //queryClient.invalidateQueries(["getFeedsPosts"]);
         }).catch((error) => {
@@ -123,6 +124,7 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
       }).catch((error) => {
         setLoading(false);
       })
+      return
     } else {
       toast.error('File is not an image or video.');
     }

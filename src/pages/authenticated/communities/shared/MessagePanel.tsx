@@ -13,6 +13,7 @@ import { formatTimeAgo } from '../../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import { CommentsIcon, EmptyHeartIcon, FilledHeartIcon } from '../../../../components/Svgs';
 import VideoPlayer from '../../../../components/VideoPlayer';
+import React from 'react';
 
 interface IProps {
     messages: IMediaContent[];
@@ -151,10 +152,14 @@ const MessageChip = ({message, userId}: {
 const MessagePanel = ({messages, isLoading}: IProps) => {
     const { userId } = useAuth();
     const id: string | null = userId as string | null
+
+    React.useEffect(() => {
+        document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
   return (
     <div className={`flex flex-col w-full h-full gap-4 sm:px-5  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
     {messages?.map((message, i) => (
-        <div key={i} className={`sm:min-w-32 sm:max-w-32 md:max-w-[100px] lg:min-w-[400px] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.user?.userId === userId
+        <div key={i} id={i === messages.length - 1 ? 'lastMsg':''} className={`sm:min-w-32 sm:max-w-32 md:max-w-[100px] lg:min-w-[400px] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.user?.userId === userId
             ? "rounded-bl-xl self-end"
             : "rounded-br-xl self-start"
             }`}>

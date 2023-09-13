@@ -36,7 +36,11 @@ const CommunityHeader = ({ community, setActive }: IProps) => {
             <div className="block lg:hidden xl:hidden" onClick={() => setActive && setActive(null)}>
                 <FiChevronLeft fontSize='30px' color='black' />
             </div>
-            <ProfilePhoto image={community.data?.imgSrc === "string" || !community.data?.imgSrc ? `https://ui-avatars.com/api/?background=random&name=${community?.data?.name}&length=1` : `${CONFIG.RESOURCE_URL}${community?.data?.imgSrc}`} />
+            <Link
+                to={`${PATH_NAMES.communityInfo}/${community.id}`}
+            >
+                <ProfilePhoto image={community.data?.imgSrc === "string" || !community.data?.imgSrc ? `https://ui-avatars.com/api/?background=random&name=${community?.data?.name}&length=1` : `${CONFIG.RESOURCE_URL}${community?.data?.imgSrc}`} />
+            </Link>
 
             <VStack alignItems='flex-start'>
                 <Link

@@ -23,7 +23,7 @@ const UserCard = React.forwardRef<any, IProps>(({index, item, dataLength, userId
         mutationFn: (data: string) => httpService.delete(`/chat/delete-chat-member`, {
             params: {
                 chatID,
-                chatMemberrs: [data],
+                chatMembers: [data],
             }
         }),
         onSuccess: (data) => {

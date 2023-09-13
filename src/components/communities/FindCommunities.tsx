@@ -46,15 +46,19 @@ const Community = ({ community }) => {
       className="py-4 flex items-center gap-4 w-full max-w-2xl border-b border-blue-600 border-opacity-40"
     >
       <div className="border-chasescrollBlue border-l-8 rounded-b-full rounded-tl-full">
-        <img
-          src={community.data.imgSrc ? `${CONFIG.RESOURCE_URL}/${community.data.imgSrc}` : `https://ui-avatars.com/api/?background=random&name=${community.data.name}&length=1`}
-          alt={community.name}
-          className="flex-grow w-[50px] max-w-[96px] h-[50px] object-cover border-l-4 border-white rounded-b-full rounded-tl-full"
-        />
+        <Link 
+          to={`${PATH_NAMES.communityInfo}/${community.id}?info=true`}
+        >
+          <img
+            src={community.data.imgSrc ? `${CONFIG.RESOURCE_URL}/${community.data.imgSrc}` : `https://ui-avatars.com/api/?background=random&name=${community.data.name}&length=1`}
+            alt={community.name}
+            className="flex-grow w-[50px] max-w-[96px] h-[50px] object-cover border-l-4 border-white rounded-b-full rounded-tl-full"
+          />
+        </Link>
       </div>
       <div className="flex justify-between items-center w-full">
         <div className="flex flex-col gap-3">
-          <Link to={`${PATH_NAMES.communityInfo}/${community.id}`} className="font-medium text-lg md:text-2xl">
+          <Link to={`${PATH_NAMES.communityInfo}/${community.id}?info=true`} className="font-medium text-lg md:text-2xl">
             {community.data.name}
           </Link>
           <div className="text-sm md:text-base opacity-[50%]">

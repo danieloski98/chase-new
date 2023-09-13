@@ -43,6 +43,12 @@ function DesktopChatView({ query }: IProps) {
     const messageId = queryParams.get('messageId');
 
 
+    React.useEffect(() => {
+        setImage('');
+        setPost('');
+        setVideo('')
+        setFile('');
+    }, [activeChat])
     
     // refs
     const filePickerRef = React.useRef<HTMLInputElement>();
@@ -76,11 +82,11 @@ function DesktopChatView({ query }: IProps) {
             page: 0,
         }
     }), {
+        refetchInterval: 1000,
         enabled: activeChat !== null,
         onSuccess: (data) => {
             console.log(data.data.content);
-            // const response: PaginatedResponse<IMediaContent> = data.data;
-            // setMessages(response.content);
+            document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
         }
     });
 
@@ -131,7 +137,6 @@ function DesktopChatView({ query }: IProps) {
             queryClient.invalidateQueries(['getMessages']);
             setVideo('');
             setPost('');
-            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
 
@@ -155,7 +160,6 @@ function DesktopChatView({ query }: IProps) {
             setVideo('');
             setPost('');
             setFile('');
-            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
 
@@ -169,7 +173,6 @@ function DesktopChatView({ query }: IProps) {
             queryClient.invalidateQueries(['getMessages']);
             setImage('');
             setPost('');
-            document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
 
@@ -178,6 +181,7 @@ function DesktopChatView({ query }: IProps) {
         onSuccess: (data) => {
             console.log(data.data);
             toast.success("Image uploaded");
+            queryClient.invalidateQueries(['getMessages']);
             setImage(data.data.fileName);
         }
     });
@@ -187,6 +191,7 @@ function DesktopChatView({ query }: IProps) {
         onSuccess: (data) => {
             console.log(data.data);
             toast.success("Video uploaded");
+            queryClient.invalidateQueries(['getMessages']);
             setVideo(data.data.fileName);
             setImage('');
         }
@@ -198,6 +203,7 @@ function DesktopChatView({ query }: IProps) {
             console.log(data.data);
             toast.success("File uploaded");
             setFile(data.data.fileName);
+            queryClient.invalidateQueries(['getMessages']);
             setImage('');
             setVideo('')
         }
@@ -281,7 +287,7 @@ function DesktopChatView({ query }: IProps) {
             filePost.mutate()
         }
 
-        if (type === '' ) {
+        if (type === '') {
             Post.mutate({
                 "message": post,
                 "chatID": activeChat?.id,
@@ -349,7 +355,7 @@ function DesktopChatView({ query }: IProps) {
         </VStack>
 
         {/* MAIN CHAT AREA */}
-        <VStack flex={0.7} height='100%' spacing={0} zIndex={1} className='bg-[url("/src/assets/images/chat-bg.png")]'>
+        <VStack flex={0.7} id='chatpanel' height='100%' spacing={0} zIndex={1} className='bg-[url("/src/assets/images/chat-bg.png")]'>
         {activeChat === null && (
             <VStack width='100%' height='100%' justifyContent='center' alignItems='center'>
                 <Heading color='brand.chasescrollButtonBlue' size='md'>No chat Selected</Heading>

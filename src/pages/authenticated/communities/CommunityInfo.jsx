@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useNavigation, useParams } from 'react-router-dom'
+import { Link, useNavigate, useNavigation, useParams, useSearchParams } from 'react-router-dom'
 import PageWrapper from '../../../components/PageWrapper'
 import { ArrowRight, BellIcon, CameraIcon, CaretLeftIcon, LeaveIcon, SearchIcon, Settings2 } from '../../../components/Svgs'
 import { useFetch } from '../../../hooks/useFetch'
@@ -25,6 +25,9 @@ const CommunityInfo = () => {
 	const navigation = useNavigate()
 	const { sendRequest } = useFetch()
 	const { token, userId } = useAuth()
+
+	const [queryParams] = useSearchParams();
+    const hasInfo = queryParams.get('info');
 
 	const { isLoading } = useQuery(['GetCom'], () => httpService.get(`${GET_GROUP}?groupID=${id}`), {
 		onSuccess: (data) => {
@@ -124,13 +127,15 @@ const CommunityInfo = () => {
 								</div>
 
 								<HStack>
-									<div className="flex items-center gap-4">
+									{ !hasInfo && (
+										<div className="flex items-center gap-4">
 						
-										<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-chasescrollBlue text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
-											<LeaveIcon />
-											Exit
+											<div className="w-[76px] h-16 cursor-pointer bg-chasescrollBgBlue rounded-lg text-chasescrollBlue text-center flex flex-col p-2 justify-between items-center text-sm font-medium">
+												<LeaveIcon />
+												Exit
+											</div>
 										</div>
-									</div>
+									)}
 
 									<div className="flex items-center gap-4">
 										{ isCreator && !deleteLoading && (

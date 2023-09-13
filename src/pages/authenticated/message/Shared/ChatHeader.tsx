@@ -72,6 +72,8 @@ const ChatHeader = ({ chat, setActive }: IProps) => {
                 src={url()}
                 name={name()}
                 size='md'
+                onClick={handleNavigation}
+                cursor={'pointer'}
             />
             {/* <ProfilePhoto image={url()} /> */}
 
