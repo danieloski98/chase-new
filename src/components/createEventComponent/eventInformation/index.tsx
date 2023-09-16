@@ -9,11 +9,12 @@ interface Props {
     formData: any, 
     handleChange: any, 
     setFormData: any, 
-    handleContinue: any
+    handleContinue: any,
+    loading: any
 }
 
 function CreateEventInformation(props: Props) {
-    const { formData, setFormData, handleContinue } = props 
+    const { formData, setFormData, handleContinue, loading } = props 
 
     // const [toBeAnnounced, setToBeAnnounced] = useState(false)
     const [selectType, setSelectType] = useState("")
@@ -204,8 +205,8 @@ function CreateEventInformation(props: Props) {
                         type="submit"
                         className="hover:text-xl"
                         onClick={() => clickHandler()}
-                        id="continueButton" >
-                        Continue
+                        id="continueButton" > 
+                        {loading ? "Loading..." : "Continue"}
                     </button>
                 </div>
             </div>

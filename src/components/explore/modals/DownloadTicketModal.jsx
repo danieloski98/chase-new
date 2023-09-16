@@ -23,7 +23,7 @@ const DownloadTicketModal = ({
   type,
   length,
   currency,
-  profile
+  profile 
 }) => { 
 
   return (

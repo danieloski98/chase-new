@@ -4,7 +4,8 @@ import { useMutation } from 'react-query'
 import { AxiosError, AxiosResponse } from "axios";
 import httpService from '../../utils/httpService';
 import { toast } from "react-toastify";
-import { Avatar } from '@chakra-ui/react';
+// import { Avatar } from '@chakra-ui/react';
+import UserImages from '../exploreComponents/sharedComponent/userImages';
 
 interface Iprops {
 	person: any,
@@ -61,7 +62,7 @@ const ExplorePerson = React.forwardRef(
 		<li ref={ref} className="flex py-4 px-4 justify-between w-full items-center border-b">
 			<div className="flex py-4 w-full items-center ">
 				<div className="h-auto w-fit rounded-b-full rounded-tl-full  overflow-hidden">
-					{person?.data?.imgMain?.value &&  
+					{/* {person?.data?.imgMain?.value &&  
 						<img onClick={() => navigate(`/profile/${`${person?.userId}`}`)} role='button' src={`https://chaseenv.chasescroll.com//resource-api/download/${person?.data?.imgMain?.value}`} alt="profiles" className="h-[57px] w-[57px] rounded-b-full rounded-tl-full" />
 					}
 					{!person?.data?.imgMain?.value && (
@@ -72,7 +73,9 @@ const ExplorePerson = React.forwardRef(
 							size='md'
 							onClick={() => navigate(`/profile/${`${person?.userId}`}`)}
 						/> 
-					)} 
+					)}  */}
+
+					<UserImages data={person} size={"[57px]"} font='[26px]' />
 				</div>
 				<div className="flex flex-col pl-4">
 					<h1 onClick={() => navigate(`/profile/${`${person?.userId}`}`)} className='cursor-pointer text-[20px] '>{person?.firstName} {person?.lastName}</h1>

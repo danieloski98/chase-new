@@ -1202,7 +1202,7 @@ export const SettingsPageList = [
   {
     id: nanoid(),
     type: "Blocked Users",
-    route: PATH_NAMES.settings,
+    route: PATH_NAMES.blockUsers,
     icon: blockedUserIcon,
   },
   {

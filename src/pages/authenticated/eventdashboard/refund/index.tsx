@@ -5,6 +5,7 @@ import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../../../context/authContext';
+import UserImages from '../../../../components/exploreComponents/sharedComponent/userImages';
 
 interface Props {
     data: any,
@@ -99,7 +100,7 @@ function RefundModal(props: Props) {
                         }
                     </div>
                 ))}
-                <button onClick={()=> clickHandler()} className=' text-red-600 font-medium  absolute right-2 top-2' >
+                <button disabled={loading ? true :false} onClick={()=> clickHandler()} className=' text-red-600 font-medium  absolute right-2 top-2' >
                     {loadingAll ? "Loading...": "refund all"}
                 </button>
             </div>
@@ -111,7 +112,7 @@ function RefundModal(props: Props) {
                             return(
                                 <div key={index} className=' W-full flex justify-between ' >
                                     <div className=' flex gap-3 ' > 
-                                        <div className=' w-[57px] h-[57px] rounded-b-[36px] rounded-tl-[36px] bg-slate-500 '  >
+                                        {/* <div className=' w-[57px] h-[57px] rounded-b-[36px] rounded-tl-[36px] bg-slate-500 '  >
                                             {item?.user?.data?.imgMain?.value &&
                                                 <img 
                                                     src={`${CONFIG.RESOURCE_URL}${item?.data?.imgMain?.value}`}
@@ -119,13 +120,14 @@ function RefundModal(props: Props) {
                                                     alt=""
                                                 /> 
                                             }
-                                        </div>
+                                        </div>  */}
+					                    <UserImages data={item} size={"[57px]"} font='[26px]' />
                                         <div className='' >
                                             <p className=' text-xl font-semibold ' >{item?.user?.firstName+" "+item?.user?.lastName}</p>
                                             <p className=' text-xs font-medium text-[#2E2B2B] ' >{item?.user?.username}</p>
                                         </div>
                                     </div>
-                                    <button onClick={()=> clickHandlerById(item?.user?.userId)} className=' px-4 h-[40px] text-white rounded-lg bg-red-600 ml-auto ' >
+                                    <button disabled={loading ? true :false} onClick={()=> clickHandlerById(item?.user?.userId)} className=' px-4 h-[40px] text-white rounded-lg bg-red-600 ml-auto ' >
                                         {loading === item?.user?.userId ? "Loading...": "Refund"}
                                     </button>
                                 </div>

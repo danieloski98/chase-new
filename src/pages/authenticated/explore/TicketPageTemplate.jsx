@@ -253,6 +253,7 @@ const TicketPageTemplate = ({
           convener={convener}
           timeAndDate={timeAndDate}
           location={location?.address}
+          ticketLeft={selectedCategory?.totalNumberOfTickets - selectedCategory?.ticketsSold}
           about={about}
           toggleModal={buyTicket}
           minticket={selectedCategory?.minTicketBuy}

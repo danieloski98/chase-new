@@ -28,6 +28,8 @@ const Explore = () => {
     getSuggestions()
   }, [])
 
+  const [BlockedUser, setblockedUser] = useState([] as any)
+
   return (
     <PageWrapper>
       {() => (
@@ -52,7 +54,7 @@ const Explore = () => {
               </Link>
             </div>
             <div className="flex gap-4 overflow-auto py-4">
-              {suggestions?.slice(0, 6)?.map((suggestion: any) => (
+              {suggestions?.slice(0, 6)?.filter((item: any)=> !BlockedUser.includes(item?.userId))?.map((suggestion: any) => (
                 <div key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
                   <UserTile
                     key={suggestion.id}
@@ -61,6 +63,8 @@ const Explore = () => {
                     firstName={suggestion?.firstName}
                     lastName={suggestion?.lastName}
                     publicProfile={suggestion?.publicProfile}
+                    setDeleted={setblockedUser}
+                    deleted={BlockedUser}
                     img={`${CONFIG.RESOURCE_URL}${suggestion?.data?.imgMain?.value}`}  
                   />
                 </div>

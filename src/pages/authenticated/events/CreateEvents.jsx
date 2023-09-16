@@ -24,35 +24,35 @@ const CreateEvents = () => {
   const { sendRequest } = useFetch()
   const [formData, setFormData] = useState({
     picUrls: [
-      ""
+      null
     ],
-    eventType: "",
-    eventName: "",
-    eventDescription: "",
+    eventType: null,
+    eventName: null,
+    eventDescription: null,
     joinSetting: "public",
-    locationType: "",
+    locationType:null,
     currency: "USD",
-    currentPicUrl: "",
-    eventFunnelGroupID: "",
-    mediaType: "",
-    currentVideoUrl: "",
+    currentPicUrl: null,
+    eventFunnelGroupID: null,
+    mediaType: null,
+    currentVideoUrl: null,
     isPublic: true,
     isExclusive: false,
     mask: false,
     attendeesVisibility: true,
-    minPrice: "",
-    maxPrice: "",
-    startTime: new Date(),
-    endTime: "",
-    startDate: "",
-    endDate: "",
-    // expirationDate: "",
+    minPrice: null,
+    maxPrice: null,
+    startTime: null,
+    endTime: null,
+    startDate: null,
+    endDate: null,
+    // expirationDate: null,
     location: {
-      link: "",
-      address: "",
-      locationDetails: "",
-      latlng: "",
-      placeIds: "",
+      link: null,
+      address: null,
+      locationDetails: null,
+      latlng: null,
+      placeIds: null,
       toBeAnnounced: false
     },
     productTypeData: [
@@ -60,7 +60,7 @@ const CreateEvents = () => {
       {
         totalNumberOfTickets: null,
         ticketPrice: null,
-        ticketType: "", 
+        ticketType: null, 
         minTicketBuy: null,
         maxTicketBuy: null
       },
@@ -71,7 +71,13 @@ const CreateEvents = () => {
   const [selectedImage, setSelectedImage] = useState('')
 
   const handleContinue = () => {
-    setActiveStep(prevStep => prevStep + 1)
+    if(activeStep === 0){
+      UploadImageData()
+    } else if(activeStep === 1){
+      UpdateEventFromDraft()
+    } else {
+      CreateEventFromDraft()
+    }
   }
 
   const handleBack = () => {
@@ -80,22 +86,27 @@ const CreateEvents = () => {
 
   const handleSubmit = async () => {
     setLoading(true)
-    const fd = new FormData();
-    fd.append("file", image);
-    if(!eventData?.eventName){ 
-      if (image !== null) {
-        const response = await sendRequest(
-          `${UPLOAD_IMAGE}${userId}`,
-          "POST",
-          fd,
-          { Authorization: `Bearer ${token}` },
-          true
-        ) 
-        let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName}
-        handlerPayload(newObj)
+
+    if(!image && formData?.currentPicUrl){ 
+      handlerPayload(formData)
+    } else { 
+      const fd = new FormData();
+      fd.append("file", image);
+      if(!eventData?.eventName){ 
+        if (image !== null) {
+          const response = await sendRequest(
+            `${UPLOAD_IMAGE}${userId}`,
+            "POST",
+            fd,
+            { Authorization: `Bearer ${token}` },
+            true
+          ) 
+          let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName}
+          handlerPayload(newObj)
+        }
+      } else {
+        handleUpdatePayload()
       }
-    } else {
-      handleUpdatePayload()
     }
   } 
 
@@ -109,14 +120,14 @@ const CreateEvents = () => {
     toast.success("Event Created")
     navigate("/events")
   }
+
   const handleUpdatePayload = async () => { 
     const response = await sendRequest(
       "events/update-event",
       "PUT",
       formData,
       { Authorization: `Bearer ${token}` }
-    ) 
-
+    )  
     toast.success("Event Updated")
     navigate("/events")
   }
@@ -243,6 +254,94 @@ const CreateEvents = () => {
     }
   }, [])
 
+  const UploadImageData =async()=>{ 
+    setLoading(true)
+
+    if(!image && formData?.currentPicUrl){ 
+      UpdateEventFromDraft()
+    } else if(image && formData?.currentPicUrl){ 
+
+      const fd = new FormData();
+      fd.append("file", image); 
+      const response = await sendRequest(
+        `${UPLOAD_IMAGE}${userId}`,
+        "POST",
+        fd,
+        { Authorization: `Bearer ${token}` },
+        true
+      ) 
+      let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName} 
+      UpdateEventFromDraftWithImage(newObj)
+    } else { 
+      const fd = new FormData();
+      fd.append("file", image); 
+      const response = await sendRequest(
+        `${UPLOAD_IMAGE}${userId}`,
+        "POST",
+        fd,
+        { Authorization: `Bearer ${token}` },
+        true
+      ) 
+      let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName}
+      SaveToDraft(newObj) 
+    }
+  }
+
+  const SaveToDraft =async(item)=>{
+    const response = await sendRequest(
+      "/events/create-draft",
+      "POST",
+      item,
+      { Authorization: `Bearer ${token}` }
+    )   
+    setFormData(response)
+    toast.success("Event Saved") 
+    setLoading(false)
+    setActiveStep(prevStep => prevStep + 1)
+  }
+
+
+
+  const UpdateEventFromDraftWithImage =async(data)=>{
+    const response = await sendRequest(
+      "/events/update-draft",
+      "PUT",
+      data,
+      { Authorization: `Bearer ${token}` }
+    )  
+    console.log(response);
+    setFormData({...formData, createdBy:userId,  lastModifiedBy: userId})
+    toast.success("Event Saved") 
+    setActiveStep(prevStep => prevStep + 1)
+    setLoading(false)
+  }
+
+  const UpdateEventFromDraft =async()=>{
+    const response = await sendRequest(
+      "/events/update-draft",
+      "PUT",
+      formData,
+      { Authorization: `Bearer ${token}` }
+    )  
+    console.log(response);
+    setFormData({...formData, createdBy:userId,  lastModifiedBy: userId})
+    toast.success("Event Saved") 
+    setActiveStep(prevStep => prevStep + 1)
+    setLoading(false)
+  }
+
+  const CreateEventFromDraft =async()=>{
+    const response = await sendRequest(
+      "/events/create-event-from-draft",
+      "POST",
+      formData,
+      { Authorization: `Bearer ${token}` }
+    )  
+    toast.success("Event Created")
+    navigate("/events")
+  }
+  
+
   return (
     <div className="flex flex-col gap-2 md:px-16 pt-8">
       <CreateEventsHeader
@@ -259,6 +358,8 @@ const CreateEvents = () => {
               handleChangeRadio={handleChangeRadio}
               handleFileChange={handleFileChange}
               handleContinue={handleContinue} 
+              SaveToDraft={UploadImageData}
+              loading={loading}
             />
           </div>
         )}
@@ -270,6 +371,8 @@ const CreateEvents = () => {
               handleContinue={handleContinue}
               handleBack={handleBack}
               setFormData={setFormData}
+              UpdateDaft={UpdateEventFromDraft}
+              loading={loading}
             />
           </div>
         )}
@@ -283,8 +386,8 @@ const CreateEvents = () => {
               formData={formData}
               HandlerDeleteTicket={HandleDeleteTicket}
               setFormData={setFormData}
-              handleSubmit={handleSubmit}
-              HandleAddTicket={HandleAddTicket}
+              handleSubmit={handleContinue}
+              HandleAddTicket={HandleAddTicket} 
               handleBack={handleBack}
             />
           </div>

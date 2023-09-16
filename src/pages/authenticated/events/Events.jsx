@@ -36,6 +36,7 @@ import SavedEventTab from "./components/SavedEvent"
 import EventCarousel from "../../../components/exploreComponents/eventCarousel"
 import { useQuery } from "react-query"
 import httpService from "@/utils/httpService"
+import EventDraft from "./components/EventDraft"
 
 const Events = () => {
   const [category, setCategory] = useState([])
@@ -50,7 +51,7 @@ const Events = () => {
   const [topEvents, setTopEvents] = useState([])
   const [savedEvents, setSavedEvents] = useState([])
   const [newUrl, setNewUrl] = useState("")
-  const { userName, token, userId, setEventCategory } = useAuth()
+  const { userName, token, userId, setEventCategory, setEventData } = useAuth()
   const { sendRequest } = useFetch()
 
   // queries
@@ -170,8 +171,9 @@ const Events = () => {
               <option value="My Events">My Events</option>
               <option value="Passed Events">Past Events</option>
               <option value="Saved Events">Saved Events</option>
+              <option value="Events Draft">Draft</option>
             </select>
-            <Link to={PATH_NAMES.createEvent} className=" flex items-center gap-3 " > 
+            <Link onClick={()=> setEventData({})} to={PATH_NAMES.createEvent} className=" flex items-center gap-3 " > 
               <FindEvent />
               Create Events
             </Link>
@@ -212,6 +214,10 @@ const Events = () => {
 
           {view === "Saved Events" && (
             <SavedEventTab />
+          )}
+
+          {view === "Events Draft" && (
+            <EventDraft />
           )}
           {/* {!isLoading && (
             <>  
