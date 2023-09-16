@@ -81,8 +81,11 @@ const SecondaryEvents = ({ events }) => {
   const EventInfo =(props)=> {    
     const {
       item,
-      index
+      index,
+      user
     } = props
+
+    const { userId } = useAuth()
 
     return(
       <div
@@ -121,9 +124,11 @@ const SecondaryEvents = ({ events }) => {
                 <span className="text-blue-600">{item.eventType}</span>
               </div>
             </div>
-            <span onClick={()=> clickHandler(item)} className=" text-blue-500 hover:text-blue-600 font-bold w-fit cursor-pointer">
-              View Ticket
-            </span>
+            {user === userId && (
+              <span onClick={()=> clickHandler(item)} className=" text-blue-500 hover:text-blue-600 font-bold w-fit cursor-pointer">
+                View Ticket
+              </span>
+            )}
           </div>
         </div> 
       </div>
@@ -137,7 +142,7 @@ const SecondaryEvents = ({ events }) => {
           if (results?.length === i + 1) {
             return (
               <div key={i} ref={lastChildRef} className="w-full max-w-2xl mx-auto " >
-                <EventInfo item={event} index={i} />
+                <EventInfo item={event} index={i} user={userId} />
               </div>
             )
           } else {

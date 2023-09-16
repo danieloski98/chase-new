@@ -103,7 +103,7 @@ function EventCarousel() {
                                         }`}
                                     />
 
-                                    <div className="absolute z-20  bottom-32 left-5 rounded-b-[32px] rounded-tl-[32px] shadow-2xl w-fit bg-white font-bold p-2">
+                                    <div className="absolute z-40  bottom-32 left-5 rounded-b-[32px] rounded-tl-[32px] shadow-2xl w-fit bg-white font-bold p-2">
                                         <h1 className="text-base flex justify-center text-center max-w-[6rem] px-1">
                                             {formatTimestampToDate(item?.startDate)}
                                         </h1> 

@@ -19,6 +19,8 @@ const SuggestionsPage = () => {
   const { token } = useAuth()
   const { sendRequest } = useFetch()
 
+  const [BlockedUser, setblockedUser] = useState([])
+
   const getSuggestions = async () => {
     const suggestions = await sendRequest(
       GET_SUGGESTED_FRIENDS,
@@ -52,7 +54,7 @@ const SuggestionsPage = () => {
           {!isLoading &&(
             <> 
               <div className="flex gap-4 p-4 flex-wrap items-center justify-center overflow-auto w-full">
-                {results?.map((suggestion, i) => { 
+                {results?.filter((item)=> !BlockedUser.includes(item?.userId))?.map((suggestion, i) => { 
                   if (results?.length === i + 1) {
                     return( 
                       <div  ref={ref}   key={suggestion?.userId} className="w-40 rounded-b-3xl rounded-tl-3xl">
@@ -65,6 +67,8 @@ const SuggestionsPage = () => {
                           lastName={suggestion?.lastName}
                           publicProfile={suggestion?.publicProfile}
                           username={suggestion?.username}  
+                          setDeleted={setblockedUser}
+                          deleted={BlockedUser}
                         /> 
                       </div>
                     )
@@ -79,6 +83,8 @@ const SuggestionsPage = () => {
                           lastName={suggestion?.lastName}
                           publicProfile={suggestion?.publicProfile}
                           username={suggestion?.username}  
+                          setDeleted={setblockedUser}
+                          deleted={BlockedUser}
                         />
                       </div>
                     )

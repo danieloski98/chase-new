@@ -5,9 +5,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import httpService from "../../../../utils/httpService";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import React from "react";
-import CONFIG from "../../../../config"; 
-import { formatNumber, formatNumberWithK } from "../../../../utils/helpers";
+import React from "react"; 
+import { formatNumberWithK } from "../../../../utils/helpers";
 
 interface Props {
     data: any,
@@ -20,51 +19,6 @@ function EventDashboardModal(props: Props) {
         data,
         setRefund
     } = props
-
-    const dataGraph = [
-        {
-          name: 'Page A',
-          uv: 4000,
-          pv: 2400,
-          amt: 2400,
-        },
-        {
-          name: 'Page B',
-          uv: 3000,
-          pv: 1398,
-          amt: 2210,
-        },
-        {
-          name: 'Page C',
-          uv: 2000,
-          pv: 9800,
-          amt: 2290,
-        },
-        {
-          name: 'Page D',
-          uv: 2780,
-          pv: 3908,
-          amt: 2000,
-        },
-        {
-          name: 'Page E',
-          uv: 1890,
-          pv: 4800,
-          amt: 2181,
-        },
-        {
-          name: 'Page F',
-          uv: 2390,
-          pv: 3800,
-          amt: 2500,
-        },
-        {
-          name: 'Page G',
-          uv: 3490,
-          pv: 4300,
-          amt: 2100,
-        },
-      ];
 
       const [history, setHistory] = React.useState([] as any)
 
@@ -126,15 +80,15 @@ function EventDashboardModal(props: Props) {
                     </div> */}
                     {/* <img src={pic} alt="image" className="w-[80px] mt-6" /> */}
                     <div className=" mt-8 w-full " >
-                        <div className=" flex gap-3 text-sm font-normal " >
+                        {/* <div className=" flex gap-3 text-sm font-normal " >
                             <p>Total</p>
                             <p>{formatNumber(history?.totalActiveSales, history?.currency === "USD" ? "$" : "₦")}</p>
-                        </div>
+                        </div> */}
                         <div role="button" onClick={()=> setRefund(true)} className=" text-white bg-[#E90303] px-2 py-[2px] mt-1 items-center w-fit flex text-[13px] font-normal gap-1 rounded-md " >
                             <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Group">
-                                <path id="Vector" d="M0.75 14.75V2.75C0.75 2.35218 0.908035 1.97064 1.18934 1.68934C1.47064 1.40804 1.85218 1.25 2.25 1.25H9.75C10.1478 1.25 10.5294 1.40804 10.8107 1.68934C11.092 1.97064 11.25 2.35218 11.25 2.75V14.75L9 13.25L7.5 14.75L6 13.25L4.5 14.75L3 13.25L0.75 14.75Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path id="Vector_2" d="M8.25 9.5V8C8.25 7.60218 8.09196 7.22064 7.81066 6.93934C7.52936 6.65804 7.14782 6.5 6.75 6.5H3.75M3.75 6.5L5.25 5M3.75 6.5L5.25 8" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path id="Vector" d="M0.75 14.75V2.75C0.75 2.35218 0.908035 1.97064 1.18934 1.68934C1.47064 1.40804 1.85218 1.25 2.25 1.25H9.75C10.1478 1.25 10.5294 1.40804 10.8107 1.68934C11.092 1.97064 11.25 2.35218 11.25 2.75V14.75L9 13.25L7.5 14.75L6 13.25L4.5 14.75L3 13.25L0.75 14.75Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path id="Vector_2" d="M8.25 9.5V8C8.25 7.60218 8.09196 7.22064 7.81066 6.93934C7.52936 6.65804 7.14782 6.5 6.75 6.5H3.75M3.75 6.5L5.25 5M3.75 6.5L5.25 8" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
                                 </g>
                             </svg>
                             Refund

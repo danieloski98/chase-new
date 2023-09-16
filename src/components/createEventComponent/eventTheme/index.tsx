@@ -6,12 +6,15 @@ import httpService from '../../../utils/httpService'
 import { GET_EVENTS_TYPES } from '../../../constants/endpoints.constant'
 import { useQuery } from 'react-query'
 import { Input, Radio, Select, Textarea } from "@chakra-ui/react"
+import CONFIG from '../../../config'
 
 interface Props {
         formData: any,
         handleChange: any,
         handleFileChange: any, 
         handleContinue: any, 
+        SaveToDraft: any,
+        loading:any
     }
 
 function CreateEventTheme(props: Props) {
@@ -19,7 +22,8 @@ function CreateEventTheme(props: Props) {
         formData,
         handleChange,
         handleFileChange, 
-        handleContinue, 
+        handleContinue,  
+        loading
     } = props
 
     const [types, setTypes] = useState([] as any)
@@ -39,9 +43,7 @@ function CreateEventTheme(props: Props) {
             reader.readAsDataURL(selected)
         } else {
             console.log('Error')
-        }  
-
-        // eventContext.setBannerFile(selected)
+        }   
     }  
 
 
@@ -65,6 +67,10 @@ function CreateEventTheme(props: Props) {
             handleContinue()
         }
     }
+
+    console.log(formData);
+    
+
     return (
         <div className="px-4 mx-auto pt-10 ">
             <div className=' w-full flex flex-col items-center ' >  
@@ -79,7 +85,7 @@ function CreateEventTheme(props: Props) {
                     <div className=' w-full flex flex-col gap-4 ' >
                         <div className="flex flex-col items-center gap-4">
                             <div role='button' className="flex justify-center items-center border border-dashed rounded-2xl border-chasescrollPalePurple w-full max-w-[361px] h-[228px]"> 
-                                {!selectedImageFile && (
+                                {(!selectedImageFile && !formData?.currentPicUrl) && (
                                     <label role='button' htmlFor="image" className="grid w-full h-full place-items-center gap-4">
                                         <div>
                                             <p className="dropzone-content text-sm md:text-sm">  Click to upload image</p>
@@ -95,10 +101,10 @@ function CreateEventTheme(props: Props) {
                                             onChange={handleImageChange}
                                             />
                                     </label>
-                                )} 
-                                {selectedImageFile && (
+                                )}  
+                                {(selectedImageFile || formData?.currentPicUrl) && (
                                     <label role='button' htmlFor="image" className="w-full h-full  rounded-2xl"> 
-                                        <img alt='eventimage' src={selectedImageFile} className=' rounded-2xl object-cover h-full w-full ' />
+                                        <img alt='eventimage' src={!selectedImageFile? CONFIG.RESOURCE_URL+formData?.currentPicUrl : selectedImageFile} className=' rounded-2xl object-cover h-full w-full ' />
                                         <input
                                             type="file"
                                             id="image"
@@ -274,7 +280,7 @@ function CreateEventTheme(props: Props) {
                     onClick={clickHandler} 
                     id="continueButton"
                     >
-                    Continue
+                        {loading? "Loading..." : "Continue"}
                     </button>
                 </div>
             </div>

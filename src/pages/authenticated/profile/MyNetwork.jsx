@@ -132,7 +132,7 @@ const MyNetwork = (props) => {
   const { results, isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/friend-requests', pageNumber:page, setPageNumber:setPage})
 
 
-  console.log(results);
+  console.log(currentUserId);
 
   return (
     <div className="flex justify-center px-4 pb-8 w-full max-w-md mx-auto">
@@ -277,108 +277,7 @@ const MyNetwork = (props) => {
             </>
           )}
 
-          {activeTab === "Connects" && (
-            // <div className="flex flex-col w-full my-6 mb-[100px]">
-            //   {data?.data?.map((profile, i) => {  
-            //     if (results?.length === i + 1) {
-            //       return( 
-            //         <div
-            //           ref={lastChildRef}
-            //           className="flex justify-between items-center my-4"
-            //           key={profile?.id} >
-            //           <Link
-            //             to={`${PATH_NAMES.profile}/${profile.userId}`}
-            //             className="flex gap-2 items-center"
-            //           >
-            //             {/* <img
-            //               src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-            //               className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
-            //               alt="connection"
-            //             /> */}
-            //             <Avatar 
-            //                 src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-            //                 className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
-            //                 name={`${profile?.firstName} ${profile.lastName}`}
-            //             />
-            //             <div className="inline-flex flex-col">
-            //               <p className="text-l text-black-800">
-            //                 {profile?.firstName} {profile?.lastName}
-            //               </p>
-            //               <small className="text-gray-500">@{profile?.username}</small>
-            //             </div>
-            //           </Link>
-            //           {/* {self && ( */}
-            //             <>
-            //               {profile?.joinStatus !== "CONNECTED" ? (
-            //                 <button
-            //                   className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
-            //                   onClick={() => unfriendPerson(profile?.userId)}
-            //                 >
-            //                   <span className="text-sm">Disconnect</span>
-            //                 </button>
-            //               ) : (
-            //                 <button
-            //                   className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
-            //                   onClick={() => friendPerson(profile?.userId)}
-            //                 >
-            //                   <span className="text-sm">Connect</span>
-            //                 </button>
-            //               )}
-            //             </>  
-            //           {/* )} */}
-            //         </div>
-            //       )
-            //     } else { 
-            //       return( 
-            //           <div
-            //           className="flex justify-between items-center my-4"
-            //           key={profile?.id}
-            //         >
-            //           <Link
-            //             to={`${PATH_NAMES.profile}/${profile.userId}`}
-            //             className="flex gap-2 items-center"
-            //           >
-            //             {/* <img
-            //               src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-            //               className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
-            //               alt="connection"
-            //             /> */}
-            //             <Avatar 
-            //                 src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-            //                 className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
-            //                 name={`${profile?.firstName} ${profile.lastName}`}
-            //             />
-            //             <div className="inline-flex flex-col">
-            //               <p className="text-l text-black-800">
-            //                 {profile?.firstName} {profile?.lastName}
-            //               </p>
-            //               <small className="text-gray-500">@{profile?.username}</small>
-            //             </div>
-            //           </Link>
-            //           {/* {self && ( */}
-            //             <>
-            //               {profile?.joinStatus === "CONNECTED" ? (
-            //                 <button
-            //                   className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
-            //                   onClick={() => unfriendPerson(profile?.userId)}
-            //                 >
-            //                   <span className="text-sm">Disconnect</span>
-            //                 </button>
-            //               ) : (
-            //                 <button
-            //                   className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
-            //                   onClick={() => friendPerson(profile?.userId)}
-            //                 >
-            //                   <span className="text-sm">Connect</span>
-            //                 </button>
-            //               )}
-            //             </>  
-            //           {/* )} */}
-            //         </div>
-            //       )
-            //     }
-            //   })}
-            // </div>
+          {activeTab === "Connects" && ( 
             <ConnectTab />
           )}
         </div> 
@@ -391,6 +290,8 @@ const ConnectTab =()=> {
   const { token, userId: currentUserId } = useAuth()
   const { sendRequest } = useFetch() 
   const [network, setNetwork] = useState([])
+
+  const self = userId === currentUserId
 
   const [page, setPage] = React.useState(0)
   const { isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/get-users-connections/'+userId, pageNumber:page, setPageNumber:setPage, search: true})
@@ -472,25 +373,25 @@ const ConnectTab =()=> {
                   <small className="text-gray-500">@{profile?.username}</small>
                 </div>
               </Link>
-              {/* {self && ( */}
-                <>
+              {/* {self && (
+                <> */}
                   {profile?.joinStatus === "CONNECTED" ? (
                     <button
                       className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
-                      onClick={() => unfriendPerson(profile?.userId)}
+                      onClick={() => unfriendPerson(currentUserId)}
                     >
                       <span className="text-sm">Disconnect</span>
                     </button>
                   ) : (
                     <button
                       className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
-                      onClick={() => friendPerson(profile?.userId)}
+                      onClick={() => friendPerson(currentUserId)}
                     >
                       <span className="text-sm">Connect</span>
                     </button>
                   )}
-                </>  
-              {/* )} */}
+                {/* </>  
+              )} */}
             </div>
           )
         // }
