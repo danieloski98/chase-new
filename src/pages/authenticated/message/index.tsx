@@ -10,6 +10,7 @@ const Message = () => {
 
   const getChats = useQuery(['getChats'], () => httpService.get(`${GET_CHAT}`), {
     onSuccess: (data) => {
+      console.log('getting chats ------------------------')
       console.log(data.data);
     }
   });

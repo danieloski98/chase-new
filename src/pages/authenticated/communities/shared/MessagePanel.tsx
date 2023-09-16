@@ -149,25 +149,32 @@ const MessageChip = ({message, userId}: {
         </Fragment>
     )
 }
-const MessagePanel = ({messages, isLoading}: IProps) => {
-    const { userId } = useAuth();
-    const id: string | null = userId as string | null
+const MessagePanel = React.forwardRef<any, IProps>(({ messages, isLoading }, ref) => {
+    // ({messages, isLoading}: IProps) => {
+        const { userId } = useAuth();
+        const id: string | null = userId as string | null
+        const [len, setLen] = React.useState(messages?.length);
 
-    React.useEffect(() => {
-        document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
-  return (
-    <div className={`flex flex-col w-full h-full gap-4 sm:px-5  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
-    {messages?.map((message, i) => (
-        <div key={i} id={i === messages.length - 1 ? 'lastMsg':''} className={`sm:min-w-32 sm:max-w-32 md:max-w-[100px] lg:min-w-[400px] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.user?.userId === userId
-            ? "rounded-bl-xl self-end"
-            : "rounded-br-xl self-start"
-            }`}>
-            <MessageChip message={message} userId={id as string} />
-        </div>
-        ))}
-</div>
-  )
-}
+    
+        React.useEffect(() => {
+            if (messages?.length !== len) {
+                setLen(messages?.length);
+                document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, [messages, len])
+      return (
+        <div className={`flex flex-col w-full h-full gap-4 sm:px-5  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
+        {messages?.map((message, i) => (
+            <div key={i} id={i === messages.length - 1 ? 'lastMsg':''} ref={i === messages?.length - 1 ? ref:null } className={`sm:min-w-32 sm:max-w-32 md:max-w-[100px] lg:min-w-[400px] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.user?.userId === userId
+                ? "rounded-bl-xl self-end"
+                : "rounded-br-xl self-start"
+                }`}>
+                <MessageChip message={message} userId={id as string} />
+            </div>
+            ))}
+    </div>
+      )
+    
+})
 
 export default MessagePanel

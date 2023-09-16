@@ -19,7 +19,7 @@ function Fab({ items }: { items: IList[] }) {
                 <motion.div 
                 onClick={() => item.action()}
                 animate={{ translateY: rotateX === 0 ? 0:-52 * (index+1), }}
-                transition={{ duration: 0.5, ease: 'easeInOut', staggerChildren: 0.2, }}
+                transition={{ duration: 0.3, ease: 'easeInOut', staggerChildren: 0.2, }}
                 className='w-12 h-12 rounded-full flex justify-center items-center bg-chasescrollPurple absolute'>
                     {item.icon}
                 </motion.div>
@@ -29,7 +29,7 @@ function Fab({ items }: { items: IList[] }) {
         <motion.div 
         onClick={() => setRotateX(rotateX === 0 ? 45 : 0)}
         animate={{ rotateZ: rotateX, perspective: 90 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: 0.1, ease: 'easeInOut' }}
         className='w-12 h-12 rounded-full flex justify-center items-center bg-chasescrollBlue cursor-pointer'>
             <FiPlus fontSize={'30px'} color='white' />
         </motion.div>

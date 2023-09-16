@@ -30,6 +30,9 @@ import PreviewContainer from '../shared/PreviewContainer';
 import PreviewVideo from '../shared/PreviewVideo';
 import PreviewFile from '../shared/PreviewFile';
 import Fab, { IList } from '../../../../components/general/Fab';
+import React from 'react';
+import lodash from "lodash"
+import TextArea from 'antd/es/input/TextArea';
 
 interface IProps {
     query: UseQueryResult<AxiosResponse<PaginatedResponse<ICommunity>, PaginatedResponse<ICommunity>>>;
@@ -47,6 +50,13 @@ function DesktopViewChat({ query }: IProps) {
     const [post, setPost] = useState(''); 
     const [type, setType] = useState('');  
     const { userId } = useAuth(); 
+
+    const [pageNumber, setPageNumber] = React.useState(0);
+
+     // scroll states
+     const [results, setResults] = React.useState<IMediaContent[]>([]);
+     const [hasNextPage, setHasNextPage] = React.useState(false);
+     const intObserver = React.useRef<IntersectionObserver>();
 
     const ITems: IList[] = [
         {
@@ -93,12 +103,30 @@ function DesktopViewChat({ query }: IProps) {
         }
     });
 
-    const getMessages = useQuery(['getMessages', activeCommunity?.id], () => httpService.get(`${GET_GROUP_POSTS}?groupID=${activeCommunity?.id}`), {
+    const getMessages = useQuery(['getMessages', activeCommunity?.id, pageNumber], () => httpService.get(`${GET_GROUP_POSTS}`, {
+        params: {
+            groupID: activeCommunity?.id,
+            page: pageNumber,
+        }
+    }), {
         onSuccess: (data) => {
-            const response: PaginatedResponse<IMediaContent> = data.data;
-            setMessages(response.content);
+            const item: PaginatedResponse<IMediaContent> = data?.data as PaginatedResponse<IMediaContent>
+            const arr = [...messages, ...item.content];
+            setMessages(lodash.uniq(arr));
+            setHasNextPage(data.data.last ? false:true);
         }
     });
+
+    const lastChildRef = React.useCallback((post: any) => {
+        if (getMessages.isLoading) return;
+        if (intObserver.current) intObserver.current.disconnect();
+        intObserver.current = new IntersectionObserver((posts) => {
+          if (posts[0].isIntersecting && hasNextPage) {
+            setPageNumber(prev => prev + 1); 
+          }
+        });
+        if (post) intObserver.current.observe(post);
+       }, [getMessages.isLoading, hasNextPage, setPageNumber]);
 
     // mutations
     const addNewEvent = useMutation({
@@ -388,7 +416,7 @@ function DesktopViewChat({ query }: IProps) {
                                 </HStack>
                             </HStack>
                             <Box flex='1' height='100%' width='100%' >
-                                <MessagePanel messages={messages} isLoading={getMessages.isLoading} />
+                                <MessagePanel messages={messages} isLoading={getMessages.isLoading} ref={lastChildRef} />
                             </Box>
 
                             <Box height='100px' />
@@ -436,7 +464,8 @@ function DesktopViewChat({ query }: IProps) {
                                     { !Post.isLoading && !imagePost.isLoading && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }
                                     { Post.isLoading || imagePost.isLoading || filePost.isLoading || videoPost.isLoading && <Spinner colorScheme='blue' size='md' />}
                                 </InputRightElement>
-                                <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' />
+                                {/* <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' /> */}
+                                <TextArea value={post} onChange={(e) => setPost(e.target.value)} size='middle' className='rounded-[20px] h-[55px] leading-5 max-h-[110px] pr-16 text-md' onResize={(e) => console.log(e)}  />
                             </InputGroup>
                         </HStack>
                         

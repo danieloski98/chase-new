@@ -20,6 +20,9 @@ import { useSearchParams } from 'react-router-dom'
 import PreviewContainer from '../../communities/shared/PreviewContainer';
 import PreviewVideo from '../../communities/shared/PreviewVideo';
 import PreviewFile from '../../communities/shared/PreviewFile';
+import { ChatMessage } from 'src/models/ChatMessage';
+import lodash from "lodash"
+import TextArea from 'antd/es/input/TextArea';
 
 
 
@@ -34,25 +37,13 @@ function MobileChatView({ query }: IProps) {
     const [chats, setChats] = React.useState<Array<Chat>>([]);
     const [activeChat, setActiveChat] = React.useState<Chat | null>(null);
     const [image, setImage] = useState('');
-    const [post, setPost] = useState(''); 
+    const [post, setPost] = useState('');  
     const [search, setSearch] = React.useState(''); 
     const [video, setVideo] = useState('');
     const [file, setFile] =  useState('');
-    const [type, setType] = useState(''); 
+    const [type, setType] = useState('');  
+    const [pageNumber, setPageNumber] = React.useState(0);
 
-    const [queryParams] = useSearchParams();
-    const messageId = queryParams.get('messageId');
-
-    console.log(`this is the messageid ${messageId}`)
-
-    React.useEffect(() => {
-        setImage('');
-        setPost('');
-        setVideo('')
-        setFile('');
-    }, [activeChat])
-  
-    
     // refs
     const filePickerRef = React.useRef<HTMLInputElement>();
     const fileReader = React.useRef<FileReader>(new FileReader());
@@ -60,6 +51,59 @@ function MobileChatView({ query }: IProps) {
 
     // others
     const queryClient = useQueryClient();
+
+    // scroll states
+    const [results, setResults] = React.useState<ChatMessage[]>([]);
+    const [hasNextPage, setHasNextPage] = React.useState(false);
+    const intObserver = React.useRef<IntersectionObserver>();
+
+    React.useEffect(() => {
+        setResults([]);
+        setPageNumber(0);
+        queryClient.invalidateQueries('getmessages');
+    }, [activeChat?.id, queryClient])
+
+       // QUERIES
+       const getMessages = useQuery(['getMessages', activeChat?.id, pageNumber], () => httpService.get(`/chat/message`, {
+        params: {
+            chatID: activeChat?.id,
+            page: pageNumber,
+        }
+    }), {
+        // refetchInterval: 1000,
+        enabled: activeChat !== null,
+        onSuccess: (data) => {
+            const item: PaginatedResponse<ChatMessage> = data?.data as PaginatedResponse<ChatMessage>
+            const arr = [...results, ...item.content];
+            setResults(lodash.uniq(arr));
+            setHasNextPage(data.data.last ? false:true);
+        }
+    });
+
+
+    const [queryParams] = useSearchParams();
+    const messageId = queryParams.get('messageId');
+
+    const lastChildRef = React.useCallback((post: any) => {
+        if (getMessages.isLoading) return;
+        if (intObserver.current) intObserver.current.disconnect();
+        intObserver.current = new IntersectionObserver((posts) => {
+          if (posts[0].isIntersecting && hasNextPage) {
+            setPageNumber(prev => prev + 1); 
+          }
+        });
+        if (post) intObserver.current.observe(post);
+       }, [getMessages.isLoading, hasNextPage, setPageNumber]);
+
+
+    React.useEffect(() => {
+        setImage('');
+        setPost('');
+        setVideo('')
+        setFile('');
+    }, [activeChat])
+    
+    
     const ITems: IList[] = [
         {
             title: 'Upload Document',
@@ -78,22 +122,7 @@ function MobileChatView({ query }: IProps) {
         }
     ];
 
-    // QUERIES
-    const getMessages = useQuery(['getMessages', activeChat?.id], () => httpService.get(`/chat/message`, {
-        params: {
-            chatID: activeChat?.id,
-            page: 0,
-        }
-    }), {
-        refetchInterval: 1000,
-        enabled: activeChat !== null,
-        onSuccess: (data) => {
-            console.log(data.data.content);
-            document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
-            // const response: PaginatedResponse<IMediaContent> = data.data;
-            // setMessages(response.content);
-        }
-    });
+   
 
     const getActiveChat = useQuery(['getActiveChat', messageId], () => httpService.get(`/chat/chat`, {
         params: {
@@ -106,7 +135,6 @@ function MobileChatView({ query }: IProps) {
             if (messageId === null) {
                 return;
             } else {
-                console.log(data.data);
                 const included = chats.filter((item) => item.id === (data?.data?.content[0] as Chat).id)
                 if (included.length > 0) {
                     const newList = chats.filter((item) => item.id !== (data?.data?.content[0] as Chat).id);
@@ -122,6 +150,7 @@ function MobileChatView({ query }: IProps) {
     });
 
     // MUTATIONS
+
     const videoPost = useMutation({
         mutationFn: () => httpService.post(`/chat/message`, {
             message: post,
@@ -139,8 +168,12 @@ function MobileChatView({ query }: IProps) {
             console.log(data.data)
             toast.success("Message created");
             queryClient.invalidateQueries(['getMessages']);
+            queryClient.invalidateQueries(['getChats']);
+            setImage('')
             setVideo('');
             setPost('');
+            setFile('');
+            setType('')
         }
     });
 
@@ -161,9 +194,12 @@ function MobileChatView({ query }: IProps) {
             console.log(data.data)
             toast.success("Message created");
             queryClient.invalidateQueries(['getMessages']);
+            queryClient.invalidateQueries(['getChats']);
+            setImage('')
             setVideo('');
             setPost('');
             setFile('');
+            setType('')
         }
     });
 
@@ -175,8 +211,12 @@ function MobileChatView({ query }: IProps) {
         onSuccess: (data) => {
             toast.success("message sent!");
             queryClient.invalidateQueries(['getMessages']);
-            setImage('');
+            queryClient.invalidateQueries(['getChats']);
+            setImage('')
+            setVideo('');
             setPost('');
+            setFile('');
+            setType('')
         }
     });
 
@@ -185,6 +225,7 @@ function MobileChatView({ query }: IProps) {
         onSuccess: (data) => {
             console.log(data.data);
             toast.success("Image uploaded");
+            queryClient.invalidateQueries(['getMessages']);
             setImage(data.data.fileName);
         }
     });
@@ -194,6 +235,7 @@ function MobileChatView({ query }: IProps) {
         onSuccess: (data) => {
             console.log(data.data);
             toast.success("Video uploaded");
+            queryClient.invalidateQueries(['getMessages']);
             setVideo(data.data.fileName);
             setImage('');
         }
@@ -205,10 +247,12 @@ function MobileChatView({ query }: IProps) {
             console.log(data.data);
             toast.success("File uploaded");
             setFile(data.data.fileName);
+            queryClient.invalidateQueries(['getMessages']);
             setImage('');
             setVideo('')
         }
     });
+
 
     // EFFECTS
     React.useEffect(() => {
@@ -216,10 +260,12 @@ function MobileChatView({ query }: IProps) {
         if (chats.length < 1 && chats?.length < 1) {
             setChats(query.data?.data.content as Array<Chat>);
         } else {
+            console.log('chats updated --------------------------')
+            setChats(lodash.uniq(query.data?.data.content as Array<Chat>))
             // communities.unshift(...query.data?.data.content as Array<ICommunity>);
             // setCommunities(communities);
         }
-    }, [chats, query.data?.data.content, query.isLoading]);
+    }, [chats, query.data?.data.content, query.isLoading, messageId]);
 
     // FUNCTIONS
     const openPicker = React.useCallback(() => {
@@ -248,6 +294,16 @@ function MobileChatView({ query }: IProps) {
             setType('file');
             return;
         }
+
+        // if (!file[0].type.startsWith('image')) {
+        //     toast.warning('You can only upload images');
+        // }
+        // fileReader.current.readAsDataURL(file[0]);
+
+        // // upload the image
+        // const formData = new FormData();
+        // formData.append('file', file[0]);
+        // uploadImage.mutate(formData);
     }, [uploadFile, uploadImage, uploadVideo]);
 
     const handlePost = React.useCallback(() => {
@@ -277,7 +333,7 @@ function MobileChatView({ query }: IProps) {
             filePost.mutate()
         }
 
-        if (type === '' ) {
+        if (type === '') {
             Post.mutate({
                 "message": post,
                 "chatID": activeChat?.id,
@@ -285,6 +341,27 @@ function MobileChatView({ query }: IProps) {
         }
        
     }, [Post, activeChat?.id, file, filePost, image, post, type, video, videoPost]);
+
+    const chatsCardFilter = React.useCallback(() => {
+        return chats
+        .filter((item) => {
+            if (search === '') {
+                return item;
+            }
+            if (item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || item.otherUser?.username?.toLowerCase().includes(search.toLowerCase())) {
+                return item;
+            }
+        })
+        .sort((a, b) => {
+            if (a.lastModifiedDate < b.lastModifiedDate) {
+                return 1
+            }
+            if (a.lastModifiedDate > b.lastModifiedDate) {
+                return -1
+            }
+            return 0;
+        })
+    }, [chats, search])
 
   return (
     <HStack display={['block', 'none']} width='100%' height='100%' gap={0}>
@@ -360,7 +437,7 @@ function MobileChatView({ query }: IProps) {
                                 
                                  <Box height='100%' width='100%' paddingBottom='100px' >
                                      {/* <MessagePanel messages={messages} isLoading={getMessages.isLoading} /> */}
-                                     <Message isLoading={getMessages.isLoading} messages={getMessages.data?.data} />
+                                     <Message ref={lastChildRef} isLoading={getMessages.isLoading} messages={results as ChatMessage[]} />
                                  </Box>
      
                                  <Box height='100px' />
@@ -401,7 +478,8 @@ function MobileChatView({ query }: IProps) {
                                  { !Post.isLoading  && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }
                                  { Post.isLoading && <Spinner colorScheme='blue' size='md' />}
                              </InputRightElement>
-                             <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' />
+                             {/* <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' /> */}
+                             <TextArea value={post} onChange={(e) => setPost(e.target.value)} size='middle' className='rounded-[20px] h-[55px] leading-5 max-h-[110px] pr-16 text-md' onResize={(e) => console.log(e)}  />
                          </InputGroup>
                      </HStack>
                  </VStack>

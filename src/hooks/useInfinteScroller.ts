@@ -19,9 +19,10 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
 
 
     // useQuery
-    const { data, isLoading, isError, error, refetch, isRefetching } = useQuery<AxiosResponse<PaginatedResponse<T>, PaginatedResponse<T>>>([`get${url}`, pageNumber ], () => httpService.get(`${url}`, {
+    const { data, isLoading, isError, error, refetch, isRefetching } = useQuery<AxiosResponse<PaginatedResponse<T>, PaginatedResponse<T>>>([`get${url}`, pageNumber, search, url], () => httpService.get(`${url}`, {
       params : {
-        page: pageNumber
+        page: pageNumber,
+        a:search,
       }
     }), {
         onSuccess: (data) => {
@@ -67,6 +68,7 @@ function useInfinteScroller<T>({ url, pageNumber, setPageNumber, search }: IProp
     refetch,
     hasNextPage,
     lastChildRef,
+    ref: intObserver,
     results,
     isRefetching
   }

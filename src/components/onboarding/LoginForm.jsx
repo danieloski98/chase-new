@@ -25,8 +25,19 @@ const LoginForm = () => {
       console.log(error);
     },
     onSuccess: (data) => {
-      toast.success('Login successful!');
-      login(data.data);
+      const userId = localStorage.getItem('userId');
+      if (userId !== null) {
+        if (data.data.user_id !== userId) {
+          toast.warn('Another user is logged in, the user has to logout their account');
+          return;
+        } else {
+          toast.success('Login successful!');
+          login(data.data);
+        }
+      } else {
+        toast.success('Login successful!');
+        login(data.data);
+      }
     }
   })
   const { renderForm } = useForm({
