@@ -6,11 +6,13 @@ import { AddIcon } from '../../../../components/Svgs';
 import { PATH_NAMES } from '../../../../constants/paths.constant';
 import { ICommunity } from '../../../../models/Communitty';
 import { PaginatedResponse } from '../../../../models/PaginatedResponse';
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import CommunityCard from '../shared/CommunityCard';
 import CommunityHeader from '../shared/CommunityHeader';
+import { FiCalendar, FiImage, FiSend, FiVideo, FiFileText } from 'react-icons/fi'
+import { COLORS } from '../../../../utils/colors';
 import httpService from '../../../../utils/httpService';
-import { CREATE_POST, GET_GROUP_POSTS, GET_SAVED_EVENTS, SAVE_EVENT, UPLOAD_IMAGE, UPLOAD_VIDEO } from '../../../../constants/endpoints.constant';
+import { CREATE_POST, GET_GROUP_POSTS, GET_SAVED_EVENTS, SAVE_EVENT, UPLOAD_FILES, UPLOAD_IMAGE, UPLOAD_VIDEO } from '../../../../constants/endpoints.constant';
 import { IEvent } from '../../../../models/Events';
 import EventsToAdd from '../../../../components/communities/EventsToAdd';
 import { toast } from 'react-toastify';
@@ -19,13 +21,18 @@ import { IMediaContent } from 'src/models/MediaPost';
 import MessagePanel from '../shared/MessagePanel';
 import CONFIG from '../../../../config';
 import selector from "../../../../assets/svg/image.svg"
+import smiley from "../../../../assets/svg/smiley.svg"
 import addEventBtn from "../../../../assets/svg/add-event.svg"
 import send from "../../../../assets/svg/send-icon.svg"
-import Fab, { IList } from '../../../../components/general/Fab';
-import { FiCalendar, FiImage, FiSend, FiVideo, FiFileText } from 'react-icons/fi'
-import PreviewFile from '../shared/PreviewFile';
-import PreviewVideo from '../shared/PreviewVideo';
+import useInfinteScroller from '../../../../hooks/useInfinteScroller';
+import { useAuth } from '../../../../context/authContext';
 import PreviewContainer from '../shared/PreviewContainer';
+import PreviewVideo from '../shared/PreviewVideo';
+import PreviewFile from '../shared/PreviewFile';
+import Fab, { IList } from '../../../../components/general/Fab';
+import React from 'react';
+import lodash from "lodash"
+import TextArea from 'antd/es/input/TextArea';
 
 
 interface IProps {
@@ -39,11 +46,19 @@ function MobileViewChat({ query }: IProps) {
     const [showEventModal, setShowEventModal] = useState(false);
     const [messages, setMessages] = useState<IMediaContent[]>([]);
     const [image, setImage] = useState('');
-    const [post, setPost] = useState('');   
     const [video, setVideo] = useState('');
     const [file, setFile] =  useState('');
+    const [post, setPost] = useState(''); 
     const [type, setType] = useState('');  
-    
+    const { userId } = useAuth(); 
+
+    const [pageNumber, setPageNumber] = React.useState(0);
+
+     // scroll states
+     const [results, setResults] = React.useState<IMediaContent[]>([]);
+     const [hasNextPage, setHasNextPage] = React.useState(false);
+     const intObserver = React.useRef<IntersectionObserver>();
+
     const ITems: IList[] = [
         {
             title: 'Upload Document',
@@ -89,12 +104,30 @@ function MobileViewChat({ query }: IProps) {
         }
     });
 
-    const getMessages = useQuery(['getMessages', activeCommunity?.id], () => httpService.get(`${GET_GROUP_POSTS}?groupID=${activeCommunity?.id}`), {
+    const getMessages = useQuery(['getMessages', activeCommunity?.id, pageNumber], () => httpService.get(`${GET_GROUP_POSTS}`, {
+        params: {
+            groupID: activeCommunity?.id,
+            page: pageNumber,
+        }
+    }), {
         onSuccess: (data) => {
-            const response: PaginatedResponse<IMediaContent> = data.data;
-            setMessages(response.content);
+            const item: PaginatedResponse<IMediaContent> = data?.data as PaginatedResponse<IMediaContent>
+            const arr = [...messages, ...item.content];
+            setMessages(lodash.uniq(arr));
+            setHasNextPage(data.data.last ? false:true);
         }
     });
+
+    const lastChildRef = React.useCallback((post: any) => {
+        if (getMessages.isLoading) return;
+        if (intObserver.current) intObserver.current.disconnect();
+        intObserver.current = new IntersectionObserver((posts) => {
+          if (posts[0].isIntersecting && hasNextPage) {
+            setPageNumber(prev => prev + 1); 
+          }
+        });
+        if (post) intObserver.current.observe(post);
+       }, [getMessages.isLoading, hasNextPage, setPageNumber]);
 
     // mutations
     const addNewEvent = useMutation({
@@ -115,6 +148,7 @@ function MobileViewChat({ query }: IProps) {
             console.log(data.data);
             toast.success("Image uploaded");
             setImage(data.data.fileName);
+            setVideo('');
         }
     });
 
@@ -221,6 +255,7 @@ function MobileViewChat({ query }: IProps) {
             queryClient.invalidateQueries(['getMessages']);
             setImage('');
             setPost('');
+            setVideo('')
             document.querySelector('#v')?.scrollTo(0, document.querySelector('#v')?.scrollHeight as number);
         }
     });
@@ -306,6 +341,7 @@ function MobileViewChat({ query }: IProps) {
         )
     }
 
+
     return (
         <HStack width='100%' height='100%' gap={0}>
 
@@ -375,7 +411,7 @@ function MobileViewChat({ query }: IProps) {
                               </HStack>
                           </HStack>
                           <Box height='100%' width='100%' >
-                              <MessagePanel messages={messages} isLoading={getMessages.isLoading} />
+                              <MessagePanel messages={messages} isLoading={getMessages.isLoading} ref={lastChildRef} />
                           </Box>
                           <Box height='50px' width='100%' />
                       </Flex>
@@ -416,7 +452,8 @@ function MobileViewChat({ query }: IProps) {
                                   { !Post.isLoading && !imagePost.isLoading && <Image src={send} width='30px' height='30px' onClick={handlePost} /> }
                                   { Post.isLoading || imagePost.isLoading && <Spinner colorScheme='blue' size='md' />}
                               </InputRightElement>
-                              <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' />
+                              {/* <Input value={post} onChange={(e) => setPost(e.target.value)} onKeyDown={(e) => { e.key === 'Enter' && handlePost()}} placeholder='Say something...' flex='1' bg="white" height='55px' borderRadius='20px' /> */}
+                              <TextArea value={post} onChange={(e) => setPost(e.target.value)} size='middle' className='rounded-[20px] h-[55px] leading-5 max-h-[110px] pr-16 text-md' onResize={(e) => console.log(e)}  />
                           </InputGroup>
                       </HStack>
                   </VStack>

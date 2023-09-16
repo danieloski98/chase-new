@@ -9,6 +9,7 @@ export type Chat = {
     lastMessagType: string;
     lastMessageUpdate: number;
     lastModifiedBy: IUser;
+    lastModifiedDate: number;
     createdBy: IUser;
     name: string;
     otherUser: IUser;

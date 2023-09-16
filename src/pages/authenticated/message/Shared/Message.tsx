@@ -8,11 +8,13 @@ import { useAuth } from '../../../../context/authContext';
 import { ChatMessage } from '../../../../models/ChatMessage';
 import { PaginatedResponse } from '../../../../models/PaginatedResponse';
 import httpService from '../../../../utils/httpService';
-import { HStack, Text, Avatar, VStack } from '@chakra-ui/react'
+import { HStack, Text, Avatar, VStack, Flex, Spinner } from '@chakra-ui/react'
 import { formatTimeAgo } from '../../../../utils/helpers';
+import { COLORS } from '../../../../utils/colors';
+import { FiHeart, FiMessageSquare, FiDownload } from 'react-icons/fi'
 
 interface IProps {
-    messages: PaginatedResponse<ChatMessage>;
+    messages: ChatMessage[];
     isLoading: boolean;
 }
 
@@ -20,27 +22,6 @@ const MessageChip = ({message, userId}: {
     message: ChatMessage,
     userId: string
 }) => {
-    const navigate = useNavigate();
-    const [comment, setComment] = React.useState('');
-    console.log(message);
-
-    const queryClient = useQueryClient();
-    const mu = useMutation({
-        mutationFn: () => httpService.post(`/hdhell/${message.id}`),
-        onSuccess: (data) => {
-            toast.success('Post liked');
-            queryClient.invalidateQueries(['getMessages'])
-        }
-    })
-
-    const commentPost = useMutation({
-        mutationFn: () => httpService.post(`/kkm`, { postID: message.id, comment }),
-        onSuccess: (data) => {
-            toast.success('comment saved');
-            queryClient.invalidateQueries(['getMessages'])
-            setComment('')
-        }
-    })
     return (
         <React.Fragment key={message?.id}>
             <HStack flexDirection={message?.self ? 'row':'row-reverse' } alignItems='flex-start'>
@@ -75,6 +56,23 @@ const MessageChip = ({message, userId}: {
                                     <Text textAlign={'left'} marginBottom={'10px'}>{message?.message ? message?.message : ''}</Text>
                                     </div>
                                 )
+                            }{
+                                message.mediaType !== 'PICTURE' && message.mediaType !== 'VIDEO' && (
+                                    <div className="flex flex-col gap-2">
+                                <div className="w-32 h-32 flex items-center justify-center">
+                                    {message.media !== '' || message.media.length < 1 && message.media?.split('.')[1]?.toUpperCase()}
+                                    { (
+                                       <HStack width='100%'>
+                                         <a href={`${CONFIG.RESOURCE_URL}${message?.media}`} download={message.media}>
+                                            <FiDownload fontSize='40px' color={message.self ? 'white' : COLORS.chasescrollBlue} className='cursor-pointer' />
+                                        </a>
+                                        <Text>Download File {message.media}</Text>
+                                       </HStack>
+                                    )}
+                                </div>
+                            <Text textAlign={'left' } fontSize={'16px'}>{message?.message ? message?.message : ''}</Text>
+                            </div>
+                                )
                             }
                         </div>
                     ) : (
@@ -100,23 +98,38 @@ const MessageChip = ({message, userId}: {
     )
 }
 
-export default function Message({ isLoading, messages }: IProps) {
-    const { userId } = useAuth();
-    const id: string | null = userId as string | null
+ const Message = React.forwardRef<any, IProps>(({isLoading, messages}, ref) => {
+    // ({ isLoading, messages, ref }: IProps) {
+        console.log(messages);
+        const { userId } = useAuth();
+        const id: string | null = userId as string | null
+        const [len, setLen] = React.useState(messages?.length);
+    
+        console.log(messages);
+    
+        React.useEffect(() => {
+            if (messages?.length !== len) {
+                setLen(messages?.length);
+                document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, [messages, len])
+      return (
+        <div className={`flex flex-col w-full h-full gap-4 sm:px-5 py-12  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
+        {messages !== undefined && messages.map((message, i) => (
+            <div id={i === messages.length - 1 ? 'lastMsg':''} ref={ i === messages?.length - 1 ? ref:null} key={i} className={`sm:min-w-32 sm:max-w-32 md:max-w-[100px] lg:min-w-[400px] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.self
+                ? "rounded-bl-xl self-end"
+                : "rounded-br-xl self-start"
+                }`}>
+                <MessageChip message={message} userId={id as string} />
+            </div>
+            ))}
+            { isLoading && (
+                <Flex width={'100%'} justifyContent={'center'} alignItems={'center'}>
+                    <Spinner colorScheme='blue' color='chasescrollBlue' size='md' />
+                </Flex>
+            )}
+    </div>
+      )
+})
 
-    React.useEffect(() => {
-        document.querySelector('#lastMsg')?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages])
-  return (
-    <div className={`flex flex-col w-full h-full gap-4 sm:px-5 py-12  lg:px-10 ${isLoading ? 'justify-center items-center' : ''}`} id='v'>
-    {messages?.content.map((message, i) => (
-        <div id={i === messages.content.length - 1 ? 'lastMsg':''} key={i} className={`sm:min-w-32 sm:max-w-32 md:max-w-[100px] lg:min-w-[400px] pb-5 border-b-[2px] m border-gray-300 h-aut0 ${message?.self
-            ? "rounded-bl-xl self-end"
-            : "rounded-br-xl self-start"
-            }`}>
-            <MessageChip message={message} userId={id as string} />
-        </div>
-        ))}
-</div>
-  )
-}
+export default Message;

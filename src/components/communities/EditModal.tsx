@@ -36,6 +36,10 @@ const EditCommunity = ({ community, onClose }: IProps) => {
         }
     });
 
+    const handleDescriptionChange = React.useCallback((e) => {
+        setDescription(e);
+    }, [])
+
     const updateGroup = useMutation({
         mutationFn: () => httpService.put(`${UPDATE_GROUP}`, {
             groupID: community.id,
@@ -102,7 +106,10 @@ const EditCommunity = ({ community, onClose }: IProps) => {
                 <Switch isChecked={isCheck} onChange={() => setIsChecked(prev =>!prev)}></Switch>
             </HStack>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} className='w-full border border-gray-400 rounded-md mt-6' />
-            <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} className='w-full border border-gray-400 rounded-md mt-6' />
+            <input type="text" value={description.substring(0, 50)} onChange={(e) => handleDescriptionChange(e.target.value)} className='w-full border border-gray-400 rounded-md mt-6' />
+            <HStack width={'100%'} height={'50px'}>
+                <Text>{description.length}/50</Text>
+            </HStack>
             <Button onClick={updateGroupdInfo} bg="brand.chasescrollButtonBlue" color='white' width='100%' isLoading={updateGroup.isLoading}>Update</Button>
         </VStack>
     </OverlayWrapper>
