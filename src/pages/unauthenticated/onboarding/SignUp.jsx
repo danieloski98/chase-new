@@ -68,7 +68,15 @@ const SignUp = () => {
     validationSchema: signUpValidation,
     submit: (data) => {
       if (!termsAccepted) {
-        alert('You must accept the terms and conditions');
+        toast.warning('You must accept the terms and conditions');
+        return;
+      }
+      if (!formState.isValid) {
+        toast.warning('You must fillin the form correctly');
+        return;
+      }
+      if (phone === '') {
+        toast.warning('Your phone number is required');
         return;
       }
       const obj = {
@@ -175,16 +183,16 @@ const SignUp = () => {
                 />
                 <div className="text-chasescrollTextGrey">
                   I accept the{" "}
-                  <button
-                    onClick={toggleTermsVisibility}
+                  <a
+                    href='https://chasesroll.com/terms'
                     className="text-chasescrollBlue"
                   >
                     Terms of service
-                  </button>{" "}
+                  </a>{" "}
                   as well as the{" "}
-                  <Link to="/privacy-policy" className="text-chasescrollBlue">
+                  <a href="https://chasescroll.com/privacy-policy" className="text-chasescrollBlue">
                     Privacy Policy
-                  </Link>
+                  </a>
                 </div>
               </div>
               <div className="flex flex-col gap-5">
