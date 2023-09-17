@@ -186,11 +186,12 @@ const SignUp = () => {
                   <a
                     href='https://chasescroll.com/terms'
                     className="text-chasescrollBlue"
+                    target="_blank"
                   >
                     Terms of service
                   </a>{" "}
                   as well as the{" "}
-                  <a href="https://chasescroll.com/privacy-poilcy" className="text-chasescrollBlue">
+                  <a href="https://chasescroll.com/privacy-poilcy" target="_blank" className="text-chasescrollBlue">
                     Privacy Policy
                   </a>
                 </div>
