@@ -53,7 +53,7 @@ const PaymentRecord = ({
 					<small className="text-gray-500">
 						{/* {formatTimestampToDate(timestamp)} - {formatTime(timestamp)} */}
 						{format(
-							new Date(timestamp),
+							new Date(timestamp * 1000),
 							'MMMM do, yyyy hh:mma'
 						)}
 					</small>

@@ -69,6 +69,12 @@ function CreateEventTheme(props: Props) {
     }
 
     console.log(formData);
+
+    const handleChangeLimit =(e: any,  limit)=>{
+        if((e.target.value).length < limit){
+            handleChange(e)
+        }
+    }
     
 
     return (
@@ -141,7 +147,7 @@ function CreateEventTheme(props: Props) {
                             <label className=" font-medium text-chasescrollTextGrey "> Event Title <span className="text-chasescrollRed"> *</span></label>
                             <Input
                                 name="eventName"
-                                onChange={handleChange}
+                                onChange={(e)=> handleChangeLimit(e, 50)}
                                 value={formData?.eventName} />
                         </div>
                     </div>
@@ -167,7 +173,7 @@ function CreateEventTheme(props: Props) {
                                 id="eventDescription"
                                 name="eventDescription"
                                 value={formData?.eventDescription}
-                                onChange={handleChange}
+                                onChange={(e)=> handleChangeLimit(e, 150)}
                                 className="outline-none w-full h-20 text-sm"
                             />
                         </div>
