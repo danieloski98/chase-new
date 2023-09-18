@@ -16,7 +16,7 @@ import { Input } from "@chakra-ui/react"
 const Explore = () => { 
  
   const [suggestions, setSuggestions] = useState([])
-  const { firstName, token, searchValue, setSearchValue } = useAuth()
+  const { firstName, token, searchValue, setSearchValue }: any = useAuth()
   const { sendRequest } = useFetch() 
 
   const getSuggestions = async () => {
