@@ -51,7 +51,7 @@ const PaymentRecord = ({
 				</div>
 				<div className="flex justify-between items-center text-xs">
 					<small className="text-gray-500">
-						{formatDate(new Date(...timestamp))} - {formatTime(new Date(...timestamp))}
+						{formatDate(timestamp)} - {formatTime(timestamp)}
 					</small>
 					<small>
 						{status === paid && <span className='bg-green-200 text-green-800 px-2 py-0.5 rounded-lg'>paid</span>}

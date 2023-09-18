@@ -13,6 +13,7 @@ export const AuthContext = createContext({
   setSearchValue: "",
   eventCategory: "",
   setEventCategory: "",
+  firstName: null,
   notification:"", 
   setnotification:"",
   eventData:"", 
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [userId, setUserId] = useState(localStorage.getItem('userId') || null);
   const [userName, setUserName] = useState(localStorage.getItem('userName') || null);
+  const [firstName, setfirstName] = useState(localStorage.getItem('firstName') || null);
   const [notification, setnotification] = useState("");
   const [authorized, setAuthorized] = useState(Boolean(token));
   const [searchValue, setSearchValue] = useState("");
@@ -36,6 +38,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
       localStorage.setItem('userName', userName);
+      localStorage.setItem('firstName', firstName);
     } else {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
@@ -46,17 +49,21 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     //const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
 
-    const { access_token, user_id, user_name, expires_in } = credentials;
+    const { access_token, user_id, user_name, expires_in, firstName } = credentials;
     setToken(access_token);
     setUserId(user_id)
     setUserName(user_name)
     setAuthorized(true);
+    setfirstName(firstName)
 
     // Set token expiration time to 'expires_in' seconds from now
     const expirationTime = new Date().getTime() + expires_in * 1000;
 
     localStorage.setItem('tokenExpiration', expirationTime);
-    setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
+    console.log(expirationTime);
+    if(firstName){
+      setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
+    }
   };
 
   const logout = () => {
@@ -85,6 +92,7 @@ export const AuthProvider = ({ children }) => {
       authorized,
       userId,
       userName,
+      firstName,
       searchValue,
       setSearchValue,
       notification, 

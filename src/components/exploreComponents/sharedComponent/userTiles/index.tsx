@@ -125,7 +125,7 @@ const UserTile = forwardRef<any, Props>
             <div className="flex flex-col lg:gap-2 gap-1 items-center"> 
                 <UserImages data={data} size={"20"} />
             </div> 
-            <h1 onClick={() => navigate(`/profile/${userId}`)} className="font-bold text-center text-sm cursor-pointer">{firstName} {lastName}</h1>
+            <h1 onClick={() => navigate(`/profile/${userId}`)} className="font-bold text-center text-sm cursor-pointer">{(firstName+" "+lastName).length > 18 ? (firstName+" "+lastName+"werttttttyyyy").slice(0, 18)+"...": (firstName+" "+lastName)}</h1>
             <h3 className="text-chasescrollGrey text-xs">
                 {mutuals} Mutual Connection{mutuals === 1 ? "" : "s"}
             </h3>
@@ -151,7 +151,7 @@ const UserTile = forwardRef<any, Props>
             : 
                 <button
                     onClick={handleadd}
-                    className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all bg-chasescrollBlue text-white `} >
+                    className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-full transition-all bg-chasescrollBlue text-white `} >
                     {Loading === userId? "Loading..": "Connect"}
                 </button>
             }

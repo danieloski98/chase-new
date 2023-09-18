@@ -51,6 +51,22 @@ function CreateEventInformation(props: Props) {
         handleContinue()
       } 
     }
+
+
+    const getValidationInfo =()=> {
+
+        if(!formData?.startDate){
+        return true
+        } else if(!formData?.endDate){
+        return true
+        } else if(!formData?.location?.toBeAnnounced){
+        if(!formData?.location?.locationDetails && !formData?.location?.link){
+        return true
+        }
+        } else {
+        return false      
+        } 
+    }
   
     const handleToBeAnnounced =(event: any)=> {
         if(event?.target?.checked){
@@ -203,7 +219,8 @@ function CreateEventInformation(props: Props) {
                 <div className="flex items-center justify-center text-chasescrollBlue  text-base md:text-lg pt-4 font-bold my-4"> 
                     <button
                         type="submit"
-                        className="hover:text-xl"
+                        disabled={getValidationInfo()}
+                        className="hover:text-xl disabled:text-red-500 disabled:transition disabled:animate-pulse disabledcursor-not-allowed"
                         onClick={() => clickHandler()}
                         id="continueButton" > 
                         {loading ? "Loading..." : "Continue"}

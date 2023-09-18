@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import illustration from "@/assets/svg/sign-in-illustration-2.svg"
 import playStore from "@/assets/images/play-store.png"
 import appleStore from "@/assets/images/apple-store.png"
@@ -11,17 +11,27 @@ import { GoogleIcon } from "../../../components/Svgs"
 import { toast, useToast } from "react-toastify"
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { auth, googleAuthProvider } from "../../../config/firebase"
-import { useMutation } from "react-query"
+import { useMutation, useQuery } from "react-query"
 import httpService from "@/utils/httpService"
 import { AUTH_URL, SIGN_IN_WITH_CREDENTIALS } from "@/constants/endpoints.constant"
-import { Spinner } from "@chakra-ui/react"
+import { Input, Spinner } from "@chakra-ui/react"
 import { useAuth } from "@/context/authContext"
+import OverlayWrapper from "@/components/OverlayWrapper"
+import { UPDATE_PROFILE } from "@/constants/endpoints.constant"
 
 const Onboarding = () => {
   const [showTerms, setShowTerms] = useState(false)
   const { login } = useAuth();
+  const [showModal, setShowModal] = React.useState(false)
+  const [Loading, setLoading] = React.useState(false)
+  const [FirstName, setFirstName] = React.useState("")
+  const [CheckUsername, setCheckUsername] = React.useState("")
+  const [LastName, setLastName] = React.useState("")
+  const [UserName, setUserName] = React.useState("")
 
   const toggleTermsVisibility = () => setShowTerms(state => !state);
+
+  const navigate = useNavigate()
 
   // react-querry
   const { isLoading, mutate } = useMutation({
@@ -32,22 +42,23 @@ const Onboarding = () => {
     }),
     onSuccess: (data) => {
       console.log(data.data);
-      toast.success('Signin with firebase successful');
-      login(data.data);
+      toast.success('Signin Successful');
+      if(!data.data?.firstName){ 
+        setShowModal(true)
+      }  
+      login(data?.data); 
     },
     onError: (error) => {
       console.log(error);
-      toast.error('An error occured while using firebase');
+      toast.error('An error occured');
     }
   })
 
   const signInWithGoogle = React.useCallback(async () => {
     try {
-      const result = await signInWithPopup(auth, googleAuthProvider)
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      //console.log(result);
-      if (credential) {
-        console.log(credential.idToken);
+      const result = await signInWithPopup(auth, googleAuthProvider) 
+      const credential = GoogleAuthProvider.credentialFromResult(result); 
+      if (credential) { 
         mutate(credential.idToken);
       }
     } catch (error) {
@@ -58,6 +69,55 @@ const Onboarding = () => {
   const handleToast = () => {
     toast.info('Coming soon');
   }
+
+  const {} = useQuery(['username'+UserName], () => httpService.get('/auth/username-check?username='+UserName), {
+    onError: (error) => {
+        toast.error(error.response?.data);
+    }, 
+    onSuccess: (data) => { 
+      console.log(data?.data?.message);
+      if(data?.data?.message === "Username already exists."){
+        setCheckUsername(data?.data?.message)
+      } else {
+        setCheckUsername("")
+      }
+    }
+  })  
+  const changeHandler =async(item)=> {
+    // const {} = useQuery(['username'], () => httpService.get('/auth/username-check?username='+item), {
+    //     onError: (error) => {
+    //         toast.error(error.response?.data);
+    //     }, 
+    //     onSuccess: (data) => { 
+    //       console.log(data);
+    //     }
+    // })  
+  }
+
+  const clickHandler =async()=> {
+    setLoading(true); 
+    if(!FirstName){
+      toast.error("Enter First Name")
+    } else if(!LastName) {
+      toast.error("Enter Last Name")
+    } else if(!UserName) {
+      toast.error("Enter User Name")
+    } else {  
+        const response = await httpService.put(UPDATE_PROFILE, {
+          firstName: FirstName,
+          lastName: LastName,
+          username: UserName,
+        })
+        if (response) { 
+          toast.success('Profile updated successfully!'); 
+          navigate("/explore")
+        } else {
+          toast.error('Something went wrong!');
+        } 
+
+    }
+    setLoading(false);
+  } 
 
   return (
     <>
@@ -143,6 +203,31 @@ const Onboarding = () => {
               )}
             </div>
           </div>
+          {showModal && ( 
+            <OverlayWrapper>
+            <div className=" w-[500px] bg-white rounded-lg " >
+              <div className=" w-full bg-white rounded-lg flex flex-col gap-4 px-6 py-5" >
+                <p className=" font-semibold text-xl " >Add User Information To Continue</p>
+                <div className=" w-full flex flex-col gap-2 mt-6 " >
+                  <p>First Name</p>
+                  <Input onChange={(e)=> setFirstName(e?.target?.value)} />
+                </div>
+                <div className=" w-full flex flex-col gap-2  " >
+                  <p>Last Name</p>
+                  <Input onChange={(e)=> setLastName(e?.target?.value)} />
+                </div>
+                <div className=" w-full flex flex-col gap-2  " >
+                  <p>Username</p>
+                  <Input onChange={(e)=> setUserName(e?.target?.value)} />
+                  {CheckUsername && 
+                    <p className=" text-sm text-chasescrollRed -mt-1 " >{CheckUsername}</p>
+                  }
+                </div>
+                <button disabled={(!FirstName || !LastName || UserName?.length < 3 || CheckUsername) ? true : false} onClick={()=> clickHandler()} className=" w-full h-[45px] bg-chasescrollBlue text-white disabled:opacity-25 rounded-md mt-6 font-semibold " >{Loading ? "Loading..." : "Update Information"}</button>
+              </div>
+            </div>
+          </OverlayWrapper>
+          )}
         </div>
       )}
     </>
