@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { ClosedEyeIcon, OpenEyeIcon } from "@/components/Svgs"
 import { useAuth } from "../../context/authContext"
@@ -11,11 +11,17 @@ import { useMutation } from "react-query"
 import httpService from "@/utils/httpService"
 import { SIGN_IN } from "@/constants/endpoints.constant"
 import { CustomInput } from "../Form/CustomInput"
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, Input } from '@chakra-ui/react'
+import OverlayWrapper from "../OverlayWrapper"
 
 const LoginForm = () => {
   const { login } = useAuth()
 
+  const [showModal, setShowModal] = React.useState(false)
+  const [Loading, setLoading] = React.useState(false)
+  const [FirstName, setFirstName] = React.useState("")
+  const [LastName, setLastName] = React.useState("")
+  const [UserName, setUserName] = React.useState("")
 
   // react hoook form implementation
   const { isLoading, mutate } = useMutation({
@@ -52,6 +58,29 @@ const LoginForm = () => {
     },
   });
 
+  const clickHandler =async()=> {
+    setLoading(true); 
+    if(!FirstName){
+      toast.error("Enter First Name")
+    } else if(!LastName) {
+      toast.error("Enter Last Name")
+    } else if(!UserName) {
+      toast.error("Enter User Name")
+    } else {  
+        const response = await httpService.put(UPDATE_PROFILE, {
+          firstName: FirstName,
+          lastName: LastName,
+          username: UserName,
+        })
+        if (response) { 
+          toast.success('Profile updated successfully!'); 
+        } else {
+          toast.error('Something went wrong!');
+        } 
+
+    }
+    setLoading(false);
+  } 
 
   return renderForm(
     <>
@@ -73,6 +102,7 @@ const LoginForm = () => {
       </div>
 
      <Button type="submit" isLoading={isLoading} bg='brand.chasescrollButtonBlue' height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign in</Button>
+      
     </>
   )
 }

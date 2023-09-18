@@ -131,9 +131,6 @@ const MyNetwork = (props) => {
   const [page, setPage] = React.useState(0)
   const { results, isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/friend-requests', pageNumber:page, setPageNumber:setPage})
 
-
-  console.log(currentUserId);
-
   return (
     <div className="flex justify-center px-4 pb-8 w-full max-w-md mx-auto">
 
@@ -373,8 +370,8 @@ const ConnectTab =()=> {
                   <small className="text-gray-500">@{profile?.username}</small>
                 </div>
               </Link>
-              {/* {self && (
-                <> */}
+              {self && (
+                <>
                   {profile?.joinStatus === "CONNECTED" ? (
                     <button
                       className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
@@ -390,8 +387,8 @@ const ConnectTab =()=> {
                       <span className="text-sm">Connect</span>
                     </button>
                   )}
-                {/* </>  
-              )} */}
+                </>  
+              )}
             </div>
           )
         // }

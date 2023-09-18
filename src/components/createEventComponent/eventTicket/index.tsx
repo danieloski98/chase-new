@@ -86,6 +86,18 @@ function CreateEventTicket(props: Props) {
             }
         } 
     } 
+
+    const handleMaxTicket =(index: number, name: string, value: any)=> {
+        if(Number(formData.productTypeData[index]?.totalNumberOfTickets) >= (value)){
+            handleChange(index, name, value)
+        } else { 
+            if(name === "minTicketBuy") {
+                toast.error("minimum ticket can't be greater than total number of ticket")
+            } else {
+                toast.error("maximum ticket can't be greater than total number of ticket")
+            }
+        }
+    }
   
     return (
         <div className=' w-full flex flex-col items-center pt-10 px-6 ' > 
@@ -192,7 +204,7 @@ function CreateEventTicket(props: Props) {
                                     placeholder="Type in minimum no of Tickets"
                                     value={formData.productTypeData[index]?.minTicketBuy}
                                     name="minTicketBuy"
-                                    onChange={e => handleChange(index, "minTicketBuy", e.target.value)} />
+                                    onChange={e => handleMaxTicket(index, "minTicketBuy", e.target.value)} />
                                 <Input
                                         h={"45px"}
                                     type="number"
@@ -200,7 +212,7 @@ function CreateEventTicket(props: Props) {
                                     placeholder="Type in maximum no. of Tickets"
                                     value={formData.productTypeData[index]?.maxTicketBuy}
                                     name="maxTicketBuy"
-                                    onChange={e => handleChange(index, "maxTicketBuy", e.target.value)} />
+                                    onChange={e => handleMaxTicket(index, "maxTicketBuy", e.target.value)} />
                             </div>
                             {formData.productTypeData[index]?.ticketType && (
                                 <> 

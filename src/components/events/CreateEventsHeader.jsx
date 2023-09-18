@@ -14,23 +14,25 @@ const CreateEventsHeader = ({ activeStep, setActiveStep, formData }) => {
       return true
     } else if(!formData?.endDate){
       return true
-    } else if(!formData?.location?.locationDetails && !formData?.location?.link){
-      return true
+    } else if(!formData?.location?.toBeAnnounced){
+      if(!formData?.location?.locationDetails && !formData?.location?.link){
+       return true
+     }
     } else {
       return false      
     } 
   }
 
   const getValidationTheme =()=> {
-    // if(!formData?.eventName){
-    //   return true
-    // } else if(!formData?.eventType){
-    //   return true
-    // } else if(!formData?.eventDescription){
-    //   return true
-    // } else {
+    if(!formData?.eventName){
+      return true
+    } else if(!formData?.eventType){
+      return true
+    } else if(!formData?.eventDescription){
+      return true
+    } else {
       return false   
-    // }
+    }
   }
 
   return (
@@ -49,7 +51,7 @@ const CreateEventsHeader = ({ activeStep, setActiveStep, formData }) => {
           return (
             <button
               key={value}
-              disabled={label === "Information" ? getValidationTheme(): label === "Tickets" ? false : false}
+              disabled={label === "Information" ? getValidationTheme(): getValidationInfo()? true : false}
               className={`text-sm md:text-base md:p-2 md:px-8 px-2 ${isActive
                 ? "text-chasescrollBlue"
                 : "text-gray-300 hover:bg-gray-50 hover:text-chasescrollBlue"

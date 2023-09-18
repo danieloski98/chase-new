@@ -14,7 +14,7 @@ import UserTile from "../../../components/exploreComponents/sharedComponent/user
 const Explore = () => { 
  
   const [suggestions, setSuggestions] = useState([])
-  const { userName, token } = useAuth()
+  const { firstName, token } = useAuth()
   const { sendRequest } = useFetch() 
 
   const getSuggestions = async () => {
@@ -35,7 +35,7 @@ const Explore = () => {
       {() => (
         <div className="py-9 flex flex-col gap-4">
           <header className="flex flex-col gap-4 px-4">
-            <h1 className="text-3xl font-bold text-chasescrollDarkBlue">Hello {userName}</h1>
+            <h1 className="text-3xl font-bold text-chasescrollDarkBlue">Hello {firstName}</h1>
             <p className="text-chasescrollBlue font-bold">Top Events</p>
           </header>
 

@@ -288,6 +288,7 @@ const CreateEvents = () => {
   }
 
   const SaveToDraft =async(item)=>{
+    setLoading(true)
     const response = await sendRequest(
       "/events/create-draft",
       "POST",
@@ -303,6 +304,7 @@ const CreateEvents = () => {
 
 
   const UpdateEventFromDraftWithImage =async(data)=>{
+    setLoading(true)
     const response = await sendRequest(
       "/events/update-draft",
       "PUT",
