@@ -204,6 +204,7 @@ const Profile_1 = () => {
       }
       case "component2": {
         return <MyNetwork
+              reload={fetchNetwork}
           // network={network}
           // fetchNetwork={fetchNetwork}
           // self={self}
