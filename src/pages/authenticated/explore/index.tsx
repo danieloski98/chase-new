@@ -35,9 +35,9 @@ const Explore = () => {
   return (
     <PageWrapper>
       {() => (
-        <div className="py-9 px-6 lg:hidden flex flex-col gap-4">
+        <div className="py-9 px-6 flex flex-col gap-4">
 
-            <div className="">
+            <div className=" lg:hidden flex ">
               <Link to={PATH_NAMES.SearchExplore}>
                 <div className="relative text-gray-400 border-[#5D70F9] rounded-lg w-full">
                   <span className="absolute inset-y-0 left-2 flex items-center pl-1 pr-2">
