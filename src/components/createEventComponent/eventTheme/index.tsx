@@ -70,8 +70,8 @@ function CreateEventTheme(props: Props) {
 
     console.log(formData);
 
-    const handleChangeLimit =(e: any,  limit)=>{
-        if((e.target.value).length < limit){
+    const handleChangeLimit =(e: any,  limit: any)=>{
+        if((e.target.value).length <= limit){
             handleChange(e)
         }
     }
@@ -149,6 +149,7 @@ function CreateEventTheme(props: Props) {
                                 name="eventName"
                                 onChange={(e)=> handleChangeLimit(e, 50)}
                                 value={formData?.eventName} />
+                            <p className=' text-sm ' >{formData?.eventName?.length+"/"+50}</p>
                         </div>
                     </div>
                     <div className=' w-full  flex flex-col gap-4 lg:mt-0 mt-4 ' >
@@ -176,6 +177,7 @@ function CreateEventTheme(props: Props) {
                                 onChange={(e)=> handleChangeLimit(e, 150)}
                                 className="outline-none w-full h-20 text-sm"
                             />
+                            <p className=' text-sm ' >{formData?.eventDescription?.length+"/"+150}</p>
                         </div>
                         <div className="grid gap-2 ">
                             <h2 className="font-bold text-sm px-0">Join Type</h2>
