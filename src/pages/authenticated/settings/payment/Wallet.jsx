@@ -175,7 +175,7 @@ const Wallet = () => {
 									className="w-12 h-12 rounded-full object-cover border border-chasescrollBlue"
 								/> */}
 
-								<UserImages data={profile} size={"12"} />
+								<UserImages data={profile} size={"12"} font={"28px"} />
 								<div className="flex flex-col text-sm">
 									<span className="text-gray-800">Hello</span>
 									<span className="font-bold capitalize">{profile?.firstName} {profile?.lastName}</span>
