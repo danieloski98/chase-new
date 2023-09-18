@@ -88,7 +88,7 @@ function CreateEventTicket(props: Props) {
     } 
 
     const handleMaxTicket =(index: number, name: string, value: any)=> {
-        if(formData.productTypeData[index]?.totalNumberOfTickets >= value){
+        if(Number(formData.productTypeData[index]?.totalNumberOfTickets) >= (value)){
             handleChange(index, name, value)
         } else { 
             if(name === "minTicketBuy") {

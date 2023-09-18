@@ -1,8 +1,10 @@
 import React from 'react'
 import { CreditWallet, DebitWallet, OtherPurchase, TicketPurchase } from '../Svgs'
-import { formatNumber, formatTime, formatDate } from '@/utils/helpers'
+import { formatNumber, formatTime, formatDate, formatTimestampToDate } from '@/utils/helpers'
 import { CURRENCY, TRANSACTION_PURPOSE, TRANSACTION_STATUS } from '@/constants'
 import moment from 'moment'
+import { format } from 'date-fns'
+// import {  } from 'src/utils/helpers'
 
 const PaymentRecord = ({
 	description,
@@ -16,9 +18,7 @@ const PaymentRecord = ({
 }) => {
 	const { payForTicket, fundWallet, cashout } = TRANSACTION_PURPOSE
 	const { started, paid, cancelled, error, refunded } = TRANSACTION_STATUS
-	const { USD, NGN } = CURRENCY 
-
-	console.log(timestamp);
+	const { USD, NGN } = CURRENCY  
 	return (
 		<div className='w-full flex gap-2.5 items-start'>
 			{purpose === payForTicket ? (
@@ -51,7 +51,11 @@ const PaymentRecord = ({
 				</div>
 				<div className="flex justify-between items-center text-xs">
 					<small className="text-gray-500">
-						{formatDate(timestamp)} - {formatTime(timestamp)}
+						{/* {formatTimestampToDate(timestamp)} - {formatTime(timestamp)} */}
+						{format(
+							new Date(timestamp),
+							'MMMM do, yyyy hh:mma'
+						)}
 					</small>
 					<small>
 						{status === paid && <span className='bg-green-200 text-green-800 px-2 py-0.5 rounded-lg'>paid</span>}

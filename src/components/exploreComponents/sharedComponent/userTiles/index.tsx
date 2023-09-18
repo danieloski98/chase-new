@@ -135,14 +135,14 @@ const UserTile = forwardRef<any, Props>
                   {data?.publicProfile ? 
                       <button
                         onClick={handleRemove}
-                        className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all bg-chasescrollRed text-white `}
+                        className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-full transition-all bg-chasescrollRed text-white `}
                       >
                         {Loading === userId ? "Loading..":isFriend === "FRIEND_REQUEST_SENT" ? "Pending" : isFriend === "CONNECTFriend" ? "Disconnected": "Disconnected"}
                       </button>
                     :
                       <button
                         onClick={handleRemove}
-                        className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-28 transition-all bg-chasescrollRed text-white `}
+                        className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs lg:text-sm w-full transition-all bg-chasescrollRed text-white `}
                       >
                         {Loading === userId ? "Loading..":isFriend === "FRIEND_REQUEST_SENT" ? "Pending" : isFriend === "CONNECTFriend" ? "Pending": "Disconnected"}
                       </button>
