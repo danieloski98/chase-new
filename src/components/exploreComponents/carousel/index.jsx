@@ -51,9 +51,14 @@ function CarouselTab(props) {
                                         }`}
                                     />
                                     {item?.eventName && (
-                                        <p className="text-center font-bold w-full lg:h-4/5  bg-chasescrollBlue text-white p-2 rounded-b-[36px]">
-                                            {item?.eventName}
-                                        </p>
+                                        <> 
+                                            <p className="text-center font-bold w-full lg:h-4/5  bg-chasescrollBlue text-white lg:block hidden p-2 rounded-b-[36px]">
+                                                {item?.eventName?.length > 50 ? item?.eventName.slice(0, 50)+"..." :item?.eventName}
+                                            </p>
+                                            <p className="text-center font-bold w-full lg:h-4/5  bg-chasescrollBlue text-white lg:hidden p-2 rounded-b-[36px]">
+                                                {item?.eventName?.length > 50 ? item?.eventName.slice(0, 25)+"..." :item?.eventName}
+                                            </p>
+                                        </>
                                     )}
                                 </div>
                             </>

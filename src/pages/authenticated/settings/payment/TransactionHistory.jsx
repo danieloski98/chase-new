@@ -41,7 +41,7 @@ const TransactionHistory = () => {
 									key={transaction?.transactionID}
 									description={transaction?.description}
 									title={transaction?.title}
-									timestamp={transaction?.timestamp * 1000}
+									timestamp={transaction?.timestamp}
 									payableAmount={transaction?.payableAmount}
 									value={transaction?.value}
 									currency={transaction?.currency}
