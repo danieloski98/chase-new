@@ -31,6 +31,8 @@ const Onboarding = () => {
 
   const toggleTermsVisibility = () => setShowTerms(state => !state);
 
+  const [checkData, setCheckData] = React.useState({})
+
   const navigate = useNavigate()
 
   // react-querry
@@ -43,16 +45,25 @@ const Onboarding = () => {
     onSuccess: (data) => {
       console.log(data.data);
       toast.success('Signin Successful');
-      if(!data.data?.firstName){ 
-        setShowModal(true)
-      }  
-      login(data?.data); 
+      // if(!data?.data?.firstName){ 
+      //   setShowModal(true)
+      // }  
+      setCheckData(data?.data)
+      login(data?.data, setShowModal); 
     },
     onError: (error) => {
       console.log(error);
       toast.error('An error occured');
     }
   })
+
+  React.useEffect(() => {
+    if(checkData?.user_id){
+      if(!checkData?.firstName){
+        setShowModal(true)
+      }
+    }
+  }, [checkData])
 
   const signInWithGoogle = React.useCallback(async () => {
     try {
@@ -110,6 +121,8 @@ const Onboarding = () => {
         })
         if (response) { 
           toast.success('Profile updated successfully!'); 
+
+          localStorage.setItem('firstName', FirstName);
           navigate("/explore")
         } else {
           toast.error('Something went wrong!');

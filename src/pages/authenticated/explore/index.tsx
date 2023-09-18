@@ -10,11 +10,13 @@ import {
 import Carousel from "../../../components/exploreComponents/carousel/index.jsx" 
 import CONFIG from "../../../config/index.js"
 import UserTile from "../../../components/exploreComponents/sharedComponent/userTiles/index.js"
+import { ExploreSearchIcon } from "../../../components/Svgs.jsx"
+import { Input } from "@chakra-ui/react"
 
 const Explore = () => { 
  
   const [suggestions, setSuggestions] = useState([])
-  const { firstName, token } = useAuth()
+  const { firstName, token, searchValue, setSearchValue } = useAuth()
   const { sendRequest } = useFetch() 
 
   const getSuggestions = async () => {
@@ -33,7 +35,27 @@ const Explore = () => {
   return (
     <PageWrapper>
       {() => (
-        <div className="py-9 flex flex-col gap-4">
+        <div className="py-9 px-6 lg:hidden flex flex-col gap-4">
+
+            <div className="">
+              <Link to={PATH_NAMES.SearchExplore}>
+                <div className="relative text-gray-400 border-[#5D70F9] rounded-lg w-full">
+                  <span className="absolute inset-y-0 left-2 flex items-center pl-1 pr-2">
+                    <ExploreSearchIcon />
+                  </span>
+                  <Input
+                    value={searchValue}
+                    onChange={(e)=> setSearchValue(e.target.value)}
+                    // className=" bg-white focus:outline-none focus:ring-0 font-medium text-sm placeholder-gray-500 pl-6 pr-3 py-2 "
+                    type="text"
+                    w={"100%"}
+                    h={"45px"}
+                    pl={"40px"}
+                    placeholder="Search for users, event or ..."
+                  />
+                </div>
+              </Link>
+            </div>
           <header className="flex flex-col gap-4 px-4">
             <h1 className="text-3xl font-bold text-chasescrollDarkBlue">Hello {firstName}</h1>
             <p className="text-chasescrollBlue font-bold">Top Events</p>

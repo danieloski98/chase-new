@@ -174,120 +174,119 @@ const MyNetwork = (props) => {
           )}
 
           {!isLoading && (
-            <>
-            
-            {activeTab === "Requests" && (
-              <> 
-                <div className="flex flex-col gap-6 justify-center items-center mt-10 w-full">
-                  {results?.map(
-                    ({ fromUserID, id }, i) => { 
-                      if (results?.length === i + 1) {
-                        return (
-                          <div
-                            className="flex justify-between items-center w-full"
-                            key={id}
-                            ref={lastChildRef}
-                          >
-                            <Link
-                              to={`${PATH_NAMES.profile}/${id}`} 
-                              className="flex gap-2 items-center"
+            <> 
+              {activeTab === "Requests" && (
+                <> 
+                  <div className="flex flex-col gap-6 justify-center items-center mt-10 w-full">
+                    {results?.map(
+                      ({ fromUserID, id }, i) => { 
+                        if (results?.length === i + 1) {
+                          return (
+                            <div
+                              className="flex justify-between items-center w-full"
+                              key={id}
+                              ref={lastChildRef}
                             >
-                              {/* <img src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
+                              <Link
+                                to={`${PATH_NAMES.profile}/${id}`} 
+                                className="flex gap-2 items-center"
+                              >
+                                {/* <img src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
 
-                              <Avatar 
-                                src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`}
-                                name={`${fromUserID?.firstName} ${fromUserID?.lastName}`}
-                              />
-                              <div className="inline-flex flex-col">
-                                <p className="text-l text-black-800 capitalize">
-                                  {fromUserID?.firstName} {fromUserID?.lastName}
-                                </p>
-                                <small className="text-gray-500">@{fromUserID?.username}</small>
+                                <Avatar 
+                                  src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`}
+                                  name={`${fromUserID?.firstName} ${fromUserID?.lastName}`}
+                                />
+                                <div className="inline-flex flex-col">
+                                  <p className="text-l text-black-800 capitalize">
+                                    {fromUserID?.firstName} {fromUserID?.lastName}
+                                  </p>
+                                  <small className="text-gray-500">@{fromUserID?.username}</small>
+                                </div>
+                              </Link>
+                              <div className="flex gap-2">
+                                <button
+                                  className="px-4 py-2 bg-chasescrollBlue text-white rounded-md shadow-md font-bold"
+                                  onClick={() => acceptRequest(id)}
+                                >
+                                  <span className="text-sm">Accept</span>
+                                </button>
+                                <button
+                                  className="px-4 py-2 text-red-600 bg-pink-100 rounded-md shadow-md font-bold"
+                                  onClick={() => rejectRequest(id)}
+                                >
+                                  <span className="text-sm">Reject</span>
+                                </button>
                               </div>
-                            </Link>
-                            <div className="flex gap-2">
-                              <button
-                                className="px-4 py-2 bg-chasescrollBlue text-white rounded-md shadow-md font-bold"
-                                onClick={() => acceptRequest(id)}
-                              >
-                                <span className="text-sm">Accept</span>
-                              </button>
-                              <button
-                                className="px-4 py-2 text-red-600 bg-pink-100 rounded-md shadow-md font-bold"
-                                onClick={() => rejectRequest(id)}
-                              >
-                                <span className="text-sm">Reject</span>
-                              </button>
                             </div>
-                          </div>
-                        )
-                      } else { 
-                        return (
-                          <div
-                            className="flex justify-between items-center w-full"
-                            key={id}
-                          >
-                            <Link
-                              to={`${PATH_NAMES.profile}/${userId}`} 
-                              className="flex gap-2 items-center"
+                          )
+                        } else { 
+                          return (
+                            <div
+                              className="flex justify-between items-center w-full"
+                              key={id}
                             >
-                              {/* <img src={`${CONFIG.RESOURCE_URL}${toUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
+                              <Link
+                                to={`${PATH_NAMES.profile}/${userId}`} 
+                                className="flex gap-2 items-center"
+                              >
+                                {/* <img src={`${CONFIG.RESOURCE_URL}${toUserID?.data?.imgMain?.value}`} alt="" className="w-12 h-12 rounded-b-full rounded-tl-full border border-chasescrollBlue object-cover" /> */}
 
-                              <Avatar 
-                                src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`}
-                                name={`${fromUserID?.firstName} ${fromUserID?.lastName}`}
-                              />
-                              <div className="inline-flex flex-col">
-                                <p className="text-l text-black-800 capitalize">
-                                  {fromUserID?.firstName} {fromUserID?.lastName}
-                                </p>
-                                <small className="text-gray-500">@{fromUserID?.username}</small>
+                                <Avatar 
+                                  src={`${CONFIG.RESOURCE_URL}${fromUserID?.data?.imgMain?.value}`}
+                                  name={`${fromUserID?.firstName} ${fromUserID?.lastName}`}
+                                />
+                                <div className="inline-flex flex-col">
+                                  <p className="text-l text-black-800 capitalize">
+                                    {fromUserID?.firstName} {fromUserID?.lastName}
+                                  </p>
+                                  <small className="text-gray-500">@{fromUserID?.username}</small>
+                                </div>
+                              </Link>
+                              <div className="flex gap-2">
+                                <button
+                                  className="px-4 py-2 bg-chasescrollBlue text-white rounded-md shadow-md font-bold"
+                                  onClick={() => acceptRequest(id)}
+                                >
+                                  <span className="text-sm">Accept</span>
+                                </button>
+                                <button
+                                  className="px-4 py-2 text-red-600 bg-pink-100 rounded-md shadow-md font-bold"
+                                  onClick={() => rejectRequest(id)}
+                                >
+                                  <span className="text-sm">Reject</span>
+                                </button>
                               </div>
-                            </Link>
-                            <div className="flex gap-2">
-                              <button
-                                className="px-4 py-2 bg-chasescrollBlue text-white rounded-md shadow-md font-bold"
-                                onClick={() => acceptRequest(id)}
-                              >
-                                <span className="text-sm">Accept</span>
-                              </button>
-                              <button
-                                className="px-4 py-2 text-red-600 bg-pink-100 rounded-md shadow-md font-bold"
-                                onClick={() => rejectRequest(id)}
-                              >
-                                <span className="text-sm">Reject</span>
-                              </button>
                             </div>
-                          </div>
-                        )
+                          )
+                        }
                       }
-                    }
-                  )}
-                </div>
-                {results.length < 1 && ( 
-                  <div className=' w-full py-2 flex justify-center font-bold text-2xl ' >
-                    No Records Found
+                    )}
                   </div>
-                )}
-              </>
-            )}
+                  {results.length < 1 && ( 
+                    <div className=' w-full py-2 flex justify-center font-bold text-2xl ' >
+                      No Records Found
+                    </div>
+                  )}
+                </>
+              )}
             </>
           )}
 
           {activeTab === "Connects" && ( 
-            <ConnectTab />
+            <ConnectTab reload={props.reload} />
           )}
         </div> 
     </div >
   )
 }
 
-const ConnectTab =()=> {
+const ConnectTab =(props)=> {
   const { userId } = useParams()
   const { token, userId: currentUserId } = useAuth()
   const { sendRequest } = useFetch() 
   const [network, setNetwork] = useState([])
-
+  const [loading, setLoading] = useState("")
   const self = userId === currentUserId
 
   const [page, setPage] = React.useState(0)
@@ -302,16 +301,19 @@ const ConnectTab =()=> {
         null,
         { Authorization: `Bearer ${token}` }
       )
-      if (data) setNetwork(data)
+      if (data){
+         setNetwork(data)
+         console.log(data);
+        }
     }
   }
 
   const friendPerson = async (item) => {
-    // setLoading(true)
+    setLoading(item)
     const data = await sendRequest(
       `${SEND_FRIEND_REQUEST}`,
       "POST",
-      { toUserID: userId },
+      { toUserID: item },
       { Authorization: `Bearer ${token}` }
     )
     if (data) {
@@ -319,11 +321,13 @@ const ConnectTab =()=> {
       fetchNetwork()
       refetch() 
     }
-    // setLoading(false)
+    setLoading("")
   }
 
+  console.log(network);
+
   const unfriendPerson = async (item) => {
-    // setLoading(true)
+    setLoading(item)
     const data = await sendRequest(
       `${REMOVE_FRIEND}${item}`,
       "DELETE",
@@ -333,62 +337,105 @@ const ConnectTab =()=> {
     if (data) {
       toast.success(data.message);
       fetchNetwork() 
+      props.reload()
     }
-    // setLoading(false)
+    setLoading("")
   }
 
   React.useEffect(()=> {
     fetchNetwork()
   }, [])
 
+  const UserTile =(props)=> {
+    
+    const {
+      profile
+    } = props
+
+    const [isFriend, setisFriend] = useState(profile?.joinStatus)
+
+    return( 
+      <div
+          className="flex justify-between items-center" 
+        >
+        <Link
+          to={`${PATH_NAMES.profile}/${profile.userId}`}
+          className="flex gap-2 items-center"
+        > 
+          <Avatar 
+              src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
+              className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
+              name={`${profile?.firstName} ${profile.lastName}`}
+          />
+          <div className="inline-flex flex-col">
+            <p className="text-l text-black-800">
+              {profile?.firstName} {profile?.lastName}
+            </p>
+            <small className="text-gray-500">@{profile?.username}</small>
+          </div>
+        </Link>
+        {/* {self && ( */}
+          {/* <>
+            {isFriend === "CONNECTED" ? (
+              <button
+                className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
+                onClick={() => unfriendPerson(profile?.userId)}
+              >
+                <span className="text-sm">{loading === profile?.userId ? "Loading...":"Disconnect"}</span>
+              </button>
+            ) : isFriend === "SELF" ? (
+              <>
+              </>
+            ) : (
+              <button
+                className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
+                onClick={() => friendPerson(profile?.userId)}
+              >
+                <span className="text-sm">{loading === profile?.userId ? "Loading...":"Connect"}</span>
+              </button>
+            )}
+          </>   */}
+
+            {(isFriend === "FRIEND_REQUEST_RECIEVED" || isFriend === "FRIEND_REQUEST_SENT" || isFriend === "CONNECTED" || isFriend === "CONNECTFriend") ?
+              <>
+                {data?.publicProfile ? 
+                    <button
+                      onClick={() => unfriendPerson(profile?.userId)}
+                      className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs px-4 lg:text-sm transition-all bg-chasescrollRed text-white `}
+                    >
+                      {loading === userId ? "Loading..":isFriend === "FRIEND_REQUEST_SENT" ? "Pending" : isFriend === "CONNECTFriend" ? "Disconnected": "Disconnected"}
+                    </button>
+                  :
+                    <button
+                      onClick={() => unfriendPerson(profile?.userId)}
+                      className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs px-4 lg:text-sm transition-all bg-chasescrollRed text-white `}
+                    >
+                      {loading === userId ? "Loading..":isFriend === "FRIEND_REQUEST_SENT" ? "Pending" : isFriend === "CONNECTFriend" ? "Pending": "Disconnected"}
+                    </button>
+                }
+              </>
+              : isFriend === "SELF" ? (
+              <>
+              </>
+            ) 
+            : 
+              <button
+                  onClick={() => friendPerson(profile?.userId)}
+                  className={`flex items-center font-semibold justify-center rounded-md py-2 text-xs px-4 lg:text-sm transition-all bg-chasescrollBlue text-white `} >
+                  {loading === userId? "Loading..": "Connect"}
+              </button>
+            }
+        {/* )} */}
+      </div>
+    )
+  }
+
   return( 
     <div className="flex flex-col w-full my-6 mb-[100px]">
       {network?.map((profile, i) => {   
           return( 
-              <div
-              className="flex justify-between items-center my-4"
-              key={profile?.id}
-            >
-              <Link
-                to={`${PATH_NAMES.profile}/${profile.userId}`}
-                className="flex gap-2 items-center"
-              >
-                {/* <img
-                  src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-                  className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
-                  alt="connection"
-                /> */}
-                <Avatar 
-                    src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-                    className="rounded-b-full rounded-tl-full object-cover w-12 h-12 border border-chasescrollBlue"
-                    name={`${profile?.firstName} ${profile.lastName}`}
-                />
-                <div className="inline-flex flex-col">
-                  <p className="text-l text-black-800">
-                    {profile?.firstName} {profile?.lastName}
-                  </p>
-                  <small className="text-gray-500">@{profile?.username}</small>
-                </div>
-              </Link>
-              {self && (
-                <>
-                  {profile?.joinStatus === "CONNECTED" ? (
-                    <button
-                      className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
-                      onClick={() => unfriendPerson(currentUserId)}
-                    >
-                      <span className="text-sm">Disconnect</span>
-                    </button>
-                  ) : (
-                    <button
-                      className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
-                      onClick={() => friendPerson(currentUserId)}
-                    >
-                      <span className="text-sm">Connect</span>
-                    </button>
-                  )}
-                </>  
-              )}
+            <div key={profile?.id} className=" my-4 " >
+              <UserTile profile={profile} />
             </div>
           )
         // }

@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, userId, userName]);
 
-  const login = async (credentials) => {
+  const login = async (credentials, setModal) => {
     //const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
 
     const { access_token, user_id, user_name, expires_in, firstName } = credentials;
@@ -63,6 +63,8 @@ export const AuthProvider = ({ children }) => {
     console.log(expirationTime);
     if(firstName){
       setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
+    } else {
+      setModal(true)
     }
   };
 
