@@ -17,6 +17,7 @@ import PaymentRecord from '@/components/settings/PaymentRecord'
 import PaymentType from './PaymentType'
 import Stripecomponent from '@/components/explore/Stripecomponent/Stripecomponent'
 import CashOutBtn from './CashOutBtn'
+import UserImages from '@/components/exploreComponents/sharedComponent/userImages'
 
 const Wallet = () => {
 	const { USD, NGN } = CURRENCY
@@ -168,11 +169,13 @@ const Wallet = () => {
 						<Link to={PATH_NAMES.payments} className="flex gap-6 items-center">
 							<ChevronLeft />
 							<div className="flex gap-4 items-center">
-								<img
+								{/* <img
 									src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
 									alt={`${profile}'s profile avatar`}
 									className="w-12 h-12 rounded-full object-cover border border-chasescrollBlue"
-								/>
+								/> */}
+
+								<UserImages data={profile} size={"12"} />
 								<div className="flex flex-col text-sm">
 									<span className="text-gray-800">Hello</span>
 									<span className="font-bold capitalize">{profile?.firstName} {profile?.lastName}</span>
