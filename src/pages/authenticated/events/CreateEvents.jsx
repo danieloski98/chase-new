@@ -27,8 +27,8 @@ const CreateEvents = () => {
       null
     ],
     eventType: null,
-    eventName: null,
-    eventDescription: null,
+    eventName: "",
+    eventDescription: "",
     joinSetting: "public",
     locationType:null,
     currency: "USD",
@@ -319,6 +319,7 @@ const CreateEvents = () => {
   }
 
   const UpdateEventFromDraft =async()=>{
+    setLoading(true)
     const response = await sendRequest(
       "/events/update-draft",
       "PUT",
@@ -333,6 +334,7 @@ const CreateEvents = () => {
   }
 
   const CreateEventFromDraft =async()=>{
+    setLoading(true)
     const response = await sendRequest(
       "/events/create-event-from-draft",
       "POST",
@@ -341,6 +343,8 @@ const CreateEvents = () => {
     )  
     toast.success("Event Created")
     navigate("/events")
+
+    setLoading(false)
   }
   
 

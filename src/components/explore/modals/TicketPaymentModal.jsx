@@ -23,8 +23,8 @@ const TicketPaymentModal = ({
   handleClose,
   ticketLeft
 }) => {
-  const increaseTicketCount = () =>{ 
-    if(ticketLeft >= ticketCount){ 
+  const increaseTicketCount = () =>{  
+    if(ticketLeft <= ticketCount){ 
       toast.error(ticketCount+" Ticket is Remaining for this Event")
    } else{ 
       if(maxticket === ticketCount){
