@@ -83,8 +83,7 @@ function CreateEventTheme(props: Props) {
                 <div className=' lg:max-w-[1000px] w-full' >
                     <h1 className="text-base md:text-xl font-bold">Event Cover Image</h1>
                     <h3 className="text-xs md:text-base md:opacity-50 ">
-                        Add photos/posters that describes details of your events. you can add
-                        upto 10 images
+                        Add photos/posters that describes details of your events. 
                     </h3>
                 </div>
                 <div className=' lg:max-w-[1000px] w-full flex lg:flex-row flex-col items-center justify-center gap-12 py-6 ' >

@@ -15,6 +15,7 @@ const PaymentType =({  config, getData, setConfig }) => {
 	const { id, orderId } = useParams()
 
 	const navigate = useNavigate()
+	const Paystack_key = import.meta.env.PAYSTACK_KEY
 
 	const [orderCode, setOrderCode] = React.useState("")
 	    // mutations 
@@ -29,7 +30,7 @@ const PaymentType =({  config, getData, setConfig }) => {
 				email: "",
 				amount: 0,
 				reference: "",
-				publicKey: "pk_test_58a8e726bbe3cce8ade3082f4e49f46089046b5d",
+				publicKey: Paystack_key,
 			})
 		},
 		onError: (error) => {

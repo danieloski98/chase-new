@@ -5,7 +5,10 @@ import CheckoutForm from "./CheckoutForm";
 import OverlayWrapper from "../../OverlayWrapper";
 import { CLOSE_ENTITY } from "../../../constants";
 
-const stripePromise = loadStripe("pk_test_y8r2StarGdVHlq3DP1AraugF");
+
+const stripe_key = import.meta.env.STRIPE_KEY
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
 const Stripecomponent = (props) => {
 
@@ -15,8 +18,7 @@ const Stripecomponent = (props) => {
         closeModal, 
         getData,
         fund
-    } = props
-
+    } = props 
     const [clientSecret, setClientSecret] = React.useState("");
     const [configData, setconfigData] = React.useState(""); 
 

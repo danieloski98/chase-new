@@ -66,6 +66,7 @@ const TicketPageTemplate = ({
   const { token, setEventData, userId } = useAuth()
   const { sendRequest: sendPaystackRequest, isLoading: paystackLoading } = useFetch()
   const { sendRequest: sendStripeRequest, isLoading: stripeLoading } = useFetch()
+	const Paystack_key = import.meta.env.VITE_PAYSTACK_KEY
 
   const handleCategorySelection = category => setSelectedCategory(category)
   const toggleRefundPolicy = () => setShowRefundPolicy(state => !state)
@@ -94,7 +95,7 @@ const TicketPageTemplate = ({
     email: "",
     amount: 0,
     reference: "",
-    publicKey: "pk_test_58a8e726bbe3cce8ade3082f4e49f46089046b5d",
+    publicKey: Paystack_key,
   }) 
 
   const [configStripe , setConfigStripe] = React.useState({ }) 
@@ -150,7 +151,7 @@ const TicketPageTemplate = ({
           setConfig({ 
             email: data?.content?.email,
             amount: (Number(data?.content?.orderTotal)*100), //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
-            publicKey: 'pk_test_58a8e726bbe3cce8ade3082f4e49f46089046b5d',
+            publicKey: Paystack_key,
             reference: data?.content?.orderCode
           }); 
         } 
@@ -253,7 +254,7 @@ const TicketPageTemplate = ({
           convener={convener}
           timeAndDate={timeAndDate}
           location={location?.address}
-          ticketLeft={selectedCategory?.totalNumberOfTickets - selectedCategory?.ticketsSold}
+          ticketLeft={Number(selectedCategory?.totalNumberOfTickets )- Number(selectedCategory?.ticketsSold)}
           about={about}
           toggleModal={buyTicket}
           minticket={selectedCategory?.minTicketBuy}
