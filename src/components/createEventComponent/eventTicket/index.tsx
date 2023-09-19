@@ -66,16 +66,16 @@ function CreateEventTicket(props: Props) {
             if(formData?.productTypeData[0].ticketType !== "Free"){
             if(formData.currency === "NGN"){
                 formData.productTypeData?.map((item)=> {
-                if(item.ticketPrice < 1000) {
-                    toast.error("Ticket Price must be Above 1000 naira")
+                if(item.ticketPrice < 10) {
+                    toast.error("Ticket Price must be Above 10 naira")
                 } else {  
                     handleSubmit()
                 }
                 })
             } else { 
                 formData.productTypeData?.map((item)=> {
-                if(item.ticketPrice < 10) {
-                    toast.error("Ticket Price must be Above 10 dollar")
+                if(item.ticketPrice < 2) {
+                    toast.error("Ticket Price must be Above 2 dollar")
                 } else { 
                     handleSubmit() 
                 }
