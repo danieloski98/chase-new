@@ -54,12 +54,12 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 					src={`${CONFIG.RESOURCE_URL}/${notification?.createdBy?.data?.imgMain?.value}`}
 					name={notification?.createdBy?.firstName+" "+notification?.createdBy?.lastName}
 				/>
-				<div className="flex flex-col">
+				<div className="flex flex-col w-full">
 					<p className="font-bold text-left text-chasescrollDarkBlue text-lg">
 						{notification.title} { notification.type === "CHAT" && <span>from {notification.createdBy.username}</span>}
 					</p>
 					<p className="text-chasescrollTextGrey text-left text-xs">
-						{notification.message}
+						{notification.message.length > 50 ? notification.message.slice(0, 50) + "..." : notification.message}
 					</p>
 				</div>
 			</div>
