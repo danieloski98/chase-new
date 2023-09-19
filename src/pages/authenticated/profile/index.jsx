@@ -21,6 +21,7 @@ import { Avatar, Spinner } from '@chakra-ui/react'
 import Loader from "../../../components/Loader"
 import { useMutation } from "react-query"
 import httpService from "@/utils/httpService"
+import { useSearchParams } from 'react-router-dom';
 
 const Profile_1 = () => {
   const [showOptions, setShowOptions] = useState(false)
@@ -33,7 +34,24 @@ const Profile_1 = () => {
   const [ownNetwork, setOwnNetwork] = useState([])
   const [events, setEvents] = useState([])
   const [communities, setCommunities] = useState([])
-  const [activeComponent, setActiveComponent] = useState("component1")
+
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page');
+
+  const [activeComponent, setActiveComponent] = useState(page === 'request' ? 'component2':'component1')
+  console.log(`The page is ${page}`);
+
+
+  if (page !== null && page === 'request') {
+    //setActiveComponent('component2')
+  }
+
+  // React.useEffect(() => {
+    
+  //   if (page === 'request') {
+  //     setActiveComponent('component2');
+  //   }
+  // }, []);
 
   const { userId } = useParams()
   const navigate = useNavigate()
@@ -78,7 +96,7 @@ const Profile_1 = () => {
     if (data){ 
       setProfile(data)
       setIsLoading(false)
-      setActiveComponent("component1")
+      //setActiveComponent("component1")
     }
   }
 
@@ -104,7 +122,7 @@ const Profile_1 = () => {
     }
   }
 
-  const fetchNetwork = async () => {
+  const fetchNetwork = React.useCallback(async () => {
     if (userId) {
       const data = await sendRequest(
         `${GET_USER_CONNECTION_LIST}${userId}`,
@@ -114,7 +132,7 @@ const Profile_1 = () => {
       )
       if (data) setNetwork(data)
     }
-  }
+  }, [sendRequest, token, userId])
 
   const fetchEvents = async () => {
     const data = await sendRequest(
@@ -198,31 +216,16 @@ const Profile_1 = () => {
   }
 
   const switchComponent = React.useCallback(() => {
-    switch(activeComponent){
-      case "component1": {
-        return <Posts   />
-      }
-      case "component2": {
-        return <MyNetwork
-              reload={fetchNetwork}
-          // network={network}
-          // fetchNetwork={fetchNetwork}
-          // self={self}
-          // friendPerson={friendPerson}
-          // unfriendPerson={unfriendPerson}
-        />
-      }
-      case "component3": {
-        return <SecondaryEvents events={events} />
-      }
-      case "component4": {
-        return <SecondaryCommunity />
-      }
-      default: {
-        return <Posts posts={posts?.content} />
-      }
+
+    const obj = {
+      'component1': <Posts posts={posts?.content} />,
+      'component2': <MyNetwork reload={fetchNetwork} />,
+      'component3': <SecondaryEvents events={events} />,
+      'component4': <SecondaryCommunity />,
     }
-  }, [activeComponent, userId])
+
+    return obj[activeComponent];
+  }, [activeComponent, events, fetchNetwork, posts?.content])
 
 
 

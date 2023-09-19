@@ -12,13 +12,12 @@ import { useNavigate } from 'react-router-dom'
 
 const Notification = forwardRef(({ notification, getNotifications, setShow, setType },ref) => {
 	const [isRead, setIsRead] = useState(false) 
-	const { token, setnotification } = useAuth()
+	const { token, setnotification, userId } = useAuth()
 	const { sendRequest } = useFetch()
 
 	const navigate = useNavigate()
 
 	const toggleRead = async (item) => { 
-		console.log(item);
 		const notification = await sendRequest(
 			`${READ_NOTIFICATIONS}?read=${!isRead}&notificationIDs=${item?.id}`,
 			'PUT',
@@ -36,6 +35,9 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 		if (item.type === 'CHAT') {
 			navigate(`/message?messageId=${item.typeID}`);
 		}
+		if (item.type === 'FRIEND_REQUEST') {
+			navigate(`/profile/${userId}?page=request`)
+		}
 
 	}
 
@@ -44,7 +46,7 @@ const Notification = forwardRef(({ notification, getNotifications, setShow, setT
 	}, [notification])  
 
 	return (
-		<button ref={ref} disabled={isRead} onClick={() => toggleRead(notification)} className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
+		<button ref={ref} onClick={() => toggleRead(notification)} className={`rounded-xl p-4 flex items-center justify-between w-full bg-chasescrollBlue ${isRead ? 'bg-opacity-5' : 'bg-opacity-20'}`}>
 			<div className="flex items-center gap-4 max-w-[75%]">
 				{/* <ProfilePhoto image={`${CONFIG.RESOURCE_URL}/${notification.createdBy.data.imgMain.value}`} /> */}
 				<Avatar  

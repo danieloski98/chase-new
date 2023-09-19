@@ -18,6 +18,7 @@ import { CustomInput } from "@/components/Form/CustomInput"
 import { Box, Button } from "@chakra-ui/react"
 import { useMutation } from "react-query"
 import httpService from "@/utils/httpService"
+import { COLORS } from "@/utils/colors"
 
 const SignUp = () => {
  
@@ -197,7 +198,7 @@ const SignUp = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-5">
-                <Button disabled={!formState.isValid || !termsAccepted || phone === '' } type="submit" isLoading={isLoading} bg='brand.chasescrollButtonBlue' height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign up</Button>
+                <Button disabled={!formState.isValid} _disabled={{ backgroundColor: 'grey' }} type="submit" isLoading={isLoading} _active={{ bg: COLORS.chasescrollButtonBlue }} height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign up</Button>
               </div>
           </div>
         </div>

@@ -36,13 +36,13 @@ const SecondaryNavbar = ({
         }
       }
     }))
-  }, [postCount, networkCount, eventCount, communityCount])
+  }, [postCount, networkCount, eventCount, communityCount, activeComponent])
 
   return (
     <div className="grid grid-cols-4 sticky top-0 gap-4 justify-center items-end w-full my-3 bg-white h-12 place-items-center">
       {menu?.map(item => (
         <div
-          className={`grid place-items-center ${activeComponent == item.type ? "text-blue-500" : "text-gray-500"
+          className={`grid place-items-center ${activeComponent === item.type ? "text-blue-500" : "text-gray-500"
             } cursor-pointer min-w-max`}
           key={item.id}
           onClick={() => handleButtonClick(item)}
