@@ -10,48 +10,70 @@ import Requests from "../../../components/communities/Requests"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
 import { Spinner } from "@chakra-ui/react"
 import InfiniteScrollerComponent from "../../../hooks/infiniteScrollerComponent"
+import httpService from "../../../utils/httpService"
+import { useQuery } from 'react-query';
+import lodash from "lodash"
+
 
 const Notifications = () => {
 
 	const [show, setShow] = React.useState(false)
 	const [type, setType] = React.useState("") 
-  const [notification, setNotification] = React.useState([])
-
-  const navigate = useNavigate()
+  const [notification, setNotification] = React.useState([]);
+  const [notificationType, setNotificationType] = React.useState('')
+  const [hasNextPage, setHasNextPage] = React.useState(false);
+  const [pageNumber, setPageNumber] = React.useState(0);
+  const [prevPageNumber, setPrevPageNuber] = React.useState(0);
+  const intObserver = React.useRef();
 
   const clickHandler =()=> {
     setShow((prev)=> !prev)
-  } 
+  }
 
-  const fetchNotification = async () => {
-    if (userId) {
-      const data = await sendRequest(
-        `${"/notifications/notification"}`,
-        "GET",
-        null,
-        { Authorization: `Bearer ${token}` }
-      )
-      if (data){ setNotification(data)
-        console.log(data);}
+  const noti = useQuery(['getNotiications', notificationType, pageNumber], () => httpService.get('/notifications/notification', {
+    params: {
+      status: notificationType,
+      page: pageNumber,
     }
-  } 
-  
-  const [page, setPage] = React.useState(0)
-  const { results, isLoading, ref, refetch, data, isRefetching } = InfiniteScrollerComponent({url:'/notifications/notification', limit: 10, filter: "id"})
+  }), {
+    onError: (error) => {
+      console.log('An error occured')
+    },
+    onSuccess: (data) => {
+      const arr = [...notification, ...data.data.content];
+      setHasNextPage(data.data.last ? false:true);
+      setNotification(lodash.uniq(arr));
+    }
+  })
 
-  console.log(results);
+  const lastChildRef = React.useCallback((post) => {
+    if (noti.isLoading) return;
+    if (intObserver.current) intObserver.current.disconnect();
+    intObserver.current = new IntersectionObserver((posts) => {
+      if (posts[0].isIntersecting && hasNextPage) {
+        setPageNumber(prev => prev + 1); 
+      }
+    });
+    if (post) intObserver.current.observe(post);
+   }, [noti.isLoading, hasNextPage]);
+
+   const handleFilterChange = React.useCallback((e) => {
+    setNotificationType(e);
+    setPageNumber(0)
+    setNotification([]);
+   }, [])
+
 
   return (
     <PageWrapper>
       {(notifications, getNotifications, notificationsFilter, filterNotifications) => (
-        <div className="flex flex-col relative justify-center gap-4 w-full px-4 py-8 overflow-x-hidden overflow-y-auto">
+        <div className="flex flex-col relative justify-center gap-4 w-full px-4 py-8 overflow-x-hidden overflow-y-auto pb-[100px]">
           {!show && (
             <div className="flex flex-col gap-4 w-full h-full max-w-2xl self-center">
               <select
                 className="outline-none w-80 px-4 py-2 rounded-lg text-sm bg-chasescrollBlue text-white relative"
-                onChange={filterNotifications}
+                onChange={(e) => handleFilterChange(e.target.value)}
               >
-                <option value="">All notifications</option>
                 {NOTIFICATION_FILTER.map((filter, index) => (
                   <option key={index} value={filter.value}>
                     {filter.label}
@@ -61,18 +83,18 @@ const Notifications = () => {
               {/* {isLoading && (
                 <Loader />
               )} */}
-              {!isLoading && results < 1 && (
+              {!noti.isLoading && notification.length < 1 && (
                 <div className="h-full w-full flex items-center gap-2 font-semibold text-xl justify-center text-chasescrollBlue">
                   No <span className="!lowercase">{notificationsFilter}</span> notifications
                 </div>
               )}
-              {results?.map((notification, index) => { 
-                if (results?.length === index + 1) {
+              {notification?.map((notif, index) => { 
+                if (index === notification?.length  - 1) {
                   return(
                     <Notification
                       key={index}
-                      ref={ref}
-                      notification={notification}
+                      ref={lastChildRef}
+                      notification={notif}
                       getNotifications={getNotifications}
                       setShow={clickHandler} 
                       setType={setType}
@@ -82,7 +104,7 @@ const Notifications = () => {
                     return(
                       <Notification
                         key={index}
-                        notification={notification}
+                        notification={notif}
                         getNotifications={getNotifications}
                         setShow={clickHandler} 
                         setType={setType}
@@ -90,7 +112,7 @@ const Notifications = () => {
                     )
                   }
               })}
-              {(isLoading || isRefetching) && (
+              {( noti.isLoading || noti.isRefetching) && (
                 <div className="w-full h-20 flex justify-center items-center">
                   <Spinner size='md' color='brand.chasescrollButtonBlue' />
                 </div>

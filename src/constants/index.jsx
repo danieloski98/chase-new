@@ -1293,6 +1293,10 @@ export const CHAT_LIST = Array(20).fill({
 
 export const NOTIFICATION_FILTER = [
   {
+    label: "All notifications",
+    value: ""
+  },
+  {
     label: "Read notifications",
     value: "READ"
   },
