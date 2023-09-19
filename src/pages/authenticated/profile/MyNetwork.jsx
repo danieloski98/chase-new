@@ -12,11 +12,14 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { Avatar } from '@chakra-ui/react';
 import Loader from "../../../components/Loader"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
+import { useSearchParams } from 'react-router-dom';
+
 
 const MyNetwork = (props) => {
   const [activeTab, setActiveTab] = useState("Connects")
   const [requests, setRequests] = useState([])
   const [network, setNetwork] = useState([])
+  const [searchParams] = useSearchParams();
   // const [isLoading, setIsLoading] = React.useState(true)
   const { sendRequest } = useFetch() 
   const navigate = useNavigate()
@@ -25,6 +28,17 @@ const MyNetwork = (props) => {
   const { token, userId: currentUserId } = useAuth()
  
   const self = userId === currentUserId
+
+  React.useEffect(() => {
+    const page = searchParams.get('page');
+    if (page === 'request') {
+      setActiveTab('Requests');
+    }
+
+    if (page === 'Connect') {
+      setActiveTab('Connect');
+    }
+  }, [])
 
   const handleTabChange = tab => {
     setActiveTab(tab)
