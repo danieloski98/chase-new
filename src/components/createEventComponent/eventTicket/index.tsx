@@ -54,8 +54,8 @@ function CreateEventTicket(props: Props) {
   
     // const [ticketArray, setArray] = React.useState([""]) 
   
-    const clickHandler =async(e: any)=> {
-        e.preventDefault() 
+    const clickHandler =async()=> {
+        
         if(!formData?.productTypeData[0].totalNumberOfTickets){
             toast.error("Enter Event Total Ticket Number")
         } else if(!formData?.productTypeData[0].ticketType){
@@ -73,7 +73,7 @@ function CreateEventTicket(props: Props) {
                         setIsLoading(false)
                     } else {  
                         setIsLoading(true)
-                        handleSubmit()
+                        await handleSubmit()
                     }
                     })
                 } else { 
@@ -82,13 +82,13 @@ function CreateEventTicket(props: Props) {
                         toast.error("Ticket Price must be Above 1 dollar")
                     } else { 
                         setIsLoading(true)
-                        handleSubmit() 
+                        await handleSubmit() 
                     }
                     })
                 }
             } else { 
                 setIsLoading(true)
-                handleSubmit()
+                await handleSubmit()
             }
         }  
 
@@ -112,7 +112,7 @@ function CreateEventTicket(props: Props) {
   
     return (
         <div className=' w-full flex flex-col items-center pt-10 px-6 ' > 
-            <form onSubmit={(e)=> clickHandler(e)} className=' lg:max-w-[600px] w-full flex  flex-col gap-4 py-6 ' >
+            <div className=' lg:max-w-[600px] w-full flex  flex-col gap-4 py-6 ' >
                 <div className=' w-full flex lg:flex-row gap-2 ' >  
                     <label
                         onClick={()=> HandleDeleteAllTicket("", null)}
@@ -289,12 +289,12 @@ function CreateEventTicket(props: Props) {
                     <button
                         className="w-full py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
                         disabled={isLoading}
-                        type='submit'
+                        onClick={clickHandler}
                     >
                         {isLoading? "loading" : "Submit"}
                     </button>
                 </div>
-            </form> 
+            </div> 
 
             {showTooltip && (
                 <OverlayWrapper handleClose={toggleTooltip}>
