@@ -21,9 +21,10 @@ interface Props {
 }
 
 function CreateEventTicket(props: Props) {
-    const { formData, setFormData, handleChange, handleSubmit, loading, handleChangeOther, HandlerDeleteTicket, HandleDeleteAllTicket, HandleAddTicket } = props
+    const { formData, setFormData, handleChange, handleSubmit, handleChangeOther, HandlerDeleteTicket, HandleDeleteAllTicket, HandleAddTicket } = props
 
     const [showTooltip, setShowTooltip] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isFree, setIsFree] = useState(false)
     const [showFunnel, setShowFunnel] = useState(false) 
     const [addFunnel, setAddFunnel] = useState(false) 
@@ -54,6 +55,7 @@ function CreateEventTicket(props: Props) {
     // const [ticketArray, setArray] = React.useState([""]) 
   
     const clickHandler =()=> {
+        setIsLoading(true)
         if(!formData?.productTypeData[0].totalNumberOfTickets){
             toast.error("Enter Event Total Ticket Number")
         } else if(!formData?.productTypeData[0].ticketType){
@@ -82,7 +84,7 @@ function CreateEventTicket(props: Props) {
                 })
             }
             } else { 
-            handleSubmit()
+                handleSubmit()
             }
         } 
     } 
@@ -279,9 +281,9 @@ function CreateEventTicket(props: Props) {
                     <button
                         className="w-full py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
                         onClick={clickHandler}
-                        disabled={loading}
+                        disabled={isLoading}
                     >
-                        {loading? "loading" : "Submit"}
+                        {isLoading? "loading" : "Submit"}
                     </button>
                 </div>
             </div> 
