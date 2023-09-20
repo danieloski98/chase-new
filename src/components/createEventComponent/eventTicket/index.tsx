@@ -73,7 +73,7 @@ function CreateEventTicket(props: Props) {
                         setIsLoading(false)
                     } else {  
                         setIsLoading(true)
-                        await handleSubmit()
+                        handleSubmit()
                     }
                     })
                 } else { 
@@ -82,13 +82,13 @@ function CreateEventTicket(props: Props) {
                         toast.error("Ticket Price must be Above 1 dollar")
                     } else { 
                         setIsLoading(true)
-                        await handleSubmit() 
+                        handleSubmit() 
                     }
                     })
                 }
             } else { 
                 setIsLoading(true)
-                await handleSubmit()
+                handleSubmit()
             }
         }  
 
