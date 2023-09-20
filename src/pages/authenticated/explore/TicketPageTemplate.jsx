@@ -98,6 +98,8 @@ const TicketPageTemplate = ({
     publicKey: Paystack_key,
   }) 
 
+  console.log(Paystack_key);
+
   const [configStripe , setConfigStripe] = React.useState({ }) 
   const [clientKey , setClientKey] = React.useState("")  
   const [ticketinfo , setticketinfo] = React.useState("")  
@@ -216,9 +218,7 @@ const TicketPageTemplate = ({
     if (data) {
       toast.success(data.message);  
     }
-  }  
-
-  console.log(dataInfo?.productTypeData);
+  }   
 
   return (
     <>

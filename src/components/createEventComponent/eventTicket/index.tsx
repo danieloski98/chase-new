@@ -21,9 +21,10 @@ interface Props {
 }
 
 function CreateEventTicket(props: Props) {
-    const { formData, setFormData, handleChange, handleSubmit, loading, handleChangeOther, HandlerDeleteTicket, HandleDeleteAllTicket, HandleAddTicket } = props
+    const { formData, setFormData, handleChange, handleSubmit, handleChangeOther, HandlerDeleteTicket, HandleDeleteAllTicket, HandleAddTicket } = props
 
     const [showTooltip, setShowTooltip] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [isFree, setIsFree] = useState(false)
     const [showFunnel, setShowFunnel] = useState(false) 
     const [addFunnel, setAddFunnel] = useState(false) 
@@ -53,7 +54,8 @@ function CreateEventTicket(props: Props) {
   
     // const [ticketArray, setArray] = React.useState([""]) 
   
-    const clickHandler =()=> {
+    const clickHandler =async(e: any)=> {
+        e.preventDefault() 
         if(!formData?.productTypeData[0].totalNumberOfTickets){
             toast.error("Enter Event Total Ticket Number")
         } else if(!formData?.productTypeData[0].ticketType){
@@ -64,27 +66,36 @@ function CreateEventTicket(props: Props) {
             toast.error("Enter Event Maximum Ticket Purchase")
         } else {
             if(formData?.productTypeData[0].ticketType !== "Free"){
-            if(formData.currency === "NGN"){
-                formData.productTypeData?.map((item)=> {
-                if(item.ticketPrice < 10) {
-                    toast.error("Ticket Price must be Above 10 naira")
-                } else {  
-                    handleSubmit()
-                }
-                })
-            } else { 
-                formData.productTypeData?.map((item)=> {
-                if(item.ticketPrice < 2) {
-                    toast.error("Ticket Price must be Above 2 dollar")
+                if(formData.currency === "NGN"){
+                    formData.productTypeData?.map((item: any)=> {
+                    if(item.ticketPrice < 20) {
+                        toast.error("Ticket Price must be Above 20 naira")
+                        setIsLoading(false)
+                    } else {  
+                        setIsLoading(true)
+                        handleSubmit()
+                    }
+                    })
                 } else { 
-                    handleSubmit() 
+                    formData.productTypeData?.map((item: any)=> {
+                    if(item.ticketPrice < 1) {
+                        toast.error("Ticket Price must be Above 1 dollar")
+                    } else { 
+                        setIsLoading(true)
+                        handleSubmit() 
+                    }
+                    })
                 }
-                })
-            }
             } else { 
-            handleSubmit()
+                setIsLoading(true)
+                handleSubmit()
             }
-        } 
+        }  
+
+        const t2 = setTimeout(() => {
+            setIsLoading(false)
+            clearTimeout(t2);
+        }, 3000);  
     } 
 
     const handleMaxTicket =(index: number, name: string, value: any)=> {
@@ -101,7 +112,7 @@ function CreateEventTicket(props: Props) {
   
     return (
         <div className=' w-full flex flex-col items-center pt-10 px-6 ' > 
-            <div className=' lg:max-w-[600px] w-full flex  flex-col gap-4 py-6 ' >
+            <form onSubmit={(e)=> clickHandler(e)} className=' lg:max-w-[600px] w-full flex  flex-col gap-4 py-6 ' >
                 <div className=' w-full flex lg:flex-row gap-2 ' >  
                     <label
                         onClick={()=> HandleDeleteAllTicket("", null)}
@@ -274,17 +285,16 @@ function CreateEventTicket(props: Props) {
                     </div>
                 )}
 
-                <div className="flex justify-center my-4 w-full">
-                    {/* <button onClick={handleBack}>Back</button> */}
+                <div className="flex justify-center my-4 w-full"> 
                     <button
                         className="w-full py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-                        onClick={clickHandler}
-                        disabled={loading}
+                        disabled={isLoading}
+                        type='submit'
                     >
-                        {loading? "loading" : "Submit"}
+                        {isLoading? "loading" : "Submit"}
                     </button>
                 </div>
-            </div> 
+            </form> 
 
             {showTooltip && (
                 <OverlayWrapper handleClose={toggleTooltip}>

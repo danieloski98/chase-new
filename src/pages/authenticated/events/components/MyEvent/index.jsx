@@ -96,23 +96,23 @@ function MyEventTab() {
                     </span>
                     <p className="text-gray-600 text-sm">
                         {event?.location?.address}
-                    </p>
-                    {!event?.ticketBought && (
-                        <IoMdTrash onClick={()=> deleteEvent(event.id)} className="ml-8" role="button"  size={25} />
-                    )} 
+                    </p> 
                     </div>
                     <div className="flex items-center"> 
-                    <button className="bg-blue-100 text-blue-600 text-sm px-2">
-                        {event?.status}
-                    </button>
+                        <button className="bg-blue-100 text-blue-600 text-sm px-2">
+                            {event?.status}
+                        </button>
+                    {!event?.ticketBought && (
+                        <button onClick={()=> deleteEvent(event?.id)} className=' ml-auto text-red-600 ' >delete</button>
+                    )} 
                     </div>
                     <p className="text-gray-600 text-sm flex items-center gap-2">
-                    Category: <span className=" text-blue-500 hover:text-blue-600 font-bold cursor-pointer">
-                        {event?.eventType?.replace("_", " ")}
-                    </span>
-                    <span className="bg-chasescrollBgBlue text-chasescrollBlue ml-8 px-2 py-1 rounded-md">
-                        {event?.isOrganizer ? "Organizer" : "Attending"}
-                    </span>
+                        Category: <span className=" text-blue-500 hover:text-blue-600 font-bold cursor-pointer">
+                            {event?.eventType?.replace("_", " ")}
+                        </span>
+                        <span className="bg-chasescrollBgBlue text-chasescrollBlue ml-8 px-2 py-1 rounded-md">
+                            {event?.isOrganizer ? "Organizer" : "Attending"}
+                        </span>
                     </p>
 
                 </div>
