@@ -2,17 +2,19 @@ import React, { useCallback, useRef, useState } from "react"
 import { toast } from "react-toastify";
 import davido from "@/assets/images/davido.png"
 import { Link } from "react-router-dom"
-import { ChevronLeft, ChevronRight } from "@/components/Svgs"
-import PageWrapper from "@/components/PageWrapper"
-import { previousPage } from "@/constants/index"
+import { ChevronLeft, ChevronRight } from "../../../components/Svgs"
+import PageWrapper from "../../../components/PageWrapper"
+import { previousPage } from "../../../constants/index"
 import { useFetch } from "../../../hooks/useFetch"
 import { useAuth } from "../../../context/authContext"
 import { UPDATE_PROFILE, UPLOAD_IMAGE } from "../../../constants/endpoints.constant"
 import ButtonSpinner from "../../../components/ButtonSpinners";
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import httpService from "@/utils/httpService";
+import httpService from "../../../utils/httpService";
 import { Avatar } from '@chakra-ui/react'
-import CONFIG from "@/config";
+import CONFIG from "../../../config";
+import UserImages from "../../../components/exploreComponents/sharedComponent/userImages";
+import { MdCamera, MdPhoto, MdPhotoCamera } from "react-icons/md";
 
 function EditProfile() {
   const { token, userId } = useAuth()
@@ -31,7 +33,7 @@ function EditProfile() {
   const ref = useRef<HTMLInputElement>();
   const queryClient = useQueryClient();
 
-  const { isLoading: profileLoading } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`),{
+  const { isLoading: profileLoading, data, refetch } = useQuery(['getUserDetails', userId], () => httpService.get(`/user/publicprofile/${userId}`),{
     onError: (error: any) => {
       toast.error(error.response?.data);
     },
@@ -68,6 +70,7 @@ function EditProfile() {
     },
     onSuccess: (data: any) => {
       console.log(data.data);
+      refetch()
       uploadProfileImage.mutate(data.data.fileName);
     }
   });
@@ -90,6 +93,9 @@ function EditProfile() {
     setComponent(!component)
     setExpanded(!expanded)
   }
+
+  console.log(userProfile?.image);
+  
 
   const updateUserProfile = async event => {
     event.preventDefault()
@@ -117,6 +123,10 @@ function EditProfile() {
           about: {
             objectPublic: about ? true: publicProfile,
             value: about
+          },
+          imgMain: {
+            objectPublic: userProfile?.image ? true: publicProfile,
+            value: userProfile?.image
           }
         }
       },
@@ -138,12 +148,13 @@ function EditProfile() {
     mutate(formData);
   }, [mutate])
 
+  console.log(data);
+  
+
   return (
     <PageWrapper>
-      {() => (
-        
+      {() => ( 
         <div className=" mb-[100px] w-full items-center justify-center flex flex-col p-4 bg-white">
-
           <input ref={ref as any} type="file" accept='image/*' hidden onChange={(e) => handleFilePicker(e.target.files as FileList)} />
 
           <div className="flex items-center w-full mb-4 p-2 ">
@@ -163,15 +174,25 @@ function EditProfile() {
                 alt="Profile Image"
                 className="w-1/4 h-25 rounded-b-[32px] rounded-tl-[32px]"
               /> */}
-              <Avatar 
+              {/* <Avatar 
                 src={`${CONFIG.RESOURCE_URL}${userProfile.image}`}
                 name={`${userProfile.firstName} ${userProfile.lastName}`}
                 size='2xl'
                 className="w-1/4 h-25 rounded-b-[32px] rounded-tl-[32px] cursor-pointer"
                 onClick={() => ref.current?.click()}
               />
+              { imageUploading || uploadProfileImage.isLoading && <p>image uploading....</p>} */}
+              {/* { uploadProfileImage.isLoading && <p>image uploading....</p>} */} 
+              <div 
+                onClick={() => ref.current?.click()}
+                className=" cursor-pointer  rounded-b-[64px] rounded-tl-[64px] relative " >
+
+                <div className=" w-full h-full rounded-b-[64px] rounded-tl-[64px] bg-black z-20 bg-opacity-25  absolute inset-0 flex justify-center items-center " >
+                    <MdPhotoCamera size={"32px"} color="white" />
+                  </div>
+					      <UserImages data={data?.data} size={"32"} font='[26px]' />
+              </div>
               { imageUploading || uploadProfileImage.isLoading && <p>image uploading....</p>}
-              { uploadProfileImage.isLoading && <p>image uploading....</p>}
             </div>
             <div className="mb-4">
               <label

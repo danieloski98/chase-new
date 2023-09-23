@@ -51,7 +51,7 @@ const CreateEventsHeader = ({ activeStep, setActiveStep, formData }) => {
           return (
             <button
               key={value}
-              disabled={label === "Information" ? getValidationTheme(): getValidationInfo()? true : false}
+              disabled={label === "Information" ? getValidationTheme():label === "Tickets" ? getValidationInfo() : false}
               className={`text-sm md:text-base md:p-2 md:px-8 px-2 ${isActive
                 ? "text-chasescrollBlue"
                 : "text-gray-300 hover:bg-gray-50 hover:text-chasescrollBlue"

@@ -56,7 +56,7 @@ function RefundModal(props: Props) {
             }
         })
 
-        // console.log(response?.data?.result);
+        console.log(response);
         toast.success(response?.data?.result);
         setLoading("")
         refetch()
@@ -108,20 +108,11 @@ function RefundModal(props: Props) {
                 {!isLoading && (
                     <> 
                         {eventUser.filter((item: any)=> item?.user?.userId !== userId)?.map((item: any, index: number)=> {
-                            
+                           
                             return(
                                 <div key={index} className=' W-full flex justify-between ' >
-                                    <div className=' flex gap-3 ' > 
-                                        {/* <div className=' w-[57px] h-[57px] rounded-b-[36px] rounded-tl-[36px] bg-slate-500 '  >
-                                            {item?.user?.data?.imgMain?.value &&
-                                                <img 
-                                                    src={`${CONFIG.RESOURCE_URL}${item?.data?.imgMain?.value}`}
-                                                    className="w-[57px] h-[57px] rounded-b-[36px] rounded-tl-[36px]"
-                                                    alt=""
-                                                /> 
-                                            }
-                                        </div>  */}
-					                    <UserImages data={item} size={"[57px]"} font='[26px]' />
+                                    <div className=' flex gap-3 ' >  
+					                    <UserImages data={item?.user} size={"[57px]"} font='[26px]' />
                                         <div className='' >
                                             <p className=' text-xl font-semibold ' >{item?.user?.firstName+" "+item?.user?.lastName}</p>
                                             <p className=' text-xs font-medium text-[#2E2B2B] ' >{item?.user?.username}</p>
