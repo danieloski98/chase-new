@@ -53,6 +53,10 @@ function EventDashboardModal(props: Props) {
     //     }
     //     return "";
     // }
+
+
+    console.log(history.tickets);
+    
       
     return (
         <div className=' w-full flex flex-col items-center py-6 ' >
@@ -129,35 +133,36 @@ function EventDashboardModal(props: Props) {
                             </div>
                         </div>
                     </div>
-                    <div className=" w-full border-b border-[#D0D4EB] mt-8 py-7 px-4 " >
+                    {history.tickets?.length < 0 && (
+                        <div className=" w-full border-b border-[#D0D4EB] mt-8 py-7 px-4 " >
+                            <ResponsiveContainer width="100%" height={500}>
+                                <BarChart
+                                    width={500}
+                                    height={300} 
+                                    margin={{
+                                        top: 20,
+                                        right: 30,
+                                        left: 20,
+                                        bottom: 5,
+                                    }}
+                                    data={history.tickets} 
+                                >
+                                    <XAxis dataKey="ticketType" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <CartesianGrid strokeDasharray="3 3" />
 
-                        <ResponsiveContainer width="100%" height={500}>
-                            <BarChart
-                                width={500}
-                                height={300} 
-                                margin={{
-                                    top: 20,
-                                    right: 30,
-                                    left: 20,
-                                    bottom: 5,
-                                }}
-                                data={history.tickets} 
-                            >
-                                <XAxis dataKey="ticketType" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <CartesianGrid strokeDasharray="3 3" />
-
-                                    <Bar dataKey="totalActiveSales" stackId="a" fill="#B7B00E" />
-                                    <Bar dataKey="totalRefund" stackId="a" fill="#E90303" />
-                                    <Bar dataKey="totalPendingSales" fill="#ffc658" />
-                                {/* <Bar dataKey="totalActiveSales" fill="#B7B00E" background={{ fill: '#eee' }} />
-                                <Bar dataKey="totalRefund" fill="#E90303" background={{ fill: '#eee' }} />
-                                <Bar dataKey="totalPendingSales" fill="#DB9E00" background={{ fill: '#eee' }} /> */}
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
+                                        <Bar dataKey="totalActiveSales" stackId="a" fill="#B7B00E" />
+                                        <Bar dataKey="totalRefund" stackId="a" fill="#E90303" />
+                                        <Bar dataKey="totalPendingSales" fill="#ffc658" />
+                                    {/* <Bar dataKey="totalActiveSales" fill="#B7B00E" background={{ fill: '#eee' }} />
+                                    <Bar dataKey="totalRefund" fill="#E90303" background={{ fill: '#eee' }} />
+                                    <Bar dataKey="totalPendingSales" fill="#DB9E00" background={{ fill: '#eee' }} /> */}
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

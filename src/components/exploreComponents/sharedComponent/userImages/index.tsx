@@ -16,7 +16,7 @@ function UserImages(props: Props) {
     return ( 
         <div className={` rounded-b-[64px] rounded-tl-[64px] w-${size} h-${size} border `}> 
             {data?.data?.imgMain?.value &&  
-                <img src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-[34px] object-cover rounded-tl-[34px]" />
+                <img src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-[64px] object-cover rounded-tl-[64px]" />
             }
             {!data?.data?.imgMain?.value && (
                 <div className={` w-full h-full bg-chasescrollGray rounded-b-[64px] rounded-tl-[64px] flex justify-center items-center font-bold text-${font ? font : "[30px]" }`} >

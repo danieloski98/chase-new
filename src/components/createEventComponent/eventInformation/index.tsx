@@ -10,11 +10,12 @@ interface Props {
     handleChange: any, 
     setFormData: any, 
     handleContinue: any,
-    loading: any
+    loading?: any
 }
 
 function CreateEventInformation(props: Props) {
-    const { formData, setFormData, handleContinue, loading } = props 
+    const { formData, setFormData, handleContinue } = props 
+    const [isLoading, setIsLoading] = useState(false);
 
     // const [toBeAnnounced, setToBeAnnounced] = useState(false)
     const [selectType, setSelectType] = useState("")
@@ -37,19 +38,26 @@ function CreateEventInformation(props: Props) {
         }))
     } 
     const clickHandler =()=> {
-      if(!formData?.startDate){
-        toast.error("Enter Event Starting Date")
-      } else if(!formData?.endDate){
-        toast.error("Enter Event Ending Date")
-      } else if(!formData?.location?.toBeAnnounced){
-        if(!formData?.location?.locationDetails && !formData?.location?.link){
-          toast.error("Enter Event Location") 
-        }  else {
+        setIsLoading(true)
+        if(!formData?.startDate){
+            toast.error("Enter Event Starting Date")
+        } else if(!formData?.endDate){
+            toast.error("Enter Event Ending Date")
+        } else if(!formData?.location?.toBeAnnounced){
+            if(!formData?.location?.locationDetails && !formData?.location?.link){
+            toast.error("Enter Event Location") 
+            }  else {
+                handleContinue()
+            }
+        } else {
             handleContinue()
-        }
-      } else {
-        handleContinue()
-      } 
+        } 
+
+
+        const t2 = setTimeout(() => {
+            setIsLoading(false)
+            clearTimeout(t2);
+        }, 3000);  
     }
 
 
@@ -64,7 +72,7 @@ function CreateEventInformation(props: Props) {
         return true
         }
         } else {
-        return false      
+        return false || isLoading   
         } 
     }
   
@@ -223,7 +231,7 @@ function CreateEventInformation(props: Props) {
                         className="hover:text-xl disabled:text-red-500 disabled:transition disabled:animate-pulse disabledcursor-not-allowed"
                         onClick={() => clickHandler()}
                         id="continueButton" > 
-                        {loading ? "Loading..." : "Continue"}
+                        {isLoading ? "Loading..." : "Continue"}
                     </button>
                 </div>
             </div>

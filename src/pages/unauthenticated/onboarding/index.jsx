@@ -119,6 +119,8 @@ const Onboarding = () => {
           lastName: LastName,
           username: UserName,
         })
+
+      localStorage.setItem('firstName', FirstName);
         if (response) { 
           toast.success('Profile updated successfully!'); 
 

@@ -285,6 +285,7 @@ function CreateEventTheme(props: Props) {
                         : "text-chasescrollBlue"
                         }`}
                     onClick={clickHandler} 
+                    disabled={loading}
                     id="continueButton"
                     >
                         {loading? "Loading..." : "Continue"}

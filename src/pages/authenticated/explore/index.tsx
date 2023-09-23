@@ -57,7 +57,7 @@ const Explore = () => {
               </Link>
             </div>
           <header className="flex flex-col gap-4 px-4">
-            <h1 className="text-3xl font-bold text-chasescrollDarkBlue">Hello {firstName}</h1>
+            <h1 className="text-3xl font-bold text-chasescrollDarkBlue">Hello {firstName || localStorage.getItem('firstName')+""}</h1>
             <p className="text-chasescrollBlue font-bold">Top Events</p>
           </header>
 
