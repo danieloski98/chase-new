@@ -173,7 +173,7 @@ const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 					onChange={handleChange}
 				/>
 				<div className="flex justify-between w-full">
-					<div className="flex flex-col gap-8 text-center">
+					{/* <div className="flex flex-col gap-8 text-center">
 						<p className="text-xl text-chasescrollTextGrey">Mode Type</p>
 						<div className="flex gap-10 justify-between items-center text-chasescrollGrey">
 							Auto <Toggle className='custom-classname' />
@@ -181,7 +181,7 @@ const CreateCommunity = ({ setaddfunnel, setFunnel, modal }) => {
 						<div className="flex gap-10 justify-between items-center text-chasescrollGrey">
 							Request <Toggle className='custom-classname' />
 						</div>
-					</div>
+					</div> */}
 					<div className="flex flex-col gap-8 text-center">
 						<p className="text-xl text-chasescrollTextGrey">Mode Type</p>
 						<div className="flex gap-10 justify-between items-center text-chasescrollGrey">
