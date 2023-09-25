@@ -178,7 +178,7 @@ function CreateEventTheme(props: Props) {
                             />
                             <p className=' text-sm ' >{formData?.eventDescription?.length+"/"+150}</p>
                         </div>
-                        <div className="grid gap-2 ">
+                        {/* <div className="grid gap-2 ">
                             <h2 className="font-bold text-sm px-0">Join Type</h2>
                             <label htmlFor="publicSetting" className="flex justify-between border-b text-sm p-2 cursor-pointer">
                                 <p className="text-sm">
@@ -207,7 +207,7 @@ function CreateEventTheme(props: Props) {
                                     isChecked={formData?.joinSetting === "private"}
                                 />
                             </label>
-                        </div>
+                        </div> */}
                         <div className="grid gap-2 ">
                             <h2 className="font-bold text-sm px-0">Event Visibility</h2>
                             <label htmlFor="publicVisibility" className="flex justify-between border-b text-sm p-2 cursor-pointer">
