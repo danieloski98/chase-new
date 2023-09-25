@@ -27,7 +27,7 @@ const Onboarding = () => {
   const [FirstName, setFirstName] = React.useState("")
   const [CheckUsername, setCheckUsername] = React.useState("")
   const [LastName, setLastName] = React.useState("")
-  const [UserName, setUserName] = React.useState("")
+  const [UserName, setUserName] = React.useState("") 
 
   const toggleTermsVisibility = () => setShowTerms(state => !state);
 
@@ -44,12 +44,12 @@ const Onboarding = () => {
     }),
     onSuccess: (data) => {
       console.log(data.data);
+      localStorage.setItem('token', data?.data?.access_token);
       toast.success('Signin Successful');
-      // if(!data?.data?.firstName){ 
-      //   setShowModal(true)
-      // }  
+      if(!data?.data?.firstName){ 
+        setShowModal(true)
+      }  
       setCheckData(data?.data)
-      login(data?.data, setShowModal); 
     },
     onError: (error) => {
       console.log(error);
@@ -61,6 +61,8 @@ const Onboarding = () => {
     if(checkData?.user_id){
       if(!checkData?.firstName){
         setShowModal(true)
+      } else { 
+        login(checkData); 
       }
     }
   }, [checkData])
@@ -86,7 +88,7 @@ const Onboarding = () => {
         toast.error(error.response?.data);
     }, 
     onSuccess: (data) => { 
-      console.log(data?.data?.message);
+      console.log(data?.data?.message); 
       if(data?.data?.message === "Username already exists."){
         setCheckUsername(data?.data?.message)
       } else {
@@ -118,14 +120,15 @@ const Onboarding = () => {
           firstName: FirstName,
           lastName: LastName,
           username: UserName,
-        })
-
-      localStorage.setItem('firstName', FirstName);
+        }) 
         if (response) { 
           toast.success('Profile updated successfully!'); 
-
           localStorage.setItem('firstName', FirstName);
-          navigate("/explore")
+
+          let newObj = {...checkData, firstName: FirstName}
+
+          login(newObj); 
+          // navigate("/explore")
         } else {
           toast.error('Something went wrong!');
         } 

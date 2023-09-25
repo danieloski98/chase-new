@@ -38,9 +38,7 @@ const Profile_1 = () => {
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page');
 
-  const [activeComponent, setActiveComponent] = useState(page === 'request' ? 'component2':'component1')
-  console.log(`The page is ${page}`);
-
+  const [activeComponent, setActiveComponent] = useState(page === 'request' ? 'component2':'component1') 
 
   if (page !== null && page === 'request') {
     //setActiveComponent('component2')
@@ -58,9 +56,7 @@ const Profile_1 = () => {
 
 
   const { sendRequest } = useFetch()
-  const { token, userId: currentUserId } = useAuth()
-
-  // console.log(userId);
+  const { token, userId: currentUserId } = useAuth() 
 
   const self = userId === currentUserId
 
@@ -75,12 +71,10 @@ const Profile_1 = () => {
         userId,
       ]
     }),
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: (data) => { 
       navigate(`/message?messageId=${data.data.id}`);
     },
-    onError: (errror) => {
-      console.log(errror);
+    onError: (errror) => { 
       toast.error('An error occured whilw trying to initiate chat');
     }
   })
