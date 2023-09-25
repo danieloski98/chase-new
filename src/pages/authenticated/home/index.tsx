@@ -117,7 +117,7 @@ const Home = () => {
       toast.success("Post created successfully");
       setPostInput("");
       loadMore()
-      queryClient.invalidateQueries(['getFeedsPosts'])
+      //queryClient.invalidateQueries(['getFeedsPosts'])
     }
   })
   const handleItemClick = (action, route, threadId) => {
