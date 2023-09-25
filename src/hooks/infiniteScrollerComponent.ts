@@ -7,16 +7,18 @@ import lodash from 'lodash';
 
 interface Props {
     url: string,
-    filter: string,
+    filter?: string,
     limit: number,
     newdata?: any,
+    array?: any,
 }
 
 function InfiniteScrollerComponent(props: Props) {
     const {
         url,
         filter,
-        limit 
+        limit,
+        array, 
     } = props
 
     const [size, setSize] = React.useState(limit)
@@ -34,17 +36,30 @@ function InfiniteScrollerComponent(props: Props) {
         }, 
         
         onSuccess: (data: any) => {   
-
-          if(isRefetching){
-            if(size === limit){
+          if(!array) { 
+            if(isRefetching){
+              if(size === limit){
+                setResults(lodash.uniqBy(data?.data?.content, filter ? filter : "id")); 
+                // return
+              } else if(size !== limit){ 
+                  results.push(...data?.data?.content);   
+                  setResults(lodash.uniqBy(results, filter ? filter : "id")); 
+              } 
+            } else {
               setResults(lodash.uniqBy(data?.data?.content, filter ? filter : "id")); 
-              // return
-            } else if(size !== limit){ 
-                results.push(...data?.data?.content);   
-                setResults(lodash.uniqBy(results, filter ? filter : "id")); 
-            } 
-          } else {
-            setResults(lodash.uniqBy(data?.data?.content, filter ? filter : "id")); 
+            }
+          } else { 
+            if(isRefetching){
+              if(size === limit){
+                setResults(lodash.uniqBy(data?.data, filter ? filter : "id")); 
+                // return
+              } else if(size !== limit){ 
+                  results.push(...data?.data);   
+                  setResults(lodash.uniqBy(results, filter ? filter : "id")); 
+              } 
+            } else {
+              setResults(lodash.uniqBy(data?.data, filter ? filter : "id")); 
+            }
           }
             setHasNextPage(data.data.last ? false:true);
             window.scrollTo(0, window.innerHeight); 

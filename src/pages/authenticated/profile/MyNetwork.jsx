@@ -13,12 +13,16 @@ import { Avatar } from '@chakra-ui/react';
 import Loader from "../../../components/Loader"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
 import { useSearchParams } from 'react-router-dom';
+import InfiniteScrollerComponent from "../../../hooks/infiniteScrollerComponent"
 
 
 const MyNetwork = (props) => {
   const [activeTab, setActiveTab] = useState("Connects")
   const [requests, setRequests] = useState([])
   const [network, setNetwork] = useState([])
+  const [loadingRejected, setloadingRejected] = useState("")
+  const [loadingAccept, setloadingAccept] = useState("")
+  const [clicledUser, setclicledUser] = useState([])
   const [searchParams] = useSearchParams();
   // const [isLoading, setIsLoading] = React.useState(true)
   const { sendRequest } = useFetch() 
@@ -58,6 +62,7 @@ const MyNetwork = (props) => {
   
 
   const acceptRequest = async (id) => {
+    setloadingAccept(id)
     const data = await sendRequest(
       "/user/accept-friend-request",
       "POST",
@@ -66,11 +71,14 @@ const MyNetwork = (props) => {
     )
     if (data) {
       toast.success(data.message);
+      setclicledUser([...clicledUser, id])
       fetchRequests()
     }
+    setloadingAccept("")
   }
 
   const rejectRequest = async (id) => {
+    setloadingRejected(id)
     const data = await sendRequest(
       REJECT_FRIEND_REQUEST+"/"+id,
       "DELETE",
@@ -80,9 +88,11 @@ const MyNetwork = (props) => {
     )
     if (data) {
       toast.success(data.message);
+      setclicledUser([...clicledUser, id]) 
       // fetchRequests()
-      refetch()
+
     }
+    setloadingRejected("")
   }
 
   const fetchNetwork = async () => {
@@ -109,7 +119,7 @@ const MyNetwork = (props) => {
     if (data) {
       toast.success(data.message);
       // fetchNetwork()
-      refetch()
+
       // fetchProfileInfo()
     }
     // setLoading(false)
@@ -126,25 +136,24 @@ const MyNetwork = (props) => {
     if (data) {
       toast.success(data.message);
       fetchNetwork()
-      refetch()
+
       fetchProfileInfo()
     }
     // setLoading(false)
   }
 
-  useEffect(()=>{
-    // fetchNetwork()
-    // fetchRequests()
+  useEffect(()=>{ 
     if(props.active){
       setActiveTab(props.active)
     } 
-    refetch()
   }, [userId])
 
   
   const [page, setPage] = React.useState(0)
-  const { results, isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/friend-requests', pageNumber:page, setPageNumber:setPage})
+  // const { results, isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/friend-requests', pageNumber:page, setPageNumber:setPage})
 
+  const {isLoading, isRefetching, results, ref} = InfiniteScrollerComponent({url:'/user/friend-requests', limit: 10})
+ 
   return (
     <div className="flex justify-center px-4 pb-8 w-full max-w-md mx-auto">
 
@@ -192,14 +201,14 @@ const MyNetwork = (props) => {
               {activeTab === "Requests" && (
                 <> 
                   <div className="flex flex-col gap-6 justify-center items-center mt-10 w-full">
-                    {results?.map(
+                    {results?.filter((item)=> !clicledUser.includes(item?.id))?.map(
                       ({ fromUserID, id }, i) => { 
                         if (results?.length === i + 1) {
                           return (
                             <div
                               className="flex justify-between items-center w-full"
                               key={id}
-                              ref={lastChildRef}
+                              ref={ref}
                             >
                               <Link
                                 to={`${PATH_NAMES.profile}/${id}`} 
@@ -223,13 +232,17 @@ const MyNetwork = (props) => {
                                   className="px-4 py-2 bg-chasescrollBlue text-white rounded-md shadow-md font-bold"
                                   onClick={() => acceptRequest(id)}
                                 >
-                                  <span className="text-sm">Accept</span>
+                                  <span className="text-sm">
+                                    {loadingAccept === id ? "Loading...": "Accept"}
+                                  </span>
                                 </button>
                                 <button
                                   className="px-4 py-2 text-red-600 bg-pink-100 rounded-md shadow-md font-bold"
                                   onClick={() => rejectRequest(id)}
                                 >
-                                  <span className="text-sm">Reject</span>
+                                  <span className="text-sm">
+                                    {loadingRejected === id ? "Loading..." : "Reject"}
+                                  </span>
                                 </button>
                               </div>
                             </div>
@@ -262,13 +275,17 @@ const MyNetwork = (props) => {
                                   className="px-4 py-2 bg-chasescrollBlue text-white rounded-md shadow-md font-bold"
                                   onClick={() => acceptRequest(id)}
                                 >
-                                  <span className="text-sm">Accept</span>
+                                  <span className="text-sm">
+                                    {loadingAccept === id ? "Loading...": "Accept"}
+                                  </span>
                                 </button>
                                 <button
                                   className="px-4 py-2 text-red-600 bg-pink-100 rounded-md shadow-md font-bold"
                                   onClick={() => rejectRequest(id)}
                                 >
-                                  <span className="text-sm">Reject</span>
+                                  <span className="text-sm">
+                                    {loadingRejected === id ? "Loading..." : "Reject"}
+                                  </span>
                                 </button>
                               </div>
                             </div>
@@ -304,24 +321,10 @@ const ConnectTab =(props)=> {
   const self = userId === currentUserId
 
   const [page, setPage] = React.useState(0)
-  const { isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/get-users-connections/'+userId, pageNumber:page, setPageNumber:setPage, search: true})
+  // const { isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/get-users-connections/'+userId, pageNumber:page, setPageNumber:setPage, search: true})
 
-
-  const fetchNetwork = async () => {
-    if (userId) {
-      const data = await sendRequest(
-        `${GET_USER_CONNECTION_LIST}${userId}`,
-        "GET",
-        null,
-        { Authorization: `Bearer ${token}` }
-      )
-      if (data){
-         setNetwork(data)
-         console.log(data);
-        }
-    }
-  }
-
+  const {isLoading, data, isRefetching, results, ref} = InfiniteScrollerComponent({url:'/user/get-users-connections/'+userId, limit: 10, array: true})
+ 
   const friendPerson = async (item) => {
     setLoading(item)
     const data = await sendRequest(
@@ -331,14 +334,10 @@ const ConnectTab =(props)=> {
       { Authorization: `Bearer ${token}` }
     )
     if (data) {
-      toast.success(data.message);
-      fetchNetwork()
-      refetch() 
+      toast.success(data.message); 
     }
     setLoading("")
-  }
-
-  console.log(network);
+  } 
 
   const unfriendPerson = async (item) => {
     setLoading(item)
@@ -349,16 +348,12 @@ const ConnectTab =(props)=> {
       { Authorization: `Bearer ${token}` }
     )
     if (data) {
-      toast.success(data.message);
-      fetchNetwork() 
+      toast.success(data.message); 
+      setNetwork([...network, item])
       props.reload()
     }
     setLoading("")
-  }
-
-  React.useEffect(()=> {
-    fetchNetwork()
-  }, [])
+  } 
 
   const UserTile =(props)=> {
     
@@ -387,28 +382,7 @@ const ConnectTab =(props)=> {
             </p>
             <small className="text-gray-500">@{profile?.username}</small>
           </div>
-        </Link>
-        {/* {self && ( */}
-          {/* <>
-            {isFriend === "CONNECTED" ? (
-              <button
-                className="px-4 py-2 text-red-600 bg-pink-100 shadow-lg font-bold rounded-md"
-                onClick={() => unfriendPerson(profile?.userId)}
-              >
-                <span className="text-sm">{loading === profile?.userId ? "Loading...":"Disconnect"}</span>
-              </button>
-            ) : isFriend === "SELF" ? (
-              <>
-              </>
-            ) : (
-              <button
-                className="px-4 py-2 text-white bg-chasescrollBlue shadow-lg font-bold rounded-md"
-                onClick={() => friendPerson(profile?.userId)}
-              >
-                <span className="text-sm">{loading === profile?.userId ? "Loading...":"Connect"}</span>
-              </button>
-            )}
-          </>   */}
+        </Link> 
 
             {(isFriend === "FRIEND_REQUEST_RECIEVED" || isFriend === "FRIEND_REQUEST_SENT" || isFriend === "CONNECTED" || isFriend === "CONNECTFriend") ?
               <>
@@ -445,15 +419,26 @@ const ConnectTab =(props)=> {
   }
 
   return( 
-    <div className="flex flex-col w-full my-6 mb-[100px]">
-      {network?.map((profile, i) => {   
-          return( 
-            <div key={profile?.id} className=" my-4 " >
-              <UserTile profile={profile} />
-            </div>
-          )
-        // }
-      })}
+    <div className="flex flex-col w-full my-6 mb-[100px]"> 
+      {!isLoading && (
+        <> 
+          {results?.filter((item)=> !network.includes(item?.userId))?.map((profile, i) => {   
+            if (results?.length === i + 1) {
+              return( 
+                <div key={profile?.id} ref={ref} className=" my-4 " >
+                  <UserTile profile={profile} />
+                </div>
+              )
+            } else { 
+              return( 
+                <div key={profile?.id} className=" my-4 " >
+                  <UserTile profile={profile} />
+                </div>
+              )
+            }
+          })}
+        </>
+      )} 
     </div>
   )
 }

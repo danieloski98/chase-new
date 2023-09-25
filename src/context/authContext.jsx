@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, userId, userName]);
 
-  const login = async (credentials, setModal) => {
+  const login = async (credentials) => {
     //const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
 
     const { access_token, user_id, user_name, expires_in, firstName } = credentials;
@@ -60,12 +60,8 @@ export const AuthProvider = ({ children }) => {
     const expirationTime = new Date().getTime() + expires_in * 1000;
 
     localStorage.setItem('tokenExpiration', expirationTime);
-    console.log(expirationTime);
-    if(firstName){
-      setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000)
-    } else {
-      setModal(true)
-    }
+    console.log(expirationTime); 
+    setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000) 
   };
 
   const logout = () => {
