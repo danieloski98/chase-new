@@ -27,6 +27,8 @@ function EditProfile() {
     about: "",
     image: '',
     publicProfile: false,
+    mobilePhone: '',
+    gender: '' 
   });
   const [loading, setLoading] = React.useState(false);
 
@@ -37,8 +39,7 @@ function EditProfile() {
     onError: (error: any) => {
       toast.error(error.response?.data);
     },
-    onSuccess: (data) => {
-      console.log(data.data);
+    onSuccess: (data) => { 
       setUserProfile({
         firstName: data.data.firstName,
         lastName: data.data.lastName,
@@ -46,7 +47,9 @@ function EditProfile() {
         website: data.data.data.webAddress?.value || '',
         about: data.data.data.about?.value || '',
         image: data.data.data.imgMain?.value || '',
-        publicProfile: data.data.publicProfile,
+        publicProfile: data.data.publicProfile, 
+        mobilePhone: data.data.data.mobilePhone?.value || '',
+        gender: data.data.data.gender?.value || '' 
       })
     }
   });
@@ -56,8 +59,7 @@ function EditProfile() {
     onError: (error: any) => {
       console.log(error);
     },
-    onSuccess: (data: any) => {
-      console.log(data.data);
+    onSuccess: (data: any) => { 
       toast.success("Profile image updated");
       queryClient.invalidateQueries(['getUserDetails']);
     }
@@ -68,8 +70,7 @@ function EditProfile() {
     onError: (error: any) => {
       console.log(error);
     },
-    onSuccess: (data: any) => {
-      console.log(data.data);
+    onSuccess: (data: any) => { 
       refetch()
       uploadProfileImage.mutate(data.data.fileName);
     }
@@ -92,10 +93,7 @@ function EditProfile() {
   const handleExpandClick = () => {
     setComponent(!component)
     setExpanded(!expanded)
-  }
-
-  console.log(userProfile?.image);
-  
+  }  
 
   const updateUserProfile = async event => {
     event.preventDefault()
@@ -106,8 +104,7 @@ function EditProfile() {
       website,
       about,publicProfile
     } = userProfile
-    setLoading(true);
-    console.log(userProfile);
+    setLoading(true); 
     const data = await sendRequest(
       UPDATE_PROFILE,
       "PUT",
@@ -127,7 +124,15 @@ function EditProfile() {
           imgMain: {
             objectPublic: userProfile?.image ? true: publicProfile,
             value: userProfile?.image
-          }
+          },
+          mobilePhone: {
+            objectPublic: userProfile?.mobilePhone ? true: false,
+            value: userProfile?.mobilePhone ,
+          },
+          gender: {
+            objectPublic: userProfile?.gender ? true: false,
+            value: userProfile?.mobilePhone,
+          }, 
         }
       },
       { Authorization: `Bearer ${token}` }
@@ -141,15 +146,11 @@ function EditProfile() {
     setLoading(false);
   }
 
-  const handleFilePicker = useCallback((file: FileList) => {
-    console.log(file);
+  const handleFilePicker = useCallback((file: FileList) => { 
     const formData = new FormData();
     formData.append('file', file[0]);
     mutate(formData);
-  }, [mutate])
-
-  console.log(data);
-  
+  }, [mutate])  
 
   return (
     <PageWrapper>

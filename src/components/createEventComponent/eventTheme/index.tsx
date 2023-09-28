@@ -278,9 +278,8 @@ function CreateEventTheme(props: Props) {
                     type="submit"
                     className={`hover:text-xl ${!formData?.eventName || 
                         !formData?.eventType ||
-                        !formData?.eventDescription ||
-                        !formData?.joinSetting ||
-                        !formData?.attendeesVisibility
+                        !formData?.eventDescription
+                        || (!selectedImageFile && !formData?.currentPicUrl)
                         ? "text-red-500 transition animate-pulse cursor-not-allowed"
                         : "text-chasescrollBlue"
                         }`}
