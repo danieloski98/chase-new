@@ -20,7 +20,7 @@ const SearchExplorePage = () => {
   return (
     <PageWrapper>
       {() => (
-        <div className=" w-full px-6 lg:w-[600px] mx-auto h-full flex flex-col"> 
+        <div className=" w-full px-6 lg:w-[600px] mx-auto h-full flex flex-col">
           <div className="py-5 lg:hidden">
             <Link to={PATH_NAMES.SearchExplore}>
               <div className="relative text-gray-400 border-[#5D70F9] rounded-lg w-full ">
@@ -29,7 +29,7 @@ const SearchExplorePage = () => {
                 </span>
                 <Input
                   value={searchValue}
-                  onChange={(e)=> setSearchValue(e.target.value)} 
+                  onChange={(e) => setSearchValue(e.target.value)}
                   // className=" bg-white focus:outline-none focus:ring-0 font-medium text-sm placeholder-gray-500 pl-6 pr-3 py-2 "
                   type="text"
                   w={"100%"}
