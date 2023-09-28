@@ -31,13 +31,15 @@ function PersonalInfoForm() {
   const [user, setUser] = React.useState<IUser | null>(null);
   const { token, userId } = useAuth(); 
 
+  console.log(user);
+  
+
   const { isLoading: updateLoading, mutate } = useMutation({
     mutationFn: (data: any) => httpService.put('/user/update-profile', data),
     onError: (error: AxiosError<any, any>) => {
       toast.error(error.response?.data);
     },
-    onSuccess: (data: AxiosResponse<any>) => {
-      console.log(data?.data);
+    onSuccess: (data: AxiosResponse<any>) => { 
     }
   });
   const dateRef: any = React.useRef(null);
@@ -50,6 +52,8 @@ function PersonalInfoForm() {
         toast.error(error.response?.data);
       },
       onSuccess: (data) => {
+        // console.log(data?.data);
+        
         setUser(data.data); 
       },
     }
@@ -61,7 +65,7 @@ function PersonalInfoForm() {
 
   //     curr.setDate(curr.getDate() + 3);
   //     let date = curr?.toISOString()?.substring(0,10);
-  //     console.log(date);
+  
   //   }
   // },[data])
   
@@ -74,8 +78,7 @@ function PersonalInfoForm() {
       dob: user?.dob || "",  
     },
     validationSchema: personinforSchema,
-    submit: (data) => {
-      console.log(data);
+    submit: (data) => { 
       
       const obj = {
         // email: user?.email,
@@ -87,7 +90,19 @@ function PersonalInfoForm() {
           gender: {
             objectPublic: true,
             value: data.gender || user?.data?.gender?.value,
+          }, 
+          webAddress: {
+            objectPublic: user?.data?.webAddress?.value ? true: false,
+            value: user?.data?.webAddress?.value
           },
+          about: {
+            objectPublic: user?.data?.about?.value ? true: false,
+            value: user?.data?.about?.value
+          },
+          imgMain: {
+            objectPublic: user?.data?.imgMain?.value ? true: false,
+            value: user?.data?.imgMain?.value
+          }
         },
         dob: data?.dob
       };

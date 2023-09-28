@@ -18,13 +18,13 @@ const PaymentDetails = () => {
 						<h1 className="text-xl font-medium">Payment Details</h1>
 					</Link>
 					<div className="flex flex-col gap-2 w-full max-w-sm text-gray-500">
-						<Link
+						{/* <Link
 							// to={PATH_NAMES.transactionHistory}
 							className='border-b border-gray-200 p-2 text-lg w-full flex gap-4 items-center'
 						>
 							<CardIcon />
 							Bank Details
-						</Link>
+						</Link> */}
 						<Link
 							to={`${PATH_NAMES.wallet}/${userId}`}
 							className='border-b border-gray-200 p-2 text-lg w-full flex gap-4 items-center'

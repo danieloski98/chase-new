@@ -41,7 +41,7 @@ const CreateEventsHeader = ({ activeStep, setActiveStep, formData }) => {
         <button onClick={handleClose}>
           <CancelIcon />
         </button>
-        <h1 className="text-lg font-bold">Create Events</h1>
+        <h1 className="text-lg font-bold">{!window.location.href?.includes("/event/edit") ? "Create" : "Edit"} Events</h1>
       </div>
 
       <div className="flex gap-4 justify-evenly md:justify-between w-full">

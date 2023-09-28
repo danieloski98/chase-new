@@ -216,10 +216,10 @@ export const OTHER_AUTHENTICATED_ROUTES = [
   {
     path: PATH_NAMES.createEvent,
     element: CreateEvents,
-  },
+  }, 
   {
-    path: PATH_NAMES.editevent,
-    element: EditEvents,
+    path: PATH_NAMES.editEvent,
+    element: CreateEvents,
   },
   {
     path: PATH_NAMES.blockUsers,

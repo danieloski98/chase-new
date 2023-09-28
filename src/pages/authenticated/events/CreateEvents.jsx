@@ -6,7 +6,7 @@ import EventInfo from "@/components/events/EventInfo"
 import { CREATE_EVENT_HEADER } from "@/constants/index"
 import { useAuth } from "../../../context/authContext"
 import { useFetch } from "../../../hooks/useFetch"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import {
   CREATE_EVENT,
   CREATE_TICKET,
@@ -30,7 +30,7 @@ const CreateEvents = () => {
     eventName: "",
     eventDescription: "",
     joinSetting: "public",
-    locationType:null,
+    locationType: null,
     currency: "USD",
     currentPicUrl: null,
     eventFunnelGroupID: null,
@@ -60,23 +60,35 @@ const CreateEvents = () => {
       {
         totalNumberOfTickets: null,
         ticketPrice: null,
-        ticketType: null, 
+        ticketType: null,
         minTicketBuy: null,
         maxTicketBuy: null
       },
     ]
   })
+
   const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
+  const { url } = useParams() 
 
   const handleContinue = () => {
-    if(activeStep === 0){
-      UploadImageData()
-    } else if(activeStep === 1){
-      UpdateEventFromDraft()
+    if (activeStep === 0) {
+      if (!formData?.productTypeData[0]?.ticketType) {
+        UploadImageData()
+      }
+      setActiveStep(prevStep => prevStep + 1)
+    } else if (activeStep === 1) {
+      if (!formData?.productTypeData[0]?.ticketType) {
+        UpdateEventFromDraft()
+      }
+      setActiveStep(prevStep => prevStep + 1)
     } else {
-      CreateEventFromDraft()
+      if (window.location.href?.includes("/event/edit")) {
+        handleSubmit()
+      } else {
+        CreateEventFromDraft()
+      }
     }
   }
 
@@ -87,72 +99,67 @@ const CreateEvents = () => {
   const handleSubmit = async () => {
     setLoading(true)
 
-    if(!image && formData?.currentPicUrl){ 
-      handlerPayload(formData)
-    } else { 
+    if (!image) {
+      handleUpdatePayload(formData)
+    } else {
       const fd = new FormData();
       fd.append("file", image);
-      if(!eventData?.eventName){ 
-        if (image !== null) {
-          const response = await sendRequest(
-            `${UPLOAD_IMAGE}${userId}`,
-            "POST",
-            fd,
-            { Authorization: `Bearer ${token}` },
-            true
-          ) 
-          let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName}
-          handlerPayload(newObj)
-        }
-      } else {
-        handleUpdatePayload()
-      }
-    }
-  } 
+      const response = await sendRequest(
+        `${UPLOAD_IMAGE}${userId}`,
+        "POST",
+        fd,
+        { Authorization: `Bearer ${token}` },
+        true
+      )
+      let newObj = { ...formData, picUrls: [response?.fileName], currentPicUrl: response?.fileName }
+      handleUpdatePayload(newObj)
 
-  const handlerPayload = async (item) => { 
+    }
+  }
+
+  const handlerPayload = async (item) => {
     const response = await sendRequest(
       CREATE_EVENT,
       "POST",
       item,
       { Authorization: `Bearer ${token}` }
-    ) 
-    toast.success("Event Created")
+    )
+    toast.success("Event Updated")
     navigate("/events")
   }
 
-  const handleUpdatePayload = async () => { 
+  const handleUpdatePayload = async (item) => {
     const response = await sendRequest(
       "events/update-event",
       "PUT",
-      formData,
+      item,
       { Authorization: `Bearer ${token}` }
-    )  
+    )
     toast.success("Event Updated")
     navigate("/events")
   }
 
   const handleChange = (index, name, value) => {
-    const clone = {...formData}
-    if(clone.productTypeData.length-1 < index){
+    const clone = { ...formData }
+    if (clone.productTypeData.length - 1 < index) {
       clone.productTypeData = [...clone.productTypeData, {
         totalNumberOfTickets: null,
         ticketPrice: null,
-        ticketType: "", 
+        ticketType: "",
         minTicketBuy: null,
         maxTicketBuy: null
       },]
     }
-    clone.productTypeData[index][name] = value 
+    clone.productTypeData[index][name] = value
 
     setFormData(clone)
-  }; 
+  };
 
-  const handleChangeOther = ({ target: { name, value, type } }) => { 
-    if(name === "isPublic" ||name === "attendeesVisibility"){ 
+  const handleChangeOther = ({ target: { name, value, type } }) => {
+    if (name === "isPublic" || name === "attendeesVisibility") {
       setFormData(data => ({
         ...data,
-        [name]: value === "true" ? true: false
+        [name]: value === "true" ? true : false
       }));
     } else {
       setFormData(data => ({
@@ -160,20 +167,20 @@ const CreateEvents = () => {
         [name]: value
       }));
     }
-  };  
+  };
 
-  const handleChangeRadio = ({ name, value }) => {  
+  const handleChangeRadio = ({ name, value }) => {
     setFormData(data => ({
       ...data,
       [name]: value
     }));
   };
 
-  const HandleDeleteTicket =(item)=> {  
-    
+  const HandleDeleteTicket = (item) => {
+
     let myArr = [...formData?.productTypeData]
 
-    var index = myArr.findIndex(function(o){
+    var index = myArr.findIndex(function (o) {
       return o.ticketType === item;
     })
     myArr.splice(index, 1);
@@ -181,15 +188,15 @@ const CreateEvents = () => {
       ...data,
       productTypeData: myArr
     }))
-  } 
+  }
 
-  const HandleAddTicket =(index)=> {  
-    
-    let myArr = [...formData?.productTypeData] 
-    myArr[index] =  {
+  const HandleAddTicket = (index) => {
+
+    let myArr = [...formData?.productTypeData]
+    myArr[index] = {
       totalNumberOfTickets: null,
       ticketPrice: null,
-      ticketType: "", 
+      ticketType: "",
       minTicketBuy: null,
       maxTicketBuy: null
     }
@@ -198,15 +205,15 @@ const CreateEvents = () => {
       ...data,
       productTypeData: myArr
     }))
-  } 
+  }
 
-  const HandleDeleteAllTicket =(name, price)=> { 
+  const HandleDeleteAllTicket = (name, price) => {
     setFormData(data => ({
       ...data,
       productTypeData: [{
         totalNumberOfTickets: null,
         ticketPrice: price,
-        ticketType: name, 
+        ticketType: name,
         minTicketBuy: null,
         maxTicketBuy: null
       }]
@@ -214,16 +221,15 @@ const CreateEvents = () => {
   }
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    console.log({ file });
+    const file = event.target.files[0] 
     if (file) {
       setImage(file)
       setSelectedImage(file.name);
     }
   }
 
-  React.useEffect(()=> {
-    if(eventData?.eventName){ 
+  React.useEffect(() => {
+    if (eventData?.eventName) {
       setFormData({
         id: eventData?.id,
         picUrls: eventData?.picUrls,
@@ -249,104 +255,102 @@ const CreateEvents = () => {
         endDate: eventData?.endDate,
         // expirationDate: eventData?.,
         location: eventData?.location,
-        productTypeData:  eventData?.productTypeData
+        productTypeData: eventData?.productTypeData
       })
     }
   }, [])
 
-  const UploadImageData =async()=>{ 
+  const UploadImageData = async () => {
     setLoading(true)
 
-    if(!image && formData?.currentPicUrl){ 
+    if (!image && formData?.currentPicUrl) {
       UpdateEventFromDraft()
-    } else if(image && formData?.currentPicUrl){ 
+    } else if (image && formData?.currentPicUrl) {
 
       const fd = new FormData();
-      fd.append("file", image); 
+      fd.append("file", image);
       const response = await sendRequest(
         `${UPLOAD_IMAGE}${userId}`,
         "POST",
         fd,
         { Authorization: `Bearer ${token}` },
         true
-      ) 
-      let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName} 
+      )
+      let newObj = { ...formData, picUrls: [response?.fileName], currentPicUrl: response?.fileName }
       UpdateEventFromDraftWithImage(newObj)
-    } else { 
+    } else {
       const fd = new FormData();
-      fd.append("file", image); 
+      fd.append("file", image);
       const response = await sendRequest(
         `${UPLOAD_IMAGE}${userId}`,
         "POST",
         fd,
         { Authorization: `Bearer ${token}` },
         true
-      ) 
-      let newObj = {...formData, picUrls: [response?.fileName], currentPicUrl:response?.fileName}
-      SaveToDraft(newObj) 
+      )
+      let newObj = { ...formData, picUrls: [response?.fileName], currentPicUrl: response?.fileName }
+      SaveToDraft(newObj)
     }
   }
 
-  const SaveToDraft =async(item)=>{
+  const SaveToDraft = async (item) => {
     setLoading(true)
     const response = await sendRequest(
       "/events/create-draft",
       "POST",
       item,
       { Authorization: `Bearer ${token}` }
-    )   
+    )
     setFormData(response)
-    toast.success("Event Saved") 
+    toast.success("Event Saved")
     setLoading(false)
     setActiveStep(prevStep => prevStep + 1)
   }
 
 
 
-  const UpdateEventFromDraftWithImage =async(data)=>{
+  const UpdateEventFromDraftWithImage = async (data) => {
     setLoading(true)
     const response = await sendRequest(
       "/events/update-draft",
       "PUT",
       data,
       { Authorization: `Bearer ${token}` }
-    )  
-    console.log(response);
-    setFormData({...formData, createdBy:userId,  lastModifiedBy: userId})
-    toast.success("Event Saved") 
+    ) 
+    setFormData({ ...formData, createdBy: userId, lastModifiedBy: userId })
+    toast.success("Event Saved")
     setActiveStep(prevStep => prevStep + 1)
     setLoading(false)
   }
 
-  const UpdateEventFromDraft =async()=>{
+  const UpdateEventFromDraft = async () => {
     setLoading(true)
     const response = await sendRequest(
       "/events/update-draft",
       "PUT",
       formData,
       { Authorization: `Bearer ${token}` }
-    )  
-    console.log(response);
-    setFormData({...formData, createdBy:userId,  lastModifiedBy: userId})
-    toast.success("Event Saved") 
+    ) 
+    setFormData({ ...formData, createdBy: userId, lastModifiedBy: userId })
+    toast.success("Event Saved")
     setActiveStep(prevStep => prevStep + 1)
     setLoading(false)
   }
 
-  const CreateEventFromDraft =async()=>{
+  const CreateEventFromDraft = async () => {
     setLoading(true)
     const response = await sendRequest(
       "/events/create-event-from-draft",
       "POST",
       formData,
       { Authorization: `Bearer ${token}` }
-    )  
+    )
     toast.success("Event Created")
     navigate("/events")
 
     setLoading(false)
   }
-  
+
 
   return (
     <div className="flex flex-col gap-2 md:px-16 pt-8">
@@ -363,7 +367,7 @@ const CreateEvents = () => {
               handleChange={handleChangeOther}
               handleChangeRadio={handleChangeRadio}
               handleFileChange={handleFileChange}
-              handleContinue={handleContinue} 
+              handleContinue={handleContinue}
               SaveToDraft={UploadImageData}
               loading={loading}
             />
@@ -393,7 +397,7 @@ const CreateEvents = () => {
               HandlerDeleteTicket={HandleDeleteTicket}
               setFormData={setFormData}
               handleSubmit={handleContinue}
-              HandleAddTicket={HandleAddTicket} 
+              HandleAddTicket={HandleAddTicket}
               handleBack={handleBack}
             />
           </div>

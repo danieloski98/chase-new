@@ -51,6 +51,10 @@ function ChangePassword() {
       toast.error('Old password and new password cannot be same');
       return;
     }
+    if ((userDetails.oldPassword?.length < 8 || userDetails.newPassword?.length < 8)) {
+      toast.error('Password must be more than 8 character');
+      return;
+    }
     const obj = {
       oldPassword: userDetails.oldPassword,
       newPassword: userDetails.newPassword,
@@ -98,6 +102,13 @@ function ChangePassword() {
                     placeholder="Old Password"
                   />
                 </InputGroup>
+                {userDetails?.oldPassword?.length > 0 && (
+                  <> 
+                    {userDetails.oldPassword?.length < 8 && (
+                      <p className=" text-xs text-red-600 mt-1 " >Password must be more than 8 character</p>
+                    )}
+                  </>
+                )}
               </div>
               <div className="mb-4">
                 <InputGroup>
@@ -114,11 +125,19 @@ function ChangePassword() {
                     placeholder="New Password"
                   />
                 </InputGroup>
+                {userDetails?.newPassword?.length > 0 && (
+                  <> 
+                    {userDetails.newPassword?.length < 8  && (
+                      <p className=" text-xs text-red-600 mt-1 " >Password must be more than 8 character</p>
+                    )}
+                  </>
+                )}
               </div>
               <div className="mb-4">
                 <button
                   type="submit"
-                  className="w-full bg-chasescrollBlue border border-blue-500 text-white py-2 px-4 rounded-lg"
+                  disabled={(userDetails.oldPassword?.length < 8 || userDetails.newPassword?.length < 8) ? true : false}
+                  className="w-full bg-chasescrollBlue border disabled:opacity-25 border-blue-500 text-white py-2 px-4 rounded-lg"
                 >
                   {isLoading ? <Spinner />: "Change Password"}
                 </button>
