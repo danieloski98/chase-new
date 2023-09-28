@@ -283,7 +283,7 @@ const Profile_1 = () => {
                     {!self && (
                       <div className="flex items-center gap-4 justify-center text-sm md:text-base">
                         {/* {profile?.joinStatus === "FRIEND_REQUEST_SENT" } */}
-                        {!self && profile?.joinStatus === "CONNECTED" && ( 
+                        {!self && ( 
                           <div
                             onClick={mutate}
                             className="w-40 bg-white text-blue-500 px-4 py-3 rounded-md text-center"
