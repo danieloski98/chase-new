@@ -40,7 +40,7 @@ function ShareBtn(props: Props) {
                             <div className=' absolute inset-x-0 flex justify-center ' > 
                                 <p className=' font-medium text-[20px] text-center' >{ "Share" }</p>
                             </div>
-                            <button className=' ml-auto' onClick={() => setShowModal(false)} >
+                            <button className=' ml-auto z-10 ' onClick={() => setShowModal(false)} >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g id="iconoir:cancel">
                                         <path id="Vector" d="M6.75781 17.243L12.0008 12L17.2438 17.243M17.2438 6.75699L11.9998 12L6.75781 6.75699" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
