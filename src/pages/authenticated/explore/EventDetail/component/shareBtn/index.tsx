@@ -11,11 +11,14 @@ import {
     WhatsappShareButton,
 } from "react-share"; 
 
-interface Props { }
+interface Props { 
+    id: any
+}
 
 function ShareBtn(props: Props) {
-    const { } = props
-
+    const { id } = props
+    // VITE_BASE_URL
+    const url_link = import.meta.env.VITE_DOMAIN
     const [showModal, setShowModal] = useState(false)
     // const [tab, setTab] = useState(false)
 
@@ -48,11 +51,11 @@ function ShareBtn(props: Props) {
                             <div className=' w-full ' >
                                 <p className=' text-center leading-[18px] text-[#121212CC] mt-4 ' >Spread the word about our upcoming event by sharing a custom link with your friends and colleagues.</p>
                                 <p className=' text-[#667085] text-sm font-medium mt-6 mb-1 ' >Event link</p>
-                                <CopyButtton text='Studentisedast.com/event' />
+                                <CopyButtton text={url_link+"event/"+id} />
                                 <p className=' py-5 text-center ' >or</p>
                                 <div className=' w-full flex justify-evenly ' >
                                     <WhatsappShareButton
-                                        url={'www.google.com'}>
+                                        url={url_link+"event/"+id}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="43" height="42" viewBox="0 0 43 42" fill="none">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M21.5 40.6875C31.6482 40.6875 39.875 32.4607 39.875 22.3125C39.875 12.1643 31.6482 3.9375 21.5 3.9375C11.3518 3.9375 3.125 12.1643 3.125 22.3125C3.125 25.608 3.99256 28.7009 5.51175 31.3753L3.125 40.6875L12.7258 38.4612C15.3331 39.8809 18.3223 40.6875 21.5 40.6875ZM21.5 37.8606C30.087 37.8606 37.0481 30.8995 37.0481 22.3125C37.0481 13.7255 30.087 6.76442 21.5 6.76442C12.913 6.76442 5.95192 13.7255 5.95192 22.3125C5.95192 25.628 6.98966 28.701 8.75804 31.2247L7.36538 36.4471L12.6799 35.1185C15.186 36.8479 18.2248 37.8606 21.5 37.8606Z" fill="#BFC8D0" />
                                             <path d="M37.25 21C37.25 29.6985 30.1985 36.75 21.5 36.75C18.1822 36.75 15.104 35.7241 12.5654 33.9723L7.18182 35.3182L8.59256 30.0279C6.80121 27.4715 5.75 24.3585 5.75 21C5.75 12.3015 12.8015 5.25 21.5 5.25C30.1985 5.25 37.25 12.3015 37.25 21Z" fill="url(#paint0_linear_1180_46679)" />
@@ -68,7 +71,7 @@ function ShareBtn(props: Props) {
                                     </WhatsappShareButton>
 
                                     <FacebookShareButton
-                                        url={'www.google.com'}
+                                        url={url_link+"event/"+id}
                                         quote={'Dummy text!'}
                                         hashtag="#muo"
                                     >
@@ -85,7 +88,7 @@ function ShareBtn(props: Props) {
                                     </FacebookShareButton>
                                     <img src='/logoicon.png' role='button' alt='log' />
                                     <LinkedinShareButton
-                                        url={'www.google.com'} >
+                                        url={url_link+"event/"+id} >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="43" height="42" viewBox="0 0 43 42" fill="none">
                                             <rect x="3.125" y="2.625" width="36.75" height="36.75" rx="18.375" fill="#0B83ED" />
                                             <path d="M17.0619 12.7209C17.0619 13.9475 15.9987 14.9419 14.6872 14.9419C13.3757 14.9419 12.3125 13.9475 12.3125 12.7209C12.3125 11.4944 13.3757 10.5 14.6872 10.5C15.9987 10.5 17.0619 11.4944 17.0619 12.7209Z" fill="white" />
@@ -120,7 +123,7 @@ function ShareBtn(props: Props) {
                                         </defs>
                                     </svg>
 
-                                    <EmailShareButton url={"www.google.com"} subject='ChaseScroll Event' >
+                                    <EmailShareButton url={url_link+"event/"+id} subject='ChaseScroll Event' >
                                         <svg width="43" height="42" viewBox="0 0 43 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <g id="vuesax/outline/sms">
                                                 <g id="sms">

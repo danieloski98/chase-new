@@ -46,6 +46,7 @@ interface Props {
     dataInfo: any,
     ticketBought: any,
     getData: any
+    ticketInfo: any
 }
 
 function EventDetail(props: Props) {
@@ -327,7 +328,7 @@ function EventDetail(props: Props) {
                             {formatNumber(minPrice, currency === "USD" ? "$" : "₦")} - {formatNumber(maxPrice, currency === "USD" ? "$" : "₦")}
                         </p>
                     </div>
-                    <ShareBtn />
+                    <ShareBtn id={eventID} />
                 </div>
                 <div className=' pb-2 border-b rounded-b-lg w-full flex mt-5 px-5 justify-between items-center ' >
                     <div className=' flex items-center gap-2' >
