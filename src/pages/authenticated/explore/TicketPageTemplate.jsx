@@ -318,7 +318,7 @@ const TicketPageTemplate = ({
           <img
             src={`${CONFIG.RESOURCE_URL}${banner}`}
             alt="Blurred Image"
-            className="h-80  blur-md w-full object-cover mx-2 rounded-b-[36px] rounded-tl-[36px]]"
+            className="h-80  blur-md w-full object-cover mx-2 rounded-b-[36px] rounded-tl-[36px]"
           />
         </div>
         <img
@@ -330,7 +330,7 @@ const TicketPageTemplate = ({
           <div className="lg:px-2 flex justify-between gap-1">
             <div className="flex flex-col gap-2">
               <h2 className="text-xl font-bold">{eventName}</h2>
-              <p className="text-chasescrollBlue font-bold text-xl">
+              <p className="text-chasescrollBlue font-semibold text-xl">
                 {formatNumber(minPrice, currency === "USD" ? "$" : "₦")} - {formatNumber(maxPrice, currency === "USD" ? "$" : "₦")}
               </p>
             </div>
@@ -368,14 +368,7 @@ const TicketPageTemplate = ({
             </div>
           </div>
           <div className="lg:px-2 flex justify-between items-center py-4 rounded-lg lg:border-b border-gray-300">
-            <div className="flex gap-2 justify-center items-center">
-              {/* <img 
-              role="button"
-                onClick={() => navigate(`/profile/${`${userBy}`}`)}
-                src={`${CONFIG.RESOURCE_URL}${eventLogo}`}
-                alt="convener logo"
-                className="w-12 h-12 object-cover rounded-b-full rounded-tl-full bg-black"
-              /> */}
+            <div className="flex gap-2 justify-center items-center"> 
                 {eventLogo&& (
                   <img src={CONFIG.RESOURCE_URL+eventLogo} alt="" className="w-16 h-16 rounded-b-[64px] rounded-tl-[64px] object-cover" /> 
                 )}
@@ -443,7 +436,7 @@ const TicketPageTemplate = ({
                 </div>
               </div>
             </div>
-            {/* <div className="flex flex-row gap-2 rounded-lg lg:px-2 lg:py-3 lg:w-80 w-full items-center lg:items-end lg:border-b border-gray-300">
+            <div className="flex flex-row gap-2 rounded-lg lg:px-2 lg:py-3 lg:w-80 w-full items-center lg:items-end lg:border-b border-gray-300">
               <LocationIcon className="w-16" />
               <div className="flex flex-col gap-2">
                 <div className="hidden lg:block text-xs text-gray-500">
@@ -457,7 +450,7 @@ const TicketPageTemplate = ({
                   <p className="text-xs font-bold">{locationType}</p>
                 </div>
               </div>
-            </div> */}
+            </div>
 
             {!isBought && (
             <div className="flex flex-col gap-2 justify-end lg:w-[430px] w-full">
