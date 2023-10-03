@@ -13,8 +13,11 @@ function UserImages(props: Props) {
         font
     } = props
 
+    console.log(data);
+    
+
     return ( 
-        <div className={` rounded-b-[64px] rounded-tl-[64px] w-${size} h-${size} border `}> 
+        <div className={` rounded-b-[64px] rounded-tl-[64px] border-[5px] border-[#D0D4EB] w-${size} h-${size} border `}> 
             {data?.data?.imgMain?.value &&  
                 <img src={`https://chaseenv.chasescroll.com//resource-api/download/${data?.data?.imgMain?.value}`} alt="profiles" className="h-full w-full rounded-b-[64px] object-cover rounded-tl-[64px]" />
             }
