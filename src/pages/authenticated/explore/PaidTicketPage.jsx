@@ -11,7 +11,7 @@ import { AxiosError } from "axios"
 import httpService from "../../../utils/httpService"
 import { useQuery } from "react-query"
 import Loader from "../../../components/Loader"
-import DynamicEvent from "./UserInfo/DynamicEvent"
+import DynamicEvent from "./EventDetail"
 
 const PaidTicketPage = () => {
   const { id, orderId, orderCode } = useParams()

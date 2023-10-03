@@ -1,4 +1,4 @@
-import { LuShare2 } from "react-icons/lu";
+// import { LuShare2 } from "react-icons/lu";
 import UserImages from '../../../../components/exploreComponents/sharedComponent/userImages';
 import { formatNumber } from '../../../../utils/helpers';
 import { MessageIcon } from '../../../../components/Svgs';
@@ -48,14 +48,14 @@ interface Props {
     getData: any
 }
 
-function DynamicEvent(props: Props) {
+function EventDetail(props: Props) {
     const {
         banner,
         eventID,
         userBy,
         eventName,
         eventLogo,
-        attendees,
+        // attendees,
         price,
         convener,
         timeAndDate,
@@ -226,8 +226,7 @@ function DynamicEvent(props: Props) {
     }
 
     return (
-        <div className=' w-full ' >
-
+        <div className=' w-full ' > 
 
             {proceedWithDownload && (
                 <DownloadTicketModal
@@ -384,4 +383,4 @@ function DynamicEvent(props: Props) {
     )
 }
 
-export default DynamicEvent 
+export default EventDetail 

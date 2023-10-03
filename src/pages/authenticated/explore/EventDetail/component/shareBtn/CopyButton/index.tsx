@@ -7,9 +7,9 @@ type props = {
     text: string,
 }
 
-export default function CopyButtton({ type, text, hide }: props) {
+export default function CopyButtton({ type, text }: props) {
 
-    const [copySuccess, setCopySuccess] = React.useState('');
+    // const [copySuccess, setCopySuccess] = React.useState('');
     const textAreaRef: any = React.useRef(null);
     const toast = useToast()
 
