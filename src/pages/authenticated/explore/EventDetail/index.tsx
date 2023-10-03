@@ -1,4 +1,4 @@
-import { LuShare2 } from "react-icons/lu";
+// import { LuShare2 } from "react-icons/lu";
 import UserImages from '../../../../components/exploreComponents/sharedComponent/userImages';
 import { formatNumber } from '../../../../utils/helpers';
 import { MessageIcon } from '../../../../components/Svgs';
@@ -46,16 +46,17 @@ interface Props {
     dataInfo: any,
     ticketBought: any,
     getData: any
+    ticketInfo: any
 }
 
-function DynamicEvent(props: Props) {
+function EventDetail(props: Props) {
     const {
         banner,
         eventID,
         userBy,
         eventName,
         eventLogo,
-        attendees,
+        // attendees,
         price,
         convener,
         timeAndDate,
@@ -226,8 +227,7 @@ function DynamicEvent(props: Props) {
     }
 
     return (
-        <div className=' w-full ' >
-
+        <div className=' w-full ' > 
 
             {proceedWithDownload && (
                 <DownloadTicketModal
@@ -328,7 +328,7 @@ function DynamicEvent(props: Props) {
                             {formatNumber(minPrice, currency === "USD" ? "$" : "₦")} - {formatNumber(maxPrice, currency === "USD" ? "$" : "₦")}
                         </p>
                     </div>
-                    <ShareBtn />
+                    <ShareBtn id={eventID} />
                 </div>
                 <div className=' pb-2 border-b rounded-b-lg w-full flex mt-5 px-5 justify-between items-center ' >
                     <div className=' flex items-center gap-2' >
@@ -384,4 +384,4 @@ function DynamicEvent(props: Props) {
     )
 }
 
-export default DynamicEvent 
+export default EventDetail 

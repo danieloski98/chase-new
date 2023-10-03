@@ -7,9 +7,9 @@ type props = {
     text: string,
 }
 
-export default function CopyButtton({ type, text, hide }: props) {
+export default function CopyButtton({ type, text }: props) {
 
-    const [copySuccess, setCopySuccess] = React.useState('');
+    // const [copySuccess, setCopySuccess] = React.useState('');
     const textAreaRef: any = React.useRef(null);
     const toast = useToast()
 
@@ -32,8 +32,8 @@ export default function CopyButtton({ type, text, hide }: props) {
                 value={text + ""}
             />
             {!type && (
-                <div className=' w-full break-all  lg:gap-0 gap-2 h-[45px] px-4 bg-[#fff] border flex text-sm items-center  border-[#D0D5DD] rounded-lg ' >
-                    <p className=' break-all text-[#667085] ' >{text}</p>
+                <div className=' w-full break-all  lg:gap-0 gap-2 py-2 px-4 bg-[#fff] border flex text-sm items-center  border-[#D0D5DD] rounded-lg ' >
+                    <p className=' break-all text-[#667085] mr-3 ' >{text}</p>
                     <div className='  w-fit ml-auto' >
 
                         <svg role='button' onClick={() => copyToClipboard(text)} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
