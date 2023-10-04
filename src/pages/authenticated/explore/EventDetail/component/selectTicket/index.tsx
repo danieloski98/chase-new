@@ -25,7 +25,7 @@ function SelectTicket(props: Props) {
     }
 
     return (
-        <div className=' relative pb-2  w-full flex gap-3 pr-5 items-center justify-end ' >
+        <div className=' relative pb-2  w-full flex gap-3 lg:pl-0 pl-5 pr-5 items-center justify-end ' >
             <div className='border rounded-lg cursor-pointer border-[#5D70F9] flex justify-center items-center w-full h-[49px]  ' >
                 <p className=' text-sm text-[#5D70F9] '>
                     {selectedticket?.ticketType ? selectedticket?.ticketType : "Select Ticket Type"}{" "}

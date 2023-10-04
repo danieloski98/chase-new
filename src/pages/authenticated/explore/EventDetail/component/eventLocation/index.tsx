@@ -15,8 +15,8 @@ function EventLocation(props: Props) {
     return ( 
         <div className=' pb-2  w-full flex flex-col items-center border-b rounded-b-lg  px-2  ' >
             <p className=' text-sm mt-4 font-medium text-center ' >Event location</p>
-            <div className=' flex  w-full items-center gap-3 mt-3 ' >
-                <LocationIcon className="w-16" />
+            <div className=' flex w-full items-center gap-3 mt-3 ' >
+                <LocationIcon className="" />
                 <div className='  ' >
                     <p className=' font-bold text-[#3C41F0]' >{location?.locationDetails ? (location.locationDetails?.length >= 17 ? location.locationDetails : location.locationDetails):
                       location?.link ? (location.link?.length >= 17 ? location.link : location.link): "To Be Announced"}</p>

@@ -16,7 +16,7 @@ function EventDate(props: Props) {
     return ( 
         <div className=' pb-2  w-full flex flex-col items-center border-b rounded-b-lg  px-2  ' >
             <p className=' text-sm mt-4 font-medium text-center ' >{name}</p>
-            <div className=' flex items-center gap-3 mt-3 ' >
+            <div className=' w-full flex items-center gap-3 mt-3 ' >
                 <BlueCalendarIcon />
                 <div className='  ' >
                     <p className=' font-bold text-[#3C41F0]' >{formatDate(date)}</p>
