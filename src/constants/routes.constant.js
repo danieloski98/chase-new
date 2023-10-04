@@ -49,6 +49,7 @@ import EditEvents from "@/pages/authenticated/events/EditEvents"
 import MessageSettings from "@/pages/authenticated/message/MessageSettings"
 import PaymentVerification from "@/pages/unauthenticated/PaymentVerification"
 import PrivacyPolicy from "@/pages/authenticated/profile/PrivacyPolicy"
+import DynamicEvent from "@/pages/authenticated/explore/DynamicEvent"
 
 export const NAVIGATION_ROUTES = [
   {
@@ -137,7 +138,11 @@ export const OTHER_UNAUTHENTICATED_ROUTES = [
   {
     path: PATH_NAMES.paymentVerification,
     element: PaymentVerification,
-  }
+  },
+  {
+    path: `${PATH_NAMES.unauth}/:id`,
+    element: DynamicEvent,
+  },
 ]
 
 export const OTHER_AUTHENTICATED_ROUTES = [

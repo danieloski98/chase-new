@@ -10,6 +10,7 @@ export const PATH_NAMES = {
   report: "/home/report",
   explore: "/explore",
   events: "/events",
+  unauth: "/event",
   paidEvents: "/events/paid-events",
   freeEvents: "/events/free-events",
   suggestions: "/explore/suggestions",
