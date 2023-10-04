@@ -41,7 +41,13 @@ const MessageChip = ({message, userId}: {
                             { message.mediaType === 'VIDEO' &&  message.media.split('.')[1] ==='mp4' && (
                                 <div className="flex flex-col gap-2">
                                     <VideoPlayer videoUrl={`${CONFIG.RESOURCE_URL}/${message?.media}`}/>
-                                    <Text textAlign={'left'} marginBottom={'10px'}>{message?.message ? message?.message : ''}</Text>
+                                    { message?.message.startsWith('https://') || message?.message.startsWith('http://') || message?.message.startsWith('www.') ? (
+                                    <a href={message?.message} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline'}}>
+                                        <Text textAlign={'left' } fontSize={'16px'}width={'100%'} >{message?.message ? message?.message : ''}</Text>
+                                    </a>
+                                ) : (
+                                    <Text textAlign={'left' } fontSize={'16px'} width={'100%'}>{message?.message ? message?.message : ''}</Text>
+                                )}
                                 </div>
                             )}
                             {
@@ -53,7 +59,13 @@ const MessageChip = ({message, userId}: {
                                             className="cursor-pointer sm:max-w-[100%] lg:max-w-[300px] rounded-[10px]"
                                             // onClick={() => toggleMediaVisibility(`${CONFIG.RESOURCE_URL}${message?.mediaRef}`)}
                                         />
-                                    <Text textAlign={'left'} marginBottom={'10px'}>{message?.message ? message?.message : ''}</Text>
+                                    { message?.message.startsWith('https://') || message?.message.startsWith('http://') || message?.message.startsWith('www.') ? (
+                                    <a href={message?.message} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline', width: '100%' }}>
+                                        <Text textAlign={'left' } fontSize={'16px'} width={'100%'} >{message?.message ? message?.message : ''}</Text>
+                                    </a>
+                                ) : (
+                                    <Text textAlign={'left' } fontSize={'16px'} width={'100%'} >{message?.message ? message?.message : ''}</Text>
+                                )}
                                     </div>
                                 )
                             }{
@@ -70,7 +82,13 @@ const MessageChip = ({message, userId}: {
                                        </HStack>
                                     )}
                                 </div>
-                            <Text textAlign={'left' } fontSize={'16px'}>{message?.message ? message?.message : ''}</Text>
+                                { message?.message.startsWith('https://') || message?.message.startsWith('http://') || message?.message.startsWith('www.') ? (
+                                    <a href={message?.message} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline', width: '100%' }}>
+                                        <Text textAlign={'left' } fontSize={'16px'} width={'100%'} >{message?.message ? message?.message : ''}</Text>
+                                    </a>
+                                ) : (
+                                    <Text textAlign={'left' } fontSize={'16px'} width={'100%'} >{message?.message ? message?.message : ''}</Text>
+                                )}
                             </div>
                                 )
                             }
@@ -82,7 +100,13 @@ const MessageChip = ({message, userId}: {
                                     <Text width='100%' textAlign={'left'} marginBottom={'10px'}>~{ message.createdBy.username }</Text>
                                 )
                             }
-                            <Text width='100%' fontSize={'14px'} textAlign={'left'}>{message?.message}</Text>
+                            { message?.message.startsWith('https://') || message?.message.startsWith('http://') || message?.message.startsWith('www.') ? (
+                                    <a href={message?.message} target="_blank" rel="noreferrer" style={{ textDecoration: 'underline', width: '100%' }}>
+                                        <Text textAlign={'left' } fontSize={'16px'}>{message?.message ? message?.message : ''}</Text>
+                                    </a>
+                                ) : (
+                                    <Text textAlign={'left' } fontSize={'16px'} width={'100%'} >{message?.message ? message?.message : ''}</Text>
+                                )}
                         </VStack>
                     )}
                     <Text size='xs' fontSize={'12px'} mt='15px' color={'gray.400'} textAlign={'right'}>{formatTimeAgo(message.createdDate)}</Text>
