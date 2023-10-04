@@ -10,6 +10,7 @@ import {
     // MailruShareButton,
     WhatsappShareButton,
 } from "react-share"; 
+import SendMesageModal from './SendMesageModal';
 
 interface Props { 
     id: any
@@ -19,7 +20,8 @@ function ShareBtn(props: Props) {
     const { id } = props
     // VITE_BASE_URL
     const url_link = import.meta.env.VITE_DOMAIN
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState(false);
+    const [share, setShare] = useState(false);
     // const [tab, setTab] = useState(false)
 
     // const handleEmail = () => {
@@ -28,6 +30,7 @@ function ShareBtn(props: Props) {
 
     return (
         <>
+            <SendMesageModal id={id} isOpen={share} onClose={() => setShare(false)} />
             <button onClick={() => setShowModal(true)} className=' flex items-center font-medium text-[20px] text-[#3C41F0] gap-2 ' >
                 Share
                 <LuShare2 size={24} color="#3C41F0" />
@@ -86,7 +89,10 @@ function ShareBtn(props: Props) {
                                             </defs>
                                         </svg>
                                     </FacebookShareButton>
-                                    <img src='/logoicon.png' role='button' alt='log' />
+                                    <img onClick={() => {
+                                        setShowModal(false);
+                                        setShare(true)
+                                    }} src='/logoicon.png' role='button' alt='log' />
                                     <LinkedinShareButton
                                         url={url_link+"event/"+id} >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="43" height="42" viewBox="0 0 43 42" fill="none">
