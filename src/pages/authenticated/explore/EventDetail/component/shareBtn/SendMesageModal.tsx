@@ -16,7 +16,7 @@ const UserCard = (props: IUser & { checked: boolean, handleCheck: (e: string) =>
             <HStack>
                 <Avatar src={`${CONFIG.RESOURCE_URL}${imgMain}`} size='sm' name={`${firstName} ${lastName}`} />
                 <VStack alignItems={'flex-start'} spacing={0}>
-                    <Heading fontSize={'16px'} color='black'>{firstName || ''}</Heading>
+                    <Heading fontSize={'16px'} color='black'>{firstName || ''} { lastName || ''}</Heading>
                     <Text color='grey' fontSize={'14px'}>@{username || ''}</Text>
                 </VStack>
             </HStack>
