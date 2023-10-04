@@ -1,7 +1,7 @@
 // import { LuShare2 } from "react-icons/lu";
 import UserImages from '../../../../components/exploreComponents/sharedComponent/userImages';
 import { formatNumber } from '../../../../utils/helpers';
-import { MessageIcon } from '../../../../components/Svgs';
+import { CaretLeftIcon, MessageIcon } from '../../../../components/Svgs';
 import AddFriends from './component/addfriends';
 import EventDate from './component/eventdate';
 import SelectTicket from "./component/selectTicket";
@@ -93,7 +93,7 @@ function EventDetail(props: Props) {
     const { token, setEventData, userId }: any = useAuth()
     const isDisabled = !isFree && !selectedCategory?.ticketPrice
     const navigate = useNavigate()
- 
+
     const toggleRefundPolicy = () => setShowRefundPolicy(state => !state)
     const viewTicket = () => setProceedWithDownload(state => !state)
     const togglePaymentOptions = () => setShowPaymentOptions(state => !state)
@@ -151,7 +151,7 @@ function EventDetail(props: Props) {
                 Authorization: `Bearer ${token}`,
             }
         ).then((data: any) => {
-            setticketinfo(data?.content) 
+            setticketinfo(data?.content)
         })
     }
 
@@ -227,7 +227,7 @@ function EventDetail(props: Props) {
     }
 
     return (
-        <div className=' w-full ' > 
+        <div className=' w-full relative ' >
 
             {proceedWithDownload && (
                 <DownloadTicketModal
@@ -314,11 +314,28 @@ function EventDetail(props: Props) {
             )}
             {showStripeForm && (
                 <Stripecomponent clientKey={clientKey} config={configStripe} closeModal={closeModal} getData={getData} />
-            )}
-            <div className=' w-full h-[300px] bg-slate-400 rounded-b-[16px] rounded-tl-[16px] ' >
-                <img 
-                    src={`${CONFIG.RESOURCE_URL}${banner}`} 
-                    className="h-80 w-full object-cover  rounded-b-[16px] rounded-tl-[16px]"/>
+            )} 
+            <div className=' w-full relative h-80 rounded-b-[16px] rounded-tl-[16px] ' >
+
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute top-9 z-20 left-2 p-2"
+                >
+                    <CaretLeftIcon />
+                </button>
+
+                <div className="backdrop-blur-sm absolute inset-0 px-3  -z-20 flex justify-center items-center rounded-b-[16px] rounded-tl-[16px] h-80">
+                    <img
+                        src={`${CONFIG.RESOURCE_URL}${banner}`}
+                        alt="Blurred Image"
+                        className="h-80  blur-md w-full object-cover mx-2 rounded-b-[16px] rounded-tl-[16px]"
+                    />
+                </div>
+                <img
+                    src={`${CONFIG.RESOURCE_URL}${banner}`}
+                    alt="ticket banner"
+                    className="w-full h-80 z-20 object-contain rounded-b-[16px] rounded-tl-[16px]"
+                />
             </div>
             <div className=' w-full ' >
                 <div className=' w-full mt-12 px-5 flex items-center justify-between ' >
