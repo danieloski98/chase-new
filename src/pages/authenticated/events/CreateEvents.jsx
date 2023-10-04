@@ -77,12 +77,10 @@ const CreateEvents = () => {
       if (!formData?.productTypeData[0]?.ticketType) {
         UploadImageData()
       }
-      setActiveStep(prevStep => prevStep + 1)
     } else if (activeStep === 1) {
       if (!formData?.productTypeData[0]?.ticketType) {
         UpdateEventFromDraft()
-      }
-      setActiveStep(prevStep => prevStep + 1)
+      } 
     } else {
       if (window.location.href?.includes("/event/edit")) {
         handleSubmit()
@@ -136,7 +134,7 @@ const CreateEvents = () => {
       { Authorization: `Bearer ${token}` }
     )
     toast.success("Event Updated")
-    navigate("/events")
+    navigate("/events")  
   }
 
   const handleChange = (index, name, value) => {
@@ -346,8 +344,7 @@ const CreateEvents = () => {
       { Authorization: `Bearer ${token}` }
     )
     toast.success("Event Created")
-    navigate("/events")
-
+    navigate("/events") 
     setLoading(false)
   }
 
