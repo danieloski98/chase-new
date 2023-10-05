@@ -13,11 +13,8 @@ function EventLocation(props: Props) {
         locationType
     } = props
 
-    console.log(location);
-    
-
     return ( 
-        <div className=' pb-2  w-full flex flex-col border-b rounded-b-lg  px-2  ' >
+        <div className=' pb-2  w-full flex flex-col border-b rounded-b-lg  px-4  ' >
             <p className=' text-[18px] mt-4 font-bold ' >Event location</p>
             <div className=' flex w-full items-center gap-3 mt-3 ' >
                 <LocationIcon className="" />
