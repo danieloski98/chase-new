@@ -19,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Loader from "../Loader"
 import useInfinteScroller from "../../hooks/useInfinteScroller"
 import InfiniteScrollerComponent from "../../hooks/infiniteScrollerComponent"
+import LocationDetail from "../exploreComponents/loctionDetail"
 
 const EventComponent =(props)=> {
 
@@ -141,10 +142,12 @@ const EventComponent =(props)=> {
             </g>
             </g>
           </svg>
-          <p className=" font-medium text-[#1732F7] " >
+
+          <LocationDetail location={event?.location} locationType={event?.locationType} length={20} style={"font-medium text-[#1732F7]"} />
+          {/* <p className=" font-medium text-[#1732F7] " >
             {event?.location?.locationDetails ? (event?.location.locationDetails?.length >= 17 ? event?.location.locationDetails.slice(0, 17)+"..." : event?.location.locationDetails):
             event?.location?.link ? (event?.location.address?.length >= 17 ? event?.location.address.slice(0, 17)+"..." : event?.location.address): ""}
-            </p>
+            </p> */}
           <button onClick={() => handleEvent(event)} className=" ml-auto " > 
             {savedEvent && 
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
