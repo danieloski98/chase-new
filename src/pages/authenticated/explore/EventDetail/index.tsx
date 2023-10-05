@@ -372,7 +372,7 @@ function EventDetail(props: Props) {
                             {!isOrganizer ? (
                                 <SelectTicket ticket={price} currency={currency} setticket={setSelectedCategory} selectedticket={selectedCategory} />
                             ) : (
-                                <div className=" w-full flex justify-center items-center gap-3 pr-5" >
+                                <div className=" w-full flex justify-center lg:flex-row flex-col items-center gap-3 pr-5" >
                                     <button onClick={() => clickHandler()} className=" w-full h-[49px] text-white font-semibold rounded-lg bg-chasescrollBlue text-sm " >My Dashboard</button>
                                     <button
                                         onClick={() => editHandler()}
@@ -392,8 +392,7 @@ function EventDetail(props: Props) {
                     <p className=' text-[#5B5858] font-normal mt-2 ' >
                        {about}
                     </p>
-                </div>
-
+                </div> 
                 <EventLocation location={location} locationType={locationType} />
                 {location?.address && (
                     <div className=' w-full px-4 py-3 ' >
