@@ -227,7 +227,7 @@ function EventDetail(props: Props) {
     }
 
     return (
-        <div className=' w-full relative ' >
+        <div className=' w-full relative lg:pb-0 pb-24 ' >
 
             {proceedWithDownload && (
                 <DownloadTicketModal
@@ -314,7 +314,7 @@ function EventDetail(props: Props) {
             )}
             {showStripeForm && (
                 <Stripecomponent clientKey={clientKey} config={configStripe} closeModal={closeModal} getData={getData} />
-            )} 
+            )}
             <div className=' w-full relative h-80 rounded-b-[16px] rounded-tl-[16px] ' >
 
                 <button
@@ -337,7 +337,7 @@ function EventDetail(props: Props) {
                     className="w-full h-80 z-20 object-contain rounded-b-[16px] rounded-tl-[16px]"
                 />
             </div>
-            <div className=' w-full ' >
+            <div className=' w-full px-2 ' >
                 <div className=' w-full mt-12 px-5 flex items-center justify-between ' >
                     <div>
                         <p className=' text-[24px] text-[#121212] font-bold  ' >{eventName}</p>
@@ -364,7 +364,7 @@ function EventDetail(props: Props) {
                         </div>
                     )}
                 </div>
-                <div className=' w-full grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-2' >
+                <div className=' w-full grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 lg:gap-2' >
                     <EventDate name='Event Start date and time' date={timeAndDate} />
                     <EventDate name='Event End date and time' date={endtimeAndDate} />
                     {!isBought && (
@@ -385,16 +385,17 @@ function EventDetail(props: Props) {
                         </>
                     )}
                     <EventLocation location={location} locationType={locationType} />
-                    <div className="flex items-center justify-center">
-                        <button
-                            disabled={isBought ? false : isDisabled}
-                            onClick={(isFree || isBought) ? viewTicket : buyTicket}
-                            className={`${isBought ? "" : isDisabled ? "cursor-not-allowed opacity-50" : ""
-                                } bg-chasescrollBlue text-white w-96 p-3 text-sm rounded-lg`}
-                        >
-                            {(isFree || isBought) ? "View" : "Buy"} Ticket
-                        </button>
-                    </div>
+                </div>
+
+                <div className="flex items-center py-6 w-full justify-center">
+                    <button
+                        disabled={isBought ? false : isDisabled}
+                        onClick={(isFree || isBought) ? viewTicket : buyTicket}
+                        className={`${isBought ? "" : isDisabled ? "cursor-not-allowed opacity-50" : ""
+                            } bg-chasescrollBlue text-white w-96 p-3 text-sm rounded-lg`}
+                    >
+                        {(isFree || isBought) ? "View" : "Buy"} Ticket
+                    </button>
                 </div>
             </div>
         </div>

@@ -15,7 +15,7 @@ function useInfiniteScroll({ userID, pageParam = 0}: {
     const [newIttem, setNew] = React.useState<IMediaContent[]>([]);
 
     const { mutate } = useMutation({
-      mutationFn: () => httpService.get(`/feed/get-user-and-friends-posts?userID=${userID}&page=${0}&size=20`),
+      mutationFn: () => httpService.get(`/feed/get-public-posts?userID=${userID}&page=${0}&size=20`),
       onSuccess: (data: any) => {
         console.log(data.data.content[0]);
         const item: IMediaPost = data.data as IMediaPost;
