@@ -94,7 +94,7 @@ function ShareBtn(props: Props) {
                                         </defs>
                                     </svg>
                                 </FacebookShareButton>
-                                <img src='/logoicon.png' role='button' alt='log' />
+                                <img onClick={() => setShare(true)} src='/logoicon.png' role='button' alt='log' />
                                 <LinkedinShareButton
                                     url={url_link + "event/" + id} >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="43" height="42" viewBox="0 0 43 42" fill="none">
