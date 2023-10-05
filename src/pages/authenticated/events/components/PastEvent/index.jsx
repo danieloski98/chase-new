@@ -56,9 +56,11 @@ function PastEventsTab() {
                     <span className="mr-1">
                         <LocationIcon_2 />
                     </span>
-                    <p className="text-gray-600 text-sm capitalize">
+
+                    <LocationDetail location={event?.location} locationType={event?.locationType} length={20} style={"text-gray-600 text-sm capitaliz"} />
+                    {/* <p className="text-gray-600 text-sm capitalize">
                         {event?.locationType}
-                    </p>
+                    </p> */}
                     </div>
                     <div className="flex items-center">
                     <div className="flex items-center mr-4">

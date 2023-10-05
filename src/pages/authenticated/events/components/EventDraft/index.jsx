@@ -105,9 +105,11 @@ function EventDraft() {
                     <span className="mr-1">
                         <LocationIcon_2 />
                     </span>
-                    <p className="text-gray-600 text-sm">
+                    
+                    <LocationDetail location={event?.location} locationType={event?.locationType} length={20} style={"text-gray-600 text-sm"} />
+                    {/* <p className="text-gray-600 text-sm">
                         {event?.location?.address}
-                    </p>
+                    </p> */}
                     </div>
                     <div className="flex items-center"> 
                     <button className="bg-blue-100 text-blue-600 text-sm px-2">

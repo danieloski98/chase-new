@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 import { EVENT_TYPE, POLICY } from "../../../../constants";
 import CONFIG from "../../../../config";
 import EventLocation from "./component/eventLocation";
-import ShareBtn from "./component/shareBtn";
+import ShareBtn from "./component/shareBtn"; 
 
 interface Props {
     banner: any,
@@ -384,8 +384,26 @@ function EventDetail(props: Props) {
                             )}
                         </>
                     )}
-                    <EventLocation location={location} locationType={locationType} />
+                    {/* <EventVenue location={location} /> */}
                 </div>
+
+                <div className=' w-full px-4 py-3 ' >
+                    <p className=' font-bold text-[18px] text-black ' >About this event </p>
+                    <p className=' text-[#5B5858] font-normal mt-2 ' >
+                       {about}
+                    </p>
+                </div>
+
+                <EventLocation location={location} locationType={locationType} />
+                {location?.address && (
+                    <div className=' w-full px-4 py-3 ' >
+                        <p className=' font-bold text-[18px] text-black ' >Venue Details</p>
+                        <p className=' text-[#5B5858] font-normal mt-2 ' >
+                            {location?.address}
+                        </p>
+                    </div>
+
+                )}
 
                 <div className="flex items-center py-6 w-full justify-center">
                     <button
