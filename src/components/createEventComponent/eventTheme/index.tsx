@@ -146,9 +146,9 @@ function CreateEventTheme(props: Props) {
                             <label className=" font-medium text-chasescrollTextGrey "> Event Title <span className="text-chasescrollRed"> *</span></label>
                             <Input
                                 name="eventName"
-                                onChange={(e)=> handleChangeLimit(e, 50)}
+                                onChange={(e)=> handleChangeLimit(e, 150)}
                                 value={formData?.eventName} />
-                            <p className=' text-sm ' >{formData?.eventName?.length+"/"+50}</p>
+                            <p className=' text-sm ' >{formData?.eventName?.length+"/"+150}</p>
                         </div>
                     </div>
                     <div className=' w-full  flex flex-col gap-4 lg:mt-0 mt-4 ' >
@@ -173,10 +173,10 @@ function CreateEventTheme(props: Props) {
                                 id="eventDescription"
                                 name="eventDescription"
                                 value={formData?.eventDescription}
-                                onChange={(e)=> handleChangeLimit(e, 150)}
+                                onChange={(e)=> handleChangeLimit(e, 1500)}
                                 className="outline-none w-full h-20 text-sm"
                             />
-                            <p className=' text-sm ' >{formData?.eventDescription?.length+"/"+150}</p>
+                            <p className=' text-sm ' >{formData?.eventDescription?.length+"/"+1500}</p>
                         </div>
                         {/* <div className="grid gap-2 ">
                             <h2 className="font-bold text-sm px-0">Join Type</h2>

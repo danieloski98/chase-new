@@ -76,17 +76,21 @@ const CreateEvents = () => {
     if (activeStep === 0) {
       if (!formData?.productTypeData[0]?.ticketType) {
         UploadImageData()
-      }
+      } else { 
+        setActiveStep(prevStep => prevStep + 1)
+      } 
     } else if (activeStep === 1) {
       if (!formData?.productTypeData[0]?.ticketType) {
         UpdateEventFromDraft()
+      }  else { 
+        setActiveStep(prevStep => prevStep + 1)
       } 
     } else {
       if (window.location.href?.includes("/event/edit")) {
         handleSubmit()
       } else {
         CreateEventFromDraft()
-      }
+      } 
     }
   }
 
