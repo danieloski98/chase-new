@@ -4,6 +4,7 @@ import { CalendarIcon } from '../../../components/Svgs'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify';
+import React from 'react';
 
 interface Props {
     formData: any,
@@ -100,6 +101,16 @@ function CreateEventInformation(props: Props) {
         }
     }
 
+    React.useEffect(()=> {
+     if(formData?.location?.link && formData?.location?.locationDetails){
+        setSelectType("Hybrid Location")
+     } else if(formData?.location?.locationDetails){
+        setSelectType("Physical Location")
+     }else if(formData?.location?.link){
+        setSelectType("Online Location")
+     }
+    }, [])
+
     return (
         <div className=' w-full flex flex-col items-center pt-10 px-6 ' >
             <div className=' lg:max-w-[600px] w-full flex flex-col items-center justify-center gap-4 py-6 ' >
@@ -177,13 +188,14 @@ function CreateEventInformation(props: Props) {
                                         h={"45px"}
                                         className="text-sm text-chasescrollDarkBlue"
                                         onChange={(e) => setSelectType(e.target.value)}
-                                        value={formData?.location?.link ? "Online Location" : formData?.location?.locationDetails ? "Physical Location" : ""} >
+                                        value={selectType} >
                                         <option value="">add location</option>
                                         <option>Physical Location</option>
                                         <option>Online Location</option>
+                                        <option>Hybrid Location</option>
                                     </Select>
                                 </div>
-                                {(selectType === "Physical Location" || formData?.location?.locationDetails) && (
+                                {(selectType === "Physical Location" || selectType === "Hybrid Location"  || formData?.location?.locationDetails) && (
                                     <div className=' w-full mt-4 ' >
                                         <p>Enter Location</p>
                                         <Input
@@ -203,9 +215,9 @@ function CreateEventInformation(props: Props) {
                                         />
                                     </div>
                                 )}
-                                {(selectType === "Online Location" || formData?.location?.link) && (
+                                {(selectType === "Online Location" || selectType === "Hybrid Location"  || formData?.location?.link) && (
                                     <div className=' w-full mt-4 ' >
-                                        <p className=' mb-2 ' >Enter Location</p>
+                                        <p className=' mb-2 ' >Enter Online Url</p>
                                         <Input
                                             type="text"
                                             h={"45px"}
