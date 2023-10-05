@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify';
 import OverlayWrapper from '../../../components/OverlayWrapper';
 import CommunityFunnel from '../../../components/events/CommunityFunnel';
@@ -42,17 +42,13 @@ function CreateEventTicket(props: Props) {
             }))
         }
     }
-  
+   
+    console.log(formData?.productTypeData?.ticketType);
+
+    React.useEffect(()=> {
+        setIsFree(formData?.productTypeData?.ticketType === "Free" ? false : true)
+    }, [])
     
-  
-    // const handleExpirationDateSelect = (date, dateString) => {
-    //     setFormData((data: any) => ({
-    //         ...data,
-    //         expirationDate: Date.parse(new Date(date?.$d).toJSON()),
-    //     }))
-    // }
-  
-    // const [ticketArray, setArray] = React.useState([""]) 
   
     const clickHandler =async()=> {
         

@@ -372,7 +372,7 @@ function EventDetail(props: Props) {
                             {!isOrganizer ? (
                                 <SelectTicket ticket={price} currency={currency} setticket={setSelectedCategory} selectedticket={selectedCategory} />
                             ) : (
-                                <div className=" w-full flex justify-center items-center gap-3 pr-5" >
+                                <div className=" w-full flex justify-center lg:flex-row flex-col items-center gap-3 pr-5" >
                                     <button onClick={() => clickHandler()} className=" w-full h-[49px] text-white font-semibold rounded-lg bg-chasescrollBlue text-sm " >My Dashboard</button>
                                     <button
                                         onClick={() => editHandler()}
