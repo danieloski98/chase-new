@@ -12,6 +12,7 @@ import { toast } from "react-toastify"
 import { useMutation, useQueryClient } from 'react-query';
 import { IoMdTrash } from 'react-icons/io';
 import InfiniteScrollerComponent from '../../../../../hooks/infiniteScrollerComponent';
+import LocationDetail from '../../../../../components/exploreComponents/loctionDetail';
 
 function EventDraft() {
     
