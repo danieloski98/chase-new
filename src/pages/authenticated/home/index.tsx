@@ -48,7 +48,7 @@ const Home = () => {
  const {  isLoading, results, hasNextPage, mutate: loadMore, refresh, newIttem  } = useInfiniteScroll({ pageParam, userID: userId as any })
  const intObserver = useRef<IntersectionObserver>();
 
- const lastChildRef = useCallback((post) => {
+ const lastChildRef = useCallback((post: any) => {
   if (isLoading) return;
   if (intObserver.current) intObserver.current.disconnect();
   intObserver.current = new IntersectionObserver((posts) => {
@@ -179,15 +179,15 @@ const Home = () => {
                     />
 
                     <Textarea
-                    placeholder={`Add your thought ${userName}`}
-                    value={postInput}
-                    onChange={e => setPostInput(e.target.value)}
-                    borderWidth={0}
-                    backgroundColor={'transparent'}
-                    resize={'none'}
-                    cols={1}
-                    size='xs'
-                  />
+                      placeholder={`Add your thought ${userName}`}
+                      value={postInput}
+                      onChange={e => setPostInput(e.target.value)}
+                      borderWidth={0}
+                      backgroundColor={'transparent'}
+                      resize={'none'}
+                      cols={1}
+                      size='xs'
+                    />
 
                     <button
                     className="w-14 pl-2 pr-6 flex justify-center items-center cursor-pointer border-r border-white"

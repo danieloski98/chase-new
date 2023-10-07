@@ -84,7 +84,7 @@ const LoginForm = () => {
 
   return renderForm(
     <>
-      <CustomInput name="username" placeholder="Username" type="text" />
+      <CustomInput name="username" placeholder="Username Or Email" type="text" />
       <Box height='15px' />
       <CustomInput name="password" placeholder="Password" type="password" isPassword />
       <Box height='15px' />
