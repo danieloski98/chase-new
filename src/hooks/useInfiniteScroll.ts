@@ -21,7 +21,9 @@ function useInfiniteScroll({ userID, pageParam = 0}: {
         const item: IMediaPost = data.data as IMediaPost;
         //const arr = [...item.content, ...newIttem, ...results];
         newIttem.unshift(item.content[0]);
-        setNew(lodash.uniq(newIttem));
+        // setNew(lodash.uniq(newIttem));
+
+        setNew(lodash.uniqBy(newIttem, "id")); 
         //setResults(lodash.uniq(arr));
       }
     })
