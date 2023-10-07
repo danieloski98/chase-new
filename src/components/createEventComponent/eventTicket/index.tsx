@@ -46,7 +46,7 @@ function CreateEventTicket(props: Props) {
     console.log(formData?.productTypeData?.ticketType);
 
     React.useEffect(()=> {
-        setIsFree(formData?.productTypeData?.ticketType === "Free" ? false : true)
+        setIsFree(formData?.productTypeData?.ticketType === "Free" ? true : false)
     }, [])
     
   
@@ -120,7 +120,7 @@ function CreateEventTicket(props: Props) {
                         <Checkbox 
                             type="checkbox"
                             className="h-4 w-4 text-blue-600 text-sm md:text-base"
-                            isChecked={!isFree}
+                            isChecked={isFree}
                             id="isPaid"
                             onChange={toggleStatus}  />
                         Paid
@@ -135,7 +135,7 @@ function CreateEventTicket(props: Props) {
                             <Checkbox 
                                 type="checkbox"
                                 className="form-checkbox h-4 w-4 text-blue-600 text-sm md:text-base"
-                                isChecked={isFree}
+                                isChecked={!isFree}
                                 id="isFree"
                                 onChange={toggleStatus} />
                             Free

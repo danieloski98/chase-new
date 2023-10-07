@@ -21,7 +21,7 @@ const EventsPanel = ({ events, toggleEvents, communityId }: IProps) => {
     const removeEventFromGroup = (eventID) => {
 		sendRequest(
 			REMOVE_SAVED_EVENT,
-			"DELETE",
+			"POST",
 			{
 				eventID,
 				typeID: communityId,
