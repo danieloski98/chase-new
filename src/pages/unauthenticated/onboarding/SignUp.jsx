@@ -198,7 +198,7 @@ const SignUp = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-5">
-                <Button disabled={!formState.isValid} _disabled={{ backgroundColor: 'grey' }} type="submit" isLoading={isLoading} _active={{ bg: COLORS.chasescrollButtonBlue }} height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign up</Button>
+                <Button disabled={!formState.isValid} opacity={!formState.isValid || !termsAccepted ? "20%": ""} _disabled={{ backgroundColor: 'grey' }}  bg={COLORS.chasescrollBlue} type="submit" isLoading={isLoading} _active={{ bg: COLORS.chasescrollButtonBlue }} height='50px' borderRadius='md' color='white' marginTop='20px' width='100%'>Sign up</Button>
               </div>
           </div>
         </div>
