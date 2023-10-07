@@ -8,6 +8,7 @@ import { PATH_NAMES } from '../../../../../constants/paths.constant';
 import CONFIG from '../../../../../config';
 import { BookmarkIcon, BookmarkIconFill, CalendarIcon, LocationIcon_2 } from "../../../../../components/Svgs"
 import InfiniteScrollerComponent from '../../../../../hooks/infiniteScrollerComponent';
+import LocationDetail from '../../../../../components/exploreComponents/loctionDetail';
 
 
 function PastEventsTab() {
