@@ -80,7 +80,7 @@ const Community = ({ community }) => {
             {leaveGroup.isLoading && 'Loading'}
           </button>
         )}
-        {community.joinStatus === 'NOT_CONNECTED' && (
+        {(
           <button
             className="text-xs md:text-sm bg-[#5D70F9] hover:bg-blue-700 text-white font-bold px-4 py-2 md:py-[10px] md:px-[42px] rounded-lg"
             onClick={() => mutate({ groupID: community.id  })}

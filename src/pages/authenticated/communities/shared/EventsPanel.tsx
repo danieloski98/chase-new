@@ -57,10 +57,10 @@ const EventsPanel = ({ events, toggleEvents, communityId }: IProps) => {
                     />
                     <div className="flex flex-col">
                         <p className="text-[8px]">
-                            {event?.eventName}
+                            {event?.eventName.length > 10 ? event?.eventName.slice(0, 10) : event?.eventName}
                         </p>
                         <p className="text-[6px] text-chasescrollBlue">
-                            {event?.eventDescription}
+                            {event?.eventDescription.length > 12 ? event?.eventDescription.slice(0, 12) : event?.eventDescription}
                         </p>
                     </div>
                 </div>

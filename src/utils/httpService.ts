@@ -4,6 +4,10 @@ const httpService = axios.create({
     baseURL: `${import.meta.env.VITE_BASE_URL}`,
 });
 
+export const unsecureHttpService = axios.create({
+    baseURL: `${import.meta.env.VITE_BASE_URL}`,
+})
+
 httpService.interceptors.request.use(async(config) => {
     const token = localStorage.getItem('token')
     if (config.data instanceof FormData) {
