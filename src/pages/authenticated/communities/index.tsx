@@ -8,7 +8,7 @@ import { GET_JOINED_GROUPS } from "../../../constants/endpoints.constant"
 import { PATH_NAMES } from "../../../constants/paths.constant"
 import { Link } from "react-router-dom"
 import { useQuery } from "react-query"
-import httpService from "../../../utils/httpService"
+import httpService, { unsecureHttpService } from "../../../utils/httpService"
 import MyCommunities from "../../../components/communities/MyCommunities"
 import FindCommunities from "../../../components/communities/FindCommunities"
 import Requests from "../../../components/communities/Requests"
@@ -34,7 +34,11 @@ const Communities = () => {
     }
   });
 
-  const getCommunities = useQuery(['getCommunities', searchVal], () => httpService.get(`${GET_ALL_PUBLIC_GROUPS_TO_JOIN}?searchText=${searchVal}`), {
+  const getCommunities = useQuery(['getCommunities', searchVal], () => unsecureHttpService.get(`/group/group`, {
+    params: {
+      // searchText: searchVal
+    }
+  }), {
     onSuccess: (data) => {
       setCommunities(data.data.content);
     }
