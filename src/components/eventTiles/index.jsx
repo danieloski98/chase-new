@@ -5,6 +5,7 @@ import { useAuth } from '../../context/authContext'
 import { useFetch } from '../../hooks/useFetch'
 import { useNavigate } from 'react-router-dom'
 import { toast } from "react-toastify"
+import LocationDetail from '../exploreComponents/loctionDetail'
 
 
 
