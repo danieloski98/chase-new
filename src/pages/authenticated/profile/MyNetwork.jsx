@@ -14,6 +14,8 @@ import Loader from "../../../components/Loader"
 import useInfinteScroller from "../../../hooks/useInfinteScroller"
 import { useSearchParams } from 'react-router-dom';
 import InfiniteScrollerComponent from "../../../hooks/infiniteScrollerComponent"
+import httpService from "@/utils/httpService"
+import {useQuery} from 'react-query'
 
 
 const MyNetwork = (props) => {
@@ -42,7 +44,7 @@ const MyNetwork = (props) => {
     if (page === 'Connect') {
       setActiveTab('Connect');
     }
-  }, [])
+  }, [searchParams])
 
   const handleTabChange = tab => {
     setActiveTab(tab)
@@ -95,17 +97,17 @@ const MyNetwork = (props) => {
     setloadingRejected("")
   }
 
-  const fetchNetwork = async () => {
-    if (userId) {
-      const data = await sendRequest(
-        `${GET_USER_CONNECTION_LIST}${userId}`,
-        "GET",
-        null,
-        { Authorization: `Bearer ${token}` }
-      )
-      if (data) setNetwork(data)
-    }
-  }
+  // const fetchNetwork = async () => {
+  //   if (userId) {
+  //     const data = await sendRequest(
+  //       `${GET_USER_CONNECTION_LIST}${userId}`,
+  //       "GET",
+  //       null,
+  //       { Authorization: `Bearer ${token}` }
+  //     )
+  //     if (data) setNetwork(data)
+  //   }
+  // }
 
 
   const friendPerson = async (item) => {
@@ -135,9 +137,9 @@ const MyNetwork = (props) => {
     )
     if (data) {
       toast.success(data.message);
-      fetchNetwork()
+      //fetchNetwork()
 
-      fetchProfileInfo()
+      //fetchProfileInfo()
     }
     // setLoading(false)
   }
@@ -176,7 +178,7 @@ const MyNetwork = (props) => {
                   }`}
                 onClick={() => {
                   handleTabChange("Connects")
-                  fetchNetwork()
+                  // fetchNetwork()
                 }}
               >
                 Connects
@@ -318,12 +320,19 @@ const ConnectTab =(props)=> {
   const { sendRequest } = useFetch() 
   const [network, setNetwork] = useState([])
   const [loading, setLoading] = useState("")
+  const [results, setResults] = useState([]);
   const self = userId === currentUserId
+  const intObserver = React.useRef();
+
 
   const [page, setPage] = React.useState(0)
-  // const { isLoading, lastChildRef, refetch, data } = useInfinteScroller({url:'/user/get-users-connections/'+userId, pageNumber:page, setPageNumber:setPage, search: true})
 
-  const {isLoading, data, isRefetching, results, ref} = InfiniteScrollerComponent({url:'/user/get-users-connections/'+userId, limit: 10, array: true})
+  const { isLoading, data,} = useQuery(['getConnections', userId], () => httpService.get(`/user/get-users-connections/${userId}`), {
+    onSuccess: (data) => {
+      console.log(data?.data);
+      setResults(data?.data);
+    }
+  });
  
   const friendPerson = async (item) => {
     setLoading(item)
@@ -425,7 +434,7 @@ const ConnectTab =(props)=> {
           {results?.filter((item)=> !network.includes(item?.userId))?.map((profile, i) => {   
             if (results?.length === i + 1) {
               return( 
-                <div key={profile?.id} ref={ref} className=" my-4 " >
+                <div key={profile?.id} className=" my-4 " >
                   <UserTile profile={profile} />
                 </div>
               )

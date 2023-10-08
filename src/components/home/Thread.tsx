@@ -109,7 +109,7 @@ const Thread = forwardRef<any, IProps>
             <div className="flex flex-col capitalize">
               <small>{post?.user?.firstName} {post?.user?.lastName}</small>
               <div className="flex flex-col">
-                <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
+                {/* <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small> */}
                 <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
               </div>
             </div>
@@ -249,7 +249,7 @@ const Thread = forwardRef<any, IProps>
             <div className="flex flex-col capitalize">
               <small>{post?.user?.firstName} {post?.user?.lastName}</small>
               <div className="flex flex-col">
-                <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
+                {/* <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small> */}
                 <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
               </div>
             </div>
