@@ -13,14 +13,15 @@ function useInfiniteScroll({ userID, pageParam = 0}: {
     const [results, setResults] = useState<IMediaContent[]>([]);
     const [hasNextPage, setHasNextPage] = useState(false);
     const [newIttem, setNew] = React.useState<IMediaContent[]>([]);
+    const [lastItem, setLastItem] = React.useState(0);
 
     const { mutate } = useMutation({
-      mutationFn: () => httpService.get(`/feed/get-public-posts?userID=${userID}&page=${0}&size=20`),
+      mutationFn: () => httpService.get(`/feed/get-public-posts?userID=${userID}&page=${pageParam}&size=20`),
       onSuccess: (data: any) => {
-        console.log(data.data.content[0]);
+        console.log(data.data);
         const item: IMediaPost = data.data as IMediaPost;
         //const arr = [...item.content, ...newIttem, ...results];
-        newIttem.unshift(item.content[0]);
+        newIttem.unshift(item.content[item.content.length]);
         // setNew(lodash.uniq(newIttem));
 
         setNew(lodash.uniqBy(newIttem, "id")); 
@@ -29,7 +30,7 @@ function useInfiniteScroll({ userID, pageParam = 0}: {
     })
 
     // switching to usequery
-    const { isError, error, isLoading, refetch } = useQuery(['getFeedsPosts', userID, pageParam], () => httpService.get(`/feed/get-user-and-friends-posts?userID=${userID}&page=${pageParam}&size=20`), {
+    const { isError, error, isLoading, refetch } = useQuery(['getFeedsPosts', userID, pageParam], () => httpService.get(`/feed/get-public-posts?userID=${userID}&page=${pageParam}&size=20`), {
         onSuccess: (data) => {
             const item: IMediaPost = data.data as IMediaPost;
             results.push(...item.content);
