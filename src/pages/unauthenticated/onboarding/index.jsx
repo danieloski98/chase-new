@@ -20,6 +20,7 @@ import OverlayWrapper from "@/components/OverlayWrapper"
 import { UPDATE_PROFILE } from "@/constants/endpoints.constant"
 
 const Onboarding = () => {
+
   const [showTerms, setShowTerms] = useState(false)
   const { login } = useAuth();
   const [showModal, setShowModal] = React.useState(false)
