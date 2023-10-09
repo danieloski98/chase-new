@@ -78,6 +78,7 @@ function EventDetail(props: Props) {
 
     const [selectedCategory, setSelectedCategory] = useState({} as any)
     const [proceedWithDownload, setProceedWithDownload] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [proceedWithPurchase, setProceedWithPurchase] = useState(false)
     const [showRefundPolicy, setShowRefundPolicy] = useState(false)
     const [showPaymentMethods, setShowPaymentMethods] = useState(false)
@@ -91,7 +92,7 @@ function EventDetail(props: Props) {
     const Paystack_key = import.meta.env.VITE_PAYSTACK_KEY
 
     const { token, setEventData, userId }: any = useAuth()
-    const isDisabled = !isFree && !selectedCategory?.ticketPrice
+    const isDisabled = !isFree || !selectedCategory?.ticketPrice
     const navigate = useNavigate()
 
     const toggleRefundPolicy = () => setShowRefundPolicy(state => !state)
@@ -215,7 +216,30 @@ function EventDetail(props: Props) {
                 })
             }
         })
+    } 
+
+    const PayForFreeEvent = () => {
+        setLoading(true)
+        sendStripeRequest(
+            CREATE_TICKET,
+            "POST",
+            {
+                eventID,
+                ticketType: selectedCategory?.ticketType,
+                numberOfTickets: ticketCount
+            },
+            { Authorization: `Bearer ${token}` }
+        ).then((data: any) => { 
+            console.log(data);
+            if(data){
+                toast.success("Successful")
+                setLoading(false)
+                buyTicket()
+                getData()
+            }
+        })
     }
+
     const clickHandler = () => {
         setEventData(dataInfo)
         navigate("/event-dashboard")
@@ -224,7 +248,7 @@ function EventDetail(props: Props) {
     const editHandler = () => {
         setEventData(dataInfo)
         navigate("/event/edit")
-    }
+    }    
 
     return (
         <div className=' w-full relative lg:pb-0 pb-24 ' >
@@ -263,11 +287,13 @@ function EventDetail(props: Props) {
                     location={location?.address}
                     ticketLeft={Number(selectedCategory?.totalNumberOfTickets) - Number(selectedCategory?.ticketsSold)}
                     about={about}
+                    loading={loading}
                     toggleModal={buyTicket}
                     minticket={selectedCategory?.minTicketBuy}
                     maxticket={selectedCategory?.maxTicketBuy}
                     toggleRefundPolicy={toggleRefundPolicy}
                     ticketPrice={selectedCategory?.ticketPrice}
+                    selectTicket={PayForFreeEvent}
                     categoryType={selectedCategory?.ticketType}
                     ticketCount={ticketCount}
                     setTicketCount={setTicketCount}
@@ -406,12 +432,11 @@ function EventDetail(props: Props) {
 
                 <div className="flex items-center py-6 w-full justify-center">
                     <button
-                        disabled={isBought ? false : isDisabled}
-                        onClick={(isFree || isBought) ? viewTicket : buyTicket}
-                        className={`${isBought ? "" : isDisabled ? "cursor-not-allowed opacity-50" : ""
-                            } bg-chasescrollBlue text-white w-96 p-3 text-sm rounded-lg`}
+                        disabled={(isBought) ? false : selectedCategory?.ticketType ? false : true}
+                        onClick={(isBought) ? viewTicket : buyTicket}
+                        className={ ` bg-chasescrollBlue disabled:opacity-30 disabled:cursor-not-allowed text-white w-96 p-3 text-sm rounded-lg`}
                     >
-                        {(isFree || isBought) ? "View" : "Buy"} Ticket
+                        {(isBought) ? "View": isFree ? "Register"  : "Buy"} Ticket
                     </button>
                 </div>
             </div>
