@@ -50,10 +50,13 @@ const SignUp = () => {
       toast.error(error.response.data);
     },
     onSuccess: (data) => { 
-      sendMail.mutate({
-        userEmail: values.email,
-        emailType: 1,
-      });
+
+      toast.success('Account created, a code has been sent to your email');
+      navigate(PATH_NAMES.verify);
+      // sendMail.mutate({
+      //   userEmail: values.email,
+      //   emailType: 1,
+      // });
     }
   });
   const { renderForm, formState, values } = useForm({

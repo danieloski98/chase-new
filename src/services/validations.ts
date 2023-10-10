@@ -5,7 +5,7 @@ const signUpValidation = z.object({
     email: z.string().email().nonempty(),
     firstName: z.string().nonempty(),
     lastName: z.string().nonempty(),
-    dob: z.string().nonempty(),
+    // dob: z.string().nonempty(),
     password: z.string().nonempty(),
     confirmPassword: z.string().nonempty(),
 }).refine(({ password, confirmPassword }) => {
@@ -26,9 +26,9 @@ const signInValidation = z.object({
 
 const personinforSchema = z.object({
     // email: z.string().nonempty().email(),
-    phone: z.string().nonempty().min(11),
-    gender: z.string().nonempty(),
-    dob: z.string().nonempty(),
+    // phone: z.string().nonempty().min(11),
+    // gender: z.string().nonempty(),
+    // dob: z.string().nonempty(),
 });
 
 const reportSchema = z.object({
