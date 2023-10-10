@@ -148,6 +148,9 @@ const Profile_1 = () => {
     if (data) setCommunities(data)
   }
 
+
+  
+
   const friendPerson = async () => {
     setLoading(true)
     const data = await sendRequest(
