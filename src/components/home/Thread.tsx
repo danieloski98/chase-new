@@ -58,7 +58,7 @@ const Thread = forwardRef<any, IProps>
 
   //const { user, text, time, type, multipleMediaRef, mediaRef, id: postID, commentCount } = post;
 
-  const getPost = useQuery([`getPost-${postData.id}`, postData.id], () => httpService.get(`${GET_POST}/${postData.id}`), {
+  const getPost = useQuery([`getPost-${postData?.id}`, postData?.id], () => httpService.get(`${GET_POST}/${postData?.id}`), {
     onSuccess:  (data) => {
       setPost(data.data);
       setIsLiked(data.data.likeStatus === 'LIKED');
@@ -67,7 +67,7 @@ const Thread = forwardRef<any, IProps>
   });
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: () => httpService.post(`${LIKE_POST}/${postData.id}`),
+    mutationFn: () => httpService.post(`${LIKE_POST}/${postData?.id}`),
     onSuccess: (data) => {
       // console.log(data.data);
       // queryClient.invalidateQueries(['getFeedsPosts']);
@@ -87,7 +87,7 @@ const Thread = forwardRef<any, IProps>
 
   if (!ref) {
     return (
-      <div id={postData.id} className="flex bg-white flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit  ">
+      <div id={postData?.id} className="flex bg-white flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit  ">
        
 
         <div className="flex justify-between items-stretch text-black lg:w-full sm:w-full">
@@ -109,7 +109,7 @@ const Thread = forwardRef<any, IProps>
             <div className="flex flex-col capitalize">
               <small>{post?.user?.firstName} {post?.user?.lastName}</small>
               <div className="flex flex-col">
-                <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
+                {/* <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small> */}
                 <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
               </div>
             </div>
@@ -227,7 +227,7 @@ const Thread = forwardRef<any, IProps>
   }
 
   return (
-    <div ref={ref} id={postData.id} className="flex bg-white flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit  ">
+    <div ref={ref} id={postData?.id} className="flex bg-white flex-col gap-4 justify-between p-5 w-full border border-opacity-50 border-gray-200 rounded-tl-[32px] rounded-b-[32px] shadow-xl h-fit  ">
        
 
         <div className="flex justify-between items-stretch text-black lg:w-full sm:w-full">
@@ -249,7 +249,7 @@ const Thread = forwardRef<any, IProps>
             <div className="flex flex-col capitalize">
               <small>{post?.user?.firstName} {post?.user?.lastName}</small>
               <div className="flex flex-col">
-                <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small>
+                {/* <small>{post?.user?.data?.city?.value ?? COMPANY_NAME}, {post?.user?.data?.country?.value}</small> */}
                 <small className="text-[10px] opacity-60">{formatTimeAgo(post?.time?.millis)}</small>
               </div>
             </div>

@@ -17,8 +17,10 @@ const TicketPaymentModal = ({
   categoryType,
   toggleModal,
   toggleRefundPolicy,
+  selectTicket,
   ticketCount,
   setTicketCount,
+  loading,
   currency,
   handleClose,
   ticketLeft
@@ -51,6 +53,15 @@ const TicketPaymentModal = ({
     setTicketCount(minticket) 
   }, [])
 
+  const clickHandler =()=> {
+    if(categoryType === "Free"){
+      // toggleModal()
+      selectTicket() 
+    } else {
+      toggleModal() 
+      toggleRefundPolicy()
+    }
+  }
 
   return (
     <OverlayWrapper handleClose={handleClose}>
@@ -108,23 +119,20 @@ const TicketPaymentModal = ({
               </div>
               <div className="flex justify-between">
                 <p>Processing Fee</p>
-                <p>{formatNumber((currency === "USD" ? usdtotal - price -service :  nairatotal - price -service), currency === "USD" ? "$" : "₦")}</p>
+                <p>{categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" :formatNumber((currency === "USD" ? usdtotal - price -service :  nairatotal - price -service), currency === "USD" ? "$" : "₦")}</p>
               </div>
               <div className="flex justify-between">
                 <p>Total</p>
                 <p>
-                  {formatNumber((currency === "USD" ? usdtotal: (nairatotal < 2500 ? nairatotalnew :nairatotal )), currency === "USD" ? "$" : "₦")}
+                  {categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" :formatNumber((currency === "USD" ? usdtotal: (nairatotal < 2500 ? nairatotalnew :nairatotal )), currency === "USD" ? "$" : "₦")}
                 </p>
               </div>
             </div>
             <button
-              onClick={() => {
-                toggleModal()
-                toggleRefundPolicy()
-              }}
+              onClick={() => clickHandler()}
               className="rounded-md bg-chasescrollBlue w-full text-white py-3"
             >
-              Pay now
+              {loading ? "Loading": categoryType === "Free" ? "Register Now" :"Pay now"}
             </button>
           </div>
         </div>

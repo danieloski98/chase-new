@@ -133,7 +133,7 @@ function EventDashboardModal(props: Props) {
                             </div>
                         </div>
                     </div>
-                    {history.tickets?.length < 0 && (
+                    {/* {(history?.totalNumberOfAvailableTickets === history?.totalNumberOfTickets) && ( */}
                         <div className=" w-full border-b border-[#D0D4EB] mt-8 py-7 px-4 " >
                             <ResponsiveContainer width="100%" height={500}>
                                 <BarChart
@@ -162,7 +162,7 @@ function EventDashboardModal(props: Props) {
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
-                    )}
+                    {/* )} */}
                 </div>
             )}
         </div>

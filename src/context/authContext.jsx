@@ -14,10 +14,10 @@ export const AuthContext = createContext({
   eventCategory: "",
   setEventCategory: "",
   firstName: null,
-  notification:"", 
-  setnotification:"",
-  eventData:"", 
-  setEventData:"",
+  notification: "",
+  setnotification: "",
+  eventData: "",
+  setEventData: "",
 });
 
 export const AuthProvider = ({ children }) => {
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, userId, userName]);
 
-  const login = async (credentials) => {
+  const login = async (credentials, modal) => {
     //const responseData = await sendRequest(SIGN_IN, 'POST', credentials);
 
     const { access_token, user_id, user_name, expires_in, firstName } = credentials;
@@ -60,15 +60,16 @@ export const AuthProvider = ({ children }) => {
     const expirationTime = new Date().getTime() + expires_in * 1000;
 
     localStorage.setItem('tokenExpiration', expirationTime);
-    console.log(expirationTime); 
-    setTimeout(() => window.location.replace(PATH_NAMES.explore), 1000) 
+    // console.log(expirationTime); 
+
+      setTimeout(() => !modal ? "" :window.location.replace(PATH_NAMES.explore), 1000) 
   };
 
   const logout = () => {
     setToken(null);
     localStorage.removeItem('token');
-    localStorage.removeItem('tokenExpiration');
-    window.location.replace(PATH_NAMES.root);
+    localStorage.removeItem('tokenExpiration'); 
+    window.location.replace(PATH_NAMES.root); 
   };
 
   // Check if the token has expired when the component mounts or updates
@@ -93,11 +94,11 @@ export const AuthProvider = ({ children }) => {
       firstName,
       searchValue,
       setSearchValue,
-      notification, 
+      notification,
       setnotification,
       eventCategory,
       setEventCategory,
-      eventData, 
+      eventData,
       setEventData
     }}>
       {children}

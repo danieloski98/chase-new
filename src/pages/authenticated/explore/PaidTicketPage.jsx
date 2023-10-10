@@ -47,7 +47,7 @@ const PaidTicketPage = () => {
         toast.success(response?.message)
       })
     } catch (error) {
-      toast.error(error?.message)
+      // toast.error(error?.message)
     }
   }
 
@@ -62,7 +62,7 @@ const PaidTicketPage = () => {
         toast.success(response?.message)
       })
     } catch (error) {
-      toast.error(error?.message)
+      // toast.error(error?.message)
     }
   }
 

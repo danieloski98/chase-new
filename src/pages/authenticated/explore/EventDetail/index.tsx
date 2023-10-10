@@ -20,7 +20,8 @@ import { toast } from "react-toastify";
 import { EVENT_TYPE, POLICY } from "../../../../constants";
 import CONFIG from "../../../../config";
 import EventLocation from "./component/eventLocation";
-import ShareBtn from "./component/shareBtn"; 
+import ShareBtn from "./component/shareBtn";
+import LoginModal from '../../../../components/explore/modals/LoginModal';
 
 interface Props {
     banner: any,
@@ -78,6 +79,8 @@ function EventDetail(props: Props) {
 
     const [selectedCategory, setSelectedCategory] = useState({} as any)
     const [proceedWithDownload, setProceedWithDownload] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [loginModal, setLoginModal] = useState(false)
     const [proceedWithPurchase, setProceedWithPurchase] = useState(false)
     const [showRefundPolicy, setShowRefundPolicy] = useState(false)
     const [showPaymentMethods, setShowPaymentMethods] = useState(false)
@@ -91,7 +94,7 @@ function EventDetail(props: Props) {
     const Paystack_key = import.meta.env.VITE_PAYSTACK_KEY
 
     const { token, setEventData, userId }: any = useAuth()
-    const isDisabled = !isFree && !selectedCategory?.ticketPrice
+    // const isDisabled = !isFree || !selectedCategory?.ticketPrice
     const navigate = useNavigate()
 
     const toggleRefundPolicy = () => setShowRefundPolicy(state => !state)
@@ -129,6 +132,7 @@ function EventDetail(props: Props) {
 
     const [userInfo, setUserInfo] = useState({} as any)
 
+
     const fetchProfileInfo = async () => {
         const data = await sendRequest(
             "/user/publicprofile/" + userId,
@@ -137,7 +141,6 @@ function EventDetail(props: Props) {
             { Authorization: `Bearer ${token}` }
         )
         if (data) {
-
             setUserInfo(data)
         }
     }
@@ -156,8 +159,10 @@ function EventDetail(props: Props) {
     }
 
     useEffect(() => {
-        getEventTicket()
-        fetchProfileInfo()
+        if (userId) {
+            getEventTicket()
+            fetchProfileInfo()
+        }
     }, [getData])
 
     const payWithPaystack = async () => {
@@ -216,6 +221,29 @@ function EventDetail(props: Props) {
             }
         })
     }
+
+    const PayForFreeEvent = () => {
+        setLoading(true)
+        sendStripeRequest(
+            CREATE_TICKET,
+            "POST",
+            {
+                eventID,
+                ticketType: selectedCategory?.ticketType,
+                numberOfTickets: ticketCount
+            },
+            { Authorization: `Bearer ${token}` }
+        ).then((data: any) => {
+            console.log(data);
+            if (data) {
+                toast.success("Successful")
+                setLoading(false)
+                buyTicket()
+                getData()
+            }
+        })
+    }
+
     const clickHandler = () => {
         setEventData(dataInfo)
         navigate("/event-dashboard")
@@ -226,9 +254,18 @@ function EventDetail(props: Props) {
         navigate("/event/edit")
     }
 
+    const closeLogin = () => {
+        setLoginModal((prev) => !prev)
+    }
+
+
+
     return (
         <div className=' w-full relative lg:pb-0 pb-24 ' >
 
+            {loginModal && (
+                <LoginModal modal={true} handleClose={closeLogin} />
+            )}
             {proceedWithDownload && (
                 <DownloadTicketModal
                     firstName={ticketinfo?.length > 0 ? ticketinfo[0]?.createdBy?.firstName : userInfo?.firstName}
@@ -263,11 +300,13 @@ function EventDetail(props: Props) {
                     location={location?.address}
                     ticketLeft={Number(selectedCategory?.totalNumberOfTickets) - Number(selectedCategory?.ticketsSold)}
                     about={about}
+                    loading={loading}
                     toggleModal={buyTicket}
                     minticket={selectedCategory?.minTicketBuy}
                     maxticket={selectedCategory?.maxTicketBuy}
                     toggleRefundPolicy={toggleRefundPolicy}
                     ticketPrice={selectedCategory?.ticketPrice}
+                    selectTicket={PayForFreeEvent}
                     categoryType={selectedCategory?.ticketType}
                     ticketCount={ticketCount}
                     setTicketCount={setTicketCount}
@@ -316,14 +355,35 @@ function EventDetail(props: Props) {
                 <Stripecomponent clientKey={clientKey} config={configStripe} closeModal={closeModal} getData={getData} />
             )}
             <div className=' w-full relative h-80 rounded-b-[16px] rounded-tl-[16px] ' >
+                {userId && (
+                    <>
+                        {window.location.href?.includes("event/") && (
+                            <button
+                                onClick={() => navigate("/events")}
+                                className="absolute top-9 z-20 left-2 p-2"
+                            >
+                                <CaretLeftIcon />
+                            </button>
+                        )}
 
-                <button
-                    onClick={() => navigate(-1)}
-                    className="absolute top-9 z-20 left-2 p-2"
-                >
-                    <CaretLeftIcon />
-                </button>
-
+                        {!window.location.href?.includes("event/") && (
+                            <button
+                                onClick={() => navigate(-1)}
+                                className="absolute top-9 z-20 left-2 p-2"
+                            >
+                                <CaretLeftIcon />
+                            </button>
+                        )}
+                    </>
+                )}
+                {/* {!userId && (
+                    <button
+                        onClick={() => navigate("/")}
+                        className="absolute top-9 z-20 left-2 p-2"
+                    >
+                        <CaretLeftIcon />
+                    </button>
+                )} */}
                 <div className="backdrop-blur-sm absolute inset-0 px-3  -z-20 flex justify-center items-center rounded-b-[16px] rounded-tl-[16px] h-80">
                     <img
                         src={`${CONFIG.RESOURCE_URL}${banner}`}
@@ -390,9 +450,9 @@ function EventDetail(props: Props) {
                 <div className=' w-full px-4 py-3 ' >
                     <p className=' font-bold text-[18px] text-black ' >About this event </p>
                     <p className=' text-[#5B5858] font-normal mt-2 ' >
-                       {about}
+                        {about}
                     </p>
-                </div> 
+                </div>
                 <EventLocation location={location} locationType={locationType} />
                 {location?.address && (
                     <div className=' w-full px-4 py-3 ' >
@@ -403,17 +463,29 @@ function EventDetail(props: Props) {
                     </div>
 
                 )}
+                {userId && (
+                    <div className="flex items-center py-6 w-full justify-center">
+                        <button
+                            disabled={(isBought) ? false : selectedCategory?.ticketType ? false : true}
+                            onClick={(isBought) ? viewTicket : buyTicket}
+                            className={` bg-chasescrollBlue disabled:opacity-30 disabled:cursor-not-allowed text-white w-96 p-3 text-sm rounded-lg`}
+                        >
+                            {(isBought) ? "View" : isFree ? "Register" : "Buy"} Ticket
+                        </button>
+                    </div>
+                )}
 
-                <div className="flex items-center py-6 w-full justify-center">
-                    <button
-                        disabled={isBought ? false : isDisabled}
-                        onClick={(isFree || isBought) ? viewTicket : buyTicket}
-                        className={`${isBought ? "" : isDisabled ? "cursor-not-allowed opacity-50" : ""
-                            } bg-chasescrollBlue text-white w-96 p-3 text-sm rounded-lg`}
-                    >
-                        {(isFree || isBought) ? "View" : "Buy"} Ticket
-                    </button>
-                </div>
+                {!userId && (
+                    <div className="flex items-center py-6 w-full justify-center">
+                        <button
+                            // disabled={(isBought) ? false : selectedCategory?.ticketType ? false : true}
+                            onClick={() => setLoginModal(true)}
+                            className={` bg-chasescrollBlue disabled:opacity-30 disabled:cursor-not-allowed text-white w-96 p-3 text-sm rounded-lg`}
+                        >
+                            {"Buy"} Ticket
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     )

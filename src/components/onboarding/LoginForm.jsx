@@ -14,7 +14,13 @@ import { CustomInput } from "../Form/CustomInput"
 import { Box, Button, Input } from '@chakra-ui/react'
 import OverlayWrapper from "../OverlayWrapper"
 
-const LoginForm = () => {
+const LoginForm = (props) => { 
+
+  const {
+    modal,
+    close
+  } = props
+
   const { login } = useAuth()
 
   const [showModal, setShowModal] = React.useState(false)
@@ -22,6 +28,7 @@ const LoginForm = () => {
   const [FirstName, setFirstName] = React.useState("")
   const [LastName, setLastName] = React.useState("")
   const [UserName, setUserName] = React.useState("")
+  const navigate = useNavigate()
 
   // react hoook form implementation
   const { isLoading, mutate } = useMutation({
@@ -31,18 +38,30 @@ const LoginForm = () => {
       console.log(error);
     },
     onSuccess: (data) => {
-      const userId = localStorage.getItem('userId');
-      if (userId !== null) {
-        if (data.data.user_id !== userId) {
-          toast.warn('Another user is logged in, the user has to logout their account');
-          return;
+      const userId = localStorage.getItem('userId'); 
+      if(data?.data?.message === "This email is not verified"){ 
+        navigate(PATH_NAMES.verify);
+      }else { 
+        if (userId !== null) {
+          if (data.data.user_id !== userId) {
+            toast.warn('Another user is logged in, the user has to logout their account');
+            return;
+          } else {
+            toast.success('Login successful!');
+            login(data.data, modal);
+            
+            if(!modal){
+              close()
+            }
+          }
         } else {
           toast.success('Login successful!');
-          login(data.data);
+          login(data.data, modal);
+  
+          if(!modal){
+            close()
+          }
         }
-      } else {
-        toast.success('Login successful!');
-        login(data.data);
       }
     }
   })
@@ -52,8 +71,7 @@ const LoginForm = () => {
       password: '',
     },
     validationSchema: signInValidation,
-    submit: (data) => {
-      console.log(data);
+    submit: (data) => { 
       mutate(data);
     },
   });
