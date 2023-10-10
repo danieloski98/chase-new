@@ -38,14 +38,14 @@ const Profile_1 = () => {
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page');
 
-  const [activeComponent, setActiveComponent] = useState(page === 'request' ? 'component2':'component1') 
+  const [activeComponent, setActiveComponent] = useState(page === 'request' ? 'component2' : 'component1')
 
   if (page !== null && page === 'request') {
     //setActiveComponent('component2')
   }
 
   // React.useEffect(() => {
-    
+
   //   if (page === 'request') {
   //     setActiveComponent('component2');
   //   }
@@ -56,7 +56,7 @@ const Profile_1 = () => {
 
 
   const { sendRequest } = useFetch()
-  const { token, userId: currentUserId } = useAuth() 
+  const { token, userId: currentUserId } = useAuth()
 
   const self = userId === currentUserId
 
@@ -71,23 +71,23 @@ const Profile_1 = () => {
         userId,
       ]
     }),
-    onSuccess: (data) => { 
+    onSuccess: (data) => {
       navigate(`/message?messageId=${data.data.id}`);
     },
-    onError: (errror) => { 
+    onError: (errror) => {
       toast.error('An error occured whilw trying to initiate chat');
     }
   })
 
   const fetchProfileInfo = async () => {
     const data = await sendRequest(
-      "/user/publicprofile/"+userId,
+      "/user/publicprofile/" + userId,
       "GET",
       null,
       { Authorization: `Bearer ${token}` }
     )
- 
-    if (data){ 
+
+    if (data) {
       setProfile(data)
       setIsLoading(false)
       //setActiveComponent("component1")
@@ -178,11 +178,11 @@ const Profile_1 = () => {
       fetchProfileInfo()
     }
     setLoading(false)
-  }  
+  }
 
   useEffect(() => {
     fetchProfileInfo()
-    fetchPosts() 
+    fetchPosts()
     fetchOwnNetwork()
     fetchEvents()
     fetchCommunities()
@@ -196,7 +196,7 @@ const Profile_1 = () => {
       if (isMyFriend) setDisplayConnect(false)
       else setDisplayConnect(true)
     }
-  }, [network]) 
+  }, [network])
 
   const handleButtonClick = componentName => {
     if (
@@ -225,7 +225,7 @@ const Profile_1 = () => {
 
   const handleShowOptions = () => {
     navigate('/settings');
-  } 
+  }
 
 
   return (
@@ -234,10 +234,10 @@ const Profile_1 = () => {
         <>
           {isLoading && (
             <div className=" w-full py-6 flex justify-center " >
-                <Loader />
+              <Loader />
             </div>
           )}
-          {!isLoading && ( 
+          {!isLoading && (
             <div>
               <section className="flex relative flex-col mb-5 pb-6 w-full text-chasescrollBlue border-b-2 border-b-gray-200 h-auto">
                 <div className="grid place-items-center relative">
@@ -249,12 +249,12 @@ const Profile_1 = () => {
                       className="w-full h-full object-cover"
                     />
                     <div className="backdrop-blur-md absolute inset-0 flex justify-start items-end pb-32 md:pb-32 px-4">
-                      <Avatar 
-                          src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
-                          alt="user profile photo"
-                          className="border-2 border-white w-40 h-40 rounded-b-full rounded-tl-full shadow-md object-cover mb-10"
-                          name={`${profile?.firstName} ${profile?.lastName}`}
-                          size='2xl'
+                      <Avatar
+                        src={`${CONFIG.RESOURCE_URL}${profile?.data?.imgMain?.value}`}
+                        alt="user profile photo"
+                        className="border-2 border-white w-40 h-40 rounded-b-full rounded-tl-full shadow-md object-cover mb-10"
+                        name={`${profile?.firstName} ${profile?.lastName}`}
+                        size='2xl'
                       />
                     </div>
                   </div>
@@ -276,20 +276,22 @@ const Profile_1 = () => {
                     <div className="text-white self-start flex flex-col">
                       <h2 className="capitalize">{profile?.firstName} {profile?.lastName}</h2>
                       <small>@{profile?.username}</small>
-                      <small>{profile?.email}</small>
+                      {profile?.showEmail && (
+                        <small>{profile?.email}</small>
+                      )}
                       <small>Bio - {profile?.data.about?.value || 'NONE'}</small>
                       <small>Website - {profile?.data.webAddress?.value || 'NONE'}</small>
                     </div>
                     {!self && (
                       <div className="flex items-center gap-4 justify-center text-sm md:text-base">
                         {/* {profile?.joinStatus === "FRIEND_REQUEST_SENT" } */}
-                        {!self && ( 
+                        {!self && (
                           <div
                             onClick={mutate}
                             className="w-40 bg-white text-blue-500 px-4 py-3 rounded-md text-center"
                           >
-                            { createChatLoading && <Spinner colorScheme="blue" /> } 
-                            { !createChatLoading && 'Chat' }
+                            {createChatLoading && <Spinner colorScheme="blue" />}
+                            {!createChatLoading && 'Chat'}
                           </div>
                         )}
                         {profile?.joinStatus === "FRIEND_REQUEST_SENT" ? (
@@ -299,13 +301,13 @@ const Profile_1 = () => {
                           >
                             {loading ? "loading.." : "Pending"}
                           </button>
-                        ): profile?.joinStatus === "CONNECTED" ? (
+                        ) : profile?.joinStatus === "CONNECTED" ? (
                           <button
                             className="w-40 font-semibold bg-[#F04F4F] text-white px-3 md:px-4 py-3 rounded-md"
                             onClick={unfriendPerson}
                           >
                             {loading ? "loading.." : "Disconnect"}
-                          </button>                        
+                          </button>
                         ) : (
                           <button
                             className="w-40 font-semibold bg-chasescrollBlue text-white px-3 md:px-4 py-3 rounded-md"
@@ -314,7 +316,7 @@ const Profile_1 = () => {
                             {loading ? "loading.." : "Connect"}
                           </button>
                         )}
-                        
+
                       </div>
                     )}
                   </div>

@@ -63,7 +63,7 @@ const Onboarding = () => {
       if(!checkData?.firstName){
         setShowModal(true)
       } else { 
-        login(checkData); 
+        login(checkData, true); 
       }
     }
   }, [checkData])
@@ -128,7 +128,7 @@ const Onboarding = () => {
 
           let newObj = {...checkData, firstName: FirstName}
 
-          login(newObj); 
+          login(newObj, true); 
           // navigate("/explore")
         } else {
           toast.error('Something went wrong!');
@@ -177,7 +177,7 @@ const Onboarding = () => {
                 <p className="text-md font-normal text-center">
                   Welcome back, login to your account
                 </p>
-                <LoginForm />
+                <LoginForm modal={true} />
               </div>
               <button
                 onClick={signInWithGoogle}
