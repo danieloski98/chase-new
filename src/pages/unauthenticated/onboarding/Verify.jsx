@@ -17,18 +17,18 @@ const Verify = ({ togglePasswordVisibility }) => {
   const navigate = useNavigate()
 
   // react query
-  const { isLoading: isVerifyLoading, mutate } = useMutation({
+  const { isLoading: isVerifyLoading, mutate, data } = useMutation({
     mutationFn: () => httpService.post(VERIFY_TOKEN, {
       token: pin,
     }),
     onError: (error) => {
-      toast.error(error.response?.data);
+      toast.error(error?.response?.data?.statusDescription);
     },
     onSuccess: (data) => {
       toast.success('Account successfully verified');
       navigate('/');
-    }
-  });
+    } 
+  }); 
 
   return (
     <MiniScreensWrapper
