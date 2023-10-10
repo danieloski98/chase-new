@@ -60,11 +60,9 @@ export const AuthProvider = ({ children }) => {
     const expirationTime = new Date().getTime() + expires_in * 1000;
 
     localStorage.setItem('tokenExpiration', expirationTime);
-    // console.log(expirationTime);
+    // console.log(expirationTime); 
 
-    // if(!modal){
-      setTimeout(() => !modal ? "" :window.location.replace(PATH_NAMES.explore), 1000)
-    // }  
+      setTimeout(() => !modal ? "" :window.location.replace(PATH_NAMES.explore), 1000) 
   };
 
   const logout = () => {
