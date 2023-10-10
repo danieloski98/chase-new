@@ -14,7 +14,13 @@ import { CustomInput } from "../Form/CustomInput"
 import { Box, Button, Input } from '@chakra-ui/react'
 import OverlayWrapper from "../OverlayWrapper"
 
-const LoginForm = () => {
+const LoginForm = (props) => { 
+
+  const {
+    modal,
+    close
+  } = props
+
   const { login } = useAuth()
 
   const [showModal, setShowModal] = React.useState(false)
@@ -38,11 +44,18 @@ const LoginForm = () => {
           return;
         } else {
           toast.success('Login successful!');
-          login(data.data);
+          login(data.data, modal);
+          if(!modal){
+            close()
+          }
         }
       } else {
         toast.success('Login successful!');
-        login(data.data);
+        login(data.data, modal);
+
+        if(!modal){
+          close()
+        }
       }
     }
   })
@@ -52,8 +65,7 @@ const LoginForm = () => {
       password: '',
     },
     validationSchema: signInValidation,
-    submit: (data) => {
-      console.log(data);
+    submit: (data) => { 
       mutate(data);
     },
   });

@@ -1,25 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
-import PageWrapper from "@/components/PageWrapper";
-import { ChevronLeft } from "@/components/Svgs";
-import { previousPage } from "@/constants/index";
+import PageWrapper from "../../../components/PageWrapper";
+import { ChevronLeft } from "../../../components/Svgs";
+import { previousPage } from "../../../constants/index";
 import { useAuth } from "../../../context/authContext";
-import { useFetch } from "../../../hooks/useFetch";
+// import { useFetch } from "../../../hooks/useFetc/h";
 import { toast } from "react-toastify";
-import ButtonSpinner from "../../../components/ButtonSpinners";
-import { UPDATE_PROFILE } from "../../../constants/endpoints.constant";
+// import ButtonSpinner from "../../../components/ButtonSpinners";
+// import { UPDATE_PROFILE } from "../../../constants/endpoints.constant";
 import { useMutation, useQuery } from "react-query";
-import httpService from "@/utils/httpService";
+import httpService from "../../../utils/httpService";
 import { useForm } from "../../../hooks/useForm";
-import { personinforSchema } from "@/services/validations";
-import { CustomInput } from "@/components/Form/CustomInput";
-import { CustomSelect } from "@/components/Form/CustomSelect";
-import SubmitButton from "@/components/Form/SubmitButton";
+import { personinforSchema } from "../../../services/validations";
+import { CustomInput } from "../../../components/Form/CustomInput";
+import { CustomSelect } from "../../../components/Form/CustomSelect";
+// import SubmitButton from "../../../components/Form/SubmitButton";
 import { IUser } from "src/models/User";
 import { AxiosError, AxiosResponse } from "axios";
-import { Button, Select } from "@chakra-ui/react";
-import { useFormContext } from "react-hook-form";
+import { Button } from "@chakra-ui/react";
+// import { useFormContext } from "react-hook-form";
 import DatePicker from "../../../components/Form/DatePicker";
+import CustomSwitch from "../../../components/Form/CustomSwitch";
+import { useNavigate } from "react-router-dom";
 
 const GENDERS = [
   { value: "male", label: "Male" },
@@ -29,9 +31,8 @@ const GENDERS = [
 
 function PersonalInfoForm() {
   const [user, setUser] = React.useState<IUser | null>(null);
-  const { token, userId } = useAuth(); 
-
-  console.log(user);
+  const { token, userId } = useAuth();  
+  const navigate = useNavigate()
   
 
   const { isLoading: updateLoading, mutate } = useMutation({
@@ -40,6 +41,9 @@ function PersonalInfoForm() {
       toast.error(error.response?.data);
     },
     onSuccess: (data: AxiosResponse<any>) => { 
+      toast.success("Profile Updated"); 
+      
+      navigate("/settings")
     }
   });
   const dateRef: any = React.useRef(null);
@@ -51,9 +55,7 @@ function PersonalInfoForm() {
       onError: (error: AxiosError<any, any>) => {
         toast.error(error.response?.data);
       },
-      onSuccess: (data) => {
-        // console.log(data?.data);
-        
+      onSuccess: (data) => { 
         setUser(data.data); 
       },
     }
@@ -70,18 +72,23 @@ function PersonalInfoForm() {
   // },[data])
   
   // form
+
+  const [emailData, setEmailData] = React.useState("" as any)
   const { renderForm } = useForm({
     defaultValues: {
       email: user?.email,
       phone: user?.data?.mobilePhone?.value || "",
       gender: user?.data?.gender?.value || "",
       dob: user?.dob || "",  
+      showEmail: user?.showEmail || false,  
     },
     validationSchema: personinforSchema,
     submit: (data) => { 
+      console.log(data);
       
       const obj = {
         // email: user?.email,
+        showEmail: emailData,
         data: {
           mobilePhone: {
             objectPublic: true,
@@ -109,6 +116,10 @@ function PersonalInfoForm() {
       mutate(obj);
     },
   });
+
+  React.useEffect(()=> {
+    setEmailData(!user?.showEmail ? false : user?.showEmail)
+  }, [user])
 
   // const handleSubmit = async event => {
   //   event.preventDefault()
@@ -153,15 +164,17 @@ function PersonalInfoForm() {
           </div>
 
           <div className="w-full sm:w-1/2 overflow-auto">
-            <CustomInput name="email" disable={true} placeholder={user?.email ? user?.email : "Email"} type="email" />
+            <CustomInput name="email" disable={true} placeholder={user?.email ? user?.email : "Email"} type="email" isPassword={false} />
+            
             <div className="h-5" />
-            <CustomInput name="phone" placeholder={user?.data?.mobilePhone?.value ? user?.data?.mobilePhone?.value : "Phone Number"} type="text" />
+            <CustomSwitch data={emailData} newData={setEmailData} />
+            <div className="h-5" />
+            <CustomInput name="phone" placeholder={user?.data?.mobilePhone?.value ? user?.data?.mobilePhone?.value : "Phone Number"} type="text" isPassword={false} />
             <div className="h-5" /> 
             <CustomSelect
               name="gender"
               option={["Male", "Female", "Other"]}
-              placeholder={user?.data?.gender?.value ? user?.data?.gender?.value : "Gender"} 
-            />
+              placeholder={user?.data?.gender?.value ? user?.data?.gender?.value : "Gender"} isPassword={false} type={"text"}            />
             <div className="h-5" /> 
             {/* <CustomInput name="dob" 
               placeholder={user?.dob ? user?.dob : "Date of Birth"} type="date" /> */}
