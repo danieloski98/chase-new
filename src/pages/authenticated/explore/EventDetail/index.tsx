@@ -130,7 +130,7 @@ function EventDetail(props: Props) {
     const [clientKey, setClientKey] = useState("")
     const [ticketinfo, setticketinfo] = useState({} as any)
 
-    const [userInfo, setUserInfo] = useState({} as any) 
+    const [userInfo, setUserInfo] = useState({} as any)
 
 
     const fetchProfileInfo = async () => {
@@ -140,7 +140,7 @@ function EventDetail(props: Props) {
             null,
             { Authorization: `Bearer ${token}` }
         )
-        if (data) { 
+        if (data) {
             setUserInfo(data)
         }
     }
@@ -159,8 +159,10 @@ function EventDetail(props: Props) {
     }
 
     useEffect(() => {
-        getEventTicket()
-        fetchProfileInfo()
+        if (userId) {
+            getEventTicket()
+            fetchProfileInfo()
+        }
     }, [getData])
 
     const payWithPaystack = async () => {

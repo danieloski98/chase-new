@@ -45,7 +45,7 @@ const LoginForm = (props) => {
         } else {
           toast.success('Login successful!');
           login(data.data, modal);
-          if(modal){
+          if(!modal){
             close()
           }
         }
@@ -53,7 +53,7 @@ const LoginForm = (props) => {
         toast.success('Login successful!');
         login(data.data, modal);
 
-        if(modal){
+        if(!modal){
           close()
         }
       }
@@ -65,8 +65,7 @@ const LoginForm = (props) => {
       password: '',
     },
     validationSchema: signInValidation,
-    submit: (data) => {
-      console.log(data);
+    submit: (data) => { 
       mutate(data);
     },
   });
