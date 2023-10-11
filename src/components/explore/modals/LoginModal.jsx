@@ -1,7 +1,7 @@
 import React from 'react'
 import OverlayWrapper from '../../../components/OverlayWrapper'
 import LoginForm from '../../../components/onboarding/LoginForm'
-import { Spinner } from '@chakra-ui/react'
+import { Input, Spinner } from '@chakra-ui/react'
 import { GoogleIcon } from '../../../components/Svgs'
 import { useAuth } from '../../../context/authContext'
 import httpService from '../../../utils/httpService'
@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { useMutation, useQuery } from 'react-query'
 import { auth, googleAuthProvider } from "../../../config/firebase"
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { SIGN_IN_WITH_CREDENTIALS } from '../../../constants/endpoints.constant'
+import { SIGN_IN_WITH_CREDENTIALS, UPDATE_PROFILE } from '../../../constants/endpoints.constant'
 
 function LoginModal(props) {
 
