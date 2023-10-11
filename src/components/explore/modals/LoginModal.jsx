@@ -25,6 +25,8 @@ function LoginModal(props) {
     const [UserName, setUserName] = React.useState("") 
     const [Loading, setLoading] = React.useState(false)
     const [CheckUsername, setCheckUsername] = React.useState("")
+    const [FirstName, setFirstName] = React.useState("") 
+    const [LastName, setLastName] = React.useState("") 
 
     const { isLoading, mutate } = useMutation({
         mutationFn: (data) => httpService.get(`${SIGN_IN_WITH_CREDENTIALS}`, {
