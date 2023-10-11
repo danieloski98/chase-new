@@ -146,7 +146,7 @@ const Profile_1 = () => {
       { Authorization: `Bearer ${token}` }
     )
     if (data) setCommunities(data)
-  }
+  } 
 
   const friendPerson = async () => {
     setLoading(true)

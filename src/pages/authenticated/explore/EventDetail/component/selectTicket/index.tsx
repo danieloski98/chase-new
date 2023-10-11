@@ -26,7 +26,7 @@ function SelectTicket(props: Props) {
 
     return (
         <div className=' relative pb-2  w-full flex gap-3 lg:pl-0 pl-5 pr-5 items-center justify-end ' >
-            <div className='border rounded-lg cursor-pointer border-[#5D70F9] flex justify-center items-center w-full h-[49px]  ' >
+            <div onClick={() => setShowModal(true)} role='button' className='border rounded-lg cursor-pointer border-[#5D70F9] flex justify-center items-center w-full h-[49px]  ' >
                 <p className=' text-sm text-[#5D70F9] '>
                     {selectedticket?.ticketType ? selectedticket?.ticketType : "Select Ticket Type"}{" "}
                     {selectedticket?.ticketType ? formatNumber(selectedticket?.ticketPrice, currency === "USD" ? "$" : "₦") : ""}
@@ -38,7 +38,7 @@ function SelectTicket(props: Props) {
                 </div>
             </button>
             {showModal && (
-                <div style={{ boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)" }} className=' w-full top-[90px] z-30 absolute bg-white border border-b-0 border-[#D0D4EB] rounded-lg ' >
+                <div style={{ boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)" }} className=' w-full top-[90px] lg:inset-x-0 inset-x-1 z-30 absolute bg-white border border-b-0 border-[#D0D4EB] rounded-lg ' >
                     {ticket?.map((item: any, index: number) => {
                         return (
                             <button

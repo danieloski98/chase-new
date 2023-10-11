@@ -1,4 +1,4 @@
-import { InputElementProps } from '@chakra-ui/react';
+// import { InputElementProps } from '@chakra-ui/react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
