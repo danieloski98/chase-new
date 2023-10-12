@@ -125,7 +125,7 @@ const UserTile = forwardRef<any, Props>
             <div className="flex flex-col lg:gap-2 gap-1 items-center"> 
                 <UserImages data={data} size={"20"} />
             </div> 
-            <h1 onClick={() => navigate(`/profile/${userId}`)} className="font-bold text-center text-sm cursor-pointer">{(firstName+" "+lastName).length > 18 ? (firstName+" "+lastName).slice(0, 18)+"...": (firstName+" "+lastName)}</h1>
+            <h1 onClick={() => navigate(`/profile/${userId}`)} className="font-bold text-center text-sm cursor-pointer">{(firstName+" "+lastName).length > 14 ? (firstName+" "+lastName).slice(0, 14)+"...": (firstName+" "+lastName)}</h1>
             <h3 className="text-chasescrollGrey text-xs">
                 {mutuals} Mutual Connection{mutuals === 1 ? "" : "s"}
             </h3>
