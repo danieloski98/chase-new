@@ -25,16 +25,16 @@ const TicketPaymentModal = ({
   handleClose,
   ticketLeft
 }) => {
-  const increaseTicketCount = () =>{  
-    if(ticketLeft <= ticketCount){ 
-      toast.error(ticketCount+" Ticket is Remaining for this Event")
-   } else{ 
-      if(maxticket === ticketCount){
-        toast.error("Limit of Ticket is "+ticketCount)
-      } else { 
+  const increaseTicketCount = () => {
+    if (ticketLeft <= ticketCount) {
+      toast.error(ticketCount + " Ticket is Remaining for this Event")
+    } else {
+      if (maxticket === ticketCount) {
+        toast.error("Limit of Ticket is " + ticketCount)
+      } else {
         setTicketCount(count => count + 1)
       }
-   }
+    }
   }
   const decreaseTicketCount = () => {
     setTicketCount(count => (count < 2 ? count : count - 1))
@@ -42,23 +42,23 @@ const TicketPaymentModal = ({
 
   const disabled = ticketCount < 2
 
-  let price = ticketPrice *ticketCount
+  let price = ticketPrice * ticketCount
   let service = price * 0.025
 
-  let usdtotal =  ((((ticketPrice * ticketCount) * 1.025) + 0.39)/(1-0.059)) 
-  let nairatotal = ((((ticketPrice * ticketCount) * 1.025) + 100)/(1-0.039))
-  let nairatotalnew = ((((ticketPrice * ticketCount) * 1.025))/(1-0.039))
+  let usdtotal = ((((ticketPrice * ticketCount) * 1.025) + 0.39) / (1 - 0.059))
+  let nairatotal = ((((ticketPrice * ticketCount) * 1.025) + 100) / (1 - 0.039))
+  let nairatotalnew = ((((ticketPrice * ticketCount) * 1.025)) / (1 - 0.039))
 
-  React.useEffect(()=> { 
-    setTicketCount(minticket) 
+  React.useEffect(() => {
+    setTicketCount(minticket)
   }, [])
 
-  const clickHandler =()=> {
-    if(categoryType === "Free"){
+  const clickHandler = () => {
+    if (categoryType === "Free") {
       // toggleModal()
-      selectTicket() 
+      selectTicket()
     } else {
-      toggleModal() 
+      toggleModal()
       toggleRefundPolicy()
     }
   }
@@ -119,12 +119,12 @@ const TicketPaymentModal = ({
               </div>
               <div className="flex justify-between">
                 <p>Processing Fee</p>
-                <p>{categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" :formatNumber((currency === "USD" ? usdtotal - price -service :  (nairatotal < 2500 ? nairatotalnew :nairatotal ) - price -service), currency === "USD" ? "$" : "₦")}</p>
+                <p>{categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" : formatNumber((currency === "USD" ? usdtotal - price - service : (nairatotal < 2500 ? nairatotalnew : nairatotal) - price - service), currency === "USD" ? "$" : "₦")}</p>
               </div>
               <div className="flex justify-between">
                 <p>Total</p>
                 <p>
-                  {categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" :formatNumber((currency === "USD" ? usdtotal: (nairatotal < 2500 ? nairatotalnew :nairatotal )), currency === "USD" ? "$" : "₦")}
+                  {categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" : formatNumber((currency === "USD" ? usdtotal : (nairatotal < 2500 ? nairatotalnew : nairatotal)), currency === "USD" ? "$" : "₦")}
                 </p>
               </div>
             </div>
@@ -132,7 +132,7 @@ const TicketPaymentModal = ({
               onClick={() => clickHandler()}
               className="rounded-md bg-chasescrollBlue w-full text-white py-3"
             >
-              {loading ? "Loading": categoryType === "Free" ? "Register Now" :"Pay now"}
+              {loading ? "Loading" : categoryType === "Free" ? "Register Now" : "Pay now"}
             </button>
           </div>
         </div>
