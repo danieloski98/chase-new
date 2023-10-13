@@ -119,7 +119,7 @@ const TicketPaymentModal = ({
               </div>
               <div className="flex justify-between">
                 <p>Processing Fee</p>
-                <p>{categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" :formatNumber((currency === "USD" ? usdtotal - price -service :  nairatotal - price -service), currency === "USD" ? "$" : "₦")}</p>
+                <p>{categoryType === "Free" ? currency === "USD" ? "$0" : "₦0" :formatNumber((currency === "USD" ? usdtotal - price -service :  (nairatotal < 2500 ? nairatotalnew :nairatotal ) - price -service), currency === "USD" ? "$" : "₦")}</p>
               </div>
               <div className="flex justify-between">
                 <p>Total</p>
