@@ -470,7 +470,7 @@ function EventDetail(props: Props) {
                             onClick={(isBought) ? viewTicket : buyTicket}
                             className={` bg-chasescrollBlue disabled:opacity-30 disabled:cursor-not-allowed text-white w-96 p-3 text-sm rounded-lg`}
                         >
-                            {(isBought) ? "View" : isFree ? "Register" : "Buy"} Ticket
+                            {(isBought) ? "View" : isFree ? "Register" : "Get"} Ticket
                         </button>
                     </div>
                 )}
@@ -482,7 +482,7 @@ function EventDetail(props: Props) {
                             onClick={() => setLoginModal(true)}
                             className={` bg-chasescrollBlue disabled:opacity-30 disabled:cursor-not-allowed text-white w-96 p-3 text-sm rounded-lg`}
                         >
-                            {"Buy"} Ticket
+                            {"Get"} Ticket
                         </button>
                     </div>
                 )}
