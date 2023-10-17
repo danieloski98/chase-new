@@ -6,6 +6,8 @@ import { CaretLeftIcon } from "../../Svgs"
 import profileAvatar from "@/assets/svg/bitmoji-profile-avatar.svg"
 import { formatDate, formatNumber, formatTime } from "../../../utils/helpers"
 import CONFIG from "../../../config"
+import React from "react"
+import { useReactToPrint } from "react-to-print";
 
 const DownloadTicketModal = ({
   userName,
@@ -26,10 +28,16 @@ const DownloadTicketModal = ({
   profile 
 }) => { 
 
+
+  const componentRef = React.useRef();  
+  const handlePrint = useReactToPrint({ 
+    content: () => componentRef.current
+  }); 
+
   return (
     <OverlayWrapper handleClose={handleClose}>
       <div className="p-4 w-full  h-[100vh] overflow-y-auto pt-[150px] pb-[100px] flex flex-col items-center justify-center gap-1">
-        <div className="w-full max-w-sm bg-white rounded-t-md flex flex-col gap-2 p-6 shadow-lg relative border border-gray-100">
+        <div ref={componentRef} className="w-full max-w-sm bg-white rounded-t-md flex flex-col gap-2 p-6 shadow-lg relative border border-gray-100">
           <div className="flex text-center text-lg relative">
             <button
               className="cursor-pointer z-10 absolute -left-2 top-0.5"
@@ -121,9 +129,9 @@ const DownloadTicketModal = ({
             <p className=" text-center text-xs " >Redefining Experiences for Effortless Event Managementc</p>
           </div>
         </div>
-        {/* <button className="shadow-lg w-full max-w-sm text-sm text-white text-center px-4 py-3 bg-chasescrollBlue rounded-b-md">
+        <button onClick={handlePrint} className="shadow-lg w-full max-w-sm text-sm text-white text-center px-4 py-3 bg-chasescrollBlue rounded-b-md">
           Download Ticket
-        </button> */}
+        </button>
       </div>
     </OverlayWrapper>
   )
