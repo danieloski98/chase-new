@@ -141,10 +141,10 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
     //   return;
     // }
     console.log(event.target.files[0]);
-    if (event.target.files[0].type.startsWith('video/') && event.target.files[0].size > 150000000) {
-      toast.warning("Video size should be less than 15MB");
-      return;
-    }
+    // if (event.target.files[0].type.startsWith('video/') && event.target.files[0].size > 150000000) {
+    //   toast.warning("Video size should be less than 15MB");
+    //   return;
+    // }
     
     const file = event.target.files[0]
     setPostFile(file)
