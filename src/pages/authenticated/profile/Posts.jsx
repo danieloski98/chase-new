@@ -48,7 +48,7 @@ const Posts = () => {
   const [page, setPage] = React.useState(0)
   const { results, isLoading, lastChildRef } = useInfinteScroller({ url: '/feed/get-users-media-posts?userID=' + userId, pageNumber: page, setPageNumber: setPage, })
 
-  console.log(results?.filter((item) => item.mediaRef?.split('.')[1] === 'mp4'))
+  console.log(results)
 
   const content = results.map((post, index) => {
     if (index === results.length - 1) {
@@ -57,7 +57,7 @@ const Posts = () => {
           {post.type === 'WITH_IMAGE' && post?.mediaRef &&
             <img
               key={index.toString()}
-              src={`${CONFIG.RESOURCE_URL}${post?.mediaRef}`}
+              src={post.mediaRef?.includes("https:") ? post?.mediaRef : `${CONFIG.RESOURCE_URL}${post?.mediaRef}`}
               className="rounded-b-[32px] rounded-tl-[32px] w-[170px] h-[170px] object-cover cursor-pointer"
               alt="media from user post"
               onClick={() => {
