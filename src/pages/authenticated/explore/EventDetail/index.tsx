@@ -198,6 +198,8 @@ function EventDetail(props: Props) {
             },
             { Authorization: `Bearer ${token}` }
         ).then((data: any) => {
+            console.log(data);
+            
             if (data?.content?.orderTotal > 0) {
 
                 setConfigStripe({
@@ -215,7 +217,7 @@ function EventDetail(props: Props) {
                     { Authorization: `Bearer ${token}` }
                 ).then((response: any) => {
                     setClientKey(response?.gatewayReferenceID)
-                    setShowStripeForm(true)
+                    // setShowStripeForm(true)
                     // window.open(response?.checkout, "_blank");
                 })
             }
