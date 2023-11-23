@@ -287,15 +287,13 @@ const UploadImage = ({ toggleFileUploader, loadMore }) => {
                     htmlFor="file"
                     className="text-white px-4 py-2.5 w-full rounded-md bg-chasescrollBlue text-sm"
                   >
-                    {/* <input
+                    <input
                       id="file"
                       type="file"
                       onChange={handleFileInputChange}
                       className="hidden"
                     />
                     Select from your desktop
-                  </label> */}
-                  <FileUploader onSuccess={handlePick} />
                   </label>
                   { fileUploading && 'Uploading file...'}
                   {/* <FileUploader onSuccess={handlePick} />
